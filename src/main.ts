@@ -16,6 +16,7 @@ import "element-plus/theme-chalk/dark/css-vars.css";
 import "@/styles/theme/element-dark.scss";
 // custom element css
 import "@/styles/element.scss";
+import "@/styles/tailwindcss.css";
 // svg icons
 import "virtual:svg-icons-register";
 // element plus
@@ -27,6 +28,7 @@ import directives from "@/directives/index";
 // vue Router
 import router from "@/routers";
 // vue i18n
+import I18n from "@/languages/index";
 // pinia store
 import pinia from "@/stores";
 // errorHandler
@@ -41,4 +43,4 @@ Object.keys(Icons).forEach(key => {
   app.component(key, Icons[key as keyof typeof Icons]);
 });
 
-app.use(ElementPlus).use(directives).use(router).use(pinia).mount("#app");
+app.use(ElementPlus).use(directives).use(router).use(I18n).use(pinia).mount("#app");
