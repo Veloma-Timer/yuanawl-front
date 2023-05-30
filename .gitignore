@@ -12,7 +12,8 @@ dist
 dist-ssr
 stats.html
 *.local
-
+*.vscode
+*.idea
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
