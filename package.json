@@ -26,7 +26,7 @@
     "release": "standard-version",
     "commit": "git add -A && czg && git push",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "npm run build:pro && electron-forge make"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",

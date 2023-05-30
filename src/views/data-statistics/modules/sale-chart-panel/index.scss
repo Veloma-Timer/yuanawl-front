@@ -1,0 +1,53 @@
+.wrap {
+  display: flex;
+}
+.top-form {
+  margin-bottom: 30px;
+  .header {
+    display: inline-block;
+    margin-right: 424px;
+  }
+  .city-radio {
+    margin-left: 856px;
+  }
+}
+.sale-echart {
+  width: 745px;
+  height: 295px;
+  margin-right: 100px;
+}
+.sale-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 10px;
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 428px;
+    height: 104px;
+    font-size: 14px;
+    color: #aaaaaa;
+    background: #ffffff;
+    border: 1px solid #d7d7d7;
+    border-radius: 10px;
+    .title {
+      margin-right: 20px;
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .to-money {
+        font-size: 24px;
+        color: #555555;
+      }
+    }
+    .bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
