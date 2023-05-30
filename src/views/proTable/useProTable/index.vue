@@ -48,7 +48,6 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -130,7 +129,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     search: { el: "input" },
     render: scope => {
       return (
-        <el-button type="primary" link onClick={() => ElMessage.success("我是通过 tsx 语法渲染的内容")}>
+        <el-button type="primary" onClick={() => ElMessage.success("我是通过 tsx 语法渲染的内容")}>
           {scope.row.username}
         </el-button>
       );
@@ -210,6 +209,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
 // 删除用户信息
 const deleteAccount = async (params: User.ResUserList) => {
   await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
+
   proTable.value?.getTableList();
 };
 
