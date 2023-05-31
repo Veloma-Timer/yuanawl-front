@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<HeaderProps>(), {
 
 <style scoped lang="scss">
 .title {
-  padding: 10px 20px;
+  padding: 14px 20px;
   font-size: 14px;
   line-height: 40px;
   color: #367fa2;

@@ -1,28 +1,32 @@
 <template>
-  <div class="top-form">
-    <Header title="本周销售" class="header"></Header>
-    <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate">
-      <template v-for="(item, index) in tabDateList" :key="index">
-        <el-radio-button :label="item.title" />
-      </template>
-    </el-radio-group>
-    <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
-      <template v-for="(item, index) in tabCityList" :key="index">
-        <el-radio-button :label="item.title" />
-      </template>
-    </el-radio-group>
-  </div>
   <div class="wrap">
-    <div ref="echartsRef" class="sale-echart"></div>
-    <div class="sale-content">
-      <div class="item" v-for="(item, index) in saleData" :key="index">
-        <div class="top">
-          <span class="title">{{ item.title }}</span>
-          <span class="to-money">￥{{ item.tMoney }}</span>
-        </div>
-        <div class="bottom">
-          <span class="title">昨日全天</span>
-          <span class="ys-money">￥{{ item.yMoney }}</span>
+    <div class="left">
+      <div class="content">
+        <Header title="本周销售" class="header"></Header>
+        <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate" class="date-radio">
+          <template v-for="(item, index) in tabDateList" :key="index">
+            <el-radio-button :label="item.title" />
+          </template>
+        </el-radio-group>
+        <div ref="echartsRef" class="sale-echarts"></div>
+      </div>
+    </div>
+    <div class="right">
+      <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
+        <template v-for="(item, index) in tabCityList" :key="index">
+          <el-radio-button :label="item.title" />
+        </template>
+      </el-radio-group>
+      <div class="sale-content">
+        <div class="item" v-for="(item, index) in saleData" :key="index">
+          <div class="top">
+            <span class="title">{{ item.title }}</span>
+            <span class="to-money">￥{{ item.tMoney }}</span>
+          </div>
+          <div class="bottom">
+            <span class="title">昨日全天</span>
+            <span class="ys-money">￥{{ item.yMoney }}</span>
+          </div>
         </div>
       </div>
     </div>
