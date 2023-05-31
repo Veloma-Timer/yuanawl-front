@@ -32,7 +32,7 @@
         {
           "path": "/commodity/summary",
           "name": "summary",
-          "component": "/commodity/summary/recovery",
+          "component": "/commodity/summary/index",
           "meta": {
             "icon": "Menu",
             "title": "账号汇总",
