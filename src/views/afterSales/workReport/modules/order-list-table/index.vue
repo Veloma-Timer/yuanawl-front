@@ -1,29 +1,30 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="信阳工单" :columns="columns" :request-api="getTableList" :init-param="initParam">
+    <ProTable ref="proTable" title="工单处理报表" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" @click="openDrawer('新增')">新增账号</el-button>
-        <el-button type="primary" @click="downloadImportTemplate">下载导入模板</el-button>
-        <el-button type="primary" @click="importTemplate">导入模板</el-button>
-        <el-button type="primary" @click="exportData">导出</el-button>
+        <div class="table-header">
+          <el-radio-group v-model="currentTimeSelect" @change="changeSelectDate" class="date-radio">
+            <template v-for="(item, index) in tabDateList" :key="index">
+              <el-radio-button :label="item.title" />
+            </template>
+          </el-radio-group>
+          <el-button type="primary" @click="exportData">导出</el-button>
+        </div>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link @click="openCheck(scope.row)">审核</el-button>
+        <el-button type="primary" link @click="openDrawer('查看', scope.row)" size="small">查看</el-button>
       </template>
     </ProTable>
     <OrderDrawer ref="drawerRef" />
-    <OrderCheck ref="orderCheckRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import OrderCheck from "./modules/order-check/index.vue";
-import OrderDrawer from "./modules/order-drawer/index.vue";
+import OrderDrawer from "../order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getUserList, editUser, addUser, getUserGender } from "@/api/modules/user";
 const proTable = ref<ProTableInstance>();
@@ -78,25 +79,10 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   },
   {
     prop: "username",
-    label: "用户赔付金额",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
-    label: "平台赔付金额",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
     label: "上报人姓名",
     search: { el: "input" },
     width: 180,
+    isShow: false,
     render: scope => {
       return <span>{scope.row.username}</span>;
     }
@@ -128,30 +114,6 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     }
   },
   {
-    prop: "username",
-    label: "处理次数",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
-    label: "是否投保",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
-    label: "回收店铺",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
     prop: "createTime",
     label: "提交工单时间",
     width: 180
@@ -160,14 +122,6 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     prop: "createTime",
     label: "最新处理时间",
     width: 180
-  },
-  {
-    prop: "username",
-    label: "处理时效",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
   },
   {
     prop: "gender",
@@ -200,16 +154,22 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     render: scope => {
       return <span>{scope.row.username}</span>;
     }
-  },
-  {
-    prop: "gender",
-    label: "店铺",
-    width: 180,
-    enum: getUserGender,
-    search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "genderLabel", value: "genderValue" }
   }
 ];
+const currentTimeSelect = ref("今日销售");
+const tabDateList = ref([
+  {
+    title: "今日销售",
+    key: "today"
+  },
+  {
+    title: "历史销售",
+    key: "history"
+  }
+]);
+function changeSelectDate(e: string | number | boolean) {
+  currentTimeSelect.value = e as string;
+}
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof OrderDrawer> | null>(null);
@@ -224,21 +184,21 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
   drawerRef.value?.acceptParams(params);
 };
 
-const orderCheckRef = ref<any>(null);
-const openCheck = (e: any) => {
-  console.log("审核", e);
-  orderCheckRef.value?.openDialog();
-};
-
-const downloadImportTemplate = () => {
-  console.log("下载导入模板");
-};
-
-const importTemplate = () => {
-  console.log("导入模板");
-};
-
 const exportData = () => {
   console.log("导出");
 };
 </script>
+
+<style lang="scss" scoped>
+.table-header {
+  display: flex;
+  align-items: center;
+  .date-radio {
+    margin-right: 60px;
+    transform: translateY(-7px);
+  }
+  .el-button {
+    height: 31px;
+  }
+}
+</style>
