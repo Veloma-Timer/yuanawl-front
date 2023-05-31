@@ -148,9 +148,9 @@
     {
       "path": "/afterSales",
       "name": "afterSales",
-      "redirect": "/afterSales/statistics/recovery",
+      "redirect": "/afterSales/orderSummary",
       "meta": {
-        "icon": "DataBoard",
+        "icon": "Memo",
         "title": "售后工单",
         "isLink": "",
         "isHide": false,
@@ -162,9 +162,9 @@
         {
           "path": "/afterSales/orderSummary",
           "name": "orderSummary",
-          "redirect": "/afterSales/orderSummary/index",
+          "component": "/afterSales/orderSummary/index",
           "meta": {
-            "icon": "DataBoard",
+            "icon": "Menu",
             "title": "售后工单汇总",
             "isLink": "",
             "isHide": false,
@@ -176,9 +176,9 @@
         {
           "path": "/afterSales/hangWork",
           "name": "hangWork",
-          "redirect": "/afterSales/hangWork/index",
+          "component": "/afterSales/hangWork/index",
           "meta": {
-            "icon": "DataBoard",
+            "icon": "Menu",
             "title": "杭州工单",
             "isLink": "",
             "isHide": false,
@@ -190,9 +190,9 @@
         {
           "path": "/afterSales/xinWork",
           "name": "xinWork",
-          "redirect": "/afterSales/xinWork/index",
+          "component": "/afterSales/xinWork/index",
           "meta": {
-            "icon": "DataBoard",
+            "icon": "Menu",
             "title": "信阳工单",
             "isLink": "",
             "isHide": false,
@@ -204,9 +204,9 @@
         {
           "path": "/afterSales/workReport",
           "name": "workReport",
-          "redirect": "/afterSales/workReport/index",
+          "component": "/afterSales/workReport/index",
           "meta": {
-            "icon": "DataBoard",
+            "icon": "Menu",
             "title": "工单处理报表",
             "isLink": "",
             "isHide": false,

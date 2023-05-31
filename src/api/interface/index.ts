@@ -88,3 +88,11 @@ export namespace User {
     children?: ResDepartment[];
   }
 }
+
+// 售后工单管理模块
+export namespace SalesOrder {
+  export interface ResSalesList {
+    time: string;
+    username: string;
+  }
+}
