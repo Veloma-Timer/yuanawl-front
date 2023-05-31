@@ -1,0 +1,66 @@
+.wrap {
+  display: flex;
+}
+.left {
+  width: 745px;
+  .content {
+    .header {
+      display: inline-block;
+      margin-right: 447px;
+    }
+    .date-radio {
+      margin-top: -10px;
+    }
+    .sale-echarts {
+      min-width: 745px;
+      min-height: 295px;
+      margin-right: 10px;
+    }
+  }
+}
+.right {
+  position: relative;
+  width: 100%;
+  margin-top: 6px;
+  margin-left: 20px;
+  .city-radio {
+    position: absolute;
+    right: 0;
+  }
+  .sale-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 20px;
+    margin-top: 64px;
+    .item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-width: 294px;
+      height: 104px;
+      font-size: 14px;
+      color: #aaaaaa;
+      background: #ffffff;
+      border: 1px solid #d7d7d7;
+      border-radius: 10px;
+      .title {
+        margin-right: 20px;
+      }
+      .top {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .to-money {
+          font-size: 24px;
+          color: #555555;
+        }
+      }
+      .bottom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}

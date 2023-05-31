@@ -118,7 +118,7 @@
         {
           "path": "/data/statistics/sale",
           "name": "sale",
-          "component": "/data-statistics/day-sale-amount/index",
+          "component": "/data-statistics/sale-amount/index",
           "meta": {
             "icon": "Menu",
             "title": "销售金额汇总",
@@ -132,7 +132,7 @@
         {
           "path": "/data/statistics/recovery",
           "name": "recovery",
-          "component": "/data-statistics/day-recovery-amount/index",
+          "component": "/data-statistics/recovery-amount/index",
           "meta": {
             "icon": "Menu",
             "title": "回收金额汇总",
