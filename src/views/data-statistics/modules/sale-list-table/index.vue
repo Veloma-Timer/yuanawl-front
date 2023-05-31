@@ -23,8 +23,7 @@ import { User } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getUserList, deleteUser, editUser, addUser } from "@/api/modules/user";
-import { useHandleData } from "@/hooks/useHandleData";
+import { getUserList, editUser, addUser } from "@/api/modules/user";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({ type: 1 });
 
@@ -114,12 +113,6 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
-};
-
-// 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-  await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-  proTable.value?.getTableList();
 };
 
 const currentTimeSelect = ref("今日销售");
