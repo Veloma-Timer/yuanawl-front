@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { User } from "@/api/interface";
+import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
@@ -38,7 +38,7 @@ const getTableList = (params: any) => {
 };
 
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { prop: "operation", label: "操作", fixed: "left", width: 180 },
   {
@@ -213,7 +213,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof OrderDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
+const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
   const params = {
     title,
     isView: title === "查看",

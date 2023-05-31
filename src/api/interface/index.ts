@@ -92,7 +92,9 @@ export namespace User {
 // 售后工单管理模块
 export namespace SalesOrder {
   export interface ResSalesList {
-    time: string;
+    time?: string;
     username: string;
+    photo: any[];
+    list: any[];
   }
 }

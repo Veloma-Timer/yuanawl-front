@@ -59,47 +59,39 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <Header title="第一次处理" class="header"></Header>
-      <el-row :gutter="10" style="margin-top: 24px">
-        <el-col :span="8">
-          <el-form-item label="处理客服姓名" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="提交时间" prop="username">
-            <el-date-picker v-model="drawerProps.row!.time" type="date" placeholder="请选择" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="处理时间" prop="username">
-            <el-date-picker v-model="drawerProps.row!.time" type="date" placeholder="请选择" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="处理结果" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <!-- <el-form-item label="用户头像" prop="avatar">
-        <UploadImg v-model:image-url="drawerProps.row!.avatar" width="135px" height="135px" :file-size="3">
-          <template #empty>
-            <el-icon><Avatar /></el-icon>
-            <span>请上传头像</span>
-          </template>
-          <template #tip> 头像大小不能超过 3M </template>
-        </UploadImg>
-      </el-form-item>
-      <el-form-item label="用户照片" prop="photo">
-        <UploadImgs v-model:file-list="drawerProps.row!.photo" height="140px" width="140px" border-radius="50%">
-          <template #empty>
-            <el-icon><Picture /></el-icon>
-            <span>请上传照片</span>
-          </template>
-          <template #tip> 照片大小不能超过 5M </template>
-        </UploadImgs>
-      </el-form-item> -->
+      <template v-for="(item, i) in drawerProps.row.list" :key="i">
+        <Header :title="`第${i + 1}次处理`" class="header"></Header>
+        <el-row :gutter="10" style="margin-top: 24px">
+          <el-col :span="8">
+            <el-form-item label="处理客服姓名" :prop="'list.' + i + '.a'" :rules="rules.a">
+              <el-input v-model="item.a" placeholder="请输入" clearable class="small-input"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="提交时间" :prop="'list.' + i + '.t1'" :rules="rules.t1">
+              <el-date-picker v-model="item.t1" type="date" placeholder="请选择" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="处理时间" :prop="'list.' + i + '.t2'" :rules="rules.t2">
+              <el-date-picker v-model="item.t2" type="date" placeholder="请选择" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="处理结果" :prop="'list.' + i + '.b'" :rules="rules.b">
+              <el-input v-model="item.b" placeholder="请输入" clearable class="small-input"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="" :prop="'list.' + i + '.photo'" :rules="rules.photo">
+          <UploadImgs v-model:file-list="item.photo" height="140px" width="140px" border-radius="50%">
+            <template #empty>
+              <el-icon><Picture /></el-icon>
+              <span>请上传照片</span>
+            </template>
+          </UploadImgs>
+        </el-form-item>
+      </template>
     </el-form>
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
@@ -114,16 +106,21 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
 // import UploadImg from "@/components/Upload/Img.vue";
-// import UploadImgs from "@/components/Upload/Imgs.vue";
+import UploadImgs from "@/components/Upload/Imgs.vue";
 import Header from "@/components/Header/index.vue";
 
 const rules = reactive({
+  a: [{ required: true, message: "必填项不能为空" }],
+  t1: [{ required: true, message: "必填项不能为空" }],
+  t2: [{ required: true, message: "必填项不能为空" }],
+  b: [{ required: true, message: "必填项不能为空" }],
   time: [{ required: true, message: "必填项不能为空" }],
+  photo: [{ required: true, message: "必填项不能为空" }],
   username: [{ required: true, message: "必填项不能为空" }]
 });
 
 interface DrawerProps {
-  time: Date | null;
+  time?: Date | null;
   title: string;
   isView: boolean;
   row: Partial<SalesOrder.ResSalesList>;
@@ -142,6 +139,20 @@ const drawerProps = ref<DrawerProps>({
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
+  drawerProps.value.row.list = [
+    {
+      a: 1,
+      t1: "2015-05-16 16:19:15",
+      t2: "2013-05-16 16:19:15",
+      b: "赔付2w"
+    },
+    {
+      a: 2,
+      t1: "2015-05-16 16:19:15",
+      t2: "2023-05-16 16:19:15",
+      b: "赔付2w"
+    }
+  ];
   drawerVisible.value = true;
 };
 
