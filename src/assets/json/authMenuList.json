@@ -220,7 +220,7 @@
     {
       "path": "/auth",
       "name": "auth",
-      "redirect": "/auth/menu",
+      "redirect": "/auth/store",
       "meta": {
         "icon": "Lock",
         "title": "设置",
@@ -232,9 +232,9 @@
       },
       "children": [
         {
-          "path": "/auth/menu",
-          "name": "authMenu",
-          "component": "/auth/menu/index",
+          "path": "/auth/store",
+          "name": "authStore",
+          "component": "/auth/store/index",
           "meta": {
             "icon": "Menu",
             "title": "门店管理",
