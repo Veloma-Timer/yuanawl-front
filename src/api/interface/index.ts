@@ -112,3 +112,16 @@ export namespace Author {
     updatedTime: string;
   }
 }
+
+// 设置管理模块
+export namespace SalesOrder {
+  export interface ResSalesList {
+    sysModule: string;
+    handleType: string;
+    handleUser: string;
+    branch: string;
+    handleRole: string;
+    handleTime: string;
+    status: string;
+  }
+}
