@@ -1,11 +1,14 @@
 <template>
   <div class="table-box">
     <ProTable ref="proTable" title="门店管理" :columns="columns" :request-api="getTableList" :init-param="initParam">
+      <!-- 表格 header 按钮 -->
+      <template #tableHeader>
+        <el-button type="primary" @click="openDrawer('新增')">新建部门</el-button>
+      </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
-        <el-button type="primary" link :icon="View" @click="openDrawer('新建下级分类', scope.row)">新建下级分类</el-button>
+        <el-button type="primary" link @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" link @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -33,7 +36,7 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<User.ResUserList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "left", width: 330 },
+  { prop: "operation", label: "操作", fixed: "left", width: 180 },
   {
     prop: "username",
     label: "门店编码",

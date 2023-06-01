@@ -3,7 +3,7 @@
     <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link @click="openDrawer('查看', scope.row)">查看</el-button>
       </template>
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
@@ -14,14 +14,14 @@
         </el-radio-group>
       </template>
     </ProTable>
-    <UserDrawer ref="drawerRef" />
+    <SaleDrawer ref="saleDrawer" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { User } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
+import SaleDrawer from "../sale-modal/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getUserList, editUser, addUser } from "@/api/modules/user";
 const proTable = ref<ProTableInstance>();
@@ -103,7 +103,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
 ];
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
+const saleDrawer = ref<InstanceType<typeof SaleDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
@@ -112,7 +112,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };
-  drawerRef.value?.acceptParams(params);
+  saleDrawer.value?.acceptParams(params);
 };
 
 const currentTimeSelect = ref("今日销售");

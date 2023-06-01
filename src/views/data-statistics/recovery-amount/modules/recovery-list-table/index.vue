@@ -14,14 +14,14 @@
         </el-radio-group>
       </template>
     </ProTable>
-    <UserDrawer ref="drawerRef" />
+    <RecoveryDrawer ref="ecoveryDrawerRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { User } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import UserDrawer from "@/views/proTable/components/UserDrawer.vue";
+import RecoveryDrawer from "../recovery-modal/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getUserList, editUser, addUser } from "@/api/modules/user";
 const proTable = ref<ProTableInstance>();
@@ -111,7 +111,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
 ];
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
+const ecoveryDrawerRef = ref<InstanceType<typeof RecoveryDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
@@ -120,7 +120,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };
-  drawerRef.value?.acceptParams(params);
+  ecoveryDrawerRef.value?.acceptParams(params);
 };
 
 const currentTimeSelect = ref("今日回收");
