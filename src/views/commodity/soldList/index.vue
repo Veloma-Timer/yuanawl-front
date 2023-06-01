@@ -39,7 +39,7 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { ElMessage, ElMessageBox } from "element-plus";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import UserDrawer from "@/views/commodity/components/UserDrawer.vue";
+import UserDrawer from "@/views/commodity/unsoldList/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps, HeaderRenderScope } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen, Download, Upload, View, Refresh } from "@element-plus/icons-vue";
 import {
@@ -95,9 +95,9 @@ const getTableList = (params: any) => {
 const columns: ColumnProps<User.ResUserList>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { prop: "email", label: "订单编号", width: 160, search: { el: "input" } },
-  { prop: "email", label: "出售人姓名", isShow: false, width: 160, search: { el: "input" } },
-  { prop: "email", label: "发布人姓名", isShow: false, width: 160, search: { el: "input" } },
-  { prop: "email", label: "回收人姓名", isShow: false, width: 160, search: { el: "input" } },
+  { prop: "email", label: "游戏分类", isShow: false, width: 160, search: { el: "input" } },
+  { prop: "email", label: "标题", isShow: false, width: 160, search: { el: "input" } },
+  { prop: "email", label: "出售金额", isShow: false, width: 160, search: { el: "input" } },
   {
     prop: "commodityClass",
     label: "商品分类",
@@ -131,20 +131,20 @@ const columns: ColumnProps<User.ResUserList>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "address", label: "游戏编号", width: 160 },
-  { prop: "address", label: "游戏分类", width: 160 },
-  { prop: "address", label: "标题", width: 160 },
-  { prop: "address", label: "出售金额", width: 160 },
   { prop: "address", label: "实际回收金额", width: 160 },
-  { prop: "address", label: "编号", width: 160 },
-  { prop: "address", label: "账号", width: 160 },
-  { prop: "address", label: "密码/邮箱", width: 160 },
-  { prop: "address", label: "手机号/邮箱密保", width: 160 },
-  { prop: "address", label: "备注", width: 160 },
+  { prop: "address", label: "差值", width: 160 },
+  { prop: "address", label: "回收人姓名", width: 160 },
+  { prop: "address", label: "发布人姓名", width: 160 },
+  { prop: "address", label: "出售人姓名", width: 160 },
+  { prop: "address", label: "回收时间", width: 160 },
+  { prop: "address", label: "出售时间", width: 160 },
+  { prop: "address", label: "滞留时间", width: 160 },
+  { prop: "address", label: "账户状态", width: 160 },
   {
     prop: "address",
     label: "有无二次",
     width: 160,
+    isShow: false,
     enum: [
       { label: "有", value: 0 },
       { label: "无", value: 1 }
@@ -155,6 +155,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     prop: "address",
     label: "资料是否存档",
     width: 160,
+    isShow: false,
     enum: [
       { label: "有", value: 0 },
       { label: "无", value: 1 }
@@ -169,7 +170,6 @@ const columns: ColumnProps<User.ResUserList>[] = [
 // 删除用户信息
 const deleteAccount = async (params: User.ResUserList) => {
   await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-
   proTable.value?.getTableList();
 };
 

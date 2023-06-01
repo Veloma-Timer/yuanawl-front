@@ -34,20 +34,20 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-// import { useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import UserDrawer from "@/views/commodity/components/UserDrawer.vue";
+import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import { getUserList, deleteUser, editUser, addUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
-// const router = useRouter();
+const router = useRouter();
 // 跳转详情页
-// const toDetail = () => {
-//   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
-// };
+const toDetail = () => {
+  router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
+};
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();

@@ -19,6 +19,7 @@ declare module "@vue/runtime-core" {
     ElBreadcrumb: typeof import("element-plus/es")["ElBreadcrumb"];
     ElBreadcrumbItem: typeof import("element-plus/es")["ElBreadcrumbItem"];
     ElButton: typeof import("element-plus/es")["ElButton"];
+    ElCol: typeof import("element-plus/es")["ElCol"];
     ElColorPicker: typeof import("element-plus/es")["ElColorPicker"];
     ElContainer: typeof import("element-plus/es")["ElContainer"];
     ElDatePicker: typeof import("element-plus/es")["ElDatePicker"];
@@ -43,6 +44,7 @@ declare module "@vue/runtime-core" {
     ElPopover: typeof import("element-plus/es")["ElPopover"];
     ElRadioButton: typeof import("element-plus/es")["ElRadioButton"];
     ElRadioGroup: typeof import("element-plus/es")["ElRadioGroup"];
+    ElRow: typeof import("element-plus/es")["ElRow"];
     ElScrollbar: typeof import("element-plus/es")["ElScrollbar"];
     ElSelect: typeof import("element-plus/es")["ElSelect"];
     ElSubMenu: typeof import("element-plus/es")["ElSubMenu"];

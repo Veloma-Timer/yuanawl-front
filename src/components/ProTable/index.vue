@@ -34,6 +34,7 @@
       :data="data ?? tableData"
       :border="border"
       :row-key="rowKey"
+      :tree-props="{ children: 'children', hasChildren: childrenStr }"
       @selection-change="selectionChange"
     >
       <!-- 默认插槽 -->
@@ -113,6 +114,8 @@ export interface ProTableProps {
   initParam?: any; // 初始化请求参数 ==> 非必传（默认为{}）
   border?: boolean; // 是否带有纵向边框 ==> 非必传（默认为true）
   toolButton?: boolean; // 是否显示表格功能按钮 ==> 非必传（默认为true）
+  hasChildren?: boolean; // 树类型的数据的显示
+  childrenStr?: string;
   rowKey?: string; // 行数据的 Key，用来优化 Table 的渲染，当表格数据多选时，所指定的 id ==> 非必传（默认为 id）
   searchCol?: number | Record<BreakPoint, number>; // 表格搜索项 每列占比配置 ==> 非必传 { xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }
 }
@@ -124,11 +127,13 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   pagination: true,
   initParam: {},
   border: true,
+  hasChildren: true,
+  childrenStr: "",
   toolButton: true,
   rowKey: "id",
   searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 })
 });
-
+console.log(props);
 // 是否显示搜索模块
 const isShowSearch = ref(true);
 
