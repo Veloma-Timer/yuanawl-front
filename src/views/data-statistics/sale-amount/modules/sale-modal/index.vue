@@ -65,10 +65,6 @@ import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
 
 const rules = reactive({
-  a: [{ required: true, message: "必填项不能为空" }],
-  t1: [{ required: true, message: "必填项不能为空" }],
-  t2: [{ required: true, message: "必填项不能为空" }],
-  b: [{ required: true, message: "必填项不能为空" }],
   time: [{ required: true, message: "必填项不能为空" }],
   photo: [{ required: true, message: "必填项不能为空" }],
   username: [{ required: true, message: "必填项不能为空" }]

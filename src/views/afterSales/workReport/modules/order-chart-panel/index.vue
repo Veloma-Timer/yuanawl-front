@@ -148,9 +148,6 @@ onMounted(() => {
         lineStyle: {
           color: "#2ED7FF"
         },
-        // areaStyle: {
-        //   color: "#2ED7FF"
-        // },
         emphasis: {
           focus: "series"
         },
@@ -163,9 +160,6 @@ onMounted(() => {
         lineStyle: {
           color: "#63ECFF"
         },
-        // areaStyle: {
-        //   color: "#63ECFF"
-        // },
         emphasis: {
           focus: "series"
         },

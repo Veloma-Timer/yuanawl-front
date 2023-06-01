@@ -3,7 +3,7 @@
     <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link @click="openDrawer('查看', scope.row)">查看</el-button>
       </template>
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
@@ -68,13 +68,6 @@ const columns: ColumnProps<User.ResUserList>[] = [
       return <span>￥{scope.row.gender}</span>;
     }
   },
-  // {
-  //   prop: "idCard",
-  //   label: "出售金额",
-  //   render: scope => {
-  //     return <span>￥{scope.row.gender}</span>;
-  //   }
-  // },
   {
     prop: "idCard",
     label: "回收人姓名",
