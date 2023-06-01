@@ -24,30 +24,48 @@
       <el-form-item label="标题" prop="idCard">
         <el-input v-model="drawerProps.row!.idCard" placeholder="请输入标题" clearable />
       </el-form-item>
-      <el-form-item label="回收人姓名" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入回收人姓名" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="回收时间" prop="address">
-        <el-date-picker v-model="drawerProps.row!.email" type="date" placeholder="请选择回收时间" />
-      </el-form-item>
-      <el-form-item label="回收价格" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入回收人姓名" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="发布人姓名" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入回收人姓名" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="发布时间" prop="email">
-        <el-date-picker v-model="drawerProps.row!.email" type="date" placeholder="请选择回收时间" />
-      </el-form-item>
-      <el-form-item label="出售人姓名" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入回收人姓名" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="出售时间" prop="email">
-        <el-date-picker v-model="drawerProps.row!.email" type="date" placeholder="请选择回收时间" />
-      </el-form-item>
-      <el-form-item label="出售价格" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入回收人姓名" clearable></el-input>
-      </el-form-item>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-form-item label="回收人姓名" prop="email">
+            <el-input v-model="drawerProps.row!.email" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="回收时间" prop="address">
+            <el-date-picker v-model="drawerProps.row!.email" type="date" placeholder="请选择" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="回收价格" prop="email">
+            <el-input v-model="drawerProps.row!.email" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="发布人姓名" prop="email">
+            <el-input v-model="drawerProps.row!.email" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="发布时间" prop="email">
+            <el-date-picker v-model="drawerProps.row!.email" type="date" placeholder="请选择" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="出售人姓名" prop="email">
+            <el-input v-model="drawerProps.row!.email" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="出售时间" prop="email">
+            <el-date-picker v-model="drawerProps.row!.email" type="date" placeholder="请选择" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="出售价格" prop="email">
+            <el-input v-model="drawerProps.row!.email" placeholder="请输入" clearable></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label="游戏分类" prop="gender">
         <el-input v-model="drawerProps.row!.username" placeholder="请输入游戏分类" clearable />
       </el-form-item>
@@ -79,7 +97,9 @@
         <el-input v-model="drawerProps.row!.address" placeholder="请输入账号描述" clearable></el-input>
       </el-form-item>
       <el-form-item label="账号状态" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入账号状态" clearable></el-input>
+        <el-select v-model="drawerProps.row!.email" placeholder="请选择">
+          <el-option v-for="item in accountList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item label="营地号" prop="address">
         <el-input v-model="drawerProps.row!.address" placeholder="请输入营地号" clearable></el-input>
@@ -155,7 +175,11 @@ const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
   drawerVisible.value = true;
 };
-
+// 账号状态
+const accountList = [
+  { label: "已出售", value: 0 },
+  { label: "未出售", value: 1 }
+];
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {

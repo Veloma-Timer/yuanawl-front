@@ -178,7 +178,7 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增账号" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

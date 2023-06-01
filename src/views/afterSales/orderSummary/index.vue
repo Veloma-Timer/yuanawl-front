@@ -3,7 +3,7 @@
     <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" @click="openDrawer('新增')">新增账号</el-button>
+        <el-button type="primary" @click="openDrawer('新增账号')">新增账号</el-button>
         <el-button type="primary" @click="downloadImportTemplate">下载导入模板</el-button>
         <el-button type="primary" @click="importTemplate">导入模板</el-button>
         <el-button type="primary" @click="exportData">导出</el-button>
@@ -218,7 +218,7 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增账号" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

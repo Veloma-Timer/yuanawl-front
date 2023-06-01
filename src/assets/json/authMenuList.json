@@ -63,7 +63,7 @@
           "component": "/commodity/unsoldList/index",
           "meta": {
             "icon": "Menu",
-            "title": "未销列表",
+            "title": "未售列表",
             "isLink": "",
             "isHide": false,
             "isFull": false,
