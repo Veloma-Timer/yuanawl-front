@@ -98,3 +98,17 @@ export namespace SalesOrder {
     list: any[];
   }
 }
+// 权限管理模块
+export namespace Author {
+  export interface RoleList {
+    id: string;
+    roleName: string;
+    powerId: number;
+    roleDesc: string;
+    isDelete: string;
+    createdBy: string;
+    createdTime: string;
+    updatedBy: string;
+    updatedTime: string;
+  }
+}

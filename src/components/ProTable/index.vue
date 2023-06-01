@@ -133,7 +133,6 @@ const props = withDefaults(defineProps<ProTableProps>(), {
   rowKey: "id",
   searchCol: () => ({ xs: 1, sm: 2, md: 2, lg: 3, xl: 4 })
 });
-console.log(props);
 // 是否显示搜索模块
 const isShowSearch = ref(true);
 
