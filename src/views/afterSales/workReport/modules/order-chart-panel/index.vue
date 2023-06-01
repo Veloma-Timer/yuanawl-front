@@ -14,17 +14,19 @@
       </el-radio-group>
       <div class="sale-content">
         <div class="item" v-for="(item, index) in saleData" :key="index">
-          <div class="top">
-            <span class="title">{{ item.title1 }}</span>
-            <span class="to-money">
-              <span v-if="item.title1 === '今日工单总价'">￥</span>
-              {{ item.value1 }}
-            </span>
-          </div>
-          <div class="bottom">
-            <span class="title">{{ item.title1 }}</span>
-            <span class="to-money">{{ item.value1 }}</span>
-          </div>
+          <table>
+            <tr class="top">
+              <td class="title">{{ item.title1 }}</td>
+              <td class="to-money">
+                <span v-if="item.title1 === '今日工单总价'">￥</span>
+                {{ item.value1 }}
+              </td>
+            </tr>
+            <tr class="bottom">
+              <td class="title">{{ item.title2 }}</td>
+              <td class="to-money">￥{{ item.value1 }}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>

@@ -19,14 +19,16 @@
       </el-radio-group>
       <div class="sale-content">
         <div class="item" v-for="(item, index) in saleData" :key="index">
-          <div class="top">
-            <span class="title">{{ item.title }}</span>
-            <span class="to-money">￥{{ item.tMoney }}</span>
-          </div>
-          <div class="bottom">
-            <span class="title">昨日全天</span>
-            <span class="ys-money">￥{{ item.yMoney }}</span>
-          </div>
+          <table>
+            <tr class="top">
+              <td class="title">{{ item.title }}</td>
+              <td class="to-money">￥{{ item.tMoney }}</td>
+            </tr>
+            <tr class="bottom">
+              <td class="title">昨日全天</td>
+              <td class="ys-money">￥{{ item.yMoney }}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
