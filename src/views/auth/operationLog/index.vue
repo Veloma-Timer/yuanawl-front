@@ -8,16 +8,12 @@
 import { User } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getUserList, getUserStatus, getUserGender } from "@/api/modules/user";
+import { getOptLog } from "@/api/modules/set";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({ type: 1 });
 
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
-  newParams.createTime && (newParams.startTime = newParams.createTime[0]);
-  newParams.createTime && (newParams.endTime = newParams.createTime[1]);
-  delete newParams.createTime;
-  return getUserList(newParams);
+  return getOptLog(params);
 };
 
 // 表格配置项
@@ -35,7 +31,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
   {
     prop: "gender",
     label: "操作类型",
-    enum: getUserGender,
+    // enum: getUserGender,
     render: scope => {
       return <span style={{ color: "#FFBA00" }}>{scope.row.gender}</span>;
     }
@@ -45,7 +41,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
   {
     prop: "status",
     label: "角色",
-    enum: getUserStatus,
+    // enum: getUserStatus,
     render: scope => {
       return <span>{scope.row.status}</span>;
     }
@@ -58,7 +54,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
   {
     prop: "status",
     label: "操作状态",
-    enum: getUserStatus,
+    // enum: getUserStatus,
     render: scope => {
       return <span>{scope.row.status === 1 ? "成功" : "失败"}</span>;
     }
