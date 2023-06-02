@@ -3,7 +3,7 @@
     <ProTable ref="proTable" title="门店管理" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" @click="openDrawer('新增门店')">新增门店</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增门店')">新增门店</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
@@ -22,6 +22,7 @@ import StoreModal from "./modules/store-modal/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getAllBranchPage, addBranch, delBranch, editBranch } from "@/api/modules/set";
 import { useHandleData } from "@/hooks/useHandleData";
+import { CirclePlus } from "@element-plus/icons-vue";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 
