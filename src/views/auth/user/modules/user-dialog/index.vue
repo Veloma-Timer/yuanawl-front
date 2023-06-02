@@ -56,7 +56,7 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { User } from "@/api/interface";
-import { getAllUser, getAllBranch, getAllRole } from "@/api/modules/set";
+import { getAllBranch, getAllRole } from "@/api/modules/set";
 
 const rules = reactive({
   userCode: [{ required: true, message: "必填项不能为空" }],
@@ -83,8 +83,12 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
-const userList = ref([]);
-const branchList = ref([]);
+
+type RoleObj = { roleName: string; id: number };
+const userList = ref<RoleObj[]>([]);
+type BranchObj = { branchName: string; id: number };
+const branchList = ref<BranchObj[]>([]);
+
 // 接收父组件传过来的参数
 const acceptParams = async (params: DrawerProps & any) => {
   drawerProps.value = params;
