@@ -28,7 +28,7 @@ import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import UserDrawer from "@/views/commodity/phoneLibrary/modules/UserDrawer.vue";
+import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
 import { getUserList, deleteUser, editUser, addUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";

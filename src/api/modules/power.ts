@@ -5,3 +5,7 @@ const baseUrl = PORT3 + "/sys_power";
 export const getIdPower = (id: string) => {
   return http.get(`${baseUrl}/${id}`);
 };
+// 修改角色权限
+export const setPower = (id: string, params: any) => {
+  return http.put(`${baseUrl}/${id}`, params);
+};

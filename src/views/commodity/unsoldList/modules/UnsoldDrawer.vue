@@ -115,7 +115,7 @@
   </el-drawer>
 </template>
 
-<script setup lang="ts" name="UserDrawer">
+<script setup lang="ts">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { User } from "@/api/interface";

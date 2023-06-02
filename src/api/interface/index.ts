@@ -87,6 +87,15 @@ export namespace User {
     name: string;
     children?: ResDepartment[];
   }
+  export interface ResUser {
+    userCode: string; // 用户编码（工号）
+    userName: string; // 用户名称
+    userTel: string; // 手机号码
+    userAccount: string; // 登录账号
+    userPassword: string; // 用户密码
+    userRoleId: number; // 用户角色ID
+    userBranchId: number; // 用户所属门店ID
+  }
 }
 
 // 售后工单管理模块
@@ -112,8 +121,12 @@ export namespace Author {
     updatedTime: string;
     disabled: "0" | "1";
   }
+  export interface RoleObj {
+    roleName: string; // 角色名
+    powerId: number; // 权限表id
+    roleDesc: string; // 角色描述
+  }
 }
-
 // 设置管理模块
 export namespace Set {
   export interface ResSalesList {

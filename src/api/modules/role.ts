@@ -6,9 +6,10 @@ export const getRoleLog = (params: any) => {
   return http.get(baseUrl, params);
 };
 // 新建角色
-export const addRole = (params: { id: string }) => {
+export const addRole = (params: any) => {
   return http.post(baseUrl, params);
 };
+// 编辑角色
 export const editRole = (params: { id: string }) => {
-  return http.put(baseUrl, params);
+  return http.put(`${baseUrl}/${params.id}`, params);
 };

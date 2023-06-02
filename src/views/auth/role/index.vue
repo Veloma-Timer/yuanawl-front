@@ -6,35 +6,35 @@
       :columns="columns"
       :request-api="getTableList"
       :init-param="initParam"
-      :pagination="false"
       :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" plain @click="openDrawer('新增')">新建分类</el-button>
+        <el-button type="primary" :icon="CirclePlus" plain @click="openDrawer('新增')">新建角色</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">编辑</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link @click="setRoleList(scope.row.powerId)">权限</el-button>
       </template>
     </ProTable>
-    <UserDrawer ref="drawerRef" />
+    <AuthorityDialog ref="dialogRef" />
+    <RoleDrawer ref="drawerRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { Author, User } from "@/api/interface";
+import { Author } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import UserDrawer from "@/views/commodity/accountClass/modules/UserDrawer.vue";
+import RoleDrawer from "@/views/auth/authority/modules/RoleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
 import { getRoleLog, addRole, editRole } from "@/api/modules/role";
-import { getIdPower } from "@/api/modules/power";
+import AuthorityDialog from "@/views/auth/authority/modules/AuthorityDialog.vue";
+const initParam = reactive({});
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
-const initParam = reactive({ type: 1 });
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
@@ -46,21 +46,14 @@ const getTableList = (params: any) => {
 const columns: ColumnProps<Author.RoleList>[] = [
   {
     prop: "roleName",
-    label: "角色名"
-  },
-  {
-    prop: "email",
-    label: "员工工号",
-    isShow: false,
+    label: "角色名称",
     search: { el: "input" }
   },
   {
-    prop: "email",
-    label: "员工姓名",
-    isShow: false,
+    prop: "roleDesc",
+    label: "角色描述",
     search: { el: "input" }
   },
-  { prop: "roleDesc", label: "描述" },
   {
     prop: "disabled",
     label: "状态",
@@ -82,12 +75,13 @@ const columns: ColumnProps<Author.RoleList>[] = [
 ];
 // 按钮状态
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
+const drawerRef = ref<InstanceType<typeof RoleDrawer> | null>(null);
+const dialogRef = ref<InstanceType<typeof AuthorityDialog> | null>(null);
+const openDrawer = (title: string, row: Partial<Author.RoleObj> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
+    row: { ...row, powerId: -1 },
     api: title === "新增" ? addRole : title === "编辑" ? editRole : undefined,
     getTableList: proTable.value?.getTableList
   };
@@ -100,6 +94,6 @@ const changeStatus = (row: Author.RoleList) => {
 // 查看角色权限
 const setRoleList = (powerId: string) => {
   if (!powerId) return;
-  getIdPower(powerId);
+  dialogRef.value?.acceptParams(powerId);
 };
 </script>
