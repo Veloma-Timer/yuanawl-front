@@ -11,13 +11,13 @@
     >
       <el-row>
         <el-col :span="12">
-          <el-form-item label="登录名称" prop="userName">
-            <el-input v-model="drawerProps.row!.userName" placeholder="请输入" clearable class="order-input"></el-input>
+          <el-form-item label="登录名称" prop="userAccount">
+            <el-input v-model="drawerProps.row!.userAccount" placeholder="请输入" clearable class="order-input"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="姓名" prop="branchCode">
-            <el-input v-model="drawerProps.row!.branchCode" placeholder="请输入" clearable class="order-input"></el-input>
+          <el-form-item label="姓名" prop="userName">
+            <el-input v-model="drawerProps.row!.userName" placeholder="请输入" clearable class="order-input"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -29,7 +29,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="所属店铺" prop="userBranchId">
             <el-select v-model="drawerProps.row!.userBranchId" placeholder="请选择" class="check-select">
               <template v-for="item in branchList" :key="item.id">

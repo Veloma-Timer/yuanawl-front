@@ -1,7 +1,7 @@
 import { ResPage, User } from "@/api/interface/index";
-import { PORT1 } from "@/api/config/servicePort";
+import { PORT1, PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
-
+const baseUrl = PORT3 + "/sys_user";
 /**
  * @name 用户管理模块
  */
@@ -17,7 +17,7 @@ export const getUserTreeList = (params: User.ReqUserParams) => {
 
 // 新增用户
 export const addUser = (params: { id: string }) => {
-  return http.post(PORT1 + `/user/add`, params);
+  return http.post(baseUrl, params);
 };
 
 // 批量添加用户
@@ -27,7 +27,7 @@ export const BatchAddUser = (params: FormData) => {
 
 // 编辑用户
 export const editUser = (params: { id: string }) => {
-  return http.post(PORT1 + `/user/edit`, params);
+  return http.put(`${baseUrl}/${params.id}`, params);
 };
 
 // 删除用户
@@ -68,4 +68,7 @@ export const getUserDepartment = () => {
 // 获取用户角色字典
 export const getUserRole = () => {
   return http.get<User.ResRole[]>(PORT1 + `/user/role`);
+};
+export const getUserListMap = (params: any) => {
+  return http.get(baseUrl, params);
 };

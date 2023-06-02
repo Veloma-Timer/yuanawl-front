@@ -13,9 +13,12 @@
       <template #tableHeader>
         <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
       </template>
+      <template #userRoleId="scope">
+        <div v>{{ scope.row.userRole ? scope.row.userRole.roleName : "--" }}</div>
+      </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">编辑</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -31,14 +34,14 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
-import { getUserList, deleteUser, editUser, addUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
+import { deleteUser, editUser, addUser, exportUserInfo, BatchAddUser, getUserListMap } from "@/api/modules/user";
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
-const initParam = reactive({ type: 1 });
+const initParam = reactive({});
 
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
@@ -58,29 +61,17 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return getUserList(newParams);
+  return getUserListMap(newParams);
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<User.ResUserList>[] = [
-  { prop: "email", label: "登录名" },
-  { prop: "email", label: "手机号码" },
-  { prop: "email", label: "角色" },
-  { prop: "email", label: "状态" },
-  {
-    prop: "commodityClass",
-    label: "员工工号",
-    isShow: false,
-    search: { el: "input" }
-  },
-  {
-    prop: "commodityClass",
-    label: "员工姓名",
-    isShow: false,
-    search: { el: "input" }
-  },
+  { prop: "userAccount", label: "登录名", search: { el: "input" } },
+  { prop: "userTel", label: "手机号码", search: { el: "input" } },
+  { prop: "userRoleId", label: "角色" },
+  // { prop: "email", label: "状态" },
   { prop: "operation", label: "操作", width: 200 }
 ];
 
@@ -119,7 +110,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
+    row: { ...row, userPassword: "123456" },
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };

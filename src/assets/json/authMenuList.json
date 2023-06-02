@@ -246,20 +246,6 @@
           }
         },
         {
-          "path": "/auth/authority",
-          "name": "authMenu",
-          "component": "/auth/authority/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "权限管理",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": true
-          }
-        },
-        {
           "path": "/auth/user",
           "name": "user",
           "component": "/auth/user/index",
