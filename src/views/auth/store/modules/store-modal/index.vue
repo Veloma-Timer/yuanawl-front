@@ -78,7 +78,7 @@ const drawerProps = ref<DrawerProps>({
   row: {}
 });
 
-type UserObj = { userName: string; id: Number };
+type UserObj = { userName: string; id: number };
 const userList = ref<UserObj[]>([]);
 
 // 接收父组件传过来的参数

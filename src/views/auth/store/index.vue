@@ -31,7 +31,7 @@ const getTableList = (params: any) => {
 };
 
 // 表格配置项
-const columns: ColumnProps<Set.ResStoreList>[] = [
+const columns: ColumnProps<Set.ResAddStore>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { prop: "operation", label: "操作", fixed: "left", width: 180 },
   {
@@ -49,6 +49,19 @@ const columns: ColumnProps<Set.ResStoreList>[] = [
     render: scope => {
       return <span>{scope.row.branchName || "--"}</span>;
     }
+  },
+  {
+    prop: "branchAddress",
+    label: "门店负责人",
+    render: ({ row }) => row.branchContact?.userName
+  },
+  {
+    prop: "branchAddress",
+    label: "门店地址"
+  },
+  {
+    prop: "branchTel",
+    label: "联系电话"
   }
 ];
 

@@ -135,8 +135,9 @@ export namespace Set {
     id?: string;
     branchName: string;
     branchCode: string;
-    branchContact: string;
+    branchContact: { userName: string };
     branchAddress: string;
     branchTel: string;
+    branchContactId: number;
   }
 }

@@ -18,7 +18,7 @@ export const getAllRole = (params: any) => {
 
 // 获取所有用户
 export const getAllUser = (params: any) => {
-  return http.get(PORT3 + `/sys_user/all`, params);
+  return http.get<{ userName: string; id: number }[]>(PORT3 + `/sys_user/all`, params);
 };
 
 // 分页查询门店
