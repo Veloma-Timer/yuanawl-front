@@ -10,6 +10,7 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getOptLog, getAllBranch, getAllRole, getAllUser } from "@/api/modules/set";
 import { OPT_STATUS } from "@/public/constant";
 import dayjs from "dayjs";
+import { Set } from "@/api/interface";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 
@@ -18,8 +19,7 @@ const getTableList = async (params: any) => {
 };
 
 // 表格配置项
-// const columns: ColumnProps<Set.ResSetList>[] = [
-const columns: ColumnProps[] = [
+const columns: ColumnProps<Set.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { type: "index", label: "日志编号", width: 100 },
   {

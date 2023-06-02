@@ -20,3 +20,23 @@ export const getAllRole = (params: any) => {
 export const getAllUser = (params: any) => {
   return http.get(PORT3 + `/sys_user/all`, params);
 };
+
+// 分页查询门店
+export const getAllBranchPage = (params: any) => {
+  return http.get(PORT3 + `/sys_branch`, params);
+};
+
+// 添加门店
+export const addBranch = (params: any) => {
+  return http.post(PORT3 + `/sys_branch`, params);
+};
+
+// 修改门店
+export const editBranch = (params: any) => {
+  return http.put(PORT3 + `/sys_branch/${params.id}`, params);
+};
+
+// 删除门店
+export const delBranch = (params: any) => {
+  return http.delete(PORT3 + `/sys_branch/${params.id}`);
+};

@@ -115,7 +115,7 @@ export namespace Author {
 }
 
 // 设置管理模块
-export namespace SalesOrder {
+export namespace Set {
   export interface ResSalesList {
     sysModule: string;
     handleType: string;
@@ -124,5 +124,19 @@ export namespace SalesOrder {
     handleRole: string;
     handleTime: string;
     status: string;
+    handleStatus: string;
+  }
+
+  export interface ResStoreList {
+    branchCode: string;
+    branchName: string;
+  }
+  export interface ResAddStore {
+    id?: string;
+    branchName: string;
+    branchCode: string;
+    branchContact: string;
+    branchAddress: string;
+    branchTel: string;
   }
 }
