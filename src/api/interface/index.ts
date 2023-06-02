@@ -119,9 +119,9 @@ export namespace Set {
   export interface ResSalesList {
     sysModule: string;
     handleType: string;
-    handleUser: string;
-    branch: string;
-    handleRole: string;
+    handleUser: any;
+    branch: any;
+    handleRole: any;
     handleTime: string;
     status: string;
     handleStatus: string;

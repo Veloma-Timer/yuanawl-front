@@ -43,7 +43,7 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
     label: "操作人员",
     fieldNames: { label: "userName", value: "id" },
     render: scope => {
-      return <span>{scope.row.handleUser || "--"}</span>;
+      return <span>{scope.row?.handleUser?.userName || "--"}</span>;
     }
   },
   {
@@ -58,7 +58,7 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
     prop: "branch",
     label: "所属店铺",
     render: scope => {
-      return <span>{scope.row.branch || "--"}</span>;
+      return <span>{scope.row?.branch?.branchName || "--"}</span>;
     }
   },
   {
@@ -73,7 +73,7 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
     prop: "handleRole",
     label: "角色",
     render: scope => {
-      return <span>{scope.row.handleRole || "--"}</span>;
+      return <span>{scope.row?.handleRole?.roleName || "--"}</span>;
     }
   },
   {
