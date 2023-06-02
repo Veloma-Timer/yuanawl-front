@@ -7,9 +7,11 @@
 <script setup lang="tsx" name="useProTable">
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getOptLog } from "@/api/modules/set";
+import { getOptLog, getAllBranch, getAllRole, getAllUser } from "@/api/modules/set";
+import { OPT_STATUS } from "@/public/constant";
+import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
-const initParam = reactive({ type: 1 });
+const initParam = reactive({});
 
 const getTableList = async (params: any) => {
   return getOptLog(params);
@@ -31,45 +33,71 @@ const columns: ColumnProps[] = [
   {
     prop: "handleType",
     label: "操作类型",
+    search: { el: "input" },
     render: scope => {
-      return <span style={{ color: "#FFBA00" }}>{scope.row.handleType || "-"}</span>;
+      return <span style={{ color: "#FFBA00" }}>{scope.row.handleType || "--"}</span>;
     }
   },
   {
     prop: "handleUser",
     label: "操作人员",
-    search: { el: "input" },
+    fieldNames: { label: "userName", value: "id" },
     render: scope => {
-      return <span>{scope.row.handleUser || "-"}</span>;
+      return <span>{scope.row.handleUser || "--"}</span>;
     }
+  },
+  {
+    prop: "handleUserId",
+    label: "操作人员",
+    search: { el: "select" },
+    enum: getAllUser,
+    isShow: false,
+    fieldNames: { label: "userName", value: "id" }
   },
   {
     prop: "branch",
     label: "所属店铺",
     render: scope => {
-      return <span>{scope.row.branch || "-"}</span>;
+      return <span>{scope.row.branch || "--"}</span>;
     }
+  },
+  {
+    prop: "branchId",
+    label: "所属店铺",
+    enum: getAllBranch,
+    search: { el: "select" },
+    isShow: false,
+    fieldNames: { label: "branchName", value: "id" }
   },
   {
     prop: "handleRole",
     label: "角色",
     render: scope => {
-      return <span>{scope.row.handleRole || "-"}</span>;
+      return <span>{scope.row.handleRole || "--"}</span>;
     }
+  },
+  {
+    prop: "handleRoleId",
+    label: "角色",
+    enum: getAllRole,
+    search: { el: "select" },
+    isShow: false,
+    fieldNames: { label: "roleName", value: "id" }
   },
   {
     prop: "handleTime",
     label: "操作日期",
     width: 180,
     render: scope => {
-      return <span>{scope.row.handleTime || "-"}</span>;
+      const time = scope.row?.handleTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
     }
   },
   {
-    prop: "status",
+    prop: "handleStatus",
     label: "操作状态",
     render: scope => {
-      return <span>{scope.row.handleStatus || "-"}</span>;
+      return <span>{OPT_STATUS[scope.row.handleStatus as any] || "--"}</span>;
     }
   }
 ];
