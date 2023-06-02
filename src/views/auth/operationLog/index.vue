@@ -5,58 +5,71 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { User } from "@/api/interface";
+import { Set } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getOptLog } from "@/api/modules/set";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({ type: 1 });
 
-const getTableList = (params: any) => {
+const getTableList = async (params: any) => {
   return getOptLog(params);
 };
 
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<Set.ResSetList>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { type: "index", label: "日志编号", width: 100 },
   {
-    prop: "username",
+    prop: "sysModule",
     label: "系统模块",
     search: { el: "input" },
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.sysModule || ""}</span>;
     }
   },
   {
-    prop: "gender",
+    prop: "handleType",
     label: "操作类型",
-    // enum: getUserGender,
     render: scope => {
-      return <span style={{ color: "#FFBA00" }}>{scope.row.gender}</span>;
+      return <span style={{ color: "#FFBA00" }}>{scope.row.handleType || "-"}</span>;
     }
   },
-  { prop: "idCard", label: "操作人员", search: { el: "input" } },
-  { prop: "address", label: "所属店铺" },
   {
-    prop: "status",
+    prop: "handleUser",
+    label: "操作人员",
+    search: { el: "input" },
+    render: scope => {
+      return <span>{scope.row.handleUser || "-"}</span>;
+    }
+  },
+  {
+    prop: "branch",
+    label: "所属店铺",
+    render: scope => {
+      return <span>{scope.row.branch || "-"}</span>;
+    }
+  },
+  {
+    prop: "handleRole",
     label: "角色",
-    // enum: getUserStatus,
     render: scope => {
-      return <span>{scope.row.status}</span>;
+      return <span>{scope.row.handleRole || "-"}</span>;
     }
   },
   {
-    prop: "createTime",
+    prop: "handleTime",
     label: "操作日期",
-    width: 180
+    width: 180,
+    render: scope => {
+      return <span>{scope.row.handleTime || "-"}</span>;
+    }
   },
   {
     prop: "status",
     label: "操作状态",
-    // enum: getUserStatus,
     render: scope => {
-      return <span>{scope.row.status === 1 ? "成功" : "失败"}</span>;
+      return <span>{scope.row.handleStatus || "-"}</span>;
     }
   }
 ];
