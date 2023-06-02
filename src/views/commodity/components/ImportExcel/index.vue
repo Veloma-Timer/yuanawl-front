@@ -64,7 +64,7 @@ const parameter = ref<ExcelParameterProps>({
 });
 
 // 接收父组件参数
-const acceptParams = (params: ExcelParameterProps) => {
+const acceptParams = (params: ExcelParameterProps & any) => {
   parameter.value = { ...parameter.value, ...params };
   dialogVisible.value = true;
 };

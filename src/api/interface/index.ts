@@ -110,6 +110,7 @@ export namespace Author {
     createdTime: string;
     updatedBy: string;
     updatedTime: string;
+    disabled: "0" | "1";
   }
 }
 

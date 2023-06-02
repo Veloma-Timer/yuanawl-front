@@ -5,7 +5,6 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { Set } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getOptLog } from "@/api/modules/set";
@@ -17,7 +16,8 @@ const getTableList = async (params: any) => {
 };
 
 // 表格配置项
-const columns: ColumnProps<Set.ResSetList>[] = [
+// const columns: ColumnProps<Set.ResSetList>[] = [
+const columns: ColumnProps[] = [
   { type: "selection", fixed: "left", width: 80 },
   { type: "index", label: "日志编号", width: 100 },
   {

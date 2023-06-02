@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "npm run build:pro && electron-forge start",
     "dev": "vite",
     "serve": "vite",
     "build:dev": "vue-tsc && vite build --mode development",

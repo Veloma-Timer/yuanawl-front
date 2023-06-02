@@ -77,8 +77,8 @@ const columns: ColumnProps<User.ResUserList>[] = [
   {
     prop: "email",
     label: "分类编号",
-    search: { el: "input" },
-    hasChildren: true
+    search: { el: "input" }
+    // hasChildren: true
   },
   { prop: "email", label: "分类名称", search: { el: "input" } },
   { prop: "email", label: "排序" },

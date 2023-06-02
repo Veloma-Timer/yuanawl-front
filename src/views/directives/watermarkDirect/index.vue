@@ -1,5 +1,5 @@
 <template>
-  <div class="card content-box" v-waterMarker="{ text: 'Geeker Admin', textColor: 'rgba(180, 180, 180, 0.6)' }">
+  <div class="card content-box" v-waterMarker="{ text: '浙江元阿网络科技有限公司', textColor: 'rgba(180, 180, 180, 0.6)' }">
     <span class="text">水印指令 🍇🍇🍇🍓🍓🍓</span>
   </div>
 </template>
