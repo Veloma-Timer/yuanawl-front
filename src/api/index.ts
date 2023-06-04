@@ -18,7 +18,8 @@ const config = {
   // 设置超时时间
   timeout: ResultEnum.TIMEOUT as number,
   // 跨域时候允许携带凭证
-  withCredentials: true
+  withCredentials: true,
+  credentials: "omit"
 };
 
 class RequestHttp {

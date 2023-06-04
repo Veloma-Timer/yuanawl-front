@@ -1,10 +1,10 @@
 import { Login } from "@/api/interface/index";
-import { PORT1, PORT3 } from "@/api/config/servicePort";
+import { PORT3 } from "@/api/config/servicePort";
 import authMenuList from "@/assets/json/authMenuList.json";
 import authButtonList from "@/assets/json/authButtonList.json";
 import http from "@/api";
 import { UnwrapRef } from "vue";
-const baseUrl: string = PORT3 + "/sys_user/login";
+const baseUrl: string = PORT3 + "/sys_user";
 /**
  * @name 登录模块
  */
@@ -15,7 +15,7 @@ export const loginApi = (params: {
   userAccount: UnwrapRef<Login.ReqLoginForm["userAccount"]>;
 }) => {
   // return http.post<Login.ResLogin>(`/api${PORT1}/login`, params, { noLoading: true }); // 正常 post json 请求  ==>  application/json
-  return http.post<Login.ResLogin>(baseUrl, params, { noLoading: true }); // 正常 post json 请求  ==>  application/json
+  return http.post<Login.ResLogin>(baseUrl + "/login", params, { noLoading: true }); // 正常 post json 请求  ==>  application/json
   // return http.post<Login.ResLogin>(PORT1 + `/login`, params, { noLoading: true }); // 控制当前请求不显示 loading
   // return http.post<Login.ResLogin>(PORT1 + `/login`, {}, { params }); // post 请求携带 query 参数  ==>  ?username=admin&password=123456
   // return http.post<Login.ResLogin>(PORT1 + `/login`, qs.stringify(params)); // post 请求携带表单参数  ==>  application/x-www-form-urlencoded
@@ -31,12 +31,12 @@ export const getAuthMenuListApi = () => {
 
 // 获取按钮权限
 export const getAuthButtonListApi = () => {
-  return http.get<Login.ResAuthButtons>(`/api/auth${PORT1}/buttons`, {}, { noLoading: true });
+  // return http.get<Login.ResAuthButtons>(`/api/auth${PORT1}/buttons`, {}, { noLoading: true });
   // 如果想让按钮权限变为本地数据，注释上一行代码，并引入本地 authButtonList.json 数据
   return authButtonList;
 };
 
 // 用户退出登录
 export const logoutApi = () => {
-  return http.post(PORT1 + `/logout`);
+  return http.post(baseUrl + "/logout");
 };

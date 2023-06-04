@@ -35,7 +35,7 @@ import { useRouter } from "vue-router";
 import { HOME_URL } from "@/config";
 import { getTimeState } from "@/utils";
 import { Login } from "@/api/interface";
-import { ElNotification } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 import { loginApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
@@ -71,24 +71,26 @@ const login = (formEl: FormInstance | undefined) => {
     loading.value = true;
     try {
       // 1.执行登录接口
-      const res = await loginApi({ ...loginForm, password: md5(loginForm.userPassword) });
-      // userStore.setToken(data.access_token);
-      // console.log(success);
-      console.log(res);
-      // 2.添加动态路由
-      await initDynamicRouter();
-      // 3.清空 tabs、keepAlive 数据
-      tabsStore.closeMultipleTab();
-      keepAliveStore.setKeepAliveName();
+      const { success } = await loginApi({ ...loginForm, password: md5(loginForm.userPassword) });
+      if (success) {
+        debugger;
+        // 2.添加动态路由
+        await initDynamicRouter();
+        // 3.清空 tabs、keepAlive 数据
+        tabsStore.closeMultipleTab();
+        keepAliveStore.setKeepAliveName();
 
-      // 4.跳转到首页
-      router.push(HOME_URL);
-      ElNotification({
-        title: getTimeState(),
-        message: "欢迎登录 浙江元阿网络科技有限公司",
-        type: "success",
-        duration: 3000
-      });
+        // 4.跳转到首页
+        router.push(HOME_URL);
+        ElNotification({
+          title: getTimeState(),
+          message: "欢迎登录 浙江元阿网络科技有限公司",
+          type: "success",
+          duration: 3000
+        });
+      } else {
+        ElMessage.error("登录失败,请核对密码");
+      }
     } finally {
       loading.value = false;
     }

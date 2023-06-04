@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "@/stores/modules/user";
 import { useAuthStore } from "@/stores/modules/auth";
 import { LOGIN_URL, ROUTER_WHITE_LIST } from "@/config";
@@ -23,7 +23,7 @@ import NProgress from "@/config/nprogress";
  * @param meta.isKeepAlive ==> 当前路由是否缓存
  * */
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [...staticRouter, ...errorRouter],
   strict: false,
   scrollBehavior: () => ({ left: 0, top: 0 })
@@ -33,9 +33,11 @@ const router = createRouter({
  * @description 路由拦截 beforeEach
  * */
 router.beforeEach(async (to, from, next) => {
+  debugger;
   const userStore = useUserStore();
   const authStore = useAuthStore();
   const cookies = document.cookie;
+
   // 1.NProgress 开始
   NProgress.start();
 
@@ -54,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
   if (ROUTER_WHITE_LIST.includes(to.path)) return next();
 
   // 5.判断是否有 cookies，没有重定向到 login 页面
-  if (!cookies) return next({ path: LOGIN_URL, replace: true });
+  // if (!cookies) return next({ path: LOGIN_URL, replace: true });
 
   // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
   if (!authStore.authMenuListGet.length) {
