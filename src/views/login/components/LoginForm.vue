@@ -73,7 +73,6 @@ const login = (formEl: FormInstance | undefined) => {
       // 1.执行登录接口
       const { success } = await loginApi({ ...loginForm, password: md5(loginForm.userPassword) });
       if (success) {
-        debugger;
         // 2.添加动态路由
         await initDynamicRouter();
         // 3.清空 tabs、keepAlive 数据

@@ -33,7 +33,6 @@ const router = createRouter({
  * @description 路由拦截 beforeEach
  * */
 router.beforeEach(async (to, from, next) => {
-  debugger;
   const userStore = useUserStore();
   const authStore = useAuthStore();
   const cookies = document.cookie;
