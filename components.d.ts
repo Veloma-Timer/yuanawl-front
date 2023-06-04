@@ -23,6 +23,7 @@ declare module "@vue/runtime-core" {
     ElCol: typeof import("element-plus/es")["ElCol"];
     ElColorPicker: typeof import("element-plus/es")["ElColorPicker"];
     ElContainer: typeof import("element-plus/es")["ElContainer"];
+    ElDatePicker: typeof import("element-plus/es")["ElDatePicker"];
     ElDialog: typeof import("element-plus/es")["ElDialog"];
     ElDivider: typeof import("element-plus/es")["ElDivider"];
     ElDrawer: typeof import("element-plus/es")["ElDrawer"];
@@ -34,6 +35,7 @@ declare module "@vue/runtime-core" {
     ElFormItem: typeof import("element-plus/es")["ElFormItem"];
     ElHeader: typeof import("element-plus/es")["ElHeader"];
     ElIcon: typeof import("element-plus/es")["ElIcon"];
+    ElImageViewer: typeof import("element-plus/es")["ElImageViewer"];
     ElInput: typeof import("element-plus/es")["ElInput"];
     ElMain: typeof import("element-plus/es")["ElMain"];
     ElMenu: typeof import("element-plus/es")["ElMenu"];
@@ -41,6 +43,8 @@ declare module "@vue/runtime-core" {
     ElOption: typeof import("element-plus/es")["ElOption"];
     ElPagination: typeof import("element-plus/es")["ElPagination"];
     ElPopover: typeof import("element-plus/es")["ElPopover"];
+    ElRadioButton: typeof import("element-plus/es")["ElRadioButton"];
+    ElRadioGroup: typeof import("element-plus/es")["ElRadioGroup"];
     ElRow: typeof import("element-plus/es")["ElRow"];
     ElScrollbar: typeof import("element-plus/es")["ElScrollbar"];
     ElSelect: typeof import("element-plus/es")["ElSelect"];

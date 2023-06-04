@@ -1,14 +1,20 @@
 <template>
   <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" size="large">
-    <el-form-item prop="username">
-      <el-input v-model="loginForm.username" placeholder="用户名：admin / user">
+    <el-form-item prop="userAccount">
+      <el-input v-model="loginForm.userAccount" placeholder="用户名：admin / user">
         <template #prefix>
           <el-icon class="el-input__icon"><user /></el-icon>
         </template>
       </el-input>
     </el-form-item>
-    <el-form-item prop="password">
-      <el-input type="password" v-model="loginForm.password" placeholder="密码：123456" show-password autocomplete="new-password">
+    <el-form-item prop="userPassword">
+      <el-input
+        type="userPassword"
+        v-model="loginForm.userPassword"
+        placeholder="密码：123456"
+        show-password
+        autocomplete="new-password"
+      >
         <template #prefix>
           <el-icon class="el-input__icon"><lock /></el-icon>
         </template>
@@ -47,14 +53,14 @@ const keepAliveStore = useKeepAliveStore();
 type FormInstance = InstanceType<typeof ElForm>;
 const loginFormRef = ref<FormInstance>();
 const loginRules = reactive({
-  username: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  password: [{ required: true, message: "请输入密码", trigger: "blur" }]
+  userAccount: [{ required: true, message: "请输入用户名", trigger: "blur" }],
+  userPassword: [{ required: true, message: "请输入密码", trigger: "blur" }]
 });
 
 const loading = ref(false);
 const loginForm = reactive<Login.ReqLoginForm>({
-  username: "",
-  password: ""
+  userAccount: "",
+  userPassword: ""
 });
 
 // login
@@ -65,12 +71,12 @@ const login = (formEl: FormInstance | undefined) => {
     loading.value = true;
     try {
       // 1.执行登录接口
-      const { data } = await loginApi({ ...loginForm, password: md5(loginForm.password) });
-      userStore.setToken(data.access_token);
-
+      const res = await loginApi({ ...loginForm, password: md5(loginForm.userPassword) });
+      // userStore.setToken(data.access_token);
+      // console.log(success);
+      console.log(res);
       // 2.添加动态路由
       await initDynamicRouter();
-
       // 3.清空 tabs、keepAlive 数据
       tabsStore.closeMultipleTab();
       keepAliveStore.setKeepAliveName();
