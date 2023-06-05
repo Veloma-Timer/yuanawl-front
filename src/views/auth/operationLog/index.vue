@@ -49,7 +49,7 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
   {
     prop: "handleUserId",
     label: "操作人员",
-    search: { el: "select" },
+    search: { el: "select", props: { filterable: true } },
     enum: getAllUser,
     isShow: false,
     fieldNames: { label: "userName", value: "id" }
@@ -65,7 +65,7 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
     prop: "branchId",
     label: "所属店铺",
     enum: getAllBranch,
-    search: { el: "select" },
+    search: { el: "select", props: { filterable: true } },
     isShow: false,
     fieldNames: { label: "branchName", value: "id" }
   },
@@ -80,7 +80,7 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
     prop: "handleRoleId",
     label: "角色",
     enum: getAllRole,
-    search: { el: "select" },
+    search: { el: "select", props: { filterable: true } },
     isShow: false,
     fieldNames: { label: "roleName", value: "id" }
   },
