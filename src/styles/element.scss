@@ -161,6 +161,9 @@
       transform: translate(-50%, -50%);
       .table-empty {
         line-height: 30px;
+        img {
+          margin: 0 auto;
+        }
       }
     }
 
