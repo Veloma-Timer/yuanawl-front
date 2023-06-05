@@ -6,7 +6,7 @@
           <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="审核结果：" prop="result">
-          <el-select v-model="form.result" placeholder="请选择" class="check-select">
+          <el-select v-model="form.result" placeholder="请选择" class="check-select" filterable>
             <el-option label="审核通过" value="Y" />
             <el-option label="审核拒绝" value="N" />
           </el-select>

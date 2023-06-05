@@ -22,7 +22,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="角色" prop="userRoleId">
-            <el-select v-model="drawerProps.row!.userRoleId" placeholder="请选择" class="check-select">
+            <el-select v-model="drawerProps.row!.userRoleId" placeholder="请选择" class="check-select" filterable>
               <template v-for="item in userList" :key="item.id">
                 <el-option :label="item.roleName" :value="item.id" />
               </template>
@@ -31,7 +31,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="所属店铺" prop="userBranchId">
-            <el-select v-model="drawerProps.row!.userBranchId" placeholder="请选择" class="check-select">
+            <el-select v-model="drawerProps.row!.userBranchId" placeholder="请选择" class="check-select" filterable>
               <template v-for="item in branchList" :key="item.id">
                 <el-option :label="item.branchName" :value="item.id" />
               </template>

@@ -22,7 +22,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="分店联系人" prop="branchContactId">
-            <el-select v-model="drawerProps.row!.branchContactId" placeholder="请选择" class="check-select">
+            <el-select v-model="drawerProps.row!.branchContactId" placeholder="请选择" class="check-select" filterable>
               <template v-for="item in userList" :key="item.id">
                 <el-option :label="item.userName" :value="item.id" />
               </template>

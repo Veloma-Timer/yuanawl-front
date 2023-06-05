@@ -97,7 +97,7 @@
         <el-input v-model="drawerProps.row!.address" placeholder="请输入账号描述" clearable></el-input>
       </el-form-item>
       <el-form-item label="账号状态" prop="email">
-        <el-select v-model="drawerProps.row!.email" placeholder="请选择">
+        <el-select v-model="drawerProps.row!.email" placeholder="请选择" filterable>
           <el-option v-for="item in accountList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
