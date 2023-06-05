@@ -48,11 +48,11 @@ const resetting = () => {
   roleTable.value = [];
 };
 // 获取权限数据
-const acceptParams = (powerId: string) => {
+const acceptParams = (row: Author.RoleList) => {
   resetting();
   dialogVisible.value = true;
-  roleId.value = powerId;
-  getIdPower(powerId).then(res => {
+  roleId.value = row.id;
+  getIdPower(row.powerId).then(res => {
     const { powerDetail = [] } = res || {};
     roleTable.value = powerDetail || [];
   });
@@ -64,9 +64,10 @@ const onSetRoleMap = () => {
     powerDetail: roleTable.value
   };
   setPower(params.id, { powerDetail: params.powerDetail }).then(res => {
-    const { affected } = res;
-    if (affected === 1) {
+    const { success } = res;
+    if (success) {
       ElMessage.success({ message: `权限修改成功` });
+      dialogVisible.value = false;
     } else {
       ElMessage.error({ message: `权限修改失败` });
     }
