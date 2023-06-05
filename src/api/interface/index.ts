@@ -1,7 +1,9 @@
 // 请求响应参数（不包含data）
 export interface Result {
-  code: string;
-  msg: string;
+  // code: string;
+  // msg: string;
+  success: string;
+  message: string;
 }
 
 // 请求响应参数（包含data）
@@ -37,7 +39,7 @@ export namespace Login {
     userPassword: string;
   }
   export interface ResLogin {
-    access_token: string;
+    data: string;
   }
   export interface ResAuthButtons {
     [key: string]: string[];
