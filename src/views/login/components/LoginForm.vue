@@ -30,20 +30,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import { HOME_URL } from "@/config";
-import { getTimeState } from "@/utils";
 import { Login } from "@/api/interface";
+import type { ElForm } from "element-plus";
 import { ElMessage, ElNotification } from "element-plus";
 import { loginApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
-import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { CircleClose, UserFilled } from "@element-plus/icons-vue";
-import type { ElForm } from "element-plus";
 import md5 from "js-md5";
+import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
+import { HOME_URL } from "@/config";
+import { getTimeState } from "@/utils";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -71,8 +71,13 @@ const login = (formEl: FormInstance | undefined) => {
     loading.value = true;
     try {
       // 1.执行登录接口
-      const { success } = await loginApi({ ...loginForm, password: md5(loginForm.userPassword) });
+      const { success, data } = await loginApi({
+        ...loginForm,
+        userPassword: md5(loginForm.userPassword),
+        password: md5(loginForm.userPassword)
+      });
       if (success) {
+        userStore.setToken(data);
         // 2.添加动态路由
         await initDynamicRouter();
         // 3.清空 tabs、keepAlive 数据
