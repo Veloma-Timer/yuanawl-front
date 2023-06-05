@@ -72,3 +72,7 @@ export const getUserRole = () => {
 export const getUserListMap = (params: any) => {
   return http.get(baseUrl, params);
 };
+// 获取所有组的信息
+export const getGroupListMap = (params: { ket: string }) => {
+  return http.get(`${PORT3}/sys_map`, params, { noLoading: true });
+};

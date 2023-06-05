@@ -7,5 +7,5 @@ export const getIdPower = (id: string) => {
 };
 // 修改角色权限
 export const setPower = (id: string, params: any) => {
-  return http.put(`${baseUrl}/${id}`, params);
+  return http.put(`${PORT3}/sys_role/edit/${id}`, params);
 };
