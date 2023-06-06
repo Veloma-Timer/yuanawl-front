@@ -37,6 +37,7 @@ import { ElMessage } from "element-plus";
 const dialogVisible = ref(false);
 const roleTable = ref([]);
 const roleId = ref("");
+const roleObj = ref({});
 const columns: ColumnProps<Author.RoleList> = [
   { prop: "name", label: "菜单", align: "center", width: 160, hasChildren: true },
   { label: "功能", align: "center", prop: "operation" }
@@ -48,11 +49,12 @@ const resetting = () => {
   roleTable.value = [];
 };
 // 获取权限数据
-const acceptParams = (row: Author.RoleList) => {
+const acceptParams = (params: any) => {
   resetting();
   dialogVisible.value = true;
-  roleId.value = row.id;
-  getIdPower(row.powerId).then(res => {
+  roleObj.value = params;
+  roleId.value = params.roleId;
+  getIdPower(params.powerId).then(res => {
     const { powerDetail = [] } = res || {};
     roleTable.value = powerDetail || [];
   });
@@ -67,7 +69,8 @@ const onSetRoleMap = () => {
     const { success } = res;
     if (success) {
       ElMessage.success({ message: `权限修改成功` });
-      dialogVisible.value = false;
+      roleObj.value.getTableList!();
+      resetting();
     } else {
       ElMessage.error({ message: `权限修改失败` });
     }
