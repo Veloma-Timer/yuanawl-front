@@ -43,6 +43,7 @@ import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import { getUserList, deleteUser, editUser, addUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
+import { summaryList } from "@/api/modules/commodity";
 const router = useRouter();
 // 跳转详情页
 const toDetail = () => {
@@ -73,7 +74,7 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return getUserList(newParams);
+  return summaryList(newParams);
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
@@ -118,23 +119,23 @@ const columns: ColumnProps<User.ResUserList>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "address", label: "游戏编号", width: 160 },
-  { prop: "address", label: "游戏分类", width: 160 },
-  { prop: "address", label: "标题", width: 160 },
-  { prop: "address", label: "出售金额", width: 160 },
-  { prop: "address", label: "实际回收金额", width: 160 },
-  { prop: "address", label: "编号", width: 160 },
-  { prop: "address", label: "账号", width: 160 },
+  { prop: "accountNumber", label: "游戏编号", width: 160 },
+  { prop: "accountType", label: "游戏分类", width: 160 },
+  { prop: "accountTitle", label: "标题", width: 160 },
+  { prop: "salePrice", label: "出售金额", width: 160 },
+  { prop: "accountRecyclerPrice", label: "实际回收金额", width: 160 },
+  { prop: "accountCode", label: "账号编码", width: 160 },
+  { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "address", label: "密码/邮箱", width: 160 },
-  { prop: "address", label: "手机号/邮箱密保", width: 160 },
-  { prop: "address", label: "备注", width: 160 },
+  { prop: "accountTel", label: "手机号/邮箱密保", width: 160 },
+  { prop: "accountRemark", label: "备注", width: 160 },
   {
-    prop: "address",
+    prop: "haveSecondary",
     label: "有无二次",
     width: 160,
     enum: [
-      { label: "有", value: 0 },
-      { label: "无", value: 1 }
+      { label: "有", value: 1 },
+      { label: "无", value: 0 }
     ],
     search: { el: "select" }
   },
@@ -148,8 +149,8 @@ const columns: ColumnProps<User.ResUserList>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "address", label: "账号描述", width: 160 },
-  { prop: "address", label: "账户状态", width: 160 },
+  { prop: "accountDesc", label: "账号描述", width: 160 },
+  { prop: "accountStatus", label: "账户状态", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 

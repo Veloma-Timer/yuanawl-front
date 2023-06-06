@@ -22,7 +22,7 @@
     </el-form-item>
   </el-form>
   <div class="login-btn">
-    <el-button :icon="CircleClose" round @click="resetForm(loginFormRef)" size="large">重置</el-button>
+    <!--    <el-button :icon="CircleClose" round @click="resetForm(loginFormRef)" size="large">重置</el-button>-->
     <el-button :icon="UserFilled" round @click="login(loginFormRef)" size="large" type="primary" :loading="loading">
       登录
     </el-button>
@@ -39,7 +39,7 @@ import { loginApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
-import { CircleClose, UserFilled } from "@element-plus/icons-vue";
+import { CircleClose, Lock, User, UserFilled } from "@element-plus/icons-vue";
 import md5 from "js-md5";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { HOME_URL } from "@/config";
@@ -118,7 +118,6 @@ onMounted(() => {
   };
 });
 </script>
-
 <style scoped lang="scss">
 @import "../index.scss";
 </style>

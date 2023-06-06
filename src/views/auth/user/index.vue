@@ -50,8 +50,8 @@ const dataCallback = (data: any) => {
   return {
     list: data.list,
     total: data.total,
-    pageNum: data.pageNum,
-    pageSize: data.pageSize
+    pageNum: Number(data.pageNum),
+    pageSize: Number(data.pageSize)
   };
 };
 
