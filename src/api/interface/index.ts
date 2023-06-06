@@ -97,6 +97,7 @@ export namespace User {
     userPassword: string; // 用户密码
     userRoleId: number; // 用户角色ID
     userBranchId: number; // 用户所属门店ID
+    setId: number; // 用户所在组
   }
 }
 

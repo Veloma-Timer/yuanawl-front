@@ -35,6 +35,7 @@ import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
 import { deleteUser, editUser, addUser, exportUserInfo, BatchAddUser, getUserListMap } from "@/api/modules/user";
+import md5 from "js-md5";
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -110,7 +111,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, userPassword: "123456" },
+    row: { ...row, userPassword: md5("123456") },
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };

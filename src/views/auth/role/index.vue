@@ -15,7 +15,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link @click="setRoleList(scope.row.powerId)">权限</el-button>
+        <el-button type="primary" link @click="setRoleList(scope.row.powerId, scope.row.id)">权限</el-button>
       </template>
     </ProTable>
     <AuthorityDialog ref="dialogRef" />
@@ -92,8 +92,13 @@ const changeStatus = (row: Author.RoleList) => {
   console.log(row);
 };
 // 查看角色权限
-const setRoleList = (powerId: string) => {
+const setRoleList = (powerId: string, id: string) => {
   if (!powerId) return;
-  dialogRef.value?.acceptParams(powerId);
+  const params = {
+    powerId,
+    roleId: id,
+    getTableList: proTable.value?.getTableList
+  };
+  dialogRef.value?.acceptParams(params);
 };
 </script>
