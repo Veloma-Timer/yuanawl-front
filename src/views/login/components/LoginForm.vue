@@ -39,7 +39,7 @@ import { loginApi } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
-import { CircleClose, Lock, User, UserFilled } from "@element-plus/icons-vue";
+import { Lock, User, UserFilled } from "@element-plus/icons-vue";
 import md5 from "js-md5";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { HOME_URL } from "@/config";
@@ -102,10 +102,10 @@ const login = (formEl: FormInstance | undefined) => {
 };
 
 // resetForm
-const resetForm = (formEl: FormInstance | undefined) => {
-  if (!formEl) return;
-  formEl.resetFields();
-};
+// const resetForm = (formEl: FormInstance | undefined) => {
+//   if (!formEl) return;
+//   formEl.resetFields();
+// };
 
 onMounted(() => {
   // 监听 enter 事件（调用登录）

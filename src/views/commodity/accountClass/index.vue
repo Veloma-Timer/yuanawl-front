@@ -21,7 +21,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -36,7 +36,9 @@ import ProTable from "@/components/ProTable/index.vue";
 import UserDrawer from "@/views/commodity/accountClass/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, View } from "@element-plus/icons-vue";
-import { getUserList, deleteUser, editUser, addUser } from "@/api/modules/user";
+import { deleteUser } from "@/api/modules/user";
+import { addAccout, deleteAccout, getAccoutList, setAccout } from "@/api/modules/accountClass";
+import { Commodity } from "@/api/commodity/commodity";
 
 // 跳转详情页
 // const toDetail = () => {
@@ -55,8 +57,8 @@ const dataCallback = (data: any) => {
   return {
     list: data.list,
     total: data.total,
-    pageNum: data.pageNum,
-    pageSize: data.pageSize
+    pageNum: Number(data.pageNum),
+    pageSize: Number(data.pageSize)
   };
 };
 
@@ -64,31 +66,27 @@ const dataCallback = (data: any) => {
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
-  newParams.createTime && (newParams.startTime = newParams.createTime[0]);
-  newParams.createTime && (newParams.endTime = newParams.createTime[1]);
-  delete newParams.createTime;
-  return getUserList(newParams);
+  return getAccoutList(newParams);
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<Commodity.accountClass>[] = [
   {
-    prop: "email",
+    prop: "typeCode",
     label: "分类编号",
     search: { el: "input" }
     // hasChildren: true
   },
-  { prop: "email", label: "分类名称", search: { el: "input" } },
-  { prop: "email", label: "排序" },
+  { prop: "typeName", label: "分类名称", search: { el: "input" } },
+  // { prop: "email", label: "排序" },
   { prop: "operation", label: "操作", width: 200 }
 ];
 
 // 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-  await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-
+const deleteAccount = async (params: Commodity.accountClass) => {
+  await useHandleData(deleteAccout, { id: [params.id] }, `删除该【${params.typeName}】分类`);
   proTable.value?.getTableList();
 };
 
@@ -110,7 +108,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增" ? addAccout : title === "编辑" ? setAccout : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

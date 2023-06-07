@@ -82,10 +82,10 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<User.ResUserList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "email", label: "订单编号", width: 160, search: { el: "input" } },
+  { prop: "accountCode", label: "订单编号", width: 160, search: { el: "input" } },
   { prop: "email", label: "出售人姓名", isShow: false, width: 160, search: { el: "input" } },
-  { prop: "email", label: "发布人姓名", isShow: false, width: 160, search: { el: "input" } },
-  { prop: "email", label: "回收人姓名", isShow: false, width: 160, search: { el: "input" } },
+  { prop: "accountPublisher", label: "发布人姓名", isShow: false, width: 160, search: { el: "input" } },
+  { prop: "accountRecycler", label: "回收人姓名", isShow: false, width: 160, search: { el: "input" } },
   {
     prop: "commodityClass",
     label: "商品分类",
@@ -122,11 +122,25 @@ const columns: ColumnProps<User.ResUserList>[] = [
   { prop: "accountNumber", label: "游戏编号", width: 160 },
   { prop: "accountType", label: "游戏分类", width: 160 },
   { prop: "accountTitle", label: "标题", width: 160 },
-  { prop: "salePrice", label: "出售金额", width: 160 },
-  { prop: "accountRecyclerPrice", label: "实际回收金额", width: 160 },
+  {
+    prop: "salePrice",
+    label: "出售金额",
+    width: 160,
+    render: scope => {
+      return getFixed(scope.row!.salePrice);
+    }
+  },
+  {
+    prop: "accountRecyclerPrice",
+    label: "实际回收金额",
+    width: 160,
+    render: scope => {
+      return getFixed(scope.row!.accountRecyclerPrice);
+    }
+  },
   { prop: "accountCode", label: "账号编码", width: 160 },
   { prop: "accountNumber", label: "账号", width: 160 },
-  { prop: "address", label: "密码/邮箱", width: 160 },
+  { prop: "accountPassword", label: "密码/邮箱", width: 160 },
   { prop: "accountTel", label: "手机号/邮箱密保", width: 160 },
   { prop: "accountRemark", label: "备注", width: 160 },
   {
@@ -140,7 +154,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     search: { el: "select" }
   },
   {
-    prop: "address",
+    prop: "isSave",
     label: "资料是否存档",
     width: 160,
     enum: [
@@ -157,10 +171,11 @@ const columns: ColumnProps<User.ResUserList>[] = [
 // 删除用户信息
 const deleteAccount = async (params: User.ResUserList) => {
   await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-
   proTable.value?.getTableList();
 };
-
+const getFixed = (str: string) => {
+  return parseFloat(str).toFixed(2);
+};
 // 批量删除用户信息
 const batchDelete = async (id: string[]) => {
   await useHandleData(deleteUser, { id }, "导出用户信息");

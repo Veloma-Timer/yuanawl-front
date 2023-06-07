@@ -24,7 +24,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -34,14 +34,16 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/phoneLibrary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { getUserList, deleteUser, editUser, addUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
+import { deleteUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
+import { addPhone, deletePhone, getPhoneList, setPhone } from "@/api/modules/phoneLibrary";
+import { parseTime } from "@/utils/is";
+import { Commodity } from "@/api/commodity/commodity";
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -65,33 +67,38 @@ const dataCallback = (data: any) => {
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
-  newParams.createTime && (newParams.startTime = newParams.createTime[0]);
-  newParams.createTime && (newParams.endTime = newParams.createTime[1]);
-  delete newParams.createTime;
-  return getUserList(newParams);
+  return getPhoneList(newParams);
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<Commodity.phoneLibrary>[] = [
   { type: "index", label: "序号", width: 80 },
-  { prop: "email", label: "开户人姓名", search: { el: "input" } },
-  { prop: "email", label: "开户日期" },
-  { prop: "email", label: "开户主号码（黑色卡册1）" },
-  { prop: "email", label: "剩余绑定次数" },
+  { prop: "openAccountName", label: "开户人姓名", search: { el: "input" } },
   {
-    prop: "commodityClass",
-    label: "卡号搜索",
-    isShow: false,
+    prop: "openAccountTime",
+    label: "开户日期",
+    render: scope => {
+      return parseTime(scope.row.openAccountTime, "{y}-{m}-{d} {h}:{i}:{s}");
+    }
+  },
+  {
+    prop: "openAccountNumber",
+    label: "开户主号码",
+    search: { el: "input" }
+  },
+  {
+    prop: "bindingTimes",
+    label: "剩余绑定次数",
     search: { el: "input" }
   },
   { prop: "operation", label: "操作", width: 200 }
 ];
 
 // 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-  await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
+const deleteAccount = async (params: Commodity.phoneLibrary) => {
+  await useHandleData(deletePhone, { id: [params.id] }, `删除【${params.openAccountName}】用户`);
 
   proTable.value?.getTableList();
 };
@@ -120,12 +127,12 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
+const openDrawer = (title: string, row: Partial<Commodity.phoneLibrary> = {}) => {
   const params = {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增" ? addPhone : title === "编辑" ? setPhone : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

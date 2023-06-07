@@ -123,3 +123,38 @@ export function isNullOrUnDef(val: unknown): val is null | undefined {
 export const isHexColor = (str: string) => {
   return /^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(str);
 };
+export function parseTime(time: any, cFormat: string) {
+  if (arguments.length === 0 || !time) {
+    return "--";
+  }
+  const format = cFormat || "{y}-{m}-{d} {h}:{i}:{s}";
+  let date;
+  if (typeof time === "object") {
+    date = time;
+  } else {
+    if (typeof time === "string" && /^[0-9]+$/.test(time)) {
+      time = parseInt(time);
+    }
+    if (typeof time === "number" && time.toString().length === 10) {
+      time = time * 1000;
+    }
+    date = new Date(time);
+  }
+  const formatObj: any = {
+    y: date.getFullYear(),
+    m: date.getMonth() + 1,
+    d: date.getDate(),
+    h: date.getHours(),
+    i: date.getMinutes(),
+    s: date.getSeconds(),
+    a: date.getDay()
+  };
+  return format.replace(/{([ymdhisa])+}/g, (result, key) => {
+    const value = formatObj[key];
+
+    if (key === "a") {
+      return ["日", "一", "二", "三", "四", "五", "六"][value];
+    }
+    return value.toString().padStart(2, "0");
+  });
+}
