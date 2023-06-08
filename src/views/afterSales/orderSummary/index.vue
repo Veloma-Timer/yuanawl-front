@@ -239,9 +239,8 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
 };
 
 const orderCheckRef = ref<any>(null);
-const openCheck = (e: any) => {
-  console.log("审核", e);
-  orderCheckRef.value?.openDialog();
+const openCheck = (row: any) => {
+  orderCheckRef.value?.openDialog({ row, getTableList: proTable.value?.getTableList });
 };
 
 const downloadImportTemplate = () => {

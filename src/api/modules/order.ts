@@ -19,7 +19,12 @@ export const editSalesList = (params: any) => {
   return http.put<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/${params.id}`, params);
 };
 
-// 售后工单工单详情
+// 售后工单详情
 export const detailSalesList = (params: any) => {
   return http.get<SalesOrder.ResSalesList>(`${PORT3}/base_work_order/${params}`);
+};
+
+// 售后工单审核
+export const checkSalesOrder = (id: number, params: any) => {
+  return http.put<SalesOrder.ResSalesList>(`${PORT3}/base_work_order/${id}`, params);
 };
