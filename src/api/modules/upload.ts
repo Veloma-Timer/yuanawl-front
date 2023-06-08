@@ -12,8 +12,8 @@ export const uploadImg = (params: FormData) => {
 };
 
 // 图片删除
-export const deletedImg = (params: any) => {
-  return http.delete(PORT3 + `/api/sys_assets/${params.id}`);
+export const deletedImg = (params: number) => {
+  return http.delete(PORT3 + `/sys_assets/${params}`);
 };
 
 // 视频上传
