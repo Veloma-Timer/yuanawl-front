@@ -28,7 +28,8 @@ export interface ReqPage {
 // 文件上传模块
 export namespace Upload {
   export interface ResFileUrl {
-    fileUrl: string;
+    path: string;
+    id: number;
   }
 }
 
@@ -103,11 +104,42 @@ export namespace User {
 
 // 售后工单管理模块
 export namespace SalesOrder {
+  export interface AccountType {
+    accountCode: string;
+    accountNumber: number;
+  }
   export interface ResSalesList {
-    time?: string;
+    detail: any[];
+    id: string;
+    accountId: string;
+    accountNumber: number;
+    reportPersonId: number;
+    newHandleId: number;
+    orderCheckerId: number;
+    branchId: number;
+    reason: string;
     username: string;
-    photo: any[];
-    list: any[];
+    accountCode: string;
+    accountPrice: string;
+    userCompensationPrice: string;
+    platformCompensationPrice: string;
+    reportPerson: string;
+    newHandle: string;
+    handleTimes: string;
+    newHandleResult: string;
+    insure: string;
+    recycleBranch: string;
+    handleTime: string;
+    orderChecker: string;
+    checkerResult: string;
+    submitOrderTime: string;
+    newHandleTime: string;
+    orderStatus: string;
+    recycleBranchId: number;
+    orderStar: number;
+    submitTime: string;
+    account: AccountType;
+    orderCode: string;
   }
 }
 // 权限管理模块

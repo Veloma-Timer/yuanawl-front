@@ -1,5 +1,5 @@
 import { Upload } from "@/api/interface/index";
-import { PORT1 } from "@/api/config/servicePort";
+import { PORT1, PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 
 /**
@@ -7,7 +7,13 @@ import http from "@/api";
  */
 // 图片上传
 export const uploadImg = (params: FormData) => {
-  return http.post<Upload.ResFileUrl>(PORT1 + `/file/upload/img`, params);
+  // return http.post<Upload.ResFileUrl>(PORT1 + `/file/upload/img`, params);
+  return http.post<Upload.ResFileUrl>(PORT3 + `/sys_assets/upload`, params);
+};
+
+// 图片删除
+export const deletedImg = (params: any) => {
+  return http.delete(PORT3 + `/api/sys_assets/${params.id}`);
 };
 
 // 视频上传

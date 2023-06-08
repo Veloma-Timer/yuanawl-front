@@ -21,6 +21,11 @@ export const getAllUser = (params: any) => {
   return http.get<{ userName: string; id: number }[]>(PORT3 + `/sys_user/all`, params);
 };
 
+// 获取所有账号
+export const getAllBaseAccount = (params: any) => {
+  return http.get<{ accountNumber: string; id: number }[]>(PORT3 + `/base_account/all`, params);
+};
+
 // 分页查询门店
 export const getAllBranchPage = (params: any) => {
   return http.get(PORT3 + `/sys_branch`, params);

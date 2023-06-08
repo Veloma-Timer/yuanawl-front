@@ -127,7 +127,7 @@ const handleHttpUpload = async (options: UploadRequestOptions) => {
   formData.append("file", options.file);
   try {
     const api = props.api ?? uploadImg;
-    const { data } = await api(formData);
+    const data = await api(formData);
     options.onSuccess(data);
   } catch (error) {
     options.onError(error as any);
@@ -143,9 +143,10 @@ interface UploadEmits {
   (e: "update:fileList", value: UploadUserFile[]): void;
 }
 const emit = defineEmits<UploadEmits>();
-const uploadSuccess = (response: { fileUrl: string } | undefined, uploadFile: UploadFile) => {
+const uploadSuccess = (response: { path: string; id: number } | undefined, uploadFile: UploadFile) => {
   if (!response) return;
-  uploadFile.url = response.fileUrl;
+  // uploadFile.url = response.path;
+  uploadFile.uid = response.id;
   emit("update:fileList", _fileList.value);
   // 调用 el-form 内部的校验方法（可自动校验）
   formItemContext?.prop && formContext?.validateField([formItemContext.prop as string]);
