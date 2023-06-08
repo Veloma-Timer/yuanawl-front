@@ -21,99 +21,34 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <!-- 新增工单 -->
-      <template v-if="isAdd">
-        <el-form-item label="工单编号" prop="orderCode">
-          <el-input v-model="drawerProps.row!.orderCode" placeholder="请输入" clearable class="order-input"></el-input>
-        </el-form-item>
-        <el-form-item label="账号" prop="accountId">
-          <el-select v-model="drawerProps.row!.accountId" placeholder="请选择" class="order-input" filterable>
-            <template v-for="item in accountList" :key="item.id">
-              <el-option :label="item.accountNumber" :value="item.id" />
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="上报人姓名" prop="reportPersonId">
-          <el-select v-model="drawerProps.row!.reportPersonId" placeholder="请选择" class="order-input" filterable>
-            <template v-for="item in userList" :key="item.id">
-              <el-option :label="item.userName" :value="item.id" />
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否投保" prop="insure">
-          <el-select v-model="drawerProps.row!.insure" placeholder="请选择" filterable class="order-input">
-            <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="工单星级" prop="orderStar">
-          <el-input v-model="drawerProps.row!.orderStar" placeholder="请输入" clearable class="small-input"></el-input>
-        </el-form-item>
-        <el-form-item label="处理时效" prop="handleTime">
-          <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" clearable class="small-input"></el-input>
-        </el-form-item>
-      </template>
-      <!-- 编辑工单 -->
-      <template v-else>
-        <el-form-item label="提交工单时间" prop="submitOrderTime" class="order-time">
-          <el-date-picker v-model="drawerProps.row!.submitOrderTime" type="date" placeholder="请选择" />
-        </el-form-item>
-        <el-form-item label="上报人姓名" prop="reportPersonId">
-          <el-select v-model="drawerProps.row!.reportPersonId" placeholder="请选择" class="order-input" filterable>
-            <template v-for="item in userList" :key="item.id">
-              <el-option :label="item.userName" :value="item.id" />
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="账号" prop="accountId">
-          <el-select v-model="drawerProps.row!.accountId" placeholder="请选择" class="order-input" filterable>
-            <template v-for="item in accountList" :key="item.id">
-              <el-option :label="item.accountNumber" :value="item.id" />
-            </template>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="最新处理结果" prop="newHandleResult">
-          <el-input v-model="drawerProps.row!.newHandleResult" placeholder="请输入" clearable class="order-input"></el-input>
-        </el-form-item>
-        <el-row :gutter="10">
-          <el-col :span="8">
-            <el-form-item label="处理次数" prop="handleTimes">
-              <el-input v-model="drawerProps.row!.handleTimes" placeholder="请输入" clearable class="small-input"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="是否投保" prop="insure">
-              <el-select v-model="drawerProps.row!.insure" placeholder="请选择" filterable class="small-input">
-                <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="最新处理客服姓名" prop="newHandleId">
-              <el-select v-model="drawerProps.row!.newHandleId" placeholder="请选择" class="check-select" filterable>
-                <template v-for="item in userList" :key="item.id">
-                  <el-option :label="item.userName" :value="item.id" />
-                </template>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="回收店铺" prop="recycleBranchId">
-              <el-select v-model="drawerProps.row!.recycleBranchId" placeholder="请选择" filterable class="small-input">
-                <el-option v-for="item in branchList" :key="item.id" :label="item.branchName" :value="item.id" />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="工单星级" prop="orderStar">
-              <el-input v-model="drawerProps.row!.orderStar" placeholder="请输入" clearable class="small-input"></el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="最新处理时间" prop="newHandleTime">
-              <el-date-picker v-model="drawerProps.row!.newHandleTime" type="date" placeholder="请选择" />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </template>
+      <el-form-item label="工单编号" prop="orderCode">
+        <el-input v-model="drawerProps.row!.orderCode" placeholder="请输入" clearable class="order-input"></el-input>
+      </el-form-item>
+      <el-form-item label="账号" prop="accountId">
+        <el-select v-model="drawerProps.row!.accountId" placeholder="请选择" class="order-input" filterable>
+          <template v-for="item in accountList" :key="item.id">
+            <el-option :label="item.accountNumber" :value="item.id" />
+          </template>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="上报人姓名" prop="reportPersonId">
+        <el-select v-model="drawerProps.row!.reportPersonId" placeholder="请选择" class="order-input" filterable>
+          <template v-for="item in userList" :key="item.id">
+            <el-option :label="item.userName" :value="item.id" />
+          </template>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="是否投保" prop="insure">
+        <el-select v-model="drawerProps.row!.insure" placeholder="请选择" filterable class="order-input">
+          <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="工单星级" prop="orderStar">
+        <el-input v-model="drawerProps.row!.orderStar" placeholder="请输入" clearable class="small-input"></el-input>
+      </el-form-item>
+      <el-form-item label="处理时效" prop="handleTime">
+        <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" clearable class="small-input"></el-input>
+      </el-form-item>
       <el-button type="primary" @click="addProcess">添加处理</el-button>
       <div v-if="!drawerProps.row.detail || drawerProps.row.detail.length <= 0" class="not-data">暂无处理数据</div>
       <!-- 第几次处理 -->
@@ -129,11 +64,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="8">
-            <el-form-item label="提交时间" :prop="'detail.' + i + '.submitTime'" :rules="rules.submitTime">
-              <el-date-picker v-model="item.submitTime" type="date" placeholder="请选择" />
-            </el-form-item>
-          </el-col> -->
           <el-col :span="8">
             <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime">
               <el-date-picker v-model="item.handleTime" type="date" placeholder="请选择" />
@@ -163,7 +93,7 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, reactive, computed } from "vue";
+import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
 // import UploadImg from "@/components/Upload/Img.vue";
@@ -269,11 +199,6 @@ const getAllAccountList = async () => {
 };
 getAllAccountList();
 
-// 是否新增
-const isAdd = computed(() => {
-  return drawerProps.value.title === "新增工单";
-});
-
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -288,37 +213,24 @@ const handleSubmit = () => {
         userCompensationPrice,
         platformCompensationPrice,
         reportPersonId,
-        newHandleId,
-        newHandleResult,
-        handleTimes,
         insure,
         recycleBranchId,
         handleTime,
         orderStar,
-        orderStatus,
-        orderCheckerId,
-        checkerResult,
         branchId,
-        reason,
-        detail,
-        newHandleTime,
-        submitOrderTime
+        detail
       } = drawerProps.value.row;
+      // orderId绑定
+      const idObj = id ? { orderId: id } : {};
       const newDetail = detail?.map(item => {
-        const idObj = item.id ? { id: item.id } : {};
-        const newDetail = {
-          ...item,
-          assets: item.assets.map((imgItem: any) => {
-            return imgItem?.response?.path || imgItem.url;
-          })
-        };
         return {
           ...idObj,
-          orderId: item.orderId,
           customerServiceId: item.customerServiceId,
           handleTime: item.handleTime,
           handleResult: item.handleResult,
-          detail: newDetail
+          assets: item.assets.map((imgItem: any) => {
+            return imgItem?.response?.path || imgItem.url;
+          })
         };
       });
       await drawerProps.value.api!({
@@ -329,21 +241,12 @@ const handleSubmit = () => {
         userCompensationPrice,
         platformCompensationPrice,
         reportPersonId,
-        newHandleId,
-        newHandleResult,
-        handleTimes,
         insure,
         recycleBranchId,
         handleTime,
         orderStar,
-        orderStatus,
-        orderCheckerId,
-        checkerResult,
         branchId,
-        reason,
-        detail: newDetail,
-        newHandleTime,
-        submitOrderTime
+        detail: newDetail
       });
       ElMessage.success({ message: `操作成功！` });
       drawerProps.value.getTableList!();
@@ -367,7 +270,6 @@ const addProcess = () => {
     console.log("添加处理", drawerProps.value.row.detail);
     drawerProps.value.row.detail.push({
       customerServiceId: "",
-      // submitTime: "",
       handleTime: "",
       handleResult: "",
       assets: []
