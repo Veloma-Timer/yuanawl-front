@@ -189,8 +189,9 @@ const uploadSuccess = (response: { path: string; id: number } | undefined, uploa
  * */
 const handleRemove = async (file: any) => {
   const api = props.api ?? deletedImg;
-  console.log("删除参数", file.id);
-  await api(file.id);
+  const id = file.id || file.uid;
+  console.log("删除参数", id);
+  await api(id);
   _fileList.value = _fileList.value.filter(item => item.url !== file.url || item.name !== file.name);
   emit("update:fileList", _fileList.value);
 };

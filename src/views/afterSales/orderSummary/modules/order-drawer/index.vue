@@ -226,7 +226,7 @@ const handleSubmit = () => {
           assets: item.assets.map((imgItem: any) => {
             return {
               path: imgItem?.response?.path || imgItem.url || imgItem.path,
-              id: imgItem.uid
+              id: imgItem.id || imgItem.uid
             };
           })
         };
