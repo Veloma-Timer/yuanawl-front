@@ -76,12 +76,7 @@
           </el-col>
         </el-row>
         <el-form-item label="" :prop="'detail.' + i + '.assets'" :rules="rules.assets">
-          <UploadImgs v-model:file-list="item.assets" height="140px" width="140px" border-radius="50%">
-            <template #empty>
-              <el-icon><Picture /></el-icon>
-              <span>请上传照片</span>
-            </template>
-          </UploadImgs>
+          <UploadFiles v-model:file-list="item.assets" height="140px" width="140px"></UploadFiles>
         </el-form-item>
       </template>
     </el-form>
@@ -96,12 +91,12 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
-// import UploadImg from "@/components/Upload/Img.vue";
-import UploadImgs from "@/components/Upload/Imgs.vue";
+import UploadFiles from "@/components/Upload/Files.vue";
 import Header from "@/components/Header/index.vue";
 import { detailSalesList } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
 import { getAllUser } from "@/api/modules/set";
+import { findFileType } from "@/utils";
 
 const rules = reactive({
   orderCode: [{ required: true, message: "必填项不能为空" }],
@@ -154,9 +149,12 @@ const getDetailInfo = async (id: any) => {
     drawerProps.value.row.detail = data?.detail?.map(item => {
       return {
         ...item,
-        assets: item.assets.map((imgItem: string) => {
+        assets: item.assets.map((imgItem: any) => {
           return {
-            url: imgItem
+            path: imgItem.path,
+            url: imgItem.path,
+            id: imgItem.id,
+            type: findFileType(imgItem.path)
           };
         })
       };
@@ -220,16 +218,16 @@ const handleSubmit = () => {
         branchId,
         detail
       } = drawerProps.value.row;
-      // orderId绑定
-      const idObj = id ? { orderId: id } : {};
       const newDetail = detail?.map(item => {
         return {
-          ...idObj,
           customerServiceId: item.customerServiceId,
           handleTime: item.handleTime,
           handleResult: item.handleResult,
           assets: item.assets.map((imgItem: any) => {
-            return imgItem?.response?.path || imgItem.url;
+            return {
+              path: imgItem?.response?.path || imgItem.url || imgItem.path,
+              id: imgItem.uid
+            };
           })
         };
       });
@@ -267,7 +265,6 @@ const addProcess = () => {
     if (!drawerProps.value.row.detail) {
       drawerProps.value.row.detail = [];
     }
-    console.log("添加处理", drawerProps.value.row.detail);
     drawerProps.value.row.detail.push({
       customerServiceId: "",
       handleTime: "",

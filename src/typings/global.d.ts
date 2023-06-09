@@ -34,6 +34,21 @@ declare namespace File {
     | "image/webp"
     | "image/x-icon";
 
+  // image video audio 各4种类型
+  type FileMimeType =
+    | "audio/mpeg"
+    | "audio/mp3"
+    | "audio/wav"
+    | "audio/ogg"
+    | "video/mp4"
+    | "video/avi"
+    | "video/mov"
+    | "video/m4v"
+    | "image/gif"
+    | "image/jpeg"
+    | "image/png"
+    | "image/webp";
+
   type ExcelMimeType = "application/vnd.ms-excel" | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 }
 

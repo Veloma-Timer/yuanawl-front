@@ -28,3 +28,8 @@ export const detailSalesList = (params: any) => {
 export const checkSalesOrder = (id: number, params: any) => {
   return http.put<SalesOrder.ResSalesList>(`${PORT3}/base_work_order/${id}`, params);
 };
+
+// 售后工单审核
+export const delSalesOrder = (id: number) => {
+  return http.delete(`${PORT3}/base_work_order/${id}`);
+};

@@ -295,3 +295,24 @@ export function findItemNested(enumData: any, callValue: any, value: string, chi
     if (current[children]) return findItemNested(current[children], callValue, value, children);
   }, null);
 }
+
+/**
+ * @description 列举了常见音乐、视频、图片各4种格式 用做不同文件预览区分
+ * @param {fileName} string 过滤类型（目前只有 tag）
+ * */
+export function findFileType(fileName: string) {
+  const extension = fileName?.split(".").pop()!.toLowerCase();
+  const imageFile = ["jpeg", "png", "gif", "webp"];
+  const audioFile = ["mpeg", "mp3", "wav", "ogg"];
+  const videoFile = ["mp4", "avi", "mov", "m4v"];
+
+  if (imageFile.includes(extension)) {
+    return "img";
+  } else if (audioFile.includes(extension)) {
+    return "audio";
+  } else if (videoFile.includes(extension)) {
+    return "video";
+  } else {
+    return extension || "";
+  }
+}

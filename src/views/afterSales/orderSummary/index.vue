@@ -9,9 +9,10 @@
         <el-button type="primary" @click="exportData">导出</el-button>
       </template>
       <!-- 表格操作 -->
-      <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link @click="openCheck(scope.row)">审核</el-button>
+      <template #operation="{ row }">
+        <el-button type="primary" link @click="openDrawer('查看', row)">查看</el-button>
+        <el-button type="primary" link @click="openCheck(row)">审核</el-button>
+        <el-button type="primary" link @click="delOrder(row.id, row.orderCode)">删除</el-button>
       </template>
     </ProTable>
     <OrderDrawer ref="drawerRef" />
@@ -26,8 +27,9 @@ import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getAllBranch } from "@/api/modules/set";
-import { getSalesList, addSalesList, editSalesList } from "@/api/modules/order";
+import { getSalesList, addSalesList, editSalesList, delSalesOrder } from "@/api/modules/order";
 import { CHCKER_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
+import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
@@ -241,6 +243,12 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
 const orderCheckRef = ref<any>(null);
 const openCheck = (row: any) => {
   orderCheckRef.value?.openDialog({ row, getTableList: proTable.value?.getTableList });
+};
+
+const delOrder = async (id: number, orderCode: string) => {
+  await useHandleData(delSalesOrder, id, `删除工单编号【${orderCode}】这条数据`);
+  proTable.value?.clearSelection();
+  proTable.value?.getTableList();
 };
 
 const downloadImportTemplate = () => {
