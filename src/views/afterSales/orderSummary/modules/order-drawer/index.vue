@@ -20,7 +20,6 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <!-- 新增工单 -->
       <el-form-item label="工单编号" prop="orderCode">
         <el-input v-model="drawerProps.row!.orderCode" placeholder="请输入" clearable class="order-input"></el-input>
       </el-form-item>

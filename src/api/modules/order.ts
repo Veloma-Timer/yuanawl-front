@@ -9,6 +9,11 @@ export const getSalesList = (params: any) => {
   return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order`, params);
 };
 
+// 售后工单汇总表格
+export const getSalesListToday = (params: any) => {
+  return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/today`, params);
+};
+
 // 售后工单新增工单
 export const addSalesList = (params: any) => {
   return http.post<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order`, params);
@@ -32,4 +37,9 @@ export const checkSalesOrder = (id: number, params: any) => {
 // 售后工单审核
 export const delSalesOrder = (id: number) => {
   return http.delete(`${PORT3}/base_work_order/${id}`);
+};
+
+// 售后工单处理报表-数据统计
+export const sysAnalysisWork = (id: number) => {
+  return http.get<SalesOrder.WorkReport>(`${PORT3}/sys_analysis/work?branchId=${id}`);
 };

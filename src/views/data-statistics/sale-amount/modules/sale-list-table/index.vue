@@ -1,5 +1,6 @@
 <template>
   <div class="table-box">
+    --{{ tableProps.selectBranchId }}--
     <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
@@ -25,7 +26,14 @@ import SaleDrawer from "../sale-modal/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getUserList, editUser, addUser } from "@/api/modules/user";
 const proTable = ref<ProTableInstance>();
-const initParam = reactive({ type: 1 });
+const initParam = reactive({});
+
+type Props = {
+  selectBranchId: number;
+};
+const tableProps = withDefaults(defineProps<Props>(), {
+  selectBranchId: 0
+});
 
 const getTableList = (params: any) => {
   return getUserList(params);
@@ -129,4 +137,14 @@ const tabCityList = ref([
 function changeCityDate(e: string | number | boolean) {
   currentTimeSelect.value = e as string;
 }
+
+// 监听 selectBranchId
+watch(
+  () => tableProps.selectBranchId,
+  value => {
+    if (value) {
+      // proTable.value?.getTableList();
+    }
+  }
+);
 </script>

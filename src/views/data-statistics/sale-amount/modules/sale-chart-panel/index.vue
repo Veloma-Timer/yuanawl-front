@@ -13,8 +13,8 @@
     </div>
     <div class="right">
       <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
-        <template v-for="(item, index) in tabCityList" :key="index">
-          <el-radio-button :label="item.title" />
+        <template v-for="(item, index) in branchList" :key="index">
+          <el-radio-button :label="item.branchName" :value="item.id" />
         </template>
       </el-radio-group>
       <div class="sale-content">
@@ -40,6 +40,8 @@ import Header from "@/components/Header/index.vue";
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
+import { getAllBranch } from "@/api/modules/set";
+const emit = defineEmits(["change-id"]);
 const echartsRef = ref<HTMLElement>();
 
 const saleData = ref([
@@ -80,23 +82,37 @@ const tabDateList = ref([
     key: "month"
   }
 ]);
-function changeSelectDate(e: string | number | boolean) {
-  currentTimeSelect.value = e as string;
+
+// 门店数据获取
+type BranchObj = { branchName: string; id: number };
+const branchList = ref<BranchObj[]>([]);
+const currentCitySelect = ref("");
+const getAllBranchData = async () => {
+  const { data } = await getAllBranch({});
+  branchList.value = data?.map(item => {
+    return {
+      branchName: item.branchName,
+      id: item.id
+    };
+  });
+  currentCitySelect.value = branchList.value[0].branchName;
+  let selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
+  let id = selectObj!.id;
+  emit("change-id", id);
+};
+getAllBranchData();
+
+// 门店切换
+async function changeCityDate(e: any) {
+  currentCitySelect.value = e as string;
+  const selectObj = branchList.value.find(item => item.branchName === e);
+  const id = selectObj!.id;
+  emit("change-id", id);
 }
 
-const currentCitySelect = ref("杭州");
-const tabCityList = ref([
-  {
-    title: "杭州",
-    key: "hz"
-  },
-  {
-    title: "信阳",
-    key: "xy"
-  }
-]);
-function changeCityDate(e: string | number | boolean) {
-  currentCitySelect.value = e as string;
+// 日期范围切换
+function changeSelectDate(e: any) {
+  console.log(e);
 }
 
 onMounted(() => {
