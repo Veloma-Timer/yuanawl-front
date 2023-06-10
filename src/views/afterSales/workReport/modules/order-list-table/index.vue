@@ -26,7 +26,7 @@ import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderDrawer from "@/views/afterSales/orderSummary/modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getSalesList, getSalesListYesterday, addSalesList, editSalesList } from "@/api/modules/order";
+import { getSalesList, getSalesListToday, addSalesList, editSalesList } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS } from "@/public/constant";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
@@ -195,9 +195,9 @@ const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.branchId = tableProps.selectBranchId;
   if (currentTimeSelect.value === "今日销售") {
-    return getSalesListYesterday(newParams);
+    return getSalesListToday(newParams);
   } else {
-    return getSalesList(params);
+    return getSalesList(newParams);
   }
 };
 

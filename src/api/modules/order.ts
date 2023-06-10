@@ -10,8 +10,8 @@ export const getSalesList = (params: any) => {
 };
 
 // 售后工单汇总表格
-export const getSalesListYesterday = (params: any) => {
-  return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/yesterday`, params);
+export const getSalesListToday = (params: any) => {
+  return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/today`, params);
 };
 
 // 售后工单新增工单

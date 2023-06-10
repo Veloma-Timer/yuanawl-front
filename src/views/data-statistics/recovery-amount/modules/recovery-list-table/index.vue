@@ -1,5 +1,6 @@
 <template>
   <div class="table-box">
+    --{{ tableProps.selectBranchId }}--
     <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
@@ -14,7 +15,7 @@
         </el-radio-group>
       </template>
     </ProTable>
-    <RecoveryDrawer ref="ecoveryDrawerRef" />
+    <RecoveryDrawer ref="recoveryDrawerRef" />
   </div>
 </template>
 
@@ -26,6 +27,13 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getUserList, editUser, addUser } from "@/api/modules/user";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({ type: 1 });
+
+type Props = {
+  selectBranchId: number;
+};
+const tableProps = withDefaults(defineProps<Props>(), {
+  selectBranchId: 0
+});
 
 const getTableList = (params: any) => {
   return getUserList(params);
@@ -104,7 +112,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
 ];
 
 // 打开 drawer(新增、查看、编辑)
-const ecoveryDrawerRef = ref<InstanceType<typeof RecoveryDrawer> | null>(null);
+const recoveryDrawerRef = ref<InstanceType<typeof RecoveryDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
@@ -113,7 +121,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };
-  ecoveryDrawerRef.value?.acceptParams(params);
+  recoveryDrawerRef.value?.acceptParams(params);
 };
 
 const currentTimeSelect = ref("今日回收");
