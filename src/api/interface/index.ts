@@ -206,6 +206,22 @@ export namespace Set {
 }
 // 首页模块
 export namespace HomeSet {
+  export interface HistogramValue {
+    name: string;
+    value: number;
+  }
+
+  export interface IDataComparison extends HistogramValue {
+    number: number; // 数量
+  }
+
+  export interface SalasRanking {
+    index: number; // 排名
+    name: string; // 客服名称
+    salas: number; // 销售额
+    branch: string; // 店铺名
+  }
+
   export interface Home {
     totalSales: {
       value: number;
@@ -245,5 +261,22 @@ export namespace HomeSet {
     }; // 平台日均新增回收量
     salesPriceMap: Record<string, number>; // 账号销售占比
     recyclingPriceMap: Record<string, number>; // 账号回收占比
+    // 工单占比
+    workOrderProp: {
+      saleAccountNumber: HistogramValue[]; // 已售账号
+      workOrderNumber: HistogramValue[]; // 工单数量
+    };
+    // 平台销售总额
+    platformSalas: { name: string; salas: number }[];
+    // 销售额排名
+    salasRanking: SalasRanking[];
+    // 销售组数据对比 -> 统计销售数据
+    salesUnit: IDataComparison[];
+    // 回收组数据对比 -> 统计回收数据
+    recycleUnit: IDataComparison[];
+    // 售后组数据对比 -> 统计售后数据
+    afterSaleUnit: IDataComparison[];
+    // 发布组数据对比 -> 统计发布数据
+    publishUnit: IDataComparison[];
   }
 }

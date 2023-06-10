@@ -21,5 +21,5 @@ export const deleteAccout = (params: any) => {
 };
 // 获取所有
 export const getAllList = () => {
-  return http.get(`${baseUrl}/all`);
+  return http.get(`${baseUrl}/all`, {}, { noLoading: true });
 };

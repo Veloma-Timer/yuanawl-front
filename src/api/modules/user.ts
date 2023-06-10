@@ -78,5 +78,5 @@ export const getGroupListMap = (params: { ket: string }) => {
 };
 // 获取所有用户
 export const getUserAll = () => {
-  return http.get(`${baseUrl}/all`);
+  return http.get(`${baseUrl}/all`, {}, { noLoading: true });
 };

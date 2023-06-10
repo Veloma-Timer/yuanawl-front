@@ -8,7 +8,7 @@ export const getOptLog = (params: any) => {
 
 // 获取所有门店
 export const getAllBranch = (params: any) => {
-  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`, params);
+  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`, params, { noLoading: true });
 };
 
 // 获取所有角色
@@ -18,7 +18,7 @@ export const getAllRole = (params: any) => {
 
 // 获取所有用户
 export const getAllUser = (params: any) => {
-  return http.get<{ userName: string; id: number }[]>(PORT3 + `/sys_user/all`, params);
+  return http.get<{ userName: string; id: number }[]>(PORT3 + `/sys_user/all`, params, { noLoading: true });
 };
 
 // 获取所有账号

@@ -83,8 +83,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "账户状态",
     width: 160,
     enum: [
-      { label: "已售", value: 0 },
-      { label: "未售", value: 1 }
+      { label: "已售", value: 1 },
+      { label: "未售", value: 0 }
     ],
     search: { el: "select" }
   },

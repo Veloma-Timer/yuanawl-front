@@ -36,7 +36,13 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="回收时间" prop="accountRecyclerTime">
-            <el-date-picker v-model="drawerProps.row!.accountRecyclerTime" type="date" placeholder="请选择" />
+            <el-date-picker
+              v-model="drawerProps.row!.accountRecyclerTime"
+              format="YYYY-MM-DD hh:mm:ss"
+              value-format="YYYY-MM-DD hh:mm:ss"
+              type="date"
+              placeholder="请选择"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -53,18 +59,32 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="发布时间" prop="accountPublisherTimer">
-            <el-date-picker v-model="drawerProps.row!.accountPublisherTimer" type="date" placeholder="请选择" />
+            <el-date-picker
+              v-model="drawerProps.row!.accountPublisherTimer"
+              format="YYYY-MM-DD hh:mm:ss"
+              value-format="YYYY-MM-DD hh:mm:ss"
+              type="date"
+              placeholder="请选择"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="8"></el-col>
         <el-col :span="8">
-          <el-form-item label="出售人平台" prop="salePlatform">
-            <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
+          <el-form-item label="出售人姓名" prop="salePeopleId">
+            <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择" filterable>
+              <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="出售时间" prop="saleTime">
-            <el-date-picker v-model="drawerProps.row!.saleTime" type="date" placeholder="请选择" />
+            <el-date-picker
+              v-model="drawerProps.row!.saleTime"
+              type="date"
+              format="YYYY-MM-DD hh:mm:ss"
+              value-format="YYYY-MM-DD hh:mm:ss"
+              placeholder="请选择"
+            />
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -73,10 +93,8 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="出售人姓名" prop="salePeopleId">
-        <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择" filterable>
-          <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
-        </el-select>
+      <el-form-item label="出售人平台" prop="salePlatform">
+        <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
       </el-form-item>
       <el-form-item label="游戏账号" prop="accountNumber">
         <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable></el-input>
@@ -202,6 +220,7 @@ const rules = reactive({
   accountPrice: [{ required: true, message: "必填项不能为空" }],
   userCompensationPrice: [{ required: true, message: "必填项不能为空" }],
   platformCompensationPrice: [{ required: true, message: "必填项不能为空" }],
+  accountRecyclerId: [{ required: true, message: "必填项不能为空" }],
   salePeopleId: [{ required: true, message: "必填项不能为空" }]
 });
 
