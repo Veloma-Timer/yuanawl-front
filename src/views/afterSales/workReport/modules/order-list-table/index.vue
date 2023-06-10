@@ -24,149 +24,155 @@
 <script setup lang="tsx" name="useProTable">
 import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import OrderDrawer from "../order-drawer/index.vue";
+import OrderDrawer from "@/views/afterSales/orderSummary/modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getUserList, editUser, addUser, getUserGender } from "@/api/modules/user";
+import { getSalesList, getSalesListYesterday, addSalesList, editSalesList } from "@/api/modules/order";
+import { CHECK_RESULT, ORDER_STATUS } from "@/public/constant";
+import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
-const initParam = reactive({ type: 1 });
+const initParam = reactive({});
 
-const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
-  newParams.createTime && (newParams.startTime = newParams.createTime[0]);
-  newParams.createTime && (newParams.endTime = newParams.createTime[1]);
-  delete newParams.createTime;
-  return getUserList(newParams);
+type Props = {
+  selectBranchId: number;
 };
+const tableProps = withDefaults(defineProps<Props>(), {
+  selectBranchId: 0
+});
 
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "left", width: 180 },
+  { prop: "operation", label: "操作", fixed: "left", width: 80 },
   {
-    prop: "username",
+    prop: "orderCode",
     label: "工单编号",
     search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.orderCode || "--"}</span>;
     }
   },
   {
-    prop: "username",
-    label: "订单编号",
+    prop: "accountCode",
+    label: "账号编号",
     search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row?.account?.accountCode || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "accountNumber",
     label: "账号",
-    search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row?.account?.accountNumber || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "accountPrice",
     label: "实付金额",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.accountPrice || "--"}</span>;
     }
   },
   {
-    prop: "username",
-    label: "上报人姓名",
-    search: { el: "input" },
-    width: 180,
-    isShow: false,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
+    prop: "newHandle",
     label: "最新处理客服姓名",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.newHandle || "--"}</span>;
     }
   },
   {
-    prop: "username",
-    label: "客服姓名",
-    width: 180,
-    search: { el: "input" },
-    isShow: false,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
+    prop: "newHandleResult",
     label: "最新处理结果",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.newHandleResult || "--"}</span>;
     }
   },
   {
-    prop: "createTime",
+    prop: "submitOrderTime",
     label: "提交工单时间",
-    width: 180
+    width: 180,
+    render: scope => {
+      const time = scope.row?.submitOrderTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+    }
   },
   {
-    prop: "createTime",
+    prop: "newHandleTime",
     label: "最新处理时间",
+    width: 180,
+    render: scope => {
+      const time = scope.row?.newHandleTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+    }
+  },
+  {
+    prop: "orderStar",
+    label: "工单星级",
     width: 180
   },
   {
-    prop: "gender",
-    label: "工单星级",
-    enum: getUserGender,
-    width: 180,
-    search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "genderLabel", value: "genderValue" }
-  },
-  {
-    prop: "gender",
+    prop: "orderStatus",
     label: "状态",
-    enum: getUserGender,
+    enum: [
+      {
+        label: "待处理",
+        value: "0"
+      },
+      {
+        label: "已处理",
+        value: "1"
+      }
+    ],
     width: 180,
     search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "genderLabel", value: "genderValue" }
+    render: scope => {
+      return <span>{ORDER_STATUS[scope.row.orderStatus as any] || "--"}</span>;
+    }
   },
   {
-    prop: "username",
+    prop: "orderChecker",
     label: "审核人",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.orderChecker || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "checkerResult",
     label: "审核结果",
     width: 180,
+    search: { el: "select", props: { filterable: true } },
+    enum: [
+      {
+        label: "未通过",
+        value: "0"
+      },
+      {
+        label: "通过",
+        value: "1"
+      }
+    ],
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
     }
   }
 ];
 const currentTimeSelect = ref("今日销售");
 const tabDateList = ref([
   {
-    title: "今日销售",
-    key: "today"
+    title: "今日销售"
   },
   {
-    title: "历史销售",
-    key: "history"
+    title: "历史销售"
   }
 ]);
+
 function changeSelectDate(e: string | number | boolean) {
   currentTimeSelect.value = e as string;
 }
@@ -178,11 +184,42 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增账号" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增工单" ? addSalesList : title === "查看" ? editSalesList : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
+
+// 获取表格数据
+const getTableList = (params: any) => {
+  let newParams = JSON.parse(JSON.stringify(params));
+  newParams.branchId = tableProps.selectBranchId;
+  if (currentTimeSelect.value === "今日销售") {
+    return getSalesListYesterday(newParams);
+  } else {
+    return getSalesList(params);
+  }
+};
+
+// 监听 selectBranchId
+watch(
+  () => tableProps.selectBranchId,
+  value => {
+    if (value) {
+      proTable.value?.getTableList();
+    }
+  }
+);
+
+// 监听 currentTimeSelect.value
+watch(
+  () => currentTimeSelect.value,
+  value => {
+    if (value) {
+      proTable.value?.getTableList();
+    }
+  }
+);
 
 const exportData = () => {
   console.log("导出");

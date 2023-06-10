@@ -40,6 +40,7 @@ import { ref } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 const echartsRef = ref<HTMLElement>();
+const emit = defineEmits(["change-id"]);
 
 // 门店数据获取
 type BranchObj = { branchName: string; id: number };
@@ -55,7 +56,9 @@ const getAllBranchData = async () => {
   });
   currentCitySelect.value = branchList.value[0].branchName;
   let selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
-  getCityData(selectObj!.id);
+  let id = selectObj!.id;
+  emit("change-id", id);
+  getCityData(id);
 };
 getAllBranchData();
 
@@ -63,7 +66,9 @@ getAllBranchData();
 async function changeCityDate(e: any) {
   currentCitySelect.value = e as string;
   let selectObj = branchList.value.find(item => item.branchName === e);
-  getCityData(selectObj!.id);
+  let id = selectObj!.id;
+  emit("change-id", id);
+  getCityData(id);
 }
 
 // 获取门店统计数据

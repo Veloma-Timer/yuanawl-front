@@ -28,7 +28,7 @@ import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getAllBranch } from "@/api/modules/set";
 import { getSalesList, addSalesList, editSalesList, delSalesOrder } from "@/api/modules/order";
-import { CHCKER_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
+import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
@@ -159,7 +159,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     }
   },
   {
-    prop: "username",
+    prop: "handleTime",
     label: "处理时效",
     width: 180,
     render: scope => {
@@ -214,7 +214,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       }
     ],
     render: scope => {
-      return <span>{CHCKER_RESULT[scope.row.checkerResult as any] || "--"}</span>;
+      return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
     }
   },
   {

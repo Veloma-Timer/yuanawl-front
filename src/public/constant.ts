@@ -7,7 +7,7 @@ export const OPT_STATUS: KeyValue = {
   1: "成功"
 };
 
-export const CHCKER_RESULT: KeyValue = {
+export const CHECK_RESULT: KeyValue = {
   0: "未通过",
   1: "通过"
 };

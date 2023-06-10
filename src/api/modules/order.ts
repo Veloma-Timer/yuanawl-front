@@ -9,6 +9,11 @@ export const getSalesList = (params: any) => {
   return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order`, params);
 };
 
+// 售后工单汇总表格
+export const getSalesListYesterday = (params: any) => {
+  return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/yesterday`, params);
+};
+
 // 售后工单新增工单
 export const addSalesList = (params: any) => {
   return http.post<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order`, params);
