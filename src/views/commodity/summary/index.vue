@@ -24,7 +24,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -34,22 +34,17 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { useRouter } from "vue-router";
-import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { getUserList, deleteUser, editUser, addUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
-import { summaryList } from "@/api/modules/commodity";
-const router = useRouter();
+import { exportUserInfo, BatchAddUser } from "@/api/modules/user";
+import { addSummary, deleteSummary, editSummary, summaryList } from "@/api/modules/commodity";
+import { getAllList } from "@/api/modules/accountClass";
+import { Commodity } from "@/api/interface/commodity/commodity";
 // 跳转详情页
-const toDetail = () => {
-  router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
-};
-
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 
@@ -80,48 +75,29 @@ const getTableList = (params: any) => {
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "订单编号", width: 160, search: { el: "input" } },
-  { prop: "email", label: "出售人姓名", isShow: false, width: 160, search: { el: "input" } },
-  { prop: "accountPublisher", label: "发布人姓名", isShow: false, width: 160, search: { el: "input" } },
-  { prop: "accountRecycler", label: "回收人姓名", isShow: false, width: 160, search: { el: "input" } },
+  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
   {
-    prop: "commodityClass",
-    label: "商品分类",
-    isShow: false,
+    prop: "accountStatus",
+    label: "账户状态",
     width: 160,
     enum: [
-      { label: "已出售", value: 0 },
-      { label: "未出售", value: 1 }
-    ],
-    search: { el: "select" }
-  },
-  {
-    prop: "status",
-    label: "商品状态",
-    isShow: false,
-    width: 160,
-    enum: [
-      { label: "已出售", value: 0 },
-      { label: "未出售", value: 1 }
-    ],
-    search: { el: "select" }
-  },
-  {
-    prop: "system",
-    label: "系统",
-    isShow: false,
-    width: 160,
-    enum: [
-      { label: "苹果", value: 0 },
-      { label: "安卓", value: 1 }
+      { label: "已售", value: 0 },
+      { label: "未售", value: 1 }
     ],
     search: { el: "select" }
   },
   { prop: "accountNumber", label: "游戏编号", width: 160 },
-  { prop: "accountType", label: "游戏分类", width: 160 },
-  { prop: "accountTitle", label: "标题", width: 160 },
+  {
+    prop: "accountType",
+    label: "游戏分类",
+    width: 160,
+    enum: getAllList,
+    search: { el: "select" },
+    fieldNames: { label: "typeName", value: "id" }
+  },
+  { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
   {
     prop: "salePrice",
     label: "出售金额",
@@ -138,18 +114,17 @@ const columns: ColumnProps<User.ResUserList>[] = [
       return getFixed(scope.row!.accountRecyclerPrice);
     }
   },
-  { prop: "accountCode", label: "账号编码", width: 160 },
   { prop: "accountNumber", label: "账号", width: 160 },
-  { prop: "accountPassword", label: "密码/邮箱", width: 160 },
-  { prop: "accountTel", label: "手机号/邮箱密保", width: 160 },
+  { prop: "accountPassword", label: "密码", width: 160 },
+  { prop: "accountTel", label: "手机号", width: 160 },
   { prop: "accountRemark", label: "备注", width: 160 },
   {
     prop: "haveSecondary",
     label: "有无二次",
     width: 160,
     enum: [
-      { label: "有", value: 1 },
-      { label: "无", value: 0 }
+      { label: "有", value: "1" },
+      { label: "无", value: "0" }
     ],
     search: { el: "select" }
   },
@@ -158,19 +133,18 @@ const columns: ColumnProps<User.ResUserList>[] = [
     label: "资料是否存档",
     width: 160,
     enum: [
-      { label: "有", value: 0 },
-      { label: "无", value: 1 }
+      { label: "有", value: "0" },
+      { label: "无", value: "1" }
     ],
     search: { el: "select" }
   },
   { prop: "accountDesc", label: "账号描述", width: 160 },
-  { prop: "accountStatus", label: "账户状态", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
 // 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-  await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
+const deleteAccount = async (params: Commodity.Account) => {
+  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
   proTable.value?.getTableList();
 };
 const getFixed = (str: string) => {
@@ -178,7 +152,7 @@ const getFixed = (str: string) => {
 };
 // 批量删除用户信息
 const batchDelete = async (id: string[]) => {
-  await useHandleData(deleteUser, { id }, "导出用户信息");
+  await useHandleData(deleteSummary, { id }, "导出用户信息");
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
@@ -200,12 +174,12 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
+const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   const params = {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

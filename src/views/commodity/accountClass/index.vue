@@ -38,7 +38,7 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, View } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import { addAccout, deleteAccout, getAccoutList, setAccout } from "@/api/modules/accountClass";
-import { Commodity } from "@/api/commodity/commodity";
+import { Commodity } from "@/api/interface/commodity/commodity";
 
 // 跳转详情页
 // const toDetail = () => {

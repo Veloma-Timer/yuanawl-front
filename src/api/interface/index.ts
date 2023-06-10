@@ -189,3 +189,46 @@ export namespace Set {
     branchContactId: number;
   }
 }
+// 首页模块
+export namespace HomeSet {
+  export interface Home {
+    totalSales: {
+      value: number;
+      preValue: string; // 昨日同比
+    }; // 今日销售总额
+    salesQuantity: {
+      value: number;
+      preValue: string;
+    }; // 今日销售数量
+    recyclingQuantity: {
+      value: number;
+      preValue: string;
+    }; // 今日回收数量
+    averageSellingPrice: {
+      value: number;
+      preValue: string;
+    }; // 今日销售均价
+    recoveryAveragePrice: {
+      value: number;
+      preValue: string;
+    }; // 今日回收均价
+    totalRecovery: {
+      value: number;
+      preValue: string;
+    }; // 今日回收总额
+    totalSalesVolume: {
+      value: number;
+    }; // 平台总销售量
+    overallRecovery: {
+      value: number;
+    }; // 平台总回收量
+    averageDailyNewSales: {
+      value: number;
+    }; // 平台日均新增销售量
+    dailyAverageNewRecyclingVolume: {
+      value: number;
+    }; // 平台日均新增回收量
+    salesPriceMap: Record<string, number>; // 账号销售占比
+    recyclingPriceMap: Record<string, number>; // 账号回收占比
+  }
+}

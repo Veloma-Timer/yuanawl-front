@@ -43,7 +43,7 @@ import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-
 import { deleteUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
 import { addPhone, deletePhone, getPhoneList, setPhone } from "@/api/modules/phoneLibrary";
 import { parseTime } from "@/utils/is";
-import { Commodity } from "@/api/commodity/commodity";
+import { Commodity } from "@/api/interface/commodity/commodity";
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -67,6 +67,10 @@ const dataCallback = (data: any) => {
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
+  if (newParams.createTime[0] && newParams.createTime[1]) {
+    newParams.openAccountTime = newParams.createTime.join(",");
+  }
+  delete newParams.createTime;
   return getPhoneList(newParams);
 };
 
@@ -77,10 +81,16 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
   { type: "index", label: "序号", width: 80 },
   { prop: "openAccountName", label: "开户人姓名", search: { el: "input" } },
   {
-    prop: "openAccountTime",
+    prop: "createTime",
     label: "开户日期",
     render: scope => {
       return parseTime(scope.row.openAccountTime, "{y}-{m}-{d} {h}:{i}:{s}");
+    },
+    search: {
+      el: "date-picker",
+      span: 2,
+      props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
+      defaultValue: ["", ""]
     }
   },
   {
