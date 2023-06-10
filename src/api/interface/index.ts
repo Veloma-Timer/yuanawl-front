@@ -141,6 +141,21 @@ export namespace SalesOrder {
     account: AccountType;
     orderCode: string;
   }
+
+  export interface HistogramValue {
+    name: string;
+    value: number;
+  }
+  export interface WorkReport {
+    handleWorkNumber: {
+      today: HistogramValue[];
+      yesterday: HistogramValue[];
+    };
+    workTotal: number;
+    addedToday: number;
+    passWork: number;
+    failedWork: number;
+  }
 }
 // 权限管理模块
 export namespace Author {

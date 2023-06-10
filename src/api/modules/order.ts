@@ -33,3 +33,8 @@ export const checkSalesOrder = (id: number, params: any) => {
 export const delSalesOrder = (id: number) => {
   return http.delete(`${PORT3}/base_work_order/${id}`);
 };
+
+// 售后工单处理报表-数据统计
+export const sysAnalysisWork = (id: number) => {
+  return http.get<SalesOrder.WorkReport>(`${PORT3}/sys_analysis/work?branchId=${id}`);
+};

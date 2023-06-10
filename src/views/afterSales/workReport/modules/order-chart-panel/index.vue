@@ -8,8 +8,8 @@
     </div>
     <div class="right">
       <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
-        <template v-for="(item, index) in tabCityList" :key="index">
-          <el-radio-button :label="item.title" />
+        <template v-for="(item, index) in branchList" :key="index">
+          <el-radio-button :label="item.branchName" :value="item.id" />
         </template>
       </el-radio-group>
       <div class="sale-content">
@@ -18,13 +18,12 @@
             <tr class="top">
               <td class="title">{{ item.title1 }}</td>
               <td class="to-money">
-                <span v-if="item.title1 === '今日工单总价'">￥</span>
                 {{ item.value1 }}
               </td>
             </tr>
             <tr class="bottom">
               <td class="title">{{ item.title2 }}</td>
-              <td class="to-money">￥{{ item.value1 }}</td>
+              <td class="to-money">{{ item.value1 }}</td>
             </tr>
           </table>
         </div>
@@ -34,67 +33,76 @@
 </template>
 
 <script setup lang="ts">
+import { sysAnalysisWork } from "@/api/modules/order";
+import { getAllBranch } from "@/api/modules/set";
 import Header from "@/components/Header/index.vue";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 const echartsRef = ref<HTMLElement>();
 
-const saleData = ref([
-  {
-    title1: "工单总数",
-    value1: "1666",
-    title2: "今日新增",
-    value2: "0"
-  },
-  {
-    title1: "今日工单总价",
-    value1: "1666",
-    title2: "昨日全天",
-    value2: "0"
-  },
-  {
-    title1: "今日售后工单数",
-    value1: "1666",
-    title2: "昨日全天",
-    value2: "0"
-  },
-  {
-    title1: "今日售后客服数量",
-    value1: "1666",
-    title2: "昨日全天",
-    value2: "0"
-  },
-  {
-    title1: "总处理单数",
-    value1: "1666",
-    title2: "已处理完结单数",
-    value2: "0"
-  },
-  {
-    title1: "审核通过单数",
-    value1: "1666",
-    title2: "审核未通过单数",
-    value2: "0"
-  }
-]);
+// 门店数据获取
+type BranchObj = { branchName: string; id: number };
+const branchList = ref<BranchObj[]>([]);
+const currentCitySelect = ref("");
+const getAllBranchData = async () => {
+  const { data } = await getAllBranch({});
+  branchList.value = data?.map(item => {
+    return {
+      branchName: item.branchName,
+      id: item.id
+    };
+  });
+  currentCitySelect.value = branchList.value[0].branchName;
+  let selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
+  getCityData(selectObj!.id);
+};
+getAllBranchData();
 
-const currentCitySelect = ref("杭州");
-const tabCityList = ref([
-  {
-    title: "杭州",
-    key: "hz"
-  },
-  {
-    title: "信阳",
-    key: "yesterday"
-  }
-]);
-function changeCityDate(e: string | number | boolean) {
+// 门店切换
+async function changeCityDate(e: any) {
   currentCitySelect.value = e as string;
+  let selectObj = branchList.value.find(item => item.branchName === e);
+  getCityData(selectObj!.id);
 }
 
-onMounted(() => {
+// 获取门店统计数据
+const saleData: any = ref([]);
+async function getCityData(id: number) {
+  const data: any = await sysAnalysisWork(id);
+  saleData.value = [
+    {
+      title1: "工单总数",
+      value1: data.workTotal,
+      title2: "今日新增",
+      value2: data.addedToday
+    },
+    {
+      title1: "审核通过单数",
+      value1: data.passWork,
+      title2: "审核未通过单数",
+      value2: data.failedWork
+    }
+  ];
+  // HistogramValue {
+  //   name: string; // X
+  //   value: number; // Y
+  // }
+  const toDayX = data.handleWorkNumber.today.map((item: any) => {
+    return item.name;
+  });
+  const toDayY = data.handleWorkNumber.today.map((item: any) => {
+    return item.value;
+  });
+  const yesterdayY = data.handleWorkNumber.yesterday.map((item: any) => {
+    return item.value;
+  });
+  initEcharts(toDayX, toDayY, yesterdayY);
+}
+
+// 渲染图表
+// x轴一条 y轴两条数据
+function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
   let myChart: echarts.ECharts = echarts.init(echartsRef.value as HTMLElement);
   let option: echarts.EChartsOption = {
     tooltip: {
@@ -128,7 +136,7 @@ onMounted(() => {
       {
         type: "category",
         boundaryGap: false,
-        data: ["00:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00"],
+        data: toDayX,
         axisLabel: {
           color: "#a1a1a1"
         }
@@ -153,7 +161,7 @@ onMounted(() => {
         emphasis: {
           focus: "series"
         },
-        data: [120, 132, 101, 134, 90, 230, 210]
+        data: yesterdayY
       },
       {
         name: "今日",
@@ -165,12 +173,12 @@ onMounted(() => {
         emphasis: {
           focus: "series"
         },
-        data: [220, 182, 191, 234, 290, 330, 310]
+        data: toDayY
       }
     ]
   };
   useEcharts(myChart, option);
-});
+}
 </script>
 
 <style scoped lang="scss">
