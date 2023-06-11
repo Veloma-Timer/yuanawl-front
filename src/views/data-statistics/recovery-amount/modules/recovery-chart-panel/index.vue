@@ -130,14 +130,9 @@ onMounted(() => {
       },
       bottom: "1%"
     },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
-    },
     grid: {
       left: "3%",
-      right: "4%",
+      right: "2px",
       bottom: "13%",
       containLabel: true
     },

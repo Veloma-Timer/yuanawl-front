@@ -148,8 +148,8 @@ export namespace SalesOrder {
   }
   export interface WorkReport {
     handleWorkNumber: {
-      today: HistogramValue[];
-      yesterday: HistogramValue[];
+      current: HistogramValue[];
+      preCurrent: HistogramValue[];
     };
     workTotal: number;
     addedToday: number;
@@ -278,5 +278,41 @@ export namespace HomeSet {
     afterSaleUnit: IDataComparison[];
     // 发布组数据对比 -> 统计发布数据
     publishUnit: IDataComparison[];
+  }
+}
+
+// 数据统计
+export namespace Data {
+  export interface keyValue {
+    name: string;
+    value: number;
+  }
+  export interface TodaySales {
+    salesMap: {
+      current: keyValue[];
+      preCurrent: keyValue[];
+    };
+    salesPrice: number;
+    arpa: number;
+    paidOrders: number;
+    buyNumber: number;
+  }
+  export interface TodayRecycle {
+    recycleNumber: {
+      current: keyValue[];
+      preCurrent: keyValue[];
+    };
+    recyclePrice: number;
+    arpa: number;
+    recycleOrders: number;
+    buyNumber: number;
+  }
+  export interface SaleList {
+    accountCode: string;
+    accountType: string;
+    accountRecyclerPrice: string;
+    salePrice: string;
+    accountPublisher: string;
+    saleTime: string;
   }
 }

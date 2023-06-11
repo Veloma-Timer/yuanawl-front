@@ -2,25 +2,25 @@
   display: flex;
 }
 .left {
-  width: 745px;
+  width: 100%;
   .content {
     .header {
       display: inline-block;
-      margin-right: 447px;
     }
     .date-radio {
-      margin-top: -10px;
+      float: right;
+      margin-top: 6px;
+      margin-right: 10px;
     }
     .sale-echarts {
-      min-width: 745px;
-      min-height: 295px;
+      min-width: 100%;
+      min-height: 340px;
       margin-right: 10px;
     }
   }
 }
 .right {
   position: relative;
-  width: 100%;
   margin-top: 6px;
   margin-left: 20px;
   .city-radio {
@@ -32,20 +32,32 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px 20px;
     margin-top: 64px;
+    table {
+      width: 100%;
+    }
+    tr {
+      width: 100%;
+    }
+    td {
+      width: 50%;
+    }
     .item {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-width: 294px;
-      height: 104px;
+      width: 300px;
+      height: 120px;
       font-size: 14px;
-      color: #aaaaaa;
+      color: #ffffff;
       background: #ffffff;
+      background-image: url("@/assets/images/card-red.png");
+      background-size: 100% 100%;
       border: 1px solid #d7d7d7;
       border-radius: 10px;
       .title {
         margin-right: 20px;
+        text-align: right;
       }
       .top {
         display: flex;
@@ -53,7 +65,7 @@
         justify-content: center;
         .to-money {
           font-size: 24px;
-          color: #555555;
+          color: #ffffff;
         }
       }
       .bottom {

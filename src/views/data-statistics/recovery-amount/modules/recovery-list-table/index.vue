@@ -24,7 +24,7 @@ import { User } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import RecoveryDrawer from "../recovery-modal/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getUserList, editUser, addUser } from "@/api/modules/user";
+import { baseAccountRecyle } from "@/api/modules/order";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({ type: 1 });
 
@@ -36,7 +36,7 @@ const tableProps = withDefaults(defineProps<Props>(), {
 });
 
 const getTableList = (params: any) => {
-  return getUserList(params);
+  return baseAccountRecyle(params);
 };
 
 // 表格配置项
@@ -118,7 +118,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    // api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };
   recoveryDrawerRef.value?.acceptParams(params);

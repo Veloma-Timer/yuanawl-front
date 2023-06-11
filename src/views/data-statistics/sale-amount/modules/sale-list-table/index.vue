@@ -1,6 +1,5 @@
 <template>
   <div class="table-box">
-    --{{ tableProps.selectBranchId }}--
     <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
@@ -20,11 +19,13 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { User } from "@/api/interface";
+import { Data, SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import SaleDrawer from "../sale-modal/index.vue";
+import SaleDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getUserList, editUser, addUser } from "@/api/modules/user";
+import { baseAccountSales } from "@/api/modules/order";
+import { addSalesList, editSalesList } from "@/api/modules/order";
+import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 
@@ -36,72 +37,59 @@ const tableProps = withDefaults(defineProps<Props>(), {
 });
 
 const getTableList = (params: any) => {
-  return getUserList(params);
+  return baseAccountSales(params, tableProps.selectBranchId);
 };
 
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<Data.SaleList>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { prop: "operation", label: "操作", fixed: "left", width: 130 },
   {
-    prop: "username",
+    prop: "accountCode",
     label: "订单编号",
     search: { el: "input" },
     render: scope => {
-      return <span>{scope.row.gender}</span>;
+      return <span>{scope.row.accountCode}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "accountType",
     label: "游戏分类",
     search: { el: "input" },
     render: scope => {
-      return <span>{scope.row.gender}</span>;
+      return <span>{scope.row.accountType}</span>;
     }
   },
+  { prop: "accountTitle", label: "标题" },
   {
-    prop: "username",
-    label: "收件姓名",
-    search: { el: "input" },
-    isShow: false,
-    render: scope => {
-      return <span>{scope.row.gender}</span>;
-    }
-  },
-  { prop: "idCard", label: "标题" },
-  {
-    prop: "idCard",
+    prop: "accountRecyclerPrice",
     label: "回收金额",
     render: scope => {
-      return <span>￥{scope.row.gender}</span>;
+      return <span>￥{scope.row.accountRecyclerPrice}</span>;
     }
   },
   {
-    prop: "idCard",
+    prop: "salePrice",
     label: "出售金额",
     render: scope => {
-      return <span>￥{scope.row.gender}</span>;
+      return <span>￥{scope.row.salePrice}</span>;
     }
   },
   {
-    prop: "idCard",
+    prop: "accountPublisher",
     label: "出售人姓名",
     render: scope => {
-      return <span>{scope.row.gender}</span>;
+      return <span>{scope.row.accountPublisher || "--"}</span>;
     }
   },
   {
-    prop: "idCard",
-    label: "卖方信息",
-    search: { el: "input" },
-    render: scope => {
-      return <span>隔壁老王/{scope.row.gender}</span>;
-    }
-  },
-  {
-    prop: "createTime",
+    prop: "saleTime",
     label: "出售时间",
     width: 180,
+    render: scope => {
+      const time = scope.row?.saleTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+    },
     search: {
       el: "date-picker",
       span: 1,
@@ -112,12 +100,12 @@ const columns: ColumnProps<User.ResUserList>[] = [
 
 // 打开 drawer(新增、查看、编辑)
 const saleDrawer = ref<InstanceType<typeof SaleDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
+const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
   const params = {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增工单" ? addSalesList : title === "查看" ? editSalesList : undefined,
     getTableList: proTable.value?.getTableList
   };
   saleDrawer.value?.acceptParams(params);
@@ -143,7 +131,7 @@ watch(
   () => tableProps.selectBranchId,
   value => {
     if (value) {
-      // proTable.value?.getTableList();
+      proTable.value?.getTableList();
     }
   }
 );

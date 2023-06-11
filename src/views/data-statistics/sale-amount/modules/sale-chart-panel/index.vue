@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="left">
       <div class="content">
-        <Header title="本周销售" class="header"></Header>
+        <Header :title="`${currentTimeSelect}销售`" class="header"></Header>
         <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate" class="date-radio">
           <template v-for="(item, index) in tabDateList" :key="index">
             <el-radio-button :label="item.title" />
@@ -41,14 +41,18 @@ import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { getAllBranch } from "@/api/modules/set";
+import { todaySales } from "@/api/modules/order";
 const emit = defineEmits(["change-id"]);
 const echartsRef = ref<HTMLElement>();
+
+const getTodaySales = async (branchId: number, date: number) => {
+  const {} = await todaySales(branchId, date);
+};
 
 const saleData = ref([
   {
     title: "今日销售金额",
-    tMoney: "1666",
-    yMoney: "2777"
+    tMoney: "1666"
   },
   {
     title: "客单价",
@@ -67,19 +71,17 @@ const saleData = ref([
   }
 ]);
 
-const currentTimeSelect = ref("本日");
+// 时间范围选择
+const currentTimeSelect = ref<string>("本日");
 const tabDateList = ref([
   {
-    title: "本日",
-    key: "today"
+    title: "本日"
   },
   {
-    title: "本周",
-    key: "week"
+    title: "本周"
   },
   {
-    title: "本月",
-    key: "month"
+    title: "本月"
   }
 ]);
 
@@ -98,6 +100,13 @@ const getAllBranchData = async () => {
   currentCitySelect.value = branchList.value[0].branchName;
   let selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
   let id = selectObj!.id;
+  const obj: any = {
+    本日: 0,
+    本周: 1,
+    本月: 2
+  };
+  let date = obj[currentTimeSelect.value];
+  getTodaySales(id, date);
   emit("change-id", id);
 };
 getAllBranchData();
@@ -107,12 +116,20 @@ async function changeCityDate(e: any) {
   currentCitySelect.value = e as string;
   const selectObj = branchList.value.find(item => item.branchName === e);
   const id = selectObj!.id;
+  const obj: any = {
+    本日: 0,
+    本周: 1,
+    本月: 2
+  };
+  let date = obj[currentTimeSelect.value];
+  getTodaySales(id, date);
   emit("change-id", id);
 }
 
 // 日期范围切换
 function changeSelectDate(e: any) {
   console.log(e);
+  currentTimeSelect.value = e;
 }
 
 onMounted(() => {
@@ -134,14 +151,9 @@ onMounted(() => {
       },
       bottom: "1%"
     },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
-    },
     grid: {
       left: "3%",
-      right: "4%",
+      right: "2px",
       bottom: "13%",
       containLabel: true
     },
