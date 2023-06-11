@@ -1,17 +1,18 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="信阳工单" :columns="columns" :request-api="getTableList" :init-param="initParam">
+    <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" @click="openDrawer('新增账号')">新增账号</el-button>
+        <el-button type="primary" @click="openDrawer('新增工单')">新增工单</el-button>
         <el-button type="primary" @click="downloadImportTemplate">下载导入模板</el-button>
         <el-button type="primary" @click="importTemplate">导入模板</el-button>
         <el-button type="primary" @click="exportData">导出</el-button>
       </template>
       <!-- 表格操作 -->
-      <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link @click="openCheck(scope.row)">审核</el-button>
+      <template #operation="{ row }">
+        <el-button type="primary" link @click="openDrawer('查看', row)">查看</el-button>
+        <el-button type="primary" link @click="openCheck(row)">审核</el-button>
+        <el-button type="primary" link @click="delOrder(row.id, row.orderCode)">删除</el-button>
       </template>
     </ProTable>
     <OrderDrawer ref="drawerRef" />
@@ -25,16 +26,18 @@ import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getUserList, editUser, addUser, getUserGender } from "@/api/modules/user";
+// import { getAllBranch } from "@/api/modules/set";
+import { getSalesList, addSalesList, editSalesList, delSalesOrder } from "@/api/modules/order";
+import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
+import { useHandleData } from "@/hooks/useHandleData";
+import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
-const initParam = reactive({ type: 1 });
+
+// 固定
+const initParam = reactive({ branchId: 1 });
 
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
-  newParams.createTime && (newParams.startTime = newParams.createTime[0]);
-  newParams.createTime && (newParams.endTime = newParams.createTime[1]);
-  delete newParams.createTime;
-  return getUserList(newParams);
+  return getSalesList(params);
 };
 
 // 表格配置项
@@ -42,173 +45,188 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
   { prop: "operation", label: "操作", fixed: "left", width: 180 },
   {
-    prop: "username",
+    prop: "orderCode",
     label: "工单编号",
     search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.orderCode || "--"}</span>;
     }
   },
   {
-    prop: "username",
-    label: "订单编号",
+    prop: "accountCode",
+    label: "账号编号",
     search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row?.account?.accountCode || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "accountNumber",
     label: "账号",
-    search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row?.account?.accountNumber || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "accountPrice",
     label: "实付金额",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.accountPrice || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "userCompensationPrice",
     label: "用户赔付金额",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.userCompensationPrice || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "platformCompensationPrice",
     label: "平台赔付金额",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.platformCompensationPrice || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "reportPerson",
     label: "上报人姓名",
-    search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.reportPerson || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "newHandle",
     label: "最新处理客服姓名",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.newHandle || "--"}</span>;
     }
   },
   {
-    prop: "username",
-    label: "客服姓名",
-    width: 180,
-    search: { el: "input" },
-    isShow: false,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "username",
+    prop: "newHandleResult",
     label: "最新处理结果",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.newHandleResult || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "handleTimes",
     label: "处理次数",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.handleTimes || "-"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "insure",
     label: "是否投保",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{INSURE_STATUS[scope.row.insure as any] || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "recycleBranch",
     label: "回收店铺",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.recycleBranch || "--"}</span>;
     }
   },
   {
-    prop: "createTime",
+    prop: "submitOrderTime",
     label: "提交工单时间",
-    width: 180
+    width: 180,
+    render: scope => {
+      const time = scope.row?.submitOrderTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+    }
   },
   {
-    prop: "createTime",
+    prop: "newHandleTime",
     label: "最新处理时间",
-    width: 180
+    width: 180,
+    render: scope => {
+      const time = scope.row?.newHandleTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+    }
   },
   {
-    prop: "username",
+    prop: "handleTime",
     label: "处理时效",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.handleTime || "--"}</span>;
     }
   },
   {
-    prop: "gender",
+    prop: "orderStar",
     label: "工单星级",
-    enum: getUserGender,
-    width: 180,
-    search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "genderLabel", value: "genderValue" }
+    width: 180
   },
   {
-    prop: "gender",
+    prop: "orderStatus",
     label: "状态",
-    enum: getUserGender,
+    enum: [
+      {
+        label: "待处理",
+        value: "0"
+      },
+      {
+        label: "已处理",
+        value: "1"
+      }
+    ],
     width: 180,
     search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "genderLabel", value: "genderValue" }
+    render: scope => {
+      return <span>{ORDER_STATUS[scope.row.orderStatus as any] || "--"}</span>;
+    }
   },
   {
-    prop: "username",
+    prop: "orderChecker",
     label: "审核人",
     width: 180,
     render: scope => {
-      return <span>{scope.row.username}</span>;
+      return <span>{scope.row.orderChecker || "--"}</span>;
     }
   },
   {
-    prop: "username",
+    prop: "checkerResult",
     label: "审核结果",
     width: 180,
-    render: scope => {
-      return <span>{scope.row.username}</span>;
-    }
-  },
-  {
-    prop: "gender",
-    label: "店铺",
-    width: 180,
-    enum: getUserGender,
     search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "genderLabel", value: "genderValue" }
+    enum: [
+      {
+        label: "未通过",
+        value: "0"
+      },
+      {
+        label: "通过",
+        value: "1"
+      }
+    ],
+    render: scope => {
+      return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
+    }
   }
+  // {
+  //   prop: "branch",
+  //   label: "店铺",
+  //   width: 180,
+  //   enum: getAllBranch,
+  //   search: { el: "select", props: { filterable: true } },
+  //   fieldNames: { label: "branchName", value: "id" }
+  // }
 ];
 
 // 打开 drawer(新增、查看、编辑)
@@ -218,16 +236,21 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增账号" ? addUser : title === "编辑" ? editUser : undefined,
+    api: title === "新增工单" ? addSalesList : title === "查看" ? editSalesList : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
 
 const orderCheckRef = ref<any>(null);
-const openCheck = (e: any) => {
-  console.log("审核", e);
-  orderCheckRef.value?.openDialog();
+const openCheck = (row: any) => {
+  orderCheckRef.value?.openDialog({ row, getTableList: proTable.value?.getTableList });
+};
+
+const delOrder = async (id: number, orderCode: string) => {
+  await useHandleData(delSalesOrder, id, `删除工单编号【${orderCode}】这条数据`);
+  proTable.value?.clearSelection();
+  proTable.value?.getTableList();
 };
 
 const downloadImportTemplate = () => {
