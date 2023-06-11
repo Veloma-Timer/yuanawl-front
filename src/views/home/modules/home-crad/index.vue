@@ -1,68 +1,243 @@
 <template>
   <div class="home-crud">
     <div class="crud-list flex">
-      <div v-for="item in crudList" :key="item.id" class="crud-list-item flex">
+      <div v-for="(item, index) in crudListMap" :key="item.id" class="crud-list-item flex">
         <div class="crud-number" ref="crudNumberRef"></div>
         <div class="crud-total">
-          <div class="total-name">今日销售总额</div>
-          <div class="total-compare">昨日同比</div>
+          <div class="total-name">{{ analysis[index].label }}</div>
+          <div v-if="analysis[index].yesterday" class="total-compare">昨日同比</div>
           <div class="total-proportion flex flx-align-center flx-justify-between">
-            {{ item.name }}%
-            <el-icon><CaretTop /></el-icon>
+            <div v-show="analysis[index].yesterday">
+              {{ item.preValue }}
+              <el-icon>
+                <CaretTop />
+              </el-icon>
+            </div>
             <img src="@/assets/images/data.png" alt="" />
           </div>
         </div>
       </div>
     </div>
+    <div class="home-proportion">
+      <div class="proportion-item" ref="proportionA"></div>
+      <div class="proportion-item" ref="proportionB"></div>
+    </div>
+    <div class="proportion" ref="proportionC"></div>
   </div>
 </template>
 <script setup lang="ts">
 import { CaretTop } from "@element-plus/icons-vue";
-import { ref, onMounted } from "vue";
+import { ref, reactive, defineProps, watch, nextTick } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
+import { setValues } from "@/views/home/modules/homeUtis.js";
+
 const crudNumberRef = ref<HTMLElement>();
-const setNumber = () => {
-  let crudNumber = document.getElementsByClassName("crud-number");
-  for (let i = 0; i < crudList.length; i++) {
-    let option: echarts.EChartsOption = {
-      title: {
-        text: "80%",
-        x: "center",
-        y: "center",
-        textStyle: {
-          fontWeight: "normal",
-          color: "#0580f2",
-          fontSize: "12"
-        }
-      },
-      color: ["rgba(176, 212, 251, 1)"],
-      legend: {
-        show: true,
-        itemGap: 12
-      },
-      series: [
-        {
-          name: "Line 1",
-          type: "pie",
-          clockWise: true,
-          radius: ["50%", "70%"],
+const proportionA = ref<HTMLElement>();
+const proportionB = ref<HTMLElement>();
+const proportionC = ref<HTMLElement>();
+const analysis = [
+  { label: "今日销售总额", yesterday: true },
+  { label: "今日销售数量", yesterday: true },
+  { label: "今日回收数量", yesterday: true },
+  { label: "今日销售均价", yesterday: true },
+  { label: "今日回收均价", yesterday: true },
+  { label: "今日回收总额", yesterday: true },
+  { label: "平台总销售量", yesterday: false },
+  { label: "平台总回收量", yesterday: false },
+  { label: "平台日均新增销售", yesterday: false },
+  { label: "平台日均新增回收", yesterday: false }
+];
+const saleGet = salesPriceMap => {
+  let myChart: echarts.ECharts = echarts.init(proportionA.value as HTMLElement);
+  let option: echarts.EChartsOption = {
+    title: {
+      text: "今日销售账号占比",
+      left: "left"
+    },
+    tooltip: {
+      trigger: "item"
+    },
+    legend: {
+      bottom: 0
+    },
+    series: [
+      {
+        type: "pie",
+        radius: "70%",
+        data: salesPriceMap,
+        emphasis: {
           itemStyle: {
-            normal: {
-              label: {
-                show: false
-              },
-              labelLine: {
-                show: false
-              }
-            }
-          },
-          hoverAnimation: false,
-          data: [
-            {
-              value: 80,
-              itemStyle: {
-                normal: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)"
+          }
+        },
+        label: {
+          formatter: function (params) {
+            return `${params.name}-${params.value}`;
+          }
+        }
+      }
+    ]
+  };
+  useEcharts(myChart, option);
+  const chartObserver = new ResizeObserver(() => {
+    myChart.resize();
+  });
+  chartObserver.observe(proportionA.value as HTMLElement);
+};
+// 回收占比
+const recoveryGet = recyclingPriceMap => {
+  let myChart: echarts.ECharts = echarts.init(proportionB.value as HTMLElement);
+  let option: echarts.EChartsOption = {
+    title: {
+      text: "今日回收账号占比",
+      left: "left"
+    },
+    tooltip: {
+      trigger: "item"
+    },
+    legend: {
+      bottom: 0
+    },
+    series: [
+      {
+        type: "pie",
+        radius: ["40%", "70%"],
+        data: recyclingPriceMap,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: "rgba(0, 0, 0, 0.5)"
+          }
+        },
+        label: {
+          formatter: function (params) {
+            return `${params.name}-${params.value}`;
+          }
+        }
+      }
+    ]
+  };
+  useEcharts(myChart, option);
+  const chartObserver = new ResizeObserver(() => {
+    myChart.resize();
+  });
+  chartObserver.observe(proportionB.value as HTMLElement);
+};
+// 工单占比
+const orderGet = (saleAccountNumber, workOrderNumber, data) => {
+  let myChart: echarts.ECharts = echarts.init(proportionC.value as HTMLElement);
+  let option: echarts.EChartsOption = {
+    title: { text: "工单占比" },
+    tooltip: {
+      trigger: "axis",
+      axisPointer: {
+        // 坐标轴指示器，坐标轴触发有效
+        type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+      }
+    },
+    legend: {
+      data: ["已售账号数量总数", "工单数量"],
+      bottom: 0
+    },
+    grid: {
+      left: "3%",
+      right: "4%",
+      bottom: "6%",
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: "category",
+        data: data
+      }
+    ],
+    yAxis: [
+      {
+        type: "value",
+        axisLabel: {
+          formatter: "{value}"
+        }
+      }
+    ],
+    series: [
+      {
+        name: "已售账号数量总数",
+        type: "bar",
+        data: saleAccountNumber
+      },
+      {
+        name: "工单数量",
+        type: "bar",
+        data: workOrderNumber
+      }
+    ]
+  };
+  useEcharts(myChart, option);
+  const chartObserver = new ResizeObserver(() => {
+    myChart.resize();
+  });
+  chartObserver.observe(proportionC.value as HTMLElement);
+};
+// 处理数据
+const wholeSetMap = obj => {
+  let data,
+    saleNumber,
+    worNumber = [];
+  const { saleAccountNumber, workOrderNumber } = obj.workOrderProp;
+  const salesPriceMap = obj.salesPriceMap;
+  const recyclingPriceMap = obj.recyclingPriceMap;
+  data = setValues(saleAccountNumber, "name");
+  saleNumber = setValues(saleAccountNumber, "value");
+  worNumber = setValues(workOrderNumber, "value");
+  saleGet(salesPriceMap);
+  recoveryGet(recyclingPriceMap);
+  orderGet(saleNumber, worNumber, data);
+};
+const props = defineProps({
+  crudListObj: {
+    type: Object,
+    default: () => {}
+  }
+});
+const setNumber = () => {
+  nextTick(() => {
+    let crudNumber = document.getElementsByClassName("crud-number");
+    for (let i = 0; i < crudListMap.length; i++) {
+      let option: echarts.EChartsOption = {
+        title: {
+          text: `${crudListMap[i].value}`,
+          x: "center",
+          y: "center",
+          textStyle: {
+            fontWeight: "normal",
+            color: "#0580f2",
+            fontSize: "12"
+          }
+        },
+        color: ["rgba(176, 212, 251, 1)"],
+        series: [
+          {
+            name: "Line 1",
+            type: "pie",
+            clockwise: true,
+            radius: ["50%", "70%"],
+            label: {
+              show: false
+            },
+            labelLine: {
+              show: false
+            },
+            emphasis: {
+              scale: true // 使用emphasis.scale替代hoverAnimation
+            },
+            data: [
+              {
+                value: crudListMap[i].value,
+                itemStyle: {
                   color: {
                     // 完成的圆环的颜色
                     colorStops: [
@@ -83,30 +258,44 @@ const setNumber = () => {
                     show: false
                   }
                 }
+              },
+              {
+                value: 20
               }
-            },
-            {
-              value: 20
-            }
-          ]
-        }
-      ]
-    };
-    let myChart: echarts.ECharts = echarts.init(crudNumber[i] as HTMLElement);
-    useEcharts(myChart, option);
-  }
+            ]
+          }
+        ]
+      };
+      let myChart: echarts.ECharts = echarts.init(crudNumber[i] as HTMLElement);
+      useEcharts(myChart, option);
+    }
+  });
 };
-onMounted(() => {
+// 处理数据
+let crudListMap = reactive([]);
+const setCrud = obj => {
+  crudListMap = [
+    obj.totalSales,
+    obj.salesQuantity,
+    obj.recyclingQuantity,
+    obj.averageSellingPrice,
+    obj.recoveryAveragePrice,
+    obj.totalRecovery,
+    obj.totalSalesVolume,
+    obj.overallRecovery,
+    obj.averageDailyNewSales,
+    obj.dailyAverageNewRecyclingVolume
+  ];
   setNumber();
-});
-const crudList = [
-  { id: 1, name: "22.8" },
-  { id: 2, name: "22.8" },
-  { id: 3, name: "22.8" },
-  { id: 4, name: "22.8" },
-  { id: 5, name: "22.8" },
-  { id: 6, name: "22.8" }
-];
+};
+watch(
+  () => props.crudListObj,
+  count => {
+    /* ... */
+    setCrud(count);
+    wholeSetMap(count);
+  }
+);
 </script>
 <style scoped lang="scss">
 .home-crud {
@@ -115,7 +304,7 @@ const crudList = [
     flex-wrap: wrap;
     width: 100%;
     .crud-list-item {
-      width: calc((100% - 80px) / 5);
+      width: calc((100% - 60px) / 4);
       height: 181px;
       padding: 18px 22px;
       margin: 0 20px 20px 0;
@@ -123,13 +312,13 @@ const crudList = [
       border: 2px solid #f0f0f0;
       border-radius: 10px;
       .crud-number {
-        width: 110px;
+        width: 160px;
         height: 100%;
       }
       .crud-total {
-        width: calc(100% - 110px);
+        width: calc(100% - 160px);
         height: 100%;
-        padding: 26px 0;
+        padding: 20px 0;
         color: #858585;
         .total-name {
           margin-bottom: 13px;
@@ -137,24 +326,51 @@ const crudList = [
           font-weight: normal;
         }
         .total-compare {
-          margin-bottom: 13px;
           font-size: 8px;
           font-weight: normal;
         }
         .total-proportion {
+          position: relative;
           font-size: 12px;
           font-weight: normal;
           color: #1cd1a1;
           img {
+            position: absolute;
+            right: 0;
             width: 75px;
             height: 31px;
           }
         }
       }
-      &:nth-child(5n) {
+      &:nth-child(4n) {
         margin: 0;
       }
     }
+  }
+  .home-proportion {
+    display: flex;
+    margin: 0 0 40px;
+    .proportion-item {
+      width: calc((100% - 40px) / 2);
+      height: 455px;
+      padding: 10px 20px;
+      margin: 0 40px 0 0;
+      background: #ffffff;
+      border-radius: 25px;
+      box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
+      &:last-child {
+        margin: 0;
+      }
+    }
+  }
+  .proportion {
+    width: 100%;
+    height: 455px;
+    padding: 10px 20px;
+    margin-bottom: 40px;
+    background: #ffffff;
+    border-radius: 25px;
+    box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
   }
 }
 </style>

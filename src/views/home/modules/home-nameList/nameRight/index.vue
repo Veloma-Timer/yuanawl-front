@@ -9,26 +9,20 @@
         <div class="header-item">店铺</div>
       </div>
       <div class="home-table-row mt26">
-        <div class="table-row-cell flex" v-for="(item, index) in nameList" :key="item.id">
+        <div class="table-row-cell flex" v-for="(item, index) in props.salasRankingArr" :key="item.index + index">
           <div class="cell-item">
-            <span :class="nameClassObj.get(item.id)">{{ index + 1 }}</span>
+            <span :class="nameClassObj.get(item.index)">{{ item.index }}</span>
           </div>
           <div class="cell-item">{{ item.name }}</div>
-          <div class="cell-item">{{ item.amount }}</div>
-          <div class="cell-item">{{ item.store }}</div>
+          <div class="cell-item">{{ item.salas }}</div>
+          <div class="cell-item">{{ item.branch }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup lang="ts">
-const nameList = [
-  { id: 1, name: "客服-旭阳", amount: "9865", store: "store" },
-  { id: 2, name: "客服-旭阳", amount: "9865", store: "store" },
-  { id: 3, name: "客服-旭阳", amount: "9865", store: "store" },
-  { id: 4, name: "客服-旭阳", amount: "9865", store: "store" },
-  { id: 5, name: "客服-旭阳", amount: "9865", store: "store" }
-];
+import { defineProps } from "vue";
 const nameClassObj = new Map([
   [1, "one"],
   [2, "two"],
@@ -36,6 +30,9 @@ const nameClassObj = new Map([
   [4, "four"],
   [5, "five"]
 ]);
+const props = defineProps({
+  salasRankingArr: Array
+});
 </script>
 <style scoped lang="scss">
 .home-name-right {

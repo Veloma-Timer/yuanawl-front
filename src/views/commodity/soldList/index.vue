@@ -40,17 +40,10 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Delete, Download, View } from "@element-plus/icons-vue";
-import {
-  deleteUser,
-  editUser,
-  addUser,
-  changeUserStatus,
-  resetUserPassWord,
-  exportUserInfo,
-  BatchAddUser
-} from "@/api/modules/user";
-import { summaryList, addSummary, deleteSummary, editSummary } from "@/api/modules/commodity";
+import { deleteUser, changeUserStatus, resetUserPassWord, exportUserInfo, BatchAddUser, getUserAll } from "@/api/modules/user";
+import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
+import { parseTime } from "@/utils";
 
 const router = useRouter();
 
@@ -104,6 +97,23 @@ const columns: ColumnProps<User.ResUserList>[] = [
     fieldNames: { label: "typeName", value: "id" }
   },
   { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
+  {
+    prop: "salePeopleId",
+    label: "出售人姓名",
+    width: 160,
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "saleTime",
+    label: "出售时间",
+    width: 160,
+    search: { el: "input" },
+    render: scope => {
+      return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}");
+    }
+  },
   {
     prop: "salePrice",
     label: "出售金额",

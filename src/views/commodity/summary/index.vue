@@ -40,10 +40,11 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { exportUserInfo, BatchAddUser } from "@/api/modules/user";
+import { exportUserInfo, BatchAddUser, getUserAll } from "@/api/modules/user";
 import { addSummary, deleteSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
+import { parseTime } from "@/utils";
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -98,6 +99,23 @@ const columns: ColumnProps<Commodity.Account>[] = [
     fieldNames: { label: "typeName", value: "id" }
   },
   { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
+  {
+    prop: "salePeopleId",
+    label: "出售人姓名",
+    width: 160,
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "saleTime",
+    label: "出售时间",
+    width: 160,
+    search: { el: "input" },
+    render: scope => {
+      return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}");
+    }
+  },
   {
     prop: "salePrice",
     label: "出售金额",
