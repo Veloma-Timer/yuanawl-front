@@ -25,7 +25,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import RecoveryDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { baseAccountRecyle } from "@/api/modules/order";
-import { addSummary, editSummary } from "@/api/modules/commodity";
+import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
@@ -39,7 +39,11 @@ const tableProps = withDefaults(defineProps<Props>(), {
 });
 
 const getTableList = (params: any) => {
-  return baseAccountRecyle(params, tableProps.selectBranchId);
+  if (currentTimeSelect.value === "今日回收") {
+    return baseAccountRecyle(params, tableProps.selectBranchId);
+  } else {
+    return summaryList({ ...params, branchId: tableProps.selectBranchId });
+  }
 };
 
 // 表格配置项
@@ -128,6 +132,7 @@ const tabCityList = ref([
 ]);
 function changeCityDate(e: string | number | boolean) {
   currentTimeSelect.value = e as string;
+  proTable.value?.getTableList();
 }
 
 // 监听 selectBranchId
