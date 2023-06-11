@@ -17,6 +17,7 @@ export const initDynamicRouter = async () => {
   const authStore = useAuthStore();
   const token = userStore.token; // 获取token
   const obj = JSON.parse(decryption("token", token));
+  console.log(obj);
   try {
     // 1.获取菜单列表 && 按钮权限列表
     await authStore.getAuthMenuList();
