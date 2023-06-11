@@ -28,8 +28,10 @@ export const useAuthStore = defineStore({
   actions: {
     // Get AuthButtonList
     async getAuthButtonList(userObj: any) {
-      const { data } = await getAuthButtonListApi(userObj.userRole.id);
-      this.authButtonList = data.powerDetail;
+      const {
+        data: { powerDetail }
+      } = await getAuthButtonListApi(userObj!.userRole!.id);
+      this.authButtonList = powerDetail;
     },
     // Get AuthMenuList
     async getAuthMenuList() {

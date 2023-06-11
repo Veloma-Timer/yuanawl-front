@@ -48,10 +48,11 @@ interface plat {
   salas: number;
 }
 let platformList: plat[] = reactive([]);
+let nameList = reactive([]);
 const myArrayRef = toRef(props, "platformSalas");
 const getNameList = async () => {
   const { data } = await homeOrder({ pageSize: 5, pageNum: 1 });
-  nameList.value = data.list || [];
+  nameList = data.list || [];
 };
 const props = defineProps({
   platformSalas: {
@@ -63,9 +64,7 @@ const props = defineProps({
     default: () => []
   }
 });
-console.log(props.salasRanking);
 watch(myArrayRef, newValue => {
-  console.log(newValue);
   platformList = newValue;
 });
 getNameList();
