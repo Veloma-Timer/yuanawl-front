@@ -26,6 +26,7 @@ import SaleDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { baseAccountSales } from "@/api/modules/order";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
+import { getAllList } from "@/api/modules/accountClass";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
@@ -60,7 +61,9 @@ const columns: ColumnProps<Data.SaleList>[] = [
   {
     prop: "accountType",
     label: "游戏分类",
-    search: { el: "input" },
+    enum: getAllList,
+    search: { el: "select" },
+    fieldNames: { label: "typeName", value: "id" },
     render: scope => {
       return <span>{scope.row.accountType || "--"}</span>;
     }
