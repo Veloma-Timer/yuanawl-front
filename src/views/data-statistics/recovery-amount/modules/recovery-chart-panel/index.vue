@@ -183,7 +183,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
       }
     },
     legend: {
-      data: ["杭州", "信阳"],
+      data: ["今日", "昨日"],
       textStyle: {
         color: "#a1a1a1"
       },
@@ -215,22 +215,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
     ],
     series: [
       {
-        name: "杭州",
-        type: "line",
-        stack: "Total",
-        lineStyle: {
-          color: "#2ED7FF"
-        },
-        areaStyle: {
-          color: "#2ED7FF"
-        },
-        emphasis: {
-          focus: "series"
-        },
-        data: yesterdayY
-      },
-      {
-        name: "信阳",
+        name: "今日",
         type: "line",
         stack: "Total",
         lineStyle: {
@@ -243,6 +228,21 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
           focus: "series"
         },
         data: toDayY
+      },
+      {
+        name: "昨日",
+        type: "line",
+        stack: "Total",
+        lineStyle: {
+          color: "#2ED7FF"
+        },
+        areaStyle: {
+          color: "#2ED7FF"
+        },
+        emphasis: {
+          focus: "series"
+        },
+        data: yesterdayY
       }
     ]
   };

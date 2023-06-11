@@ -62,3 +62,13 @@ export const baseAccountSales = (params: any, branchId: number) => {
 export const baseAccountRecyle = (params: any, branchId: number) => {
   return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`, params);
 };
+
+// 账号模板
+export const downTemplate = () => {
+  return http.get(`/static/template/账号模板.xlsx`, {});
+};
+
+// 账号导入
+export const baseAccountUpload = (file: any) => {
+  return http.get(`${PORT3}/base_account/upload`, { file });
+};
