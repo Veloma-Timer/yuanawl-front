@@ -2,7 +2,7 @@
   display: flex;
 }
 .left {
-  width: 100%;
+  flex: 7;
   .content {
     .header {
       display: inline-block;
@@ -23,6 +23,7 @@
   position: relative;
   margin-top: 6px;
   margin-left: 20px;
+  flex: 3;
   .city-radio {
     position: absolute;
     right: 0;
@@ -55,6 +56,7 @@
       background-size: 100% 100%;
       border: 1px solid #d7d7d7;
       border-radius: 10px;
+      padding-left: 20px;
       .title {
         margin-right: 20px;
         text-align: right;
@@ -62,16 +64,15 @@
       .top {
         display: flex;
         align-items: center;
-        justify-content: center;
-        .to-money {
-          font-size: 24px;
-          color: #ffffff;
-        }
+        justify-content: left;
+        font-size: 18px;
+        color: #ffffff;
       }
       .bottom {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: left;
+        margin-top: 10px;
       }
     }
   }

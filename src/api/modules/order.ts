@@ -46,12 +46,12 @@ export const sysAnalysisWork = (id: number, date: number) => {
 
 // 数据统计-日销售金额汇总-上边图表的
 export const todaySales = (branchId: number, date: number) => {
-  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
+  return http.get<Data.TodaySales>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
 };
 
 // 数据统计-日回收金额汇总-上边图表的
 export const todayRecycle = (branchId: number, date: number) => {
-  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/sys_analysis/today_recycle?branchId=${branchId}&date=${date}`);
+  return http.get<Data.TodayRecycle>(`${PORT3}/sys_analysis/today_recycle?branchId=${branchId}&date=${date}`);
 };
 
 // 数据统计-日销售金额汇总-下边表格的
@@ -59,6 +59,6 @@ export const baseAccountSales = (params: any, branchId: number) => {
   return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_sales?branchId=${branchId}`, params);
 };
 // 数据统计-日回收金额汇总-下边表格的
-export const baseAccountRecyle = (branchId: number) => {
-  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`);
+export const baseAccountRecyle = (params: any, branchId: number) => {
+  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`, params);
 };

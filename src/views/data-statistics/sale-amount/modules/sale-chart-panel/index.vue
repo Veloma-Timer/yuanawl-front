@@ -21,12 +21,14 @@
         <div class="item" v-for="(item, index) in saleData" :key="index">
           <table>
             <tr class="top">
-              <td class="title">{{ item.title }}</td>
-              <td class="to-money">￥{{ item.tMoney }}</td>
+              {{
+                item.title
+              }}
             </tr>
             <tr class="bottom">
-              <td class="title">昨日全天</td>
-              <td class="ys-money">￥{{ item.yMoney }}</td>
+              {{
+                item.value
+              }}
             </tr>
           </table>
         </div>
@@ -37,7 +39,7 @@
 
 <script setup lang="ts">
 import Header from "@/components/Header/index.vue";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { getAllBranch } from "@/api/modules/set";
@@ -45,31 +47,46 @@ import { todaySales } from "@/api/modules/order";
 const emit = defineEmits(["change-id"]);
 const echartsRef = ref<HTMLElement>();
 
+const saleData: any = ref([]);
 const getTodaySales = async (branchId: number, date: number) => {
-  const {} = await todaySales(branchId, date);
+  const {
+    data: {
+      salesMap: { current, preCurrent },
+      salesPrice,
+      arpa,
+      paidOrders,
+      buyNumber
+    }
+  } = await todaySales(branchId, date);
+  const toDayX = current.map((item: any) => {
+    return item.name;
+  });
+  const toDayY = current.map((item: any) => {
+    return item.value;
+  });
+  const yesterdayY = preCurrent.map((item: any) => {
+    return item.value;
+  });
+  initEcharts(toDayX, toDayY, yesterdayY);
+  saleData.value = [
+    {
+      title: "今日销售金额",
+      value: salesPrice
+    },
+    {
+      title: "客单价",
+      value: arpa
+    },
+    {
+      title: "支付订单数",
+      value: paidOrders
+    },
+    {
+      title: "下单用户数",
+      value: buyNumber
+    }
+  ];
 };
-
-const saleData = ref([
-  {
-    title: "今日销售金额",
-    tMoney: "1666"
-  },
-  {
-    title: "客单价",
-    tMoney: "3666",
-    yMoney: "4777"
-  },
-  {
-    title: "支付订单数",
-    tMoney: "5666",
-    yMoney: "6777"
-  },
-  {
-    title: "下单用户数",
-    tMoney: "7666",
-    yMoney: "8777"
-  }
-]);
 
 // 时间范围选择
 const currentTimeSelect = ref<string>("本日");
@@ -128,11 +145,31 @@ async function changeCityDate(e: any) {
 
 // 日期范围切换
 function changeSelectDate(e: any) {
-  console.log(e);
   currentTimeSelect.value = e;
 }
 
-onMounted(() => {
+let id = computed(() => {
+  const selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
+  return selectObj!.id;
+});
+
+let date = computed(() => {
+  const obj: any = {
+    本日: 0,
+    本周: 1,
+    本月: 2
+  };
+  return obj[currentTimeSelect.value];
+});
+
+watch(
+  () => currentTimeSelect.value,
+  () => {
+    getTodaySales(id.value, date.value);
+  }
+);
+
+function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
   let myChart: echarts.ECharts = echarts.init(echartsRef.value as HTMLElement);
   let option: echarts.EChartsOption = {
     tooltip: {
@@ -161,7 +198,7 @@ onMounted(() => {
       {
         type: "category",
         boundaryGap: false,
-        data: ["一月", "二月", "三月", "四月", "五月", "六月", "七月"],
+        data: toDayX,
         axisLabel: {
           color: "#a1a1a1"
         }
@@ -189,7 +226,7 @@ onMounted(() => {
         emphasis: {
           focus: "series"
         },
-        data: [120, 132, 101, 134, 90, 230, 210]
+        data: yesterdayY
       },
       {
         name: "信阳",
@@ -204,12 +241,12 @@ onMounted(() => {
         emphasis: {
           focus: "series"
         },
-        data: [220, 182, 191, 234, 290, 330, 310]
+        data: toDayY
       }
     ]
   };
   useEcharts(myChart, option);
-});
+}
 </script>
 
 <style scoped lang="scss">

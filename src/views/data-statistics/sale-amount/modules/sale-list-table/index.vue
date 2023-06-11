@@ -19,12 +19,13 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { Data, SalesOrder } from "@/api/interface";
+import { Data } from "@/api/interface";
+import { Commodity } from "@/api/interface/commodity/commodity";
 import ProTable from "@/components/ProTable/index.vue";
 import SaleDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { baseAccountSales } from "@/api/modules/order";
-import { addSalesList, editSalesList } from "@/api/modules/order";
+import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
@@ -37,7 +38,11 @@ const tableProps = withDefaults(defineProps<Props>(), {
 });
 
 const getTableList = (params: any) => {
-  return baseAccountSales(params, tableProps.selectBranchId);
+  if (currentTimeSelect.value === "今日销售") {
+    return baseAccountSales(params, tableProps.selectBranchId);
+  } else {
+    return summaryList({ ...params, branchId: tableProps.selectBranchId });
+  }
 };
 
 // 表格配置项
@@ -49,7 +54,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     label: "订单编号",
     search: { el: "input" },
     render: scope => {
-      return <span>{scope.row.accountCode}</span>;
+      return <span>{scope.row.accountCode || "--"}</span>;
     }
   },
   {
@@ -57,7 +62,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     label: "游戏分类",
     search: { el: "input" },
     render: scope => {
-      return <span>{scope.row.accountType}</span>;
+      return <span>{scope.row.accountType || "--"}</span>;
     }
   },
   { prop: "accountTitle", label: "标题" },
@@ -65,14 +70,14 @@ const columns: ColumnProps<Data.SaleList>[] = [
     prop: "accountRecyclerPrice",
     label: "回收金额",
     render: scope => {
-      return <span>￥{scope.row.accountRecyclerPrice}</span>;
+      return <span>￥{scope.row.accountRecyclerPrice || "-"}</span>;
     }
   },
   {
     prop: "salePrice",
     label: "出售金额",
     render: scope => {
-      return <span>￥{scope.row.salePrice}</span>;
+      return <span>￥{scope.row.salePrice || "--"}</span>;
     }
   },
   {
@@ -100,12 +105,12 @@ const columns: ColumnProps<Data.SaleList>[] = [
 
 // 打开 drawer(新增、查看、编辑)
 const saleDrawer = ref<InstanceType<typeof SaleDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
+const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   const params = {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增工单" ? addSalesList : title === "查看" ? editSalesList : undefined,
+    api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
   saleDrawer.value?.acceptParams(params);
@@ -114,16 +119,15 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
 const currentTimeSelect = ref("今日销售");
 const tabCityList = ref([
   {
-    title: "今日销售",
-    key: "today"
+    title: "今日销售"
   },
   {
-    title: "历史销售",
-    key: "history"
+    title: "历史销售"
   }
 ]);
 function changeCityDate(e: string | number | boolean) {
   currentTimeSelect.value = e as string;
+  proTable.value?.getTableList();
 }
 
 // 监听 selectBranchId

@@ -315,4 +315,12 @@ export namespace Data {
     accountPublisher: string;
     saleTime: string;
   }
+  export interface RecycleList {
+    accountCode: string;
+    accountType: string;
+    accountRecycler: string;
+    accountRecyclerTime: string;
+    accountStatus: number;
+    accountRecyclerPrice: string;
+  }
 }
