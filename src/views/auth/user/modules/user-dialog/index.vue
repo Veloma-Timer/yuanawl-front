@@ -11,7 +11,7 @@
     >
       <el-row>
         <el-col :span="12">
-          <el-form-item label="登录编码" prop="userCode">
+          <el-form-item label="用户编码" prop="userCode">
             <el-input v-model="drawerProps.row!.userCode" placeholder="请输入" clearable class="order-input"></el-input>
           </el-form-item>
         </el-col>

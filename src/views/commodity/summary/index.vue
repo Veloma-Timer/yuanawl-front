@@ -12,7 +12,7 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
+        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载导入模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
       </template>
@@ -41,8 +41,8 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { exportUserInfo, BatchAddUser, getUserAll } from "@/api/modules/user";
-import { addSummary, deleteSummary, editSummary, summaryList } from "@/api/modules/commodity";
+import { getUserAll } from "@/api/modules/user";
+import { addSummary, deleteSummary, editSummary, summaryList, summaryTemplate, summaryUpload } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
@@ -187,10 +187,10 @@ const onExport = async () => {
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}模板`,
+    title: `${title}账号`,
     status: title === "下载",
-    tempApi: exportUserInfo,
-    updateApi: BatchAddUser,
+    tempApi: summaryTemplate,
+    updateApi: summaryUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);

@@ -17,3 +17,17 @@ export const editSummary = (params: any) => {
 export const deleteSummary = (params: any) => {
   return http.delete(`${baseUrl}/${params.id}`, params);
 };
+// 账号模块
+export const summaryTemplate = () => {
+  return http.get(`/static/template/账号模板.xlsx`);
+};
+
+// 账号导入
+export const summaryUpload = (file: any) => {
+  return http.post(`${PORT3}/base_account/upload`, { file });
+};
+
+// 账号导出
+export const summaryExport = (params: any) => {
+  return http.download(`${PORT3}/base_account/export`, params);
+};

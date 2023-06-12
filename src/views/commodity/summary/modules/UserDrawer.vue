@@ -18,7 +18,7 @@
       <el-form-item label="账号编号" prop="accountCode">
         <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入订单编号" clearable />
       </el-form-item>
-      <el-form-item label="游戏分类" prop="accountType">
+      <el-form-item label="账号分类" prop="accountType">
         <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable>
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
