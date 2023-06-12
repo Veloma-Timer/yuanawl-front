@@ -45,6 +45,7 @@ import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { getAllBranch } from "@/api/modules/set";
 const router = useRouter();
 const { BUTTONS } = useAuthButtons();
 // 跳转详情页
@@ -121,6 +122,17 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     render: scope => {
       return getFixed(scope.row!.accountRecyclerPrice);
+    }
+  },
+  {
+    prop: "branchId",
+    label: "所属问店",
+    width: 160,
+    enum: getAllBranch,
+    search: { el: "select" },
+    fieldNames: { label: "branchName", value: "id" },
+    render: scope => {
+      return scope.row.branch.branchName;
     }
   },
   { prop: "accountNumber", label: "账号", width: 160 },

@@ -12,6 +12,9 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
+        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载导入模板</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
       </template>
       <template #userRoleId="scope">
         <div v>{{ scope.row.userRole ? scope.row.userRole.roleName : "--" }}</div>
@@ -33,10 +36,11 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, View } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
 import { deleteUser, editUser, addUser, exportUserInfo, BatchAddUser, getUserListMap } from "@/api/modules/user";
 import md5 from "js-md5";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { download } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
 // const router = useRouter();
 // 跳转详情页
@@ -91,14 +95,16 @@ const batchDelete = async (id: string[]) => {
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
-
+const onExport = async () => {
+  // await download();
+};
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}模板`,
+    title: `${title}用户`,
     status: title === "下载",
     tempApi: exportUserInfo,
     updateApi: BatchAddUser,
@@ -113,7 +119,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, userPassword: md5("123456") },
+    row: { ...row },
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };

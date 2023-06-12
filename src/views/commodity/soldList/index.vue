@@ -45,6 +45,7 @@ import { deleteUser, getUserAll } from "@/api/modules/user";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { parseTime } from "@/utils";
+import { getAllBranch } from "@/api/modules/set";
 
 const router = useRouter();
 const { BUTTONS } = useAuthButtons();
@@ -110,7 +111,6 @@ const columns: ColumnProps<User.ResUserList>[] = [
     prop: "saleTime",
     label: "出售时间",
     width: 160,
-    search: { el: "input" },
     render: scope => {
       return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}");
     }
@@ -129,6 +129,17 @@ const columns: ColumnProps<User.ResUserList>[] = [
     width: 160,
     render: scope => {
       return getFixed(scope.row!.accountRecyclerPrice);
+    }
+  },
+  {
+    prop: "branchId",
+    label: "所属问店",
+    width: 160,
+    enum: getAllBranch,
+    search: { el: "select" },
+    fieldNames: { label: "branchName", value: "id" },
+    render: scope => {
+      return scope.row.branch.branchName;
     }
   },
   { prop: "accountNumber", label: "账号", width: 160 },

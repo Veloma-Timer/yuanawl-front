@@ -99,6 +99,7 @@ export namespace User {
     userRoleId: number; // 用户角色ID
     userBranchId: number; // 用户所属门店ID
     setId: number; // 用户所在组
+    isAdmin: number; // 是否为管理员
   }
 }
 

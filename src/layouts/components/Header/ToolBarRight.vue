@@ -28,7 +28,7 @@ import { decryption } from "@/utils/AESUtil";
 const userStore = useUserStore();
 
 const obj = JSON.parse(decryption("token", userStore.token));
-const username = computed(() => obj.user.userName);
+const username = computed(() => obj.user.userAccount);
 </script>
 
 <style scoped lang="scss">

@@ -51,14 +51,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="发布人姓名" prop="accountPublisherId">
+          <el-form-item label="发布人姓名">
             <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择" filterable>
               <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="发布时间" prop="accountPublisherTimer">
+          <el-form-item label="发布时间">
             <el-date-picker
               v-model="drawerProps.row!.accountPublisherTimer"
               format="YYYY-MM-DD hh:mm:ss"
@@ -70,14 +70,14 @@
         </el-col>
         <el-col :span="8"></el-col>
         <el-col :span="8">
-          <el-form-item label="出售人姓名" prop="salePeopleId">
+          <el-form-item label="出售人姓名">
             <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择" filterable>
               <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="出售时间" prop="saleTime">
+          <el-form-item label="出售时间">
             <el-date-picker
               v-model="drawerProps.row!.saleTime"
               type="date"
@@ -88,12 +88,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="出售价格" prop="salePrice">
+          <el-form-item label="出售价格">
             <el-input v-model="drawerProps.row!.salePrice" placeholder="请输入" clearable></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label="出售人平台" prop="salePlatform">
+      <el-form-item label="出售平台">
         <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
       </el-form-item>
       <el-form-item label="游戏账号" prop="accountNumber">
@@ -114,7 +114,7 @@
       <el-form-item label="账号实付金额" prop="accountPrice">
         <el-input v-model="drawerProps.row!.accountPrice" placeholder="请输入账号实付金额" clearable :maxlength="11"></el-input>
       </el-form-item>
-      <el-form-item label="用户赔付金额" prop="userCompensationPrice">
+      <el-form-item label="用户赔付金额">
         <el-input
           v-model="drawerProps.row!.userCompensationPrice"
           placeholder="请输入用户赔付金额"
@@ -122,7 +122,7 @@
           :maxlength="11"
         ></el-input>
       </el-form-item>
-      <el-form-item label="平台赔付金额" prop="platformCompensationPrice">
+      <el-form-item label="平台赔付金额">
         <el-input
           v-model="drawerProps.row!.platformCompensationPrice"
           placeholder="请输入平台赔付金额"
@@ -133,7 +133,7 @@
       <el-form-item label="手机号" prop="accountTel">
         <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号/邮箱密保" clearable :maxlength="11"></el-input>
       </el-form-item>
-      <el-form-item label="账号备注" prop="accountRemark">
+      <el-form-item label="账号备注">
         <el-input v-model="drawerProps.row!.accountRemark" placeholder="请输入备注" clearable></el-input>
       </el-form-item>
       <el-form-item label="有无二次" prop="haveSecondary">
@@ -219,6 +219,7 @@ const rules = reactive({
   accountLevel: [{ required: true, message: "必填项不能为空" }],
   accountPrice: [{ required: true, message: "必填项不能为空" }],
   userCompensationPrice: [{ required: true, message: "必填项不能为空" }],
+  branchId: [{ required: true, message: "必填项不能为空" }],
   platformCompensationPrice: [{ required: true, message: "必填项不能为空" }],
   accountRecyclerId: [{ required: true, message: "必填项不能为空" }],
   salePeopleId: [{ required: true, message: "必填项不能为空" }]

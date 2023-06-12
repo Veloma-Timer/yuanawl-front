@@ -11,12 +11,12 @@
     >
       <el-row>
         <el-col :span="12">
-          <el-form-item label="用户编码" prop="userCode">
+          <el-form-item label="员工工号" prop="userCode">
             <el-input v-model="drawerProps.row!.userCode" placeholder="请输入" clearable class="order-input"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="登录名称" prop="userAccount">
+          <el-form-item label="登录账号" prop="userAccount">
             <el-input v-model="drawerProps.row!.userAccount" placeholder="请输入" clearable class="order-input"></el-input>
           </el-form-item>
         </el-col>
@@ -57,9 +57,29 @@
             </el-select>
           </el-form-item>
         </el-col>
+        <!--        <el-col :span="12">-->
+        <!--          <el-form-item label="密码" prop="userPassword">-->
+        <!--            <el-input-->
+        <!--              type="userPassword"-->
+        <!--              v-model="drawerProps.row!.userPassword"-->
+        <!--              placeholder="请输入"-->
+        <!--              clearable-->
+        <!--              class="order-input"-->
+        <!--            ></el-input>-->
+        <!--          </el-form-item>-->
+        <!--        </el-col>-->
+        <el-col :span="12">
+          <el-form-item label="管理员" prop="isAdmin">
+            <el-radio-group v-model="drawerProps.row!.isAdmin" class="ml-4">
+              <el-radio label="1" size="large">是</el-radio>
+              <el-radio label="0" size="large">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <template #footer>
+      <span class="form-password">默认密码是123456</span>
       <el-button @click="drawerVisible = false">关闭</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
@@ -72,6 +92,7 @@ import { ElMessage, FormInstance } from "element-plus";
 import { User } from "@/api/interface";
 import { getAllBranch, getAllRole } from "@/api/modules/set";
 import { getGroupListMap } from "@/api/modules/user";
+import md5 from "js-md5";
 const rules = reactive({
   userCode: [{ required: true, message: "必填项不能为空" }],
   userName: [{ required: true, message: "必填项不能为空" }],
@@ -80,7 +101,8 @@ const rules = reactive({
   userPassword: [{ required: true, message: "必填项不能为空" }],
   userRoleId: [{ required: true, message: "必填项不能为空" }],
   userBranchId: [{ required: true, message: "必填项不能为空" }],
-  setId: [{ required: true, message: "必填项不能为空" }]
+  setId: [{ required: true, message: "必填项不能为空" }],
+  isAdmin: [{ required: true, message: "必填项不能为空" }]
 });
 
 interface DrawerProps {
@@ -130,7 +152,8 @@ const handleSubmit = () => {
     if (!valid) return;
     try {
       const params = {
-        ...drawerProps.value.row
+        ...drawerProps.value.row,
+        userPassword: md5("123456")
       };
       await drawerProps.value.api!(params);
       ElMessage.success({ message: `${drawerProps.value.title}成功！` });
@@ -152,5 +175,10 @@ defineExpose({
   :deep(.el-input__wrapper) {
     width: 300px;
   }
+}
+.form-password {
+  float: left;
+  font-size: 12px;
+  color: #666666;
 }
 </style>

@@ -80,3 +80,7 @@ export const getGroupListMap = (params: { ket: string }) => {
 export const getUserAll = () => {
   return http.get(`${baseUrl}/all`, {}, { noLoading: true });
 };
+// 下载用户模板
+export const getUserTemptable = () => {
+  // return http.get()
+};

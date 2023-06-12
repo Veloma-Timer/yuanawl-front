@@ -11,8 +11,8 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载导入模板</el-button>
+        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
+        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载账号模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
       </template>
@@ -47,6 +47,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
 import { download } from "@/utils/file";
+import { getAllBranch } from "@/api/modules/set";
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -113,7 +114,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "saleTime",
     label: "出售时间",
     width: 160,
-    search: { el: "input" },
     render: scope => {
       return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}");
     }
@@ -132,6 +132,17 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     render: scope => {
       return getFixed(String(scope.row!.accountRecyclerPrice));
+    }
+  },
+  {
+    prop: "branchId",
+    label: "所属问店",
+    width: 160,
+    enum: getAllBranch,
+    search: { el: "select" },
+    fieldNames: { label: "branchName", value: "id" },
+    render: scope => {
+      return scope.row.branch.branchName;
     }
   },
   { prop: "accountNumber", label: "账号", width: 160 },
