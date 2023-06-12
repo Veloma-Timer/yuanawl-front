@@ -301,14 +301,14 @@ watch(
 .home-crud {
   width: 100%;
   .crud-list {
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: space-between;
     width: 100%;
     .crud-list-item {
-      margin-bottom: 10px;
       width: 32.5%;
       height: 181px;
       padding: 18px 22px;
+      margin-bottom: 10px;
       background: #ffffff;
       border: 2px solid #f0f0f0;
       border-radius: 10px;
@@ -372,6 +372,19 @@ watch(
     background: #ffffff;
     border-radius: 25px;
     box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
+  }
+}
+
+@media (width <= 1366px) {
+  /* 在此处添加你的样式 */
+  .crud-list-item {
+    width: calc((100% - 40px) / 3) !important;
+    &:nth-child(3n) {
+      margin: 0 !important;
+    }
+    &:nth-child(4n) {
+      margin: 0 20px 20px 0 !important;
+    }
   }
 }
 </style>

@@ -11,7 +11,9 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">导出</el-button>
+        <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">
+          导出
+        </el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -33,20 +35,19 @@
 <script setup lang="tsx" name="useProTable">
 import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
-import { useDownload } from "@/hooks/useDownload";
-import { ElMessageBox } from "element-plus";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Delete, Download, View } from "@element-plus/icons-vue";
-import { deleteUser, changeUserStatus, resetUserPassWord, exportUserInfo, BatchAddUser, getUserAll } from "@/api/modules/user";
+import { deleteUser, getUserAll } from "@/api/modules/user";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { parseTime } from "@/utils";
 
 const router = useRouter();
-
+const { BUTTONS } = useAuthButtons();
 // 跳转详情页
 const toDetail = () => {
   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
@@ -172,37 +173,6 @@ const batchDelete = async (id: string[]) => {
 };
 const getFixed = (str: string) => {
   return parseFloat(str).toFixed(2);
-};
-// 重置用户密码
-const resetPass = async (params: User.ResUserList) => {
-  await useHandleData(resetUserPassWord, { id: params.id }, `重置【${params.username}】用户密码`);
-  proTable.value?.getTableList();
-};
-
-// 切换用户状态
-const changeStatus = async (row: User.ResUserList) => {
-  await useHandleData(changeUserStatus, { id: row.id, status: row.status == 1 ? 0 : 1 }, `切换【${row.username}】用户状态`);
-  proTable.value?.getTableList();
-};
-
-// 导出用户列表
-const downloadFile = async () => {
-  ElMessageBox.confirm("确认导出用户数据?", "温馨提示", { type: "warning" }).then(() =>
-    useDownload(exportUserInfo, "用户列表", proTable.value?.searchParam)
-  );
-};
-
-// 批量添加用户
-const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
-const batchAdd = (title: string) => {
-  const params = {
-    title: `${title}模板`,
-    status: title === "下载",
-    tempApi: exportUserInfo,
-    updateApi: BatchAddUser,
-    getTableList: proTable.value?.getTableList
-  };
-  dialogRef.value?.acceptParams(params);
 };
 
 // 打开 drawer(新增、查看、编辑)

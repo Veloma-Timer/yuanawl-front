@@ -1,6 +1,6 @@
 <template>
   <div class="home-name">
-    <div class="home-name-left">
+    <div class="home-name-left flex">
       <div class="name-left-top">
         <div class="top-title">平台销售总额</div>
         <div class="top-content flex">
@@ -74,12 +74,11 @@ getNameList();
   display: flex;
   flex-wrap: wrap;
   .home-name-left {
-    width: 768px;
-    height: 576px;
-    margin-right: 30px;
+    justify-content: space-between;
+    width: 100%;
     .name-left-top {
-      width: 100%;
-      height: 244px;
+      width: 48%;
+      height: 300px;
       padding: 30px 36px;
       margin-bottom: 32px;
       color: #ffffff;
@@ -129,8 +128,8 @@ getNameList();
       }
     }
     .name-left-bottom {
-      width: 100%;
-      height: calc(100% - 276px);
+      width: 48%;
+      height: 300px;
       padding: 20px 46px 32px 26px;
       background: #ffffff;
       border-radius: 25px;

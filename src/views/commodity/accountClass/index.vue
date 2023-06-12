@@ -11,7 +11,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" plain @click="openDrawer('新增')">新建分类</el-button>
+        <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" plain @click="openDrawer('新增')">新建分类</el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -21,8 +21,8 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" v-if="BUTTONS.del" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -39,7 +39,8 @@ import { CirclePlus, Delete, View } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import { addAccout, deleteAccout, getAccoutList, setAccout } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
 // 跳转详情页
 // const toDetail = () => {
 //   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);

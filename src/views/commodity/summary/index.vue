@@ -13,8 +13,8 @@
       <template #tableHeader>
         <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button type="primary" :icon="Download" plain @click="onExport">导出</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -24,8 +24,8 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -46,7 +46,7 @@ import { addSummary, deleteSummary, editSummary, summaryList } from "@/api/modul
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
-import { download } from "../../../utils/file";
+import { download } from "@/utils/file";
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();

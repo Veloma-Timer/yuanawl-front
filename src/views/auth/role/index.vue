@@ -10,12 +10,12 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" plain @click="openDrawer('新增')">新建角色</el-button>
+        <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" plain @click="openDrawer('新增')">新建角色</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link @click="setRoleList(scope.row.powerId, scope.row.id)">权限</el-button>
+        <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" v-if="BUTTONS.edit" link @click="setRoleList(scope.row.powerId, scope.row.id)">权限</el-button>
       </template>
     </ProTable>
     <AuthorityDialog ref="dialogRef" />
@@ -31,7 +31,9 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
 import { getRoleLog, addRole, editRole } from "@/api/modules/role";
 import AuthorityDialog from "@/views/auth/authority/modules/AuthorityDialog.vue";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
 const initParam = reactive({});
+const { BUTTONS } = useAuthButtons();
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)

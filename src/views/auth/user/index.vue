@@ -11,14 +11,14 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
+        <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
       </template>
       <template #userRoleId="scope">
         <div v>{{ scope.row.userRole ? scope.row.userRole.roleName : "--" }}</div>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -36,6 +36,8 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
 import { deleteUser, editUser, addUser, exportUserInfo, BatchAddUser, getUserListMap } from "@/api/modules/user";
 import md5 from "js-md5";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）

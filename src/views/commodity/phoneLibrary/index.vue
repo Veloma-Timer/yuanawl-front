@@ -11,10 +11,12 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
+        <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">导出</el-button>
+        <el-button type="primary" v-if="BUTTONS.import" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)"
+          >导出</el-button
+        >
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -24,8 +26,8 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" v-if="BUTTONS.del" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -44,6 +46,8 @@ import { deleteUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
 import { addPhone, deletePhone, getPhoneList, setPhone } from "@/api/modules/phoneLibrary";
 import { parseTime } from "@/utils/is";
 import { Commodity } from "@/api/interface/commodity/commodity";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）

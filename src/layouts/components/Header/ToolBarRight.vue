@@ -23,9 +23,13 @@ import ThemeSetting from "./components/ThemeSetting.vue";
 import Message from "./components/Message.vue";
 import Fullscreen from "./components/Fullscreen.vue";
 import Avatar from "./components/Avatar.vue";
+import { decryption } from "@/utils/AESUtil";
 
 const userStore = useUserStore();
-const username = computed(() => userStore.userInfo.name);
+
+const obj = JSON.parse(decryption("token", userStore.token));
+console.log(obj);
+const username = computed(() => obj.user.userName);
 </script>
 
 <style scoped lang="scss">

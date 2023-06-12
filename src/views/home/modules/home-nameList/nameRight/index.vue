@@ -36,9 +36,9 @@ const props = defineProps({
 </script>
 <style scoped lang="scss">
 .home-name-right {
-  width: calc(100% - 798px);
+  width: 100%;
   height: 576px;
-  padding: 44px 52px 52px;
+  padding: 52px;
   background: #ffffff;
   border: 2px solid #f0f0f0;
   border-radius: 25px;

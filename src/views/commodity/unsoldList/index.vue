@@ -11,7 +11,9 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">导出</el-button>
+        <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)"
+          >导出</el-button
+        >
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -32,19 +34,19 @@
 
 <script setup lang="tsx" name="useProTable">
 import { useRouter } from "vue-router";
-import { User } from "@/api/interface";
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Delete, Download, View } from "@element-plus/icons-vue";
-import { getUserList, deleteUser, editUser, addUser } from "@/api/modules/user";
-import { addSummary, deleteSummary, editSummary, summaryList } from "@/api/modules/commodity";
+import { deleteUser } from "@/api/modules/user";
+import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
 const router = useRouter();
-
+const { BUTTONS } = useAuthButtons();
 // 跳转详情页
 const toDetail = () => {
   router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
