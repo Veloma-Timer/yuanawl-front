@@ -72,3 +72,8 @@ export const downTemplate = () => {
 export const baseAccountUpload = (file: any) => {
   return http.post(`${PORT3}/base_account/upload`, { file });
 };
+
+// 账号导出
+export const baseAccountExport = (params: any) => {
+  return http.download(`${PORT3}/base_account/export`, params);
+};

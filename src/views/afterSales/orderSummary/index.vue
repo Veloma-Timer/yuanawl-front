@@ -2,25 +2,13 @@
   <div class="table-box">
     <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
-      <template #tableHeader>
+      <template #tableHeader="scope">
         <el-button type="primary" @click="openDrawer('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
-        <el-button type="primary" @click="downloadImportTemplate" :icon="Download" plain>下载导入模板</el-button>
-        <el-upload
-          action="#"
-          :multiple="true"
-          :show-file-list="false"
-          :http-request="uploadExcel"
-          :before-upload="beforeExcelUpload"
-          :on-success="excelUploadSuccess"
-          :on-error="excelUploadError"
-          :accept="fileType.join(',')"
-          class="up-btn"
-        >
-          <template #trigger>
-            <el-button type="primary" @click="importTemplate" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
-          </template>
-        </el-upload>
-        <el-button type="primary" @click="exportData" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
+        <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
+        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
+        <el-button type="primary" @click="batchExport(scope.selectedListIds)" v-if="BUTTONS.export" :icon="Download" plain>
+          导出
+        </el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
@@ -31,6 +19,7 @@
     </ProTable>
     <OrderDrawer ref="drawerRef" />
     <OrderCheck ref="orderCheckRef" />
+    <ImportExcel ref="dialogRef" />
   </div>
 </template>
 
@@ -41,14 +30,22 @@ import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getAllBranch } from "@/api/modules/set";
-import { getSalesList, addSalesList, editSalesList, delSalesOrder, downTemplate, baseAccountUpload } from "@/api/modules/order";
+import {
+  getSalesList,
+  addSalesList,
+  editSalesList,
+  delSalesOrder,
+  downTemplate,
+  baseAccountUpload,
+  baseAccountExport
+} from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
-import { useDownload } from "@/hooks/useDownload";
-import { UploadRequestOptions, UploadRawFile, ElNotification } from "element-plus";
+import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { exportData } from "@/utils/download";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -270,70 +267,35 @@ const delOrder = async (id: number, orderCode: string) => {
   proTable.value?.getTableList();
 };
 
-const downloadImportTemplate = () => {
-  useDownload(downTemplate, `工单模板`);
+const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
+const batchAdd = (title: string) => {
+  const params = {
+    title: `${title}工单`,
+    status: title === "下载",
+    tempApi: downTemplate,
+    updateApi: baseAccountUpload,
+    getTableList: proTable.value?.getTableList
+  };
+  dialogRef.value?.acceptParams(params);
 };
 
-// 文件上传
-const uploadExcel = async (param: UploadRequestOptions) => {
-  let excelFormData = new FormData();
-  excelFormData.append("file", param.file);
-  await baseAccountUpload(excelFormData);
-};
-
-/**
- * @description 文件上传之前判断
- * @param file 上传的文件
- * */
-const beforeExcelUpload = (file: UploadRawFile) => {
-  const isExcel = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]!.includes(
-    file.type as File.ExcelMimeType
-  );
-  const size = 50;
-  const fileSize = file.size / 1024 / 1024 < size!;
-  if (!isExcel)
-    ElNotification({
-      title: "温馨提示",
-      message: "上传文件只能是 xls / xlsx 格式！",
-      type: "warning"
-    });
-  if (!fileSize)
-    setTimeout(() => {
-      ElNotification({
-        title: "温馨提示",
-        message: `上传文件大小不能超过${size}MB！`,
-        type: "warning"
-      });
-    }, 0);
-  return isExcel && fileSize;
-};
-
-// 上传错误提示
-const excelUploadError = () => {
-  ElNotification({
-    title: "温馨提示",
-    message: `上传失败，请您重新上传！`,
-    type: "error"
-  });
-};
-
-// 上传成功提示
-const excelUploadSuccess = () => {
-  ElNotification({
-    title: "温馨提示",
-    message: `上传成功！`,
-    type: "success"
-  });
-};
-
-const fileType = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
-
-const importTemplate = () => {
-  console.log("导入模板");
-};
-
-const exportData = () => {
-  console.log("导出");
+// 批量导出工单信息
+const batchExport = async (id: string[]) => {
+  // await useHandleData(downTemplate, { id }, "导出工单表格");
+  // proTable.value?.clearSelection();
+  // proTable.value?.getTableList();
+  // console.log(1111, id);
+  // const title = "下载";
+  // const params = {
+  //   title: `${title}工单`,
+  //   status: title === "下载",
+  //   tempApi: baseAccountExport,
+  //   updateApi: baseAccountExport,
+  //   getTableList: proTable.value?.getTableList
+  // };
+  // dialogRef.value?.acceptParams(params);
+  console.log(baseAccountExport);
+  exportData(baseAccountExport, id);
 };
 </script>
 
