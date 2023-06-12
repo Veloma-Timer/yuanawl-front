@@ -10,11 +10,11 @@
       :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader="scope">
+      <template #tableHeader>
         <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">导出</el-button>
+        <el-button type="primary" :icon="Download" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -46,6 +46,7 @@ import { addSummary, deleteSummary, editSummary, summaryList } from "@/api/modul
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
+import { download } from "../../../utils/file";
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -122,7 +123,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "出售金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row!.salePrice);
+      return getFixed(String(scope.row!.salePrice));
     }
   },
   {
@@ -130,7 +131,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "实际回收金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row!.accountRecyclerPrice);
+      return getFixed(String(scope.row!.accountRecyclerPrice));
     }
   },
   { prop: "accountNumber", label: "账号", width: 160 },
@@ -170,10 +171,14 @@ const getFixed = (str: string) => {
   return parseFloat(str).toFixed(2);
 };
 // 批量删除用户信息
-const batchDelete = async (id: string[]) => {
-  await useHandleData(deleteSummary, { id }, "导出用户信息");
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
+// const batchDelete = async (id: string[]) => {
+//   await useHandleData(deleteSummary, { id }, "导出用户信息");
+//   proTable.value?.clearSelection();
+//   proTable.value?.getTableList();
+// };
+
+const onExport = async () => {
+  await download();
 };
 
 // 重置用户密码
