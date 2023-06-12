@@ -175,7 +175,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
     },
     grid: {
       left: "3%",
-      right: "4%",
+      right: "8px",
       bottom: "13%",
       containLabel: true
     },
