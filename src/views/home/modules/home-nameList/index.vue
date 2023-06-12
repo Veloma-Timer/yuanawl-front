@@ -4,16 +4,12 @@
       <div class="name-left-top">
         <div class="top-title">平台销售总额</div>
         <div class="top-content flex">
-          <div class="top-champion">
+          <div class="top-champion" v-for="(item, index) in platformList" :key="index + item.name">
             <div class="champion-button mb16">
-              <img src="@/assets/images/champion.png" alt="" />
-              杭州
+              <img v-show="index === 0" src="@/assets/images/champion.png" alt="" />
+              {{ item.name }}
             </div>
-            <i>￥12000.00</i>
-          </div>
-          <div class="top-champion">
-            <div class="champion-button mb16">杭州</div>
-            <i>￥12000.00</i>
+            <i>￥{{ item.salas }}</i>
           </div>
         </div>
       </div>
@@ -29,44 +25,54 @@
             </el-progress>
           </div>
           <div class="left-table">
-            <div class="table-item flx-align-center">
+            <div class="table-item flx-align-center" v-for="item in nameList" :key="item.id">
               <div class="operate">【待处理】</div>
-              <div class="content">订单[623541325001]</div>
-              <div class="bottom">立即处理&gt;</div>
-            </div>
-            <div class="table-item flx-align-center">
-              <div class="operate">【待处理】</div>
-              <div class="content">订单[623541325001]</div>
-              <div class="bottom">立即处理&gt;</div>
-            </div>
-            <div class="table-item flx-align-center">
-              <div class="operate">【待处理】</div>
-              <div class="content">订单[623541325001]</div>
-              <div class="bottom">立即处理&gt;</div>
-            </div>
-            <div class="table-item flx-align-center">
-              <div class="operate">【待处理】</div>
-              <div class="content">订单[623541325001]</div>
-              <div class="bottom">立即处理&gt;</div>
-            </div>
-            <div class="table-item flx-align-center">
-              <div class="operate">【待处理】</div>
-              <div class="content">订单[623541325001]</div>
+              <div class="content">订单[{{ item.orderCode }}]</div>
               <div class="bottom">立即处理&gt;</div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <nameRight />
+    <nameRight :salasRankingArr="props.salasRanking" />
   </div>
 </template>
 <script setup lang="ts">
 import nameRight from "@/views/home/modules/home-nameList/nameRight/index.vue";
+import { homeOrder } from "@/api/modules/home";
+import { defineProps, reactive, toRef, watch } from "vue";
+interface plat {
+  branch: string;
+  index: number;
+  name: string;
+  salas: number;
+}
+let platformList: plat[] = reactive([]);
+let nameList = reactive([]);
+const myArrayRef = toRef(props, "platformSalas");
+const getNameList = async () => {
+  const { data } = await homeOrder({ pageSize: 5, pageNum: 1 });
+  nameList = data.list || [];
+};
+const props = defineProps({
+  platformSalas: {
+    type: Array,
+    default: () => []
+  },
+  salasRanking: {
+    type: Array,
+    default: () => []
+  }
+});
+watch(myArrayRef, newValue => {
+  platformList = newValue;
+});
+getNameList();
 </script>
 <style scoped lang="scss">
 .home-name {
   display: flex;
+  flex-wrap: wrap;
   .home-name-left {
     width: 768px;
     height: 576px;
@@ -167,6 +173,7 @@ import nameRight from "@/views/home/modules/home-nameList/nameRight/index.vue";
             line-height: 28px;
             color: #ffffff;
             text-align: center;
+            cursor: pointer;
             background: #f85d5d;
             border-radius: 14px;
           }

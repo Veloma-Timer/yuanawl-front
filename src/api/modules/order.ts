@@ -1,4 +1,4 @@
-import { ResPage, SalesOrder } from "@/api/interface/index";
+import { ResPage, ResultData, SalesOrder, Data } from "@/api/interface/index";
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 /**
@@ -40,6 +40,35 @@ export const delSalesOrder = (id: number) => {
 };
 
 // 售后工单处理报表-数据统计
-export const sysAnalysisWork = (id: number) => {
-  return http.get<SalesOrder.WorkReport>(`${PORT3}/sys_analysis/work?branchId=${id}`);
+export const sysAnalysisWork = (id: number, date: number) => {
+  return http.get<SalesOrder.WorkReport>(`${PORT3}/sys_analysis/work?branchId=${id}&date=${date}`);
+};
+
+// 数据统计-日销售金额汇总-上边图表的
+export const todaySales = (branchId: number, date: number) => {
+  return http.get<Data.TodaySales>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
+};
+
+// 数据统计-日回收金额汇总-上边图表的
+export const todayRecycle = (branchId: number, date: number) => {
+  return http.get<Data.TodayRecycle>(`${PORT3}/sys_analysis/today_recycle?branchId=${branchId}&date=${date}`);
+};
+
+// 数据统计-日销售金额汇总-下边表格的
+export const baseAccountSales = (params: any, branchId: number) => {
+  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_sales?branchId=${branchId}`, params);
+};
+// 数据统计-日回收金额汇总-下边表格的
+export const baseAccountRecyle = (params: any, branchId: number) => {
+  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`, params);
+};
+
+// 账号模板
+export const downTemplate = () => {
+  return http.get(`/static/template/账号模板.xlsx`, {});
+};
+
+// 账号导入
+export const baseAccountUpload = (file: any) => {
+  return http.get(`${PORT3}/base_account/upload`, { file });
 };

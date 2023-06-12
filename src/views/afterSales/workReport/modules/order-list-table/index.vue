@@ -36,7 +36,7 @@ type Props = {
   selectBranchId: number;
 };
 const tableProps = withDefaults(defineProps<Props>(), {
-  selectBranchId: 0
+  selectBranchId: undefined
 });
 
 // 表格配置项
@@ -163,13 +163,13 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     }
   }
 ];
-const currentTimeSelect = ref("今日销售");
+const currentTimeSelect = ref("今日工单");
 const tabDateList = ref([
   {
-    title: "今日销售"
+    title: "今日工单"
   },
   {
-    title: "历史销售"
+    title: "历史工单"
   }
 ]);
 
@@ -191,33 +191,32 @@ const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) =
 };
 
 // 获取表格数据
-const getTableList = (params: any) => {
+const getTableList = async (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
   newParams.branchId = tableProps.selectBranchId;
-  if (currentTimeSelect.value === "今日销售") {
-    return getSalesListToday(newParams);
+  if (!newParams.branchId) {
+    return false;
+  }
+  if (currentTimeSelect.value === "今日工单") {
+    return await getSalesListToday(newParams);
   } else {
-    return getSalesList(newParams);
+    return await getSalesList(newParams);
   }
 };
 
 // 监听 selectBranchId
 watch(
   () => tableProps.selectBranchId,
-  value => {
-    if (value) {
-      proTable.value?.getTableList();
-    }
+  () => {
+    proTable.value?.getTableList();
   }
 );
 
 // 监听 currentTimeSelect.value
 watch(
   () => currentTimeSelect.value,
-  value => {
-    if (value) {
-      proTable.value?.getTableList();
-    }
+  () => {
+    proTable.value?.getTableList();
   }
 );
 

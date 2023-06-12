@@ -20,81 +20,62 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="提交工单时间" prop="time" class="order-time">
-        <el-date-picker v-model="drawerProps.row!.time" type="date" placeholder="请选择" />
+      <el-form-item label="工单编号" prop="orderCode">
+        <el-input v-model="drawerProps.row!.orderCode" placeholder="请输入" clearable class="order-input"></el-input>
       </el-form-item>
-      <el-form-item label="上报人姓名" prop="username">
-        <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="order-input"></el-input>
+      <el-form-item label="账号" prop="accountId">
+        <el-select v-model="drawerProps.row!.accountId" placeholder="请选择" class="order-input" filterable>
+          <template v-for="item in accountList" :key="item.id">
+            <el-option :label="item.accountNumber" :value="item.id" />
+          </template>
+        </el-select>
       </el-form-item>
-      <el-form-item label="账号" prop="username">
-        <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="order-input"></el-input>
+      <el-form-item label="上报人姓名" prop="reportPersonId">
+        <el-select v-model="drawerProps.row!.reportPersonId" placeholder="请选择" class="order-input" filterable>
+          <template v-for="item in userList" :key="item.id">
+            <el-option :label="item.userName" :value="item.id" />
+          </template>
+        </el-select>
       </el-form-item>
-      <el-form-item label="最新处理结果" prop="username">
-        <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="order-input"></el-input>
+      <el-form-item label="是否投保" prop="insure">
+        <el-select v-model="drawerProps.row!.insure" placeholder="请选择" filterable class="order-input">
+          <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
-      <el-row :gutter="10">
-        <el-col :span="8">
-          <el-form-item label="处理次数" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="是否投保" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="最新处理客服姓名" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="回收店铺" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="工单星级" prop="username">
-            <el-input v-model="drawerProps.row!.username" placeholder="请输入" clearable class="small-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="最新处理时间" prop="username">
-            <el-date-picker v-model="drawerProps.row!.time" type="date" placeholder="请选择" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <template v-for="(item, i) in drawerProps.row.list" :key="i">
+      <el-form-item label="工单星级" prop="orderStar">
+        <el-input v-model="drawerProps.row!.orderStar" placeholder="请输入" clearable class="small-input"></el-input>
+      </el-form-item>
+      <el-form-item label="处理时效" prop="handleTime">
+        <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" clearable class="small-input"></el-input>
+      </el-form-item>
+      <el-button type="primary" @click="addProcess">添加处理</el-button>
+      <div v-if="!drawerProps.row.detail || drawerProps.row.detail.length <= 0" class="not-data">暂无处理数据</div>
+      <!-- 第几次处理 -->
+      <template v-for="(item, i) in drawerProps.row?.detail" :key="i">
         <Header :title="`第${i + 1}次处理`" class="header"></Header>
         <el-row :gutter="10" style="margin-top: 24px">
           <el-col :span="8">
-            <el-form-item label="处理客服姓名" :prop="'list.' + i + '.a'" :rules="rules.a">
-              <el-input v-model="item.a" placeholder="请输入" clearable class="small-input"></el-input>
+            <el-form-item label="处理客服姓名" :prop="'detail.' + i + '.customerServiceId'" :rules="rules.customerServiceId">
+              <el-select v-model="item.customerServiceId" placeholder="请选择" class="small-input" filterable>
+                <template v-for="item2 in userList" :key="item2.id">
+                  <el-option :label="item2.userName" :value="item2.id" />
+                </template>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="提交时间" :prop="'list.' + i + '.t1'" :rules="rules.t1">
-              <el-date-picker v-model="item.t1" type="date" placeholder="请选择" />
+            <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime">
+              <el-date-picker v-model="item.handleTime" type="date" placeholder="请选择" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="处理时间" :prop="'list.' + i + '.t2'" :rules="rules.t2">
-              <el-date-picker v-model="item.t2" type="date" placeholder="请选择" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item label="处理结果" :prop="'list.' + i + '.b'" :rules="rules.b">
-              <el-input v-model="item.b" placeholder="请输入" clearable class="small-input"></el-input>
+            <el-form-item label="处理结果" :prop="'detail.' + i + '.handleResult'" :rules="rules.handleResult">
+              <el-input v-model="item.handleResult" placeholder="请输入" clearable class="small-input"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="" :prop="'list.' + i + '.photo'" :rules="rules.photo">
-          <UploadImgs v-model:file-list="item.photo" height="140px" width="140px" border-radius="50%">
-            <template #empty>
-              <el-icon><Picture /></el-icon>
-              <span>请上传照片</span>
-            </template>
-          </UploadImgs>
+        <el-form-item label="" :prop="'detail.' + i + '.assets'" :rules="rules.assets">
+          <UploadFiles v-model:file-list="item.assets" height="140px" width="140px"></UploadFiles>
         </el-form-item>
       </template>
     </el-form>
@@ -107,25 +88,38 @@
 
 <script setup lang="ts" name="UserDrawer">
 import { ref, reactive } from "vue";
-// import { genderType } from "@/utils/serviceDict";
 import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
-// import UploadImg from "@/components/Upload/Img.vue";
-import UploadImgs from "@/components/Upload/Imgs.vue";
+import UploadFiles from "@/components/Upload/Files.vue";
 import Header from "@/components/Header/index.vue";
+import { detailSalesList } from "@/api/modules/order";
+import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
+import { getAllUser } from "@/api/modules/set";
+import { findFileType } from "@/utils";
 
 const rules = reactive({
-  a: [{ required: true, message: "必填项不能为空" }],
-  t1: [{ required: true, message: "必填项不能为空" }],
-  t2: [{ required: true, message: "必填项不能为空" }],
-  b: [{ required: true, message: "必填项不能为空" }],
-  time: [{ required: true, message: "必填项不能为空" }],
-  photo: [{ required: true, message: "必填项不能为空" }],
-  username: [{ required: true, message: "必填项不能为空" }]
+  orderCode: [{ required: true, message: "必填项不能为空" }],
+  customerService: [{ required: true, message: "必填项不能为空" }],
+  submitTime: [{ required: true, message: "必填项不能为空" }],
+  handleTime: [{ required: true, message: "必填项不能为空" }],
+  customerServiceId: [{ required: true, message: "必填项不能为空" }],
+  handleResult: [{ required: true, message: "必填项不能为空" }],
+  submitOrderTime: [{ required: true, message: "必填项不能为空" }],
+  assets: [{ required: true, message: "必填项不能为空" }],
+  username: [{ required: true, message: "必填项不能为空" }],
+  reportPersonId: [{ required: true, message: "必填项不能为空" }],
+  accountId: [{ required: true, message: "必填项不能为空" }],
+  newHandleResult: [{ required: true, message: "必填项不能为空" }],
+  handleTimes: [{ required: true, message: "必填项不能为空" }],
+  insure: [{ required: true, message: "必填项不能为空" }],
+  newHandleId: [{ required: true, message: "必填项不能为空" }],
+  recycleBranchId: [{ required: true, message: "必填项不能为空" }],
+  orderStar: [{ required: true, message: "必填项不能为空" }],
+  newHandleTime: [{ required: true, message: "必填项不能为空" }]
 });
 
 interface DrawerProps {
-  time?: Date | null;
+  submitOrderTime?: Date | null;
   title: string;
   isView: boolean;
   row: Partial<SalesOrder.ResSalesList>;
@@ -135,31 +129,72 @@ interface DrawerProps {
 
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
-  time: null,
+  submitOrderTime: null,
   isView: false,
   title: "",
   row: {}
 });
 
+// 返显数据处理
+const getDetailInfo = async (id: any) => {
+  if (!id) {
+    return false;
+  }
+  const { data } = await detailSalesList(id);
+  if (data) {
+    drawerProps.value.row = {
+      ...data
+    };
+    drawerProps.value.row.detail = data?.detail?.map(item => {
+      return {
+        ...item,
+        assets: item.assets.map((imgItem: any) => {
+          return {
+            path: imgItem.path,
+            url: imgItem.path,
+            id: imgItem.id,
+            type: findFileType(imgItem.path)
+          };
+        })
+      };
+    });
+  }
+};
+
+type UserObj = { userName: string; id: number };
+const userList = ref<UserObj[]>([]);
 // 接收父组件传过来的参数
-const acceptParams = (params: DrawerProps) => {
+const acceptParams = async (params: DrawerProps) => {
   drawerProps.value = params;
-  drawerProps.value.row.list = [
-    {
-      a: 1,
-      t1: "2015-05-16 16:19:15",
-      t2: "2013-05-16 16:19:15",
-      b: "赔付2w"
-    },
-    {
-      a: 2,
-      t1: "2015-05-16 16:19:15",
-      t2: "2023-05-16 16:19:15",
-      b: "赔付2w"
-    }
-  ];
+  getDetailInfo(params.row.id);
+  const { data } = await getAllUser({});
+  userList.value = data;
   drawerVisible.value = true;
 };
+
+// 账号状态
+const insureList = [
+  { label: "否", value: "0" },
+  { label: "是", value: "1" }
+];
+
+// 店铺列表
+type BranchObj = { branchName: string; id: number };
+const branchList = ref<BranchObj[]>([]);
+const getBranchList = async () => {
+  const { data } = await getAllBranch({});
+  branchList.value = data;
+};
+getBranchList();
+
+// 账号列表
+type AccountObj = { accountNumber: string; id: number };
+const accountList = ref<AccountObj[]>([]);
+const getAllAccountList = async () => {
+  const { data } = await getAllBaseAccount({});
+  accountList.value = data;
+};
+getAllAccountList();
 
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
@@ -167,8 +202,50 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.row);
-      ElMessage.success({ message: `${drawerProps.value.title}成功！` });
+      const {
+        id,
+        orderCode,
+        accountId,
+        accountPrice,
+        userCompensationPrice,
+        platformCompensationPrice,
+        reportPersonId,
+        insure,
+        recycleBranchId,
+        handleTime,
+        orderStar,
+        branchId,
+        detail
+      } = drawerProps.value.row;
+      const newDetail = detail?.map(item => {
+        return {
+          customerServiceId: item.customerServiceId,
+          handleTime: item.handleTime,
+          handleResult: item.handleResult,
+          assets: item.assets.map((imgItem: any) => {
+            return {
+              path: imgItem?.response?.path || imgItem.url || imgItem.path,
+              id: imgItem.id || imgItem.uid
+            };
+          })
+        };
+      });
+      await drawerProps.value.api!({
+        id,
+        orderCode,
+        accountId,
+        accountPrice,
+        userCompensationPrice,
+        platformCompensationPrice,
+        reportPersonId,
+        insure,
+        recycleBranchId,
+        handleTime,
+        orderStar,
+        branchId,
+        detail: newDetail
+      });
+      ElMessage.success({ message: `操作成功！` });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
     } catch (error) {
@@ -180,6 +257,22 @@ const handleSubmit = () => {
 const edit = () => {
   drawerProps.value.isView = false;
   console.log("编辑");
+};
+
+const addProcess = () => {
+  try {
+    if (!drawerProps.value.row.detail) {
+      drawerProps.value.row.detail = [];
+    }
+    drawerProps.value.row.detail.push({
+      customerServiceId: "",
+      handleTime: "",
+      handleResult: "",
+      assets: []
+    });
+  } catch (error) {
+    console.log("添加处理", error);
+  }
 };
 
 defineExpose({
@@ -211,5 +304,10 @@ defineExpose({
   :deep(.el-input__wrapper) {
     width: 400px;
   }
+}
+.not-data {
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--el-text-color-regular);
 }
 </style>

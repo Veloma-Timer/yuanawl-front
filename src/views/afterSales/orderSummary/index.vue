@@ -5,7 +5,24 @@
       <template #tableHeader>
         <el-button type="primary" @click="openDrawer('新增工单')">新增工单</el-button>
         <el-button type="primary" @click="downloadImportTemplate">下载导入模板</el-button>
-        <el-button type="primary" @click="importTemplate">导入模板</el-button>
+        <el-upload
+          action="#"
+          :limit="excelLimit"
+          :multiple="true"
+          :show-file-list="true"
+          :http-request="uploadExcel"
+          :before-upload="beforeExcelUpload"
+          :on-exceed="handleExceed"
+          :on-success="excelUploadSuccess"
+          :on-error="excelUploadError"
+          :accept="fileType.join(',')"
+          style="inline-block"
+          class="up-btn"
+        >
+          <template #trigger>
+            <el-button type="primary" @click="importTemplate">导入模板</el-button>
+          </template>
+        </el-upload>
         <el-button type="primary" @click="exportData">导出</el-button>
       </template>
       <!-- 表格操作 -->
@@ -27,16 +44,20 @@ import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getAllBranch } from "@/api/modules/set";
-import { getSalesList, addSalesList, editSalesList, delSalesOrder } from "@/api/modules/order";
+import { getSalesList, addSalesList, editSalesList, delSalesOrder, downTemplate, baseAccountUpload } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
+import { useDownload } from "@/hooks/useDownload";
+import { UploadRequestOptions, UploadRawFile, ElNotification } from "element-plus";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 
 const getTableList = (params: any) => {
   return getSalesList(params);
 };
+
+const excelLimit = ref(1);
 
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
@@ -252,8 +273,73 @@ const delOrder = async (id: number, orderCode: string) => {
 };
 
 const downloadImportTemplate = () => {
-  console.log("下载导入模板");
+  useDownload(downTemplate, `工单模板`);
 };
+
+// 文件上传
+const uploadExcel = async (param: UploadRequestOptions) => {
+  let excelFormData = new FormData();
+  console.log(param.file);
+  debugger;
+  excelFormData.append("file", param.file);
+  await baseAccountUpload(excelFormData);
+};
+
+/**
+ * @description 文件上传之前判断
+ * @param file 上传的文件
+ * */
+const beforeExcelUpload = (file: UploadRawFile) => {
+  const isExcel = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]!.includes(
+    file.type as File.ExcelMimeType
+  );
+  const size = 50;
+  const fileSize = file.size / 1024 / 1024 < size!;
+  if (!isExcel)
+    ElNotification({
+      title: "温馨提示",
+      message: "上传文件只能是 xls / xlsx 格式！",
+      type: "warning"
+    });
+  if (!fileSize)
+    setTimeout(() => {
+      ElNotification({
+        title: "温馨提示",
+        message: `上传文件大小不能超过${size}MB！`,
+        type: "warning"
+      });
+    }, 0);
+  return isExcel && fileSize;
+};
+
+// 文件数超出提示
+const handleExceed = () => {
+  ElNotification({
+    title: "温馨提示",
+    message: "最多只能上传一个文件！",
+    type: "warning"
+  });
+};
+
+// 上传错误提示
+const excelUploadError = () => {
+  ElNotification({
+    title: "温馨提示",
+    message: `上传失败，请您重新上传！`,
+    type: "error"
+  });
+};
+
+// 上传成功提示
+const excelUploadSuccess = () => {
+  ElNotification({
+    title: "温馨提示",
+    message: `上传成功！`,
+    type: "success"
+  });
+};
+
+const fileType = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
 
 const importTemplate = () => {
   console.log("导入模板");
@@ -263,3 +349,13 @@ const exportData = () => {
   console.log("导出");
 };
 </script>
+
+<style scoped lang="scss">
+:deep(.el-upload) {
+  display: inline-block;
+}
+.up-btn {
+  display: inline-block;
+  margin: 0 10px;
+}
+</style>

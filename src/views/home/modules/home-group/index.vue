@@ -1,17 +1,38 @@
 <template>
-  <div class="home-group" :class="className" ref="groupRef"></div>
+  <div>
+    <div class="home-group" :class="className" ref="groupRef"></div>
+  </div>
 </template>
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { ref, onMounted } from "vue";
+import { ref, watch, toRef } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
+import { setValues } from "@/views/home/modules/homeUtis.js";
 const groupRef = ref<HTMLElement>();
+const myArrayRef = toRef(props, "listArr");
 const props = defineProps({
-  title: String,
-  className: String
+  listArr: {
+    type: Array,
+    default: () => []
+  },
+  className: {
+    type: String,
+    default: ""
+  },
+  title: {
+    type: String,
+    default: ""
+  }
 });
-const groupGet = () => {
+watch(myArrayRef, newValue => {
+  let data,
+    value = [];
+  data = setValues(newValue, "name");
+  value = setValues(newValue, "value");
+  groupGet(data, value);
+});
+const groupGet = (data, value) => {
   let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
   let option: echarts.EChartsOption = {
     title: { text: props.title },
@@ -35,7 +56,7 @@ const groupGet = () => {
     xAxis: [
       {
         type: "category",
-        data: ["一月", "二月", "三月", "五月", "六月", "一月", "二月", "三月", "五月", "六月"]
+        data: data
       }
     ],
     yAxis: [
@@ -50,15 +71,16 @@ const groupGet = () => {
       {
         name: "售出",
         type: "bar",
-        data: [20, 12, 31, 34, 31, 20, 12, 31, 34, 31]
+        data: value
       }
     ]
   };
   useEcharts(myChart, option);
+  const chartObserver = new ResizeObserver(() => {
+    myChart.resize();
+  });
+  chartObserver.observe(groupRef.value as HTMLElement);
 };
-onMounted(() => {
-  groupGet();
-});
 </script>
 <style scoped lang="scss">
 .home-group {

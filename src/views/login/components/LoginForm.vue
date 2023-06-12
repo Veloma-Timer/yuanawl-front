@@ -70,6 +70,7 @@ const login = (formEl: FormInstance | undefined) => {
     if (!valid) return;
     loading.value = true;
     try {
+      debugger;
       // 1.执行登录接口
       const { success, data } = await loginApi({
         ...loginForm,

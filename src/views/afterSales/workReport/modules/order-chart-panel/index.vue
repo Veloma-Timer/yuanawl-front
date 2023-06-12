@@ -3,12 +3,17 @@
     <div class="left">
       <div class="content">
         <Header title="处理工单数量" class="header"></Header>
+        <el-radio-group v-model="currentTimeLabel" size="large" @change="changeSelectDate" class="date-radio">
+          <template v-for="(item, index) in tabCityList" :key="index">
+            <el-radio-button :label="item.title" />
+          </template>
+        </el-radio-group>
         <div ref="echartsRef" class="sale-echarts"></div>
       </div>
     </div>
     <div class="right">
       <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
-        <template v-for="(item, index) in branchList" :key="index">
+        <template v-for="(item, index) in newBranchList" :key="index">
           <el-radio-button :label="item.branchName" :value="item.id" />
         </template>
       </el-radio-group>
@@ -16,14 +21,14 @@
         <div class="item" v-for="(item, index) in saleData" :key="index">
           <table>
             <tr class="top">
-              <td class="title">{{ item.title1 }}</td>
-              <td class="to-money">
-                {{ item.value1 }}
-              </td>
+              {{
+                item.title
+              }}
             </tr>
             <tr class="bottom">
-              <td class="title">{{ item.title2 }}</td>
-              <td class="to-money">{{ item.value1 }}</td>
+              {{
+                item.value
+              }}
             </tr>
           </table>
         </div>
@@ -34,7 +39,7 @@
 
 <script setup lang="ts">
 import { sysAnalysisWork } from "@/api/modules/order";
-import { getAllBranch } from "@/api/modules/set";
+// import { getAllBranch } from "@/api/modules/set";
 import Header from "@/components/Header/index.vue";
 import { ref } from "vue";
 import * as echarts from "echarts";
@@ -42,68 +47,110 @@ import { useEcharts } from "@/hooks/useEcharts";
 const echartsRef = ref<HTMLElement>();
 const emit = defineEmits(["change-id"]);
 
-// 门店数据获取
-type BranchObj = { branchName: string; id: number };
-const branchList = ref<BranchObj[]>([]);
-const currentCitySelect = ref("");
-const getAllBranchData = async () => {
-  const { data } = await getAllBranch({});
-  branchList.value = data?.map(item => {
-    return {
-      branchName: item.branchName,
-      id: item.id
-    };
-  });
-  currentCitySelect.value = branchList.value[0].branchName;
-  let selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
-  let id = selectObj!.id;
-  emit("change-id", id);
-  getCityData(id);
+type Props = {
+  branchList: any;
+  selectBranchId: number;
 };
-getAllBranchData();
+const tableProps = withDefaults(defineProps<Props>(), {
+  branchList: [],
+  selectBranchId: 0
+});
+
+const currentCitySelect = ref("");
 
 // 门店切换
 async function changeCityDate(e: any) {
   currentCitySelect.value = e as string;
-  let selectObj = branchList.value.find(item => item.branchName === e);
-  let id = selectObj!.id;
-  emit("change-id", id);
-  getCityData(id);
+  let selectObj = tableProps.branchList.find((item: { branchName: any }) => item.branchName === e);
+  emit("change-id", selectObj.id);
 }
 
 // 获取门店统计数据
 const saleData: any = ref([]);
-async function getCityData(id: number) {
-  const data: any = await sysAnalysisWork(id);
+async function getCityData(id: number, date: number) {
+  const {
+    data: { workTotal, addedToday, passWork, failedWork, handleWorkNumber }
+  } = await sysAnalysisWork(id, date);
   saleData.value = [
     {
-      title1: "工单总数",
-      value1: data.workTotal,
-      title2: "今日新增",
-      value2: data.addedToday
+      title: "工单总数",
+      value: workTotal
     },
     {
-      title1: "审核通过单数",
-      value1: data.passWork,
-      title2: "审核未通过单数",
-      value2: data.failedWork
+      title: "今日新增",
+      value: addedToday
+    },
+    {
+      title: "审核通过单数",
+      value: passWork
+    },
+    {
+      title: "审核未通过单数",
+      value: failedWork
     }
   ];
-  // HistogramValue {
-  //   name: string; // X
-  //   value: number; // Y
-  // }
-  const toDayX = data.handleWorkNumber.today.map((item: any) => {
+  const toDayX = handleWorkNumber.current.map((item: any) => {
     return item.name;
   });
-  const toDayY = data.handleWorkNumber.today.map((item: any) => {
+  const toDayY = handleWorkNumber.current.map((item: any) => {
     return item.value;
   });
-  const yesterdayY = data.handleWorkNumber.yesterday.map((item: any) => {
+  const yesterdayY = handleWorkNumber.preCurrent.map((item: any) => {
     return item.value;
   });
   initEcharts(toDayX, toDayY, yesterdayY);
 }
+
+// 日期范围选择
+const currentTimeLabel = ref("本日");
+const currentTimeValue = ref(0);
+const tabCityList = ref([
+  {
+    title: "本日"
+  },
+  {
+    title: "本周"
+  },
+  {
+    title: "本月"
+  }
+]);
+function changeSelectDate(e: any) {
+  currentTimeLabel.value = e;
+  if (e === "本日") {
+    currentTimeValue.value = 0;
+  } else if (e === "本周") {
+    currentTimeValue.value = 1;
+  } else if (e === "本月") {
+    currentTimeValue.value = 2;
+  }
+}
+
+watch(
+  () => currentTimeValue.value,
+  () => {
+    getCityData(tableProps.selectBranchId, currentTimeValue.value);
+  }
+);
+watch(
+  () => tableProps.selectBranchId,
+  () => {
+    getCityData(tableProps.selectBranchId, currentTimeValue.value);
+  },
+  { deep: true, immediate: true }
+);
+
+type BranchObj = { branchName: string; id: number };
+const newBranchList = ref<BranchObj[]>([]);
+watch(
+  () => tableProps.branchList,
+  value => {
+    if (value) {
+      newBranchList.value = value;
+      currentCitySelect.value = value[0].branchName;
+    }
+  }
+);
 
 // 渲染图表
 // x轴一条 y轴两条数据
@@ -125,11 +172,6 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
         color: "#a1a1a1"
       },
       bottom: "1%"
-    },
-    toolbox: {
-      feature: {
-        saveAsImage: {}
-      }
     },
     grid: {
       left: "3%",

@@ -4,6 +4,7 @@ import { RouteRecordRaw } from "vue-router";
 import { ElNotification } from "element-plus";
 import { useUserStore } from "@/stores/modules/user";
 import { useAuthStore } from "@/stores/modules/auth";
+import { decryption } from "@/utils/AESUtil";
 
 // 引入 views 文件夹下所有 vue 文件
 const modules = import.meta.glob("@/views/**/*.vue");
@@ -12,13 +13,15 @@ const modules = import.meta.glob("@/views/**/*.vue");
  * @description 初始化动态路由
  */
 export const initDynamicRouter = async () => {
+  debugger;
   const userStore = useUserStore();
   const authStore = useAuthStore();
-
+  const token = userStore.token; // 获取token
+  const obj = JSON.parse(decryption("token", token));
   try {
     // 1.获取菜单列表 && 按钮权限列表
     await authStore.getAuthMenuList();
-    await authStore.getAuthButtonList();
+    await authStore.getAuthButtonList(obj.user);
 
     // 2.判断当前用户有没有菜单权限
     if (!authStore.authMenuListGet.length) {
