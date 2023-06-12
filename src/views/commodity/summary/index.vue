@@ -178,7 +178,7 @@ const getFixed = (str: string) => {
 // };
 
 const onExport = async () => {
-  await download();
+  await download("工单报表");
 };
 
 // 重置用户密码

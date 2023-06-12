@@ -174,7 +174,10 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "orderStar",
     label: "工单星级",
-    width: 180
+    width: 180,
+    render: scope => {
+      return <el-rate value={scope.row.orderStar} max={3} disabled />;
+    }
   },
   {
     prop: "orderStatus",
