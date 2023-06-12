@@ -17,7 +17,7 @@
     },
     {
       "path": "/commodity",
-      "name": "commodity",
+      "name": "账号管理",
       "redirect": "/commodity",
       "meta": {
         "icon": "MessageBox",
@@ -31,7 +31,7 @@
       "children": [
         {
           "path": "/commodity/summary",
-          "name": "summary",
+          "name": "账号汇总",
           "component": "/commodity/summary/index",
           "meta": {
             "icon": "Menu",
@@ -45,7 +45,7 @@
         },
         {
           "path": "/commodity/soldList",
-          "name": "soldList",
+          "name": "已售列表",
           "component": "/commodity/soldList/index",
           "meta": {
             "icon": "Menu",
@@ -59,7 +59,7 @@
         },
         {
           "path": "/commodity/unsoldList",
-          "name": "unsoldList",
+          "name": "未售列表",
           "component": "/commodity/unsoldList/index",
           "meta": {
             "icon": "Menu",
@@ -73,7 +73,7 @@
         },
         {
           "path": "/commodity/accountClass",
-          "name": "accountClass",
+          "name": "账号分类",
           "component": "/commodity/accountClass/index",
           "meta": {
             "icon": "Menu",
@@ -87,7 +87,7 @@
         },
         {
           "path": "/commodity/phoneLibrary",
-          "name": "phoneLibrary",
+          "name": "手机号码库",
           "component": "/commodity/phoneLibrary/index",
           "meta": {
             "icon": "Menu",

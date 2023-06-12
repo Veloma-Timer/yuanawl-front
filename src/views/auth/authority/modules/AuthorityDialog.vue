@@ -33,6 +33,9 @@ import { getIdPower, setPower } from "@/api/modules/power";
 import { ColumnProps } from "@/components/ProTable/interface";
 import { Author } from "@/api/interface";
 import { ElMessage } from "element-plus";
+import { useAuthStore } from "@/stores/modules/auth";
+import { decryption } from "@/utils/AESUtil";
+import { useUserStore } from "@/stores/modules/user";
 
 const dialogVisible = ref(false);
 const roleTable = ref([]);
@@ -44,6 +47,7 @@ const columns: ColumnProps<Author.RoleList> = [
 ];
 // 重置方法
 const resetting = () => {
+  getButtonList();
   dialogVisible.value = false;
   roleId.value = "";
   roleTable.value = [];
@@ -75,6 +79,13 @@ const onSetRoleMap = () => {
       ElMessage.error({ message: `权限修改失败` });
     }
   });
+};
+const userStore = useUserStore();
+const authStore = useAuthStore();
+const token = userStore.token; // 获取token
+const getButtonList = async () => {
+  const obj = JSON.parse(decryption("token", token));
+  await authStore.getAuthButtonList(obj.user);
 };
 defineExpose({
   acceptParams

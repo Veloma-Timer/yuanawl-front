@@ -11,7 +11,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
+        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button type="primary" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">导出</el-button>
@@ -35,6 +35,7 @@
 
 <script setup lang="tsx" name="useProTable">
 import { useHandleData } from "@/hooks/useHandleData";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
@@ -51,7 +52,7 @@ const proTable = ref<ProTableInstance>();
 
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({ type: 1 });
-
+const { BUTTONS } = useAuthButtons();
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
