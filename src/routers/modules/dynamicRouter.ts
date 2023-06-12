@@ -13,7 +13,6 @@ const modules = import.meta.glob("@/views/**/*.vue");
  * @description 初始化动态路由
  */
 export const initDynamicRouter = async () => {
-  debugger;
   const userStore = useUserStore();
   const authStore = useAuthStore();
   const token = userStore.token; // 获取token

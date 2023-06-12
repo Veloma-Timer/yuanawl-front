@@ -279,8 +279,6 @@ const downloadImportTemplate = () => {
 // 文件上传
 const uploadExcel = async (param: UploadRequestOptions) => {
   let excelFormData = new FormData();
-  console.log(param.file);
-  debugger;
   excelFormData.append("file", param.file);
   await baseAccountUpload(excelFormData);
 };
