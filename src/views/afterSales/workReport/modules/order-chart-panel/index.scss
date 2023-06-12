@@ -3,7 +3,7 @@
   width: 100%;
 }
 .left {
-  flex: 7;
+  flex: 6;
   .content {
     .header {
       display: inline-block;
@@ -22,7 +22,7 @@
 }
 .right {
   position: relative;
-  flex: 3;
+  flex: 4;
   margin-top: 6px;
   margin-left: 20px;
   .city-radio {
