@@ -25,7 +25,7 @@
 <script setup lang="ts" name="UserDrawer">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
-import { Commodity } from "@/api/commodity/commodity";
+import { Commodity } from "@/api/interface/commodity/commodity";
 
 const rules = reactive({
   typeCode: [{ required: true, message: "请输入分类编号" }],

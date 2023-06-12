@@ -76,3 +76,7 @@ export const getUserListMap = (params: any) => {
 export const getGroupListMap = (params: { ket: string }) => {
   return http.get(`${PORT3}/sys_map`, params, { noLoading: true });
 };
+// 获取所有用户
+export const getUserAll = () => {
+  return http.get(`${baseUrl}/all`, {}, { noLoading: true });
+};
