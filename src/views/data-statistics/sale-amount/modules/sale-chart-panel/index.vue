@@ -216,7 +216,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
       {
         name: "今日",
         type: "line",
-        stack: "Total",
+        // stack: "Total",
         lineStyle: {
           color: "#63ECFF"
         },
@@ -231,7 +231,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
       {
         name: "昨日",
         type: "line",
-        stack: "Total",
+        // stack: "Total",
         lineStyle: {
           color: "#2ED7FF"
         },
