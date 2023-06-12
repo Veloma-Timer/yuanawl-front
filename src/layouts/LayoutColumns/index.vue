@@ -3,7 +3,7 @@
   <el-container class="layout">
     <div class="aside-split">
       <div class="logo flx-center">
-        <img class="logo-img" src="@/assets/images/logo.svg" alt="logo" />
+        <img class="logo-img" src="@/assets/images/white-logo-small.png" alt="logo" />
       </div>
       <el-scrollbar>
         <div class="split-list">
@@ -24,7 +24,7 @@
     </div>
     <el-aside :class="{ 'not-aside': !subMenuList.length }" :style="{ width: isCollapse ? '65px' : '210px' }">
       <div class="logo flx-center">
-        <span class="logo-text" v-show="subMenuList.length">{{ isCollapse ? "元" : "浙江元阿网络科技有限公司" }}</span>
+        <span class="logo-text" v-show="subMenuList.length">{{ isCollapse ? "元" : "元阿网络" }}</span>
       </div>
       <el-scrollbar>
         <el-menu

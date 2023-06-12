@@ -37,7 +37,6 @@
 </template>
 
 <script setup lang="ts" name="home">
-import { ref, reactive, onMounted } from "vue";
 import homeCard from "@/views/home/modules/home-crad/index.vue";
 import homeNameList from "@/views/home/modules/home-nameList/index.vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";

@@ -301,13 +301,14 @@ watch(
 .home-crud {
   width: 100%;
   .crud-list {
+    justify-content: space-between;
     flex-wrap: wrap;
     width: 100%;
     .crud-list-item {
-      width: calc((100% - 60px) / 4);
+      margin-bottom: 10px;
+      width: 32.5%;
       height: 181px;
       padding: 18px 22px;
-      margin: 0 20px 20px 0;
       background: #ffffff;
       border: 2px solid #f0f0f0;
       border-radius: 10px;
