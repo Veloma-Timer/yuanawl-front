@@ -3,12 +3,12 @@
     <ProTable ref="proTable" title="门店管理" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增门店')">新增门店</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增门店')" v-if="BUTTONS.add">新增门店</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" link @click="openDrawer('编辑', scope.row)" v-if="BUTTONS.edit" :icon="View">编辑</el-button>
+        <el-button type="primary" link @click="deleteAccount(scope.row)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
     </ProTable>
     <StoreModal ref="storeModalRef" />
@@ -22,9 +22,11 @@ import StoreModal from "./modules/store-modal/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getAllBranchPage, addBranch, delBranch, editBranch } from "@/api/modules/set";
 import { useHandleData } from "@/hooks/useHandleData";
-import { CirclePlus } from "@element-plus/icons-vue";
+import { CirclePlus, View, Delete } from "@element-plus/icons-vue";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
+const { BUTTONS } = useAuthButtons();
 
 const getTableList = (params: any) => {
   return getAllBranchPage(params);
@@ -33,7 +35,7 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Set.ResAddStore>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "left", width: 180 },
+  { prop: "operation", label: "操作", fixed: "right", width: 180 },
   {
     prop: "branchCode",
     label: "门店编码",

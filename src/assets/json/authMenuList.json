@@ -117,7 +117,7 @@
       "children": [
         {
           "path": "/data/statistics/sale",
-          "name": "sale",
+          "name": "销售金额汇总",
           "component": "/data-statistics/sale-amount/index",
           "meta": {
             "icon": "Menu",
@@ -131,7 +131,7 @@
         },
         {
           "path": "/data/statistics/recovery",
-          "name": "recovery",
+          "name": "回收金额汇总",
           "component": "/data-statistics/recovery-amount/index",
           "meta": {
             "icon": "Menu",
@@ -161,7 +161,7 @@
       "children": [
         {
           "path": "/afterSales/orderSummary",
-          "name": "orderSummary",
+          "name": "售后工单汇总",
           "component": "/afterSales/orderSummary/index",
           "meta": {
             "icon": "Menu",
@@ -175,7 +175,7 @@
         },
         {
           "path": "/afterSales/hangWork",
-          "name": "hangWork",
+          "name": "杭州工单",
           "component": "/afterSales/hangWork/index",
           "meta": {
             "icon": "Menu",
@@ -189,7 +189,7 @@
         },
         {
           "path": "/afterSales/xinWork",
-          "name": "xinWork",
+          "name": "信阳工单",
           "component": "/afterSales/xinWork/index",
           "meta": {
             "icon": "Menu",
@@ -203,11 +203,11 @@
         },
         {
           "path": "/afterSales/workReport",
-          "name": "workReport",
+          "name": "工单处理汇总",
           "component": "/afterSales/workReport/index",
           "meta": {
             "icon": "Menu",
-            "title": "工单处理报表",
+            "title": "工单处理汇总",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -233,7 +233,7 @@
       "children": [
         {
           "path": "/auth/store",
-          "name": "authStore",
+          "name": "门店管理",
           "component": "/auth/store/index",
           "meta": {
             "icon": "Menu",
@@ -275,7 +275,7 @@
         },
         {
           "path": "/auth/operationLog",
-          "name": "operationLog",
+          "name": "操作日志",
           "component": "/auth/operationLog/index",
           "meta": {
             "icon": "Menu",

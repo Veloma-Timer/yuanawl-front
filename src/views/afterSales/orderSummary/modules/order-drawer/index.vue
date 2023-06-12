@@ -3,9 +3,11 @@
     <template #header>
       <div class="edit-btn">
         <span>{{ drawerProps.title }}</span>
-        <el-button type="primary" @click="edit" v-if="drawerProps.title === '查看'">
-          <div>编辑</div>
-        </el-button>
+        <template v-if="BUTTONS.edit">
+          <el-button type="primary" @click="edit" v-if="drawerProps.title === '查看'">
+            <div>编辑</div>
+          </el-button>
+        </template>
       </div>
     </template>
     <div class="first-header">
@@ -96,6 +98,9 @@ import { detailSalesList } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
 import { getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+
+const { BUTTONS } = useAuthButtons();
 
 const rules = reactive({
   orderCode: [{ required: true, message: "必填项不能为空" }],

@@ -3,16 +3,16 @@
     <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" @click="openDrawer('新增工单')">新增工单</el-button>
-        <el-button type="primary" @click="downloadImportTemplate">下载导入模板</el-button>
-        <el-button type="primary" @click="importTemplate">导入模板</el-button>
-        <el-button type="primary" @click="exportData">导出</el-button>
+        <el-button type="primary" @click="openDrawer('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
+        <el-button type="primary" @click="downloadImportTemplate" icon="Download" plain>下载导入模板</el-button>
+        <el-button type="primary" @click="importTemplate" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
+        <el-button type="primary" @click="exportData" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
-        <el-button type="primary" link @click="openDrawer('查看', row)">查看</el-button>
-        <el-button type="primary" link @click="openCheck(row)">审核</el-button>
-        <el-button type="primary" link @click="delOrder(row.id, row.orderCode)">删除</el-button>
+        <el-button type="primary" link @click="openDrawer('查看', row)" v-if="BUTTONS.view" :icon="View">查看</el-button>
+        <el-button type="primary" link @click="openCheck(row)" v-if="BUTTONS.check" :icon="EditPen">审核</el-button>
+        <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
     </ProTable>
     <OrderDrawer ref="drawerRef" />
@@ -30,8 +30,11 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getSalesList, addSalesList, editSalesList, delSalesOrder } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
+const { BUTTONS } = useAuthButtons();
 
 // 固定
 const initParam = reactive({ branchId: 0 });
@@ -43,7 +46,7 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "left", width: 180 },
+  { prop: "operation", label: "操作", fixed: "right", width: 220 },
   {
     prop: "orderCode",
     label: "工单编号",

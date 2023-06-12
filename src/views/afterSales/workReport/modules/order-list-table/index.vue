@@ -14,7 +14,9 @@
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('查看', scope.row)" size="small">查看</el-button>
+        <el-button type="primary" link @click="openDrawer('查看', scope.row)" size="small" v-if="BUTTONS.view" :icon="View">
+          查看
+        </el-button>
       </template>
     </ProTable>
     <OrderDrawer ref="drawerRef" />
@@ -29,8 +31,11 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getSalesList, getSalesListToday, addSalesList, editSalesList } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS } from "@/public/constant";
 import dayjs from "dayjs";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { View } from "@element-plus/icons-vue";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
+const { BUTTONS } = useAuthButtons();
 
 type Props = {
   selectBranchId: number;
@@ -42,7 +47,7 @@ const tableProps = withDefaults(defineProps<Props>(), {
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "left", width: 80 },
+  { prop: "operation", label: "操作", fixed: "right", width: 100 },
   {
     prop: "orderCode",
     label: "工单编号",

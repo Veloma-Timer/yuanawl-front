@@ -3,7 +3,7 @@
     <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link @click="openDrawer('查看', scope.row)" :icon="View">查看</el-button>
       </template>
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
@@ -27,6 +27,7 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { baseAccountRecyle } from "@/api/modules/order";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
+import { View } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
@@ -49,7 +50,7 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Data.RecycleList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "left", width: 130 },
+  { prop: "operation", label: "操作", fixed: "right", width: 130 },
   {
     prop: "accountCode",
     label: "订单编号",
