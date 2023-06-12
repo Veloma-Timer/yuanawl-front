@@ -21,9 +21,9 @@
 }
 .right {
   position: relative;
+  flex: 3;
   margin-top: 6px;
   margin-left: 20px;
-  flex: 3;
   .city-radio {
     position: absolute;
     right: 0;
@@ -49,6 +49,7 @@
       justify-content: center;
       width: 300px;
       height: 120px;
+      padding-left: 20px;
       font-size: 14px;
       color: #ffffff;
       background: #ffffff;
@@ -56,7 +57,6 @@
       background-size: 100% 100%;
       border: 1px solid #d7d7d7;
       border-radius: 10px;
-      padding-left: 20px;
       .title {
         margin-right: 20px;
         text-align: right;

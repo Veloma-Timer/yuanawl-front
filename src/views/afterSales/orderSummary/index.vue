@@ -7,16 +7,13 @@
         <el-button type="primary" @click="downloadImportTemplate">下载导入模板</el-button>
         <el-upload
           action="#"
-          :limit="excelLimit"
           :multiple="true"
-          :show-file-list="true"
+          :show-file-list="false"
           :http-request="uploadExcel"
           :before-upload="beforeExcelUpload"
-          :on-exceed="handleExceed"
           :on-success="excelUploadSuccess"
           :on-error="excelUploadError"
           :accept="fileType.join(',')"
-          style="inline-block"
           class="up-btn"
         >
           <template #trigger>
@@ -56,8 +53,6 @@ const initParam = reactive({});
 const getTableList = (params: any) => {
   return getSalesList(params);
 };
-
-const excelLimit = ref(1);
 
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
@@ -308,15 +303,6 @@ const beforeExcelUpload = (file: UploadRawFile) => {
       });
     }, 0);
   return isExcel && fileSize;
-};
-
-// 文件数超出提示
-const handleExceed = () => {
-  ElNotification({
-    title: "温馨提示",
-    message: "最多只能上传一个文件！",
-    type: "warning"
-  });
 };
 
 // 上传错误提示

@@ -70,5 +70,5 @@ export const downTemplate = () => {
 
 // 账号导入
 export const baseAccountUpload = (file: any) => {
-  return http.get(`${PORT3}/base_account/upload`, { file });
+  return http.post(`${PORT3}/base_account/upload`, { file });
 };
