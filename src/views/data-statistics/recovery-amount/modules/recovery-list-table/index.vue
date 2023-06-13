@@ -78,7 +78,7 @@ const columns: ColumnProps<Data.RecycleList>[] = [
     prop: "accountRecycler",
     label: "回收人姓名",
     render: scope => {
-      return <span>{scope.row.accountRecycler || "--"}</span>;
+      return <span>{scope.row?.accountRecycler?.userName || "--"}</span>;
     }
   },
   {
