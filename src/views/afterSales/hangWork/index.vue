@@ -2,13 +2,11 @@
   <div class="table-box">
     <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
-      <template #tableHeader="scope">
+      <template #tableHeader>
         <el-button type="primary" @click="openDrawer('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
         <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
         <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
-        <el-button type="primary" @click="batchExport(scope.selectedListIds)" v-if="BUTTONS.export" :icon="Download" plain>
-          导出
-        </el-button>
+        <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
@@ -30,13 +28,22 @@ import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 // import { getAllBranch } from "@/api/modules/set";
-import { getSalesList, addSalesList, editSalesList, delSalesOrder, downTemplate, baseAccountUpload } from "@/api/modules/order";
+import {
+  getSalesList,
+  addSalesList,
+  editSalesList,
+  delSalesOrder,
+  orderTemplate,
+  orderUpload,
+  orderExport
+} from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
+import { saveFile } from "@/utils/file";
 const proTable = ref<ProTableInstance>();
 const { BUTTONS } = useAuthButtons();
 
@@ -266,20 +273,20 @@ const delOrder = async (id: number, orderCode: string) => {
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}工单`,
+    title: title === "下载" ? `${title}工单批量导入模板` : "工单批量导入",
     status: title === "下载",
-    tempApi: downTemplate,
-    updateApi: baseAccountUpload,
+    tempApi: orderTemplate,
+    updateApi: orderUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);
 };
 
 // 批量导出工单信息
-const batchExport = async (id: string[]) => {
-  // 接口要换
-  await useHandleData(downTemplate, { id }, "导出工单表格");
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
+const batchExport = async () => {
+  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  delete obj.total;
+  const data = await orderExport(obj);
+  saveFile(data, "工单报表");
 };
 </script>

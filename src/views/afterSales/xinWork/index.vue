@@ -4,9 +4,9 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" @click="openDrawer('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
-        <el-button type="primary" @click="downloadImportTemplate" :icon="Download" plain>下载导入模板</el-button>
-        <el-button type="primary" @click="importTemplate" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
-        <el-button type="primary" @click="exportData" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
+        <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
+        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
+        <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
@@ -17,6 +17,7 @@
     </ProTable>
     <OrderDrawer ref="drawerRef" />
     <OrderCheck ref="orderCheckRef" />
+    <ImportExcel ref="dialogRef" />
   </div>
 </template>
 
@@ -27,12 +28,22 @@ import OrderCheck from "./modules/order-check/index.vue";
 import OrderDrawer from "./modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 // import { getAllBranch } from "@/api/modules/set";
-import { getSalesList, addSalesList, editSalesList, delSalesOrder } from "@/api/modules/order";
+import {
+  getSalesList,
+  addSalesList,
+  editSalesList,
+  delSalesOrder,
+  orderTemplate,
+  orderUpload,
+  orderExport
+} from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
+import { saveFile } from "@/utils/file";
+import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 const proTable = ref<ProTableInstance>();
 const { BUTTONS } = useAuthButtons();
 
@@ -253,21 +264,29 @@ const openCheck = (row: any) => {
   orderCheckRef.value?.openDialog({ row, getTableList: proTable.value?.getTableList });
 };
 
+const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const delOrder = async (id: number, orderCode: string) => {
   await useHandleData(delSalesOrder, id, `删除工单编号【${orderCode}】这条数据`);
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
 
-const downloadImportTemplate = () => {
-  console.log("下载导入模板");
+const batchAdd = (title: string) => {
+  const params = {
+    title: title === "下载" ? `${title}工单批量导入模板` : "工单批量导入",
+    status: title === "下载",
+    tempApi: orderTemplate,
+    updateApi: orderUpload,
+    getTableList: proTable.value?.getTableList
+  };
+  dialogRef.value?.acceptParams(params);
 };
 
-const importTemplate = () => {
-  console.log("导入模板");
-};
-
-const exportData = () => {
-  console.log("导出");
+// 批量导出工单信息
+const batchExport = async () => {
+  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  delete obj.total;
+  const data = await orderExport(obj);
+  saveFile(data, "工单报表");
 };
 </script>

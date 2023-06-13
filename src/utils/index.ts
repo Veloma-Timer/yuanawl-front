@@ -351,3 +351,11 @@ export function parseTime(time: any, cFormat: string) {
     return value.toString().padStart(2, "0");
   });
 }
+
+export const formatParams = (obj: any) => {
+  let params = "";
+  for (let key in obj) {
+    params = params + key + "=" + obj[key] + "&";
+  }
+  return `?${params.slice(0, -1)}`;
+};

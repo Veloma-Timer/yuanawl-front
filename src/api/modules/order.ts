@@ -1,6 +1,7 @@
 import { ResPage, ResultData, SalesOrder, Data } from "@/api/interface/index";
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
+import { formatParams } from "@/utils/index";
 /**
  * @name 售后模块
  */
@@ -63,17 +64,18 @@ export const baseAccountRecyle = (params: any, branchId: number) => {
   return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`, params);
 };
 
-// 账号模板
-export const downTemplate = () => {
-  return http.get(`/static/template/账号模板.xlsx`, {});
+// 工单模板
+export const orderTemplate = () => {
+  return http.get(`/static/template/工单模板.xlsx`, {}, { responseType: "blob" });
 };
 
-// 账号导入
-export const baseAccountUpload = (file: any) => {
-  return http.post(`${PORT3}/base_account/upload`, { file });
+// 工单导入
+export const orderUpload = (file: any) => {
+  return http.post(`${PORT3}/base_work_order/upload`, { file });
 };
 
-// 账号导出
-export const baseAccountExport = (params: any) => {
-  return http.download(`${PORT3}/base_account/export`, params);
+// 工单导出
+export const orderExport = (params: any) => {
+  const newParams = formatParams(params);
+  return http.post(`${PORT3}/base_work_order/export${newParams}`);
 };

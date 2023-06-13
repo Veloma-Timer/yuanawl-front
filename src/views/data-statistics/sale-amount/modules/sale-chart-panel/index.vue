@@ -67,7 +67,6 @@ const getTodaySales = async (branchId: number, date: number) => {
   const yesterdayY = preCurrent.map((item: any) => {
     return item.value;
   });
-  initEcharts(toDayX, toDayY, yesterdayY);
   saleData.value = [
     {
       title: "今日销售金额",
@@ -86,6 +85,7 @@ const getTodaySales = async (branchId: number, date: number) => {
       value: buyNumber
     }
   ];
+  initEcharts(toDayX, toDayY, yesterdayY);
 };
 
 // 时间范围选择

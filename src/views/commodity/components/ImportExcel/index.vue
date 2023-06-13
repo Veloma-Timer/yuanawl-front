@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="dialogVisible" :title="`批量添加${parameter.title}`" :destroy-on-close="true" width="580px" draggable>
+  <el-dialog v-model="dialogVisible" :title="`${parameter.title}`" :destroy-on-close="true" width="580px" draggable>
     <el-form class="drawer-multiColumn-form" label-width="100px">
       <el-form-item v-show="parameter.status" label="模板下载 :">
         <el-button type="primary" :icon="Download" @click="downloadTemp">点击下载</el-button>
@@ -72,7 +72,7 @@ const acceptParams = (params: ExcelParameterProps & any) => {
 // Excel 导入模板下载
 const downloadTemp = () => {
   if (!parameter.value.tempApi) return;
-  useDownload(parameter.value.tempApi, `${parameter.value.title}模板`);
+  useDownload(parameter.value.tempApi, `${parameter.value.title}`);
 };
 
 // 文件上传

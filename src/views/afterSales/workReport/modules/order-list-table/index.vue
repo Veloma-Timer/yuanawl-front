@@ -28,11 +28,12 @@ import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderDrawer from "@/views/afterSales/orderSummary/modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getSalesList, getSalesListToday, addSalesList, editSalesList } from "@/api/modules/order";
+import { getSalesList, getSalesListToday, addSalesList, editSalesList, orderExport } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS } from "@/public/constant";
 import dayjs from "dayjs";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { View } from "@element-plus/icons-vue";
+import { saveFile } from "@/utils/file";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -228,8 +229,11 @@ watch(
   }
 );
 
-const exportData = () => {
-  console.log("导出");
+const exportData = async () => {
+  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  delete obj.total;
+  const data = await orderExport(obj);
+  saveFile(data, "工单报表");
 };
 </script>
 
