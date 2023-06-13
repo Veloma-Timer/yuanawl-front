@@ -24,8 +24,8 @@ export const phoneTemplate = () => {
 };
 
 // 手机号导入
-export const phoneUpload = (file: any) => {
-  return http.post(`${baseUrl}/upload`, { file });
+export const phoneUpload = (file: FormData) => {
+  return http.post(`${baseUrl}/upload`, file);
 };
 
 // 手机号导出

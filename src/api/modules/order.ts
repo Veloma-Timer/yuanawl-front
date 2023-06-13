@@ -70,8 +70,8 @@ export const orderTemplate = () => {
 };
 
 // 工单导入
-export const orderUpload = (file: any) => {
-  return http.post(`${PORT3}/base_work_order/upload`, { file });
+export const orderUpload = (file: FormData) => {
+  return http.post(`${PORT3}/base_work_order/upload`, file);
 };
 
 // 工单导出

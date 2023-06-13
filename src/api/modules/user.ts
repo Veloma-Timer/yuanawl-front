@@ -84,8 +84,8 @@ export const getUserAll = () => {
 export const getUserTemptable = () => {
   return http.get(`/static/template/用户模板.xlsx`, {}, { responseType: "blob" });
 };
-export const getUserUpload = (file: any) => {
-  return http.post(`${baseUrl}/upload`, { file });
+export const getUserUpload = (file: FormData) => {
+  return http.post(`${baseUrl}/upload`, file);
 };
 
 export const getUserExport = (params: any) => {

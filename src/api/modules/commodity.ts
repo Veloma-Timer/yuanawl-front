@@ -24,8 +24,8 @@ export const summaryTemplate = () => {
 };
 
 // 账号导入
-export const summaryUpload = (file: any) => {
-  return http.post(`${PORT3}/base_account/upload`, { file });
+export const summaryUpload = (file: FormData) => {
+  return http.post(`${PORT3}/base_account/upload`, file);
 };
 
 // 账号导出
