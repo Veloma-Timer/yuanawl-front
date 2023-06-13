@@ -82,5 +82,12 @@ export const getUserAll = () => {
 };
 // 下载用户模板
 export const getUserTemptable = () => {
-  // return http.get()
+  return http.get(`/static/template/用户模板.xlsx`, {}, { responseType: "blob" });
+};
+export const getUserUpload = (file: any) => {
+  return http.post(`${baseUrl}/upload`, { file });
+};
+
+export const getUserExport = (params: any) => {
+  return http.post(`${baseUrl}/export`, params);
 };

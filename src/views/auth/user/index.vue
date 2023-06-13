@@ -12,7 +12,7 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载导入模板</el-button>
+        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
       </template>
@@ -37,10 +37,17 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
-import { deleteUser, editUser, addUser, exportUserInfo, BatchAddUser, getUserListMap } from "@/api/modules/user";
-import md5 from "js-md5";
+import {
+  deleteUser,
+  editUser,
+  addUser,
+  getUserListMap,
+  getUserTemptable,
+  getUserUpload,
+  getUserExport
+} from "@/api/modules/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { download } from "@/utils/file";
+import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
 // const router = useRouter();
 // 跳转详情页
@@ -60,7 +67,12 @@ const dataCallback = (data: any) => {
     pageSize: Number(data.pageSize)
   };
 };
-
+const onExport = async () => {
+  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  delete obj.total;
+  const data = await getUserExport(obj);
+  saveFile(data, "用户导出");
+};
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
@@ -95,19 +107,16 @@ const batchDelete = async (id: string[]) => {
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
-const onExport = async () => {
-  // await download();
-};
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}用户`,
+    title: title === "下载" ? `${title}用户模板` : "用户导入",
     status: title === "下载",
-    tempApi: exportUserInfo,
-    updateApi: BatchAddUser,
+    tempApi: getUserTemptable,
+    updateApi: getUserUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);

@@ -29,7 +29,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import RoleDrawer from "@/views/auth/authority/modules/RoleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, View } from "@element-plus/icons-vue";
-import { getRoleLog, addRole, editRole } from "@/api/modules/role";
+import { getRoleLog, addRole, editRole, changeRole } from "@/api/modules/role";
 import AuthorityDialog from "@/views/auth/authority/modules/AuthorityDialog.vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 const initParam = reactive({});
@@ -64,9 +64,9 @@ const columns: ColumnProps<Author.RoleList>[] = [
         <>
           <el-switch
             model-value={scope.row.disabled}
-            active-text={scope.row.disabled ? "启用" : "禁用"}
-            active-value={1}
-            inactive-value={0}
+            active-text={!scope.row.disabled ? "启用" : "禁用"}
+            active-value={"1"}
+            inactive-value={"0"}
             onClick={() => changeStatus(scope.row)}
           />
         </>
@@ -90,8 +90,14 @@ const openDrawer = (title: string, row: Partial<Author.RoleObj> = {}) => {
   drawerRef.value?.acceptParams(params);
 };
 // 修改状态
-const changeStatus = (row: Author.RoleList) => {
-  console.log(row);
+const changeStatus = async (row: Author.RoleList) => {
+  const id = row.id;
+  try {
+    await changeRole(id);
+    proTable.value?.getTableList();
+  } catch (err) {
+    console.log(err);
+  }
 };
 // 查看角色权限
 const setRoleList = (powerId: string, id: string) => {

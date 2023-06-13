@@ -12,9 +12,9 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载账号模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -42,12 +42,21 @@ import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import { getUserAll } from "@/api/modules/user";
-import { addSummary, deleteSummary, editSummary, summaryList, summaryTemplate, summaryUpload } from "@/api/modules/commodity";
+import {
+  addSummary,
+  deleteSummary,
+  editSummary,
+  summaryExport,
+  summaryList,
+  summaryTemplate,
+  summaryUpload
+} from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
-import { download } from "@/utils/file";
+import { download, saveFile } from "@/utils/file";
 import { getAllBranch } from "@/api/modules/set";
+import { orderExport } from "@/api/modules/order";
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -142,7 +151,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" },
     render: scope => {
-      return scope.row?.branch?.branchName;
+      return scope.row.branch?.branchName;
     }
   },
   { prop: "accountNumber", label: "账号", width: 160 },
@@ -189,7 +198,10 @@ const getFixed = (str: string) => {
 // };
 
 const onExport = async () => {
-  await download("工单报表");
+  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  delete obj.total;
+  const data = await summaryExport(obj);
+  saveFile(data, "账号汇总导出");
 };
 
 // 重置用户密码

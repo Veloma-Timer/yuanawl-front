@@ -18,3 +18,17 @@ export const getPhoneList = (params: any) => {
 export const deletePhone = (params: any) => {
   return http.delete(`${baseUrl}/${params.id}`, params);
 };
+// 手机号模块
+export const phoneTemplate = () => {
+  return http.get(`/static/template/号码库模板.xlsx`, {}, { responseType: "blob" });
+};
+
+// 手机号导入
+export const phoneUpload = (file: any) => {
+  return http.post(`${baseUrl}/upload`, { file });
+};
+
+// 手机号导出
+export const phoneExport = (params: any) => {
+  return http.post(`${PORT3}/base_tel/export`, params);
+};

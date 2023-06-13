@@ -13,3 +13,7 @@ export const addRole = (params: any) => {
 export const editRole = (params: { id: string }) => {
   return http.put(`${baseUrl}/${params.id}`, params);
 };
+// 切换角色
+export const changeRole = (id: string) => {
+  return http.put(`${baseUrl}/change/${id}`);
+};

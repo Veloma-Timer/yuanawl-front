@@ -10,13 +10,11 @@
       :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader="scope">
+      <template #tableHeader>
         <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
         <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
         <el-button type="primary" v-if="BUTTONS.import" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)"
-          >导出</el-button
-        >
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -42,11 +40,21 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/phoneLibrary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { deleteUser, exportUserInfo, BatchAddUser } from "@/api/modules/user";
-import { addPhone, deletePhone, getPhoneList, setPhone } from "@/api/modules/phoneLibrary";
+import { deleteUser } from "@/api/modules/user";
+import {
+  addPhone,
+  deletePhone,
+  getPhoneList,
+  phoneExport,
+  phoneTemplate,
+  phoneUpload,
+  setPhone
+} from "@/api/modules/phoneLibrary";
 import { parseTime } from "@/utils/is";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { summaryExport } from "@/api/modules/commodity";
+import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
 // const router = useRouter();
 // 跳转详情页
@@ -104,7 +112,7 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
   },
   {
     prop: "bindingTimes",
-    label: "剩余绑定次数",
+    label: "绑定次数",
     search: { el: "input" }
   },
   { prop: "operation", label: "操作", width: 200 }
@@ -130,15 +138,20 @@ const batchDelete = async (id: string[]) => {
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}模板`,
+    title: `${title}手机号码库模板`,
     status: title === "下载",
-    tempApi: exportUserInfo,
-    updateApi: BatchAddUser,
+    tempApi: phoneTemplate,
+    updateApi: phoneUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);
 };
-
+const onExport = async () => {
+  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  delete obj.total;
+  const data = await phoneExport(obj);
+  saveFile(data, "手机号码库导出");
+};
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.phoneLibrary> = {}) => {

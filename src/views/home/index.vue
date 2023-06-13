@@ -42,6 +42,8 @@ import homeNameList from "@/views/home/modules/home-nameList/index.vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import { getAllBranch } from "@/api/modules/set";
 import { getHomeList } from "@/api/modules/home";
+import { HomeSet } from "@/api/interface";
+import { ref } from "vue";
 
 interface Item {
   branchName: string;

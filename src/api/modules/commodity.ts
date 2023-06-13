@@ -1,5 +1,6 @@
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
+import { formatParams } from "@/utils";
 const baseUrl: string = PORT3 + "/base_account";
 // 获取账户汇总列表
 export const summaryList = (params: any) => {
@@ -19,7 +20,7 @@ export const deleteSummary = (params: any) => {
 };
 // 账号模块
 export const summaryTemplate = () => {
-  return http.get(`/static/template/账号模板.xlsx`);
+  return http.get(`/static/template/账号模板.xlsx`, {}, { responseType: "blob" });
 };
 
 // 账号导入
@@ -29,5 +30,5 @@ export const summaryUpload = (file: any) => {
 
 // 账号导出
 export const summaryExport = (params: any) => {
-  return http.download(`${PORT3}/base_account/export`, params);
+  return http.post(`${PORT3}/base_account/export`, params);
 };
