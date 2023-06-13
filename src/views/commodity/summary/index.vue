@@ -142,7 +142,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" },
     render: scope => {
-      return scope.row.branch.branchName;
+      return scope.row?.branch?.branchName;
     }
   },
   { prop: "accountNumber", label: "账号", width: 160 },
