@@ -3,9 +3,9 @@
   <Tabs v-if="tabs" />
   <router-view v-slot="{ Component, route }">
     <transition appear name="fade-transform" mode="out-in">
-      <keep-alive :include="keepAliveName">
+      <!-- <keep-alive :include="keepAliveName"> -->
         <component :is="Component" :key="route.fullPath" v-if="isRouterShow" />
-      </keep-alive>
+      <!-- </keep-alive> -->
     </transition>
   </router-view>
   <el-footer v-if="footer">
