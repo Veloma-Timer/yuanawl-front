@@ -6,6 +6,10 @@ const baseUrl: string = PORT3 + "/base_account";
 export const summaryList = (params: any) => {
   return http.get(`${baseUrl}`, params);
 };
+// 获取账户汇总列表-历史列表
+export const summaryListHistory = (params: any) => {
+  return http.get(`${baseUrl}/history_account`, params);
+};
 // 新增账户
 export const addSummary = (params: any) => {
   return http.post(baseUrl, params);
