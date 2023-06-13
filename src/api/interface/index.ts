@@ -308,18 +308,21 @@ export namespace Data {
     recycleOrders: number;
     buyNumber: number;
   }
+  export interface AccountPublisher {
+    userName: string;
+  }
   export interface SaleList {
     accountCode: string;
     accountType: string;
     accountRecyclerPrice: string;
     salePrice: string;
-    accountPublisher: string;
+    accountPublisher: AccountPublisher;
     saleTime: string;
   }
   export interface RecycleList {
     accountCode: string;
     accountType: string;
-    accountRecycler: string;
+    accountRecycler: AccountPublisher;
     accountRecyclerTime: string;
     accountStatus: number;
     accountRecyclerPrice: string;

@@ -18,7 +18,7 @@ import { ref, onBeforeUnmount, provide, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useDebounceFn } from "@vueuse/core";
 import { useGlobalStore } from "@/stores/modules/global";
-import { useKeepAliveStore } from "@/stores/modules/keepAlive";
+// import { useKeepAliveStore } from "@/stores/modules/keepAlive";
 import Maximize from "./components/Maximize.vue";
 import Tabs from "@/layouts/components/Tabs/index.vue";
 import Footer from "@/layouts/components/Footer/index.vue";
@@ -26,8 +26,8 @@ import Footer from "@/layouts/components/Footer/index.vue";
 const globalStore = useGlobalStore();
 const { maximize, isCollapse, layout, tabs, footer } = storeToRefs(globalStore);
 
-const keepAliveStore = useKeepAliveStore();
-const { keepAliveName } = storeToRefs(keepAliveStore);
+// const keepAliveStore = useKeepAliveStore();
+// const { keepAliveName } = storeToRefs(keepAliveStore);
 
 // 注入刷新页面方法
 const isRouterShow = ref(true);

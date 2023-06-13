@@ -56,7 +56,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     label: "订单编号",
     search: { el: "input" },
     render: scope => {
-      return <span>{scope.row.accountCode || "--"}</span>;
+      return <span>{scope.row?.accountCode || "--"}</span>;
     }
   },
   {
@@ -64,10 +64,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     label: "游戏分类",
     enum: getAllList,
     search: { el: "select" },
-    fieldNames: { label: "typeName", value: "id" },
-    render: scope => {
-      return <span>{scope.row.accountType || "--"}</span>;
-    }
+    fieldNames: { label: "typeName", value: "id" }
   },
   { prop: "accountTitle", label: "标题" },
   {
@@ -81,14 +78,14 @@ const columns: ColumnProps<Data.SaleList>[] = [
     prop: "salePrice",
     label: "出售金额",
     render: scope => {
-      return <span>￥{scope.row.salePrice || "--"}</span>;
+      return <span>￥{scope.row?.salePrice || "--"}</span>;
     }
   },
   {
     prop: "accountPublisher",
     label: "出售人姓名",
     render: scope => {
-      return <span>{scope.row.accountPublisher || "--"}</span>;
+      return <span>{scope.row?.accountPublisher?.userName || "--"}</span>;
     }
   },
   {

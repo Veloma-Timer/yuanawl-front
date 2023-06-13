@@ -64,10 +64,7 @@ const columns: ColumnProps<Data.RecycleList>[] = [
     label: "游戏分类",
     enum: getAllList,
     search: { el: "select" },
-    fieldNames: { label: "typeName", value: "id" },
-    render: scope => {
-      return <span>{scope.row.accountType || "--"}</span>;
-    }
+    fieldNames: { label: "typeName", value: "id" }
   },
   { prop: "accountTitle", label: "标题" },
   {
@@ -81,7 +78,7 @@ const columns: ColumnProps<Data.RecycleList>[] = [
     prop: "accountRecycler",
     label: "回收人姓名",
     render: scope => {
-      return <span>{scope.row.accountRecycler || "--"}</span>;
+      return <span>{scope.row?.accountRecycler?.userName || "--"}</span>;
     }
   },
   {
