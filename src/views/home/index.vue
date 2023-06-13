@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home table-box">
     <div class="home-tab mb30 flex">
       <div class="tab-list flex clear">
         <div
