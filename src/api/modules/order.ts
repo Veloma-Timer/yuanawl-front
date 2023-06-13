@@ -32,7 +32,7 @@ export const detailSalesList = (params: any) => {
 
 // 售后工单审核
 export const checkSalesOrder = (id: number, params: any) => {
-  return http.put<SalesOrder.ResSalesList>(`${PORT3}/base_work_order/${id}`, params);
+  return http.put<SalesOrder.ResSalesList>(`${PORT3}/base_work_order/check/${id}`, params);
 };
 
 // 售后工单审核
