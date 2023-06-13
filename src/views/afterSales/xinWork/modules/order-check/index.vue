@@ -17,7 +17,7 @@
         </el-form-item>
         <template v-if="form.checkerResult === '0'">
           <el-form-item label="未通过原因：" prop="reason">
-            <el-input v-model="form.reason" placeholder="请输入" />
+            <el-input v-model="form.reason" placeholder="请输入" type="textarea" :autosize="{ minRows: 2, maxRows: 4 }" />
           </el-form-item>
         </template>
       </el-form>

@@ -25,7 +25,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import SaleDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { baseAccountSales } from "@/api/modules/order";
-import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
+import { summaryListHistory, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { View } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
@@ -43,7 +43,7 @@ const getTableList = (params: any) => {
   if (currentTimeSelect.value === "今日销售") {
     return baseAccountSales(params, tableProps.selectBranchId);
   } else {
-    return summaryList({ ...params, branchId: tableProps.selectBranchId });
+    return summaryListHistory({ ...params, branchId: tableProps.selectBranchId });
   }
 };
 
