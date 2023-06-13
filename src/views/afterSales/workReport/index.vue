@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card table-box">
     <order-chart-panel @change-id="changeId" :branchList="branchList" />
     <order-list-table :select-branch-id="selectBranchId" :branchList="branchList" />
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card table-box">
     <recovery-chart-panel @change-id="changeId" />
     <recovery-list-table :select-branch-id="selectBranchId" />
   </div>
