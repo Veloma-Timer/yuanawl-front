@@ -17,7 +17,7 @@
         <span class="left-title">待办工单</span>
         <div class="flex">
           <div class="left-progress mt30">
-            <el-progress type="circle" :percentage="7" :width="197">
+            <el-progress type="circle" :percentage="nameList.length" :width="197">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">待办</span>
@@ -28,7 +28,7 @@
             <div class="table-item flx-align-center" v-for="item in nameList" :key="item.id">
               <div class="operate">【待处理】</div>
               <div class="content">订单[{{ item.orderCode }}]</div>
-              <div class="bottom">立即处理&gt;</div>
+              <div class="bottom" @click="setRouterLink(item)">立即处理&gt;</div>
             </div>
           </div>
         </div>
@@ -41,18 +41,28 @@
 import nameRight from "@/views/home/modules/home-nameList/nameRight/index.vue";
 import { homeOrder } from "@/api/modules/home";
 import { defineProps, reactive, toRef, watch } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 interface plat {
   branch: string;
   index: number;
   name: string;
   salas: number;
 }
-let platformList: plat[] = reactive([]);
+let platformList: plat[] | undefined = reactive([]);
 let nameList = reactive([]);
 const myArrayRef = toRef(props, "platformSalas");
 const getNameList = async () => {
   const { data } = await homeOrder({ pageSize: 5, pageNum: 1 });
   nameList = data.list || [];
+};
+const setRouterLink = item => {
+  router.push({
+    path: "/afterSales/orderSummary",
+    query: {
+      orderCode: item.orderCode
+    }
+  });
 };
 const props = defineProps({
   platformSalas: {
@@ -76,9 +86,10 @@ getNameList();
   .home-name-left {
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 20px;
     .name-left-top {
-      width: 48%;
-      height: 300px;
+      width: 780px;
+      //height: 300px;
       padding: 30px 36px;
       margin-bottom: 32px;
       color: #ffffff;
@@ -88,7 +99,7 @@ getNameList();
       box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
       .top-title {
         width: 100%;
-        height: 24px;
+        //height: 24px;
         font-size: 16px;
         font-weight: normal;
         line-height: 24px;
@@ -97,7 +108,7 @@ getNameList();
         align-items: center;
         justify-content: space-around;
         width: 75%;
-        height: calc(100% - 24px);
+        //height: calc(100% - 24px);
         margin-left: 25%;
         .top-champion {
           .champion-button {
@@ -128,8 +139,8 @@ getNameList();
       }
     }
     .name-left-bottom {
-      width: 48%;
-      height: 300px;
+      width: 780px;
+      //height: 300px;
       padding: 20px 46px 32px 26px;
       background: #ffffff;
       border-radius: 25px;
@@ -139,8 +150,7 @@ getNameList();
         color: #333333;
       }
       .left-progress {
-        width: calc(100% - 465px);
-        height: 197px;
+        //width: calc(100% - 465px);
         margin-right: 50px;
       }
       .left-table {

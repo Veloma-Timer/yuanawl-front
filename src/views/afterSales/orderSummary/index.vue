@@ -44,10 +44,11 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
+import { useRoute } from "vue-router";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
-
+const route = useRoute();
 const getTableList = (params: any) => {
   return getSalesList(params);
 };
@@ -293,6 +294,16 @@ const batchExport = async () => {
   const data = await orderExport(obj);
   saveFile(data, "工单报表");
 };
+onMounted(() => {
+  setTimeout(() => {
+    // 携带参数page跳转
+    const orderCode = route.query.orderCode;
+    if (proTable.value) {
+      proTable.value.searchParam.orderCode = orderCode;
+      proTable.value?.search();
+    }
+  }, 300);
+});
 </script>
 
 <style scoped lang="scss">

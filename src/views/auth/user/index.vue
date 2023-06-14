@@ -31,21 +31,12 @@
 
 <script setup lang="tsx" name="useProTable">
 import { User } from "@/api/interface";
-import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
-import {
-  deleteUser,
-  editUser,
-  addUser,
-  getUserListMap,
-  getUserTemptable,
-  getUserUpload,
-  getUserExport
-} from "@/api/modules/user";
+import { editUser, addUser, getUserListMap, getUserTemptable, getUserUpload, getUserExport } from "@/api/modules/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
@@ -95,18 +86,8 @@ const columns: ColumnProps<User.ResUserList>[] = [
 ];
 
 // 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-  await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-
-  proTable.value?.getTableList();
-};
 
 // 批量删除用户信息
-const batchDelete = async (id: string[]) => {
-  await useHandleData(deleteUser, { id }, "导出用户信息");
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
-};
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户

@@ -39,8 +39,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/phoneLibrary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { deleteUser } from "@/api/modules/user";
+import { CirclePlus, Delete, Upload, View } from "@element-plus/icons-vue";
 import {
   addPhone,
   deletePhone,
@@ -53,7 +52,6 @@ import {
 import { parseTime } from "@/utils/is";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { summaryExport } from "@/api/modules/commodity";
 import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
 // const router = useRouter();
@@ -126,12 +124,6 @@ const deleteAccount = async (params: Commodity.phoneLibrary) => {
 };
 
 // 批量删除用户信息
-const batchDelete = async (id: string[]) => {
-  await useHandleData(deleteUser, { id }, "导出用户信息");
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
-};
-
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户
@@ -159,7 +151,7 @@ const openDrawer = (title: string, row: Partial<Commodity.phoneLibrary> = {}) =>
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addPhone : title === "编辑" ? setPhone : undefined,
+    api: title === "新增" ? addPhone : title === "查看" ? setPhone : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

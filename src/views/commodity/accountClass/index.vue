@@ -36,7 +36,6 @@ import ProTable from "@/components/ProTable/index.vue";
 import UserDrawer from "@/views/commodity/accountClass/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, View } from "@element-plus/icons-vue";
-import { deleteUser } from "@/api/modules/user";
 import { addAccout, deleteAccout, getAccoutList, setAccout } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
@@ -92,12 +91,6 @@ const deleteAccount = async (params: Commodity.accountClass) => {
 };
 
 // 批量删除用户信息
-const batchDelete = async (id: string[]) => {
-  await useHandleData(deleteUser, { id }, "导出用户信息");
-  proTable.value?.clearSelection();
-  proTable.value?.getTableList();
-};
-
 // 重置用户密码
 // 切换用户状态
 // 导出用户列表
@@ -109,7 +102,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addAccout : title === "编辑" ? setAccout : undefined,
+    api: title === "新增" ? addAccout : title === "查看" ? setAccout : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
