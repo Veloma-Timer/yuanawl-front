@@ -74,7 +74,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     prop: "accountRecyclerPrice",
     label: "回收金额",
     render: scope => {
-      return <span>￥{scope.row.accountRecyclerPrice || "-"}</span>;
+      return getFixed(scope.row.accountRecyclerPrice);
     }
   },
   {
