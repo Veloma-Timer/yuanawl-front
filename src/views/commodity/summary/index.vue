@@ -54,15 +54,17 @@ import {
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
-import { download, saveFile } from "@/utils/file";
+import { saveFile } from "@/utils/file";
 import { getAllBranch } from "@/api/modules/set";
-import { orderExport } from "@/api/modules/order";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
-const initParam = reactive({ type: 1 });
+const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
@@ -231,4 +233,15 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   };
   drawerRef.value?.acceptParams(params);
 };
+
+onMounted(() => {
+  setTimeout(() => {
+    // 携带参数page跳转
+    const accountCode = route.query.accountCode;
+    if (proTable.value) {
+      proTable.value.searchParam.accountCode = accountCode;
+      proTable.value?.search();
+    }
+  }, 300);
+});
 </script>

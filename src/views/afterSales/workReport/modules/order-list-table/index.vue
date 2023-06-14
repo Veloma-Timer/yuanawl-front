@@ -64,7 +64,13 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row?.account?.accountCode || "--"}</span>;
+      return (
+        <el-button type="primary" link>
+          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.account?.accountCode || "" } }}>
+            {scope.row?.account?.accountCode || "--"}
+          </router-link>
+        </el-button>
+      );
     }
   },
   {
