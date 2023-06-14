@@ -18,14 +18,14 @@
           v-for="item in monthList"
           :class="{ active: monthName === item.id }"
           :key="item.id"
-          @click="setValue(false, item.id)"
+          @click="setValue(false, item.id, item.branchName)"
         >
           {{ item.branchName }}
         </div>
       </div>
     </div>
     <!--    卡片-->
-    <homeCard :crudListObj="crudListObj" />
+    <homeCard :crudListObj="crudListObj" :branchName="branchName" />
     <homeNameList :platformSalas="crudListObj.platformSalas" :salasRanking="crudListObj.salasRanking" />
     <div class="pb30">
       <home-group title="销售组数据对比" :listArr="crudListObj.salesUnit" />
@@ -42,7 +42,6 @@ import homeNameList from "@/views/home/modules/home-nameList/index.vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import { getAllBranch } from "@/api/modules/set";
 import { getHomeList } from "@/api/modules/home";
-import { HomeSet } from "@/api/interface";
 import { ref } from "vue";
 
 interface Item {
@@ -52,19 +51,21 @@ interface Item {
 
 let cityList = ref([]);
 const monthList: Item[] = [
-  { branchName: "本日", id: 0 },
+  { branchName: "今日", id: 0 },
   { branchName: "本周", id: 1 },
   { branchName: "本月", id: 2 }
 ];
 let cityName = ref(0);
 let monthName = ref(0);
+let branchName = ref("今日");
 let params = reactive({});
-const setValue = function (bol: boolean, state: number) {
+const setValue = function (bol: boolean, state: number, name: string) {
   if (bol) {
     cityName.value = state;
   } else {
     monthName.value = state;
   }
+  branchName.value = name;
   params = {
     ...params,
     date: monthName.value,

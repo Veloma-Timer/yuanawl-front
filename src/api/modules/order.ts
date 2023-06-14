@@ -66,7 +66,7 @@ export const baseAccountRecyle = (params: any, branchId: number) => {
 
 // 工单模板
 export const orderTemplate = () => {
-  return http.get(`/static/template/工单模板.xlsx`, {}, { responseType: "blob" });
+  return http.get(`/static/template/work_order.xlsx`, {}, { responseType: "blob" });
 };
 
 // 工单导入

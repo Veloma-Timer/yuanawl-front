@@ -47,13 +47,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { parseTime } from "@/utils";
 import { getAllBranch } from "@/api/modules/set";
 
-const router = useRouter();
 const { BUTTONS } = useAuthButtons();
-// 跳转详情页
-const toDetail = () => {
-  router.push(`/proTable/useProTable/detail/${Math.random().toFixed(3)}?params=detail-page`);
-};
-
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 
@@ -87,7 +81,11 @@ const columns: ColumnProps<User.ResUserList>[] = [
   {
     prop: "accountStatus",
     label: "账户状态",
-    width: 160
+    width: 160,
+    enum: [
+      { label: "已售", value: 1 },
+      { label: "未售", value: 0 }
+    ]
   },
   { prop: "accountNumber", label: "游戏编号", width: 160 },
   {

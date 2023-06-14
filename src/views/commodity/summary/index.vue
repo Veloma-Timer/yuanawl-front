@@ -134,7 +134,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "出售金额",
     width: 160,
     render: scope => {
-      return getFixed(String(scope.row!.salePrice));
+      return <span>{getFixed(scope.row.salePrice) || "--"}</span>;
     }
   },
   {
@@ -142,7 +142,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "实际回收金额",
     width: 160,
     render: scope => {
-      return getFixed(String(scope.row!.accountRecyclerPrice));
+      return <span>{getFixed(scope.row.accountRecyclerPrice) || "--"}</span>;
     }
   },
   {
@@ -190,7 +190,10 @@ const deleteAccount = async (params: Commodity.Account) => {
   proTable.value?.getTableList();
 };
 const getFixed = (str: string) => {
-  return parseFloat(str).toFixed(2);
+  if (str) {
+    return parseFloat(str).toFixed(2);
+  }
+  return "--";
 };
 // 批量删除用户信息
 // const batchDelete = async (id: string[]) => {
@@ -228,20 +231,25 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
+    api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
-
+const getAllTypeList = async () => {
+  await getAllList();
+};
 onMounted(() => {
   setTimeout(() => {
     // 携带参数page跳转
-    const accountCode = route.query.accountCode;
+    const { accountCode, accountType } = route.query;
+    const type = Number(accountType);
     if (proTable.value) {
       proTable.value.searchParam.accountCode = accountCode;
+      proTable.value.searchParam.accountType = type;
       proTable.value?.search();
     }
   }, 300);
+  getAllTypeList();
 });
 </script>

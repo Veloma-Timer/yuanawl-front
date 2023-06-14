@@ -20,7 +20,7 @@ export const deletePhone = (params: any) => {
 };
 // 手机号模块
 export const phoneTemplate = () => {
-  return http.get(`/static/template/号码库模板.xlsx`, {}, { responseType: "blob" });
+  return http.get(`/static/template/tel.xlsx`, {}, { responseType: "blob" });
 };
 
 // 手机号导入

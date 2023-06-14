@@ -4,7 +4,10 @@
       <div v-for="(item, index) in crudListMap" :key="item.id" class="crud-list-item flex">
         <div class="crud-number" ref="crudNumberRef"></div>
         <div class="crud-total">
-          <div class="total-name">{{ analysis[index].label }}</div>
+          <div class="total-name">
+            <span v-show="index <= 7">{{ props.branchName }}</span>
+            <span>{{ analysis[index].label }}</span>
+          </div>
           <div v-if="analysis[index].yesterday" class="total-compare">昨日同比</div>
           <div class="total-proportion flex flx-align-center flx-justify-between">
             <div v-show="analysis[index].yesterday">
@@ -31,19 +34,20 @@ import { ref, reactive, defineProps, watch, nextTick } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { setValues } from "@/views/home/modules/homeUtis.js";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const crudNumberRef = ref<HTMLElement>();
 const proportionA = ref<HTMLElement>();
 const proportionB = ref<HTMLElement>();
 const proportionC = ref<HTMLElement>();
 const analysis = [
-  { label: "今日销售总额", yesterday: true },
-  { label: "今日销售数量", yesterday: true },
-  { label: "今日回收数量", yesterday: true },
-  { label: "今日销售均价", yesterday: true },
-  { label: "今日回收均价", yesterday: true },
-  { label: "今日回收总额", yesterday: true },
-  { label: "平台总销售量", yesterday: false },
+  { label: "销售总额", yesterday: true },
+  { label: "销售数量", yesterday: true },
+  { label: "回收数量", yesterday: true },
+  { label: "销售均价", yesterday: true },
+  { label: "回收均价", yesterday: true },
+  { label: "回收总额", yesterday: true },
+  { label: "总销售量", yesterday: false },
   { label: "平台总回收量", yesterday: false },
   { label: "平台日均新增销售", yesterday: false },
   { label: "平台日均新增回收", yesterday: false }
@@ -86,6 +90,19 @@ const saleGet = salesPriceMap => {
     myChart.resize();
   });
   chartObserver.observe(proportionA.value as HTMLElement);
+  myChart.on("click", function (param) {
+    console.log(param.data);
+    routerLink(param.data);
+  });
+};
+// 跳转方法
+const routerLink = item => {
+  router.push({
+    path: "/commodity/summary",
+    query: {
+      accountType: item.number
+    }
+  });
 };
 // 回收占比
 const recoveryGet = recyclingPriceMap => {
@@ -126,6 +143,9 @@ const recoveryGet = recyclingPriceMap => {
     myChart.resize();
   });
   chartObserver.observe(proportionB.value as HTMLElement);
+  myChart.on("click", function (param) {
+    routerLink(param.data);
+  });
 };
 // 工单占比
 const orderGet = (saleAccountNumber, workOrderNumber, data) => {
@@ -201,6 +221,10 @@ const props = defineProps({
   crudListObj: {
     type: Object,
     default: () => {}
+  },
+  branchName: {
+    type: String,
+    default: "今日"
   }
 });
 const setNumber = () => {
@@ -296,6 +320,12 @@ watch(
     wholeSetMap(count);
   }
 );
+watch(
+  () => props.branchName,
+  value => {
+    console.log(`车变了`, value);
+  }
+);
 </script>
 <style scoped lang="scss">
 .home-crud {
@@ -311,7 +341,7 @@ watch(
       margin-bottom: 10px;
       background: #ffffff;
       border: 2px solid #f0f0f0;
-      border-radius: 10px;
+      border-radius: 25px;
       .crud-number {
         width: 160px;
         height: 100%;

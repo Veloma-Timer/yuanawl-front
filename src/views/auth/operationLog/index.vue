@@ -94,6 +94,13 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
     }
   },
   {
+    prop: "handleDesc",
+    label: "操作描述",
+    render: scope => {
+      return <span>{scope.row?.handleDesc || "--"}</span>;
+    }
+  },
+  {
     prop: "handleStatus",
     label: "操作状态",
     render: scope => {

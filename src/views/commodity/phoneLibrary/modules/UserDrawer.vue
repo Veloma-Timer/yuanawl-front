@@ -19,7 +19,7 @@
         <el-input v-model="drawerProps.row!.openAccountName" placeholder="请输入开户人姓名" clearable />
       </el-form-item>
       <el-form-item label="开户号码" prop="openAccountNumber">
-        <el-input v-model="drawerProps.row!.openAccountNumber" placeholder="请输入开户号码" clearable />
+        <el-input v-model="drawerProps.row!.openAccountNumber" :maxlength="11" placeholder="请输入开户号码" clearable />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -53,10 +53,6 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
-const edit = () => {
-  drawerProps.value.isView = false;
-  console.log("编辑");
-};
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;

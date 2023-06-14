@@ -16,7 +16,7 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="账号编号" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入订单编号" clearable />
+        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编号" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
         <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable>
@@ -47,7 +47,12 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="回收价格" prop="accountRecyclerPrice">
-            <el-input v-model="drawerProps.row!.accountRecyclerPrice" placeholder="请输入" clearable></el-input>
+            <el-input-number
+              class="order-input"
+              v-model="drawerProps.row!.accountRecyclerPrice"
+              placeholder="请输入"
+              clearable
+            ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -89,7 +94,12 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="出售价格">
-            <el-input v-model="drawerProps.row!.salePrice" placeholder="请输入" clearable></el-input>
+            <el-input-number
+              class="order-input"
+              v-model="drawerProps.row!.salePrice"
+              placeholder="请输入"
+              clearable
+            ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -112,26 +122,33 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="账号实付金额" prop="accountPrice">
-        <el-input v-model="drawerProps.row!.accountPrice" placeholder="请输入账号实付金额" clearable :maxlength="11"></el-input>
+        <el-input-number
+          class="order-input"
+          v-model="drawerProps.row!.accountPrice"
+          placeholder="请输入账号实付金额"
+          clearable
+          :maxlength="11"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="用户赔付金额">
-        <el-input
+        <el-input-number
+          class="order-input"
           v-model="drawerProps.row!.userCompensationPrice"
           placeholder="请输入用户赔付金额"
           clearable
           :maxlength="11"
-        ></el-input>
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="平台赔付金额">
-        <el-input
+        <el-input-number
+          class="order-input"
           v-model="drawerProps.row!.platformCompensationPrice"
           placeholder="请输入平台赔付金额"
           clearable
-          :maxlength="11"
-        ></el-input>
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="手机号" prop="accountTel">
-        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号/邮箱密保" clearable :maxlength="11"></el-input>
+        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable :maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="账号备注">
         <el-input v-model="drawerProps.row!.accountRemark" placeholder="请输入备注" clearable></el-input>
@@ -154,16 +171,16 @@
       <el-form-item label="账号描述" prop="accountDesc">
         <el-input v-model="drawerProps.row!.accountDesc" placeholder="请输入账号描述" clearable></el-input>
       </el-form-item>
-      <el-form-item label="账号状态" prop="accountStatus">
-        <el-select v-model="drawerProps.row!.accountStatus" placeholder="请选择" filterable>
-          <el-option v-for="item in accountStatusMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="网站上传" prop="netUpload">
-        <el-select v-model="drawerProps.row!.netUpload" placeholder="请选择" filterable>
-          <el-option v-for="item in netUploadMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
+      <!--      <el-form-item label="账号状态" prop="accountStatus">-->
+      <!--        <el-select v-model="drawerProps.row!.accountStatus" placeholder="请选择" filterable>-->
+      <!--          <el-option v-for="item in accountStatusMap" :key="item.value" :label="item.label" :value="item.value" />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
+      <!--      <el-form-item label="网站上传" prop="netUpload">-->
+      <!--        <el-select v-model="drawerProps.row!.netUpload" placeholder="请选择" filterable>-->
+      <!--          <el-option v-for="item in netUploadMap" :key="item.value" :label="item.label" :value="item.value" />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
       <el-form-item label="交易猫上架" prop="transCatUploaded">
         <el-select v-model="drawerProps.row!.transCatUploaded" placeholder="请选择" filterable>
           <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
@@ -265,19 +282,10 @@ const handleSubmit = () => {
   });
 };
 // 账户分类
-const accountStatusMap = [
-  { label: "已售", value: 1 },
-  { label: "未售", value: 0 }
-];
 // 二次
 const haveSecondaryMap = [
   { label: "有", value: "1" },
   { label: "无", value: "0" }
-];
-// 上传
-const netUploadMap = [
-  { label: "已上传", value: "1" },
-  { label: "未上传", value: "0" }
 ];
 // 上架
 const transCatUploadedMap = [
@@ -310,5 +318,9 @@ defineExpose({
   div {
     color: var(--el-color-white) !important;
   }
+}
+.order-input,
+.el-input {
+  width: 400px !important;
 }
 </style>

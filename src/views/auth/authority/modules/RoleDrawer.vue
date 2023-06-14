@@ -55,9 +55,6 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
-const edit = () => {
-  drawerProps.value.isView = false;
-};
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
