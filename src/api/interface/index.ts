@@ -189,6 +189,7 @@ export namespace Set {
     handleTime: string;
     status: string;
     handleStatus: string;
+    handleDesc: string;
   }
 
   export interface ResStoreList {
