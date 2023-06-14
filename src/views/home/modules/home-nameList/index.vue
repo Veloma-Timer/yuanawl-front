@@ -1,7 +1,7 @@
 <template>
   <div class="home-name">
-    <div class="home-name-left flex">
-      <div class="name-left-top">
+    <div class="home-name-left">
+      <div class="name-left-top mr-4">
         <div class="top-title">平台销售总额</div>
         <div class="top-content flex">
           <div class="top-champion" v-for="(item, index) in platformList" :key="index + item.name">
@@ -88,7 +88,7 @@ getNameList();
     width: 100%;
     margin-bottom: 20px;
     .name-left-top {
-      width: 780px;
+      //width: 100%;
       height: 351px;
       padding: 30px 36px;
       margin-bottom: 32px;
@@ -139,9 +139,9 @@ getNameList();
       }
     }
     .name-left-bottom {
+      width: 100%;
       //width: 780px;
       //height: 300px;
-      flex: 1;
       padding: 20px 46px 32px 26px;
       background: #ffffff;
       border-radius: 25px;

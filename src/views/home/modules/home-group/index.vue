@@ -63,7 +63,7 @@ const groupGet = (data, value) => {
       {
         type: "value",
         axisLabel: {
-          formatter: "{value}"
+          formatter: "￥{value}"
         }
       }
     ],

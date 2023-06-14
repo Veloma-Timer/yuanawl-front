@@ -79,7 +79,7 @@ const saleGet = salesPriceMap => {
         },
         label: {
           formatter: function (params) {
-            return `${params.name}-${params.value}`;
+            return `￥${params.name}-${params.value}`;
           }
         }
       }
@@ -132,7 +132,7 @@ const recoveryGet = recyclingPriceMap => {
         },
         label: {
           formatter: function (params) {
-            return `${params.name}-${params.value}`;
+            return `￥${params.name}-${params.value}`;
           }
         }
       }
@@ -179,7 +179,7 @@ const orderGet = (saleAccountNumber, workOrderNumber, data) => {
       {
         type: "value",
         axisLabel: {
-          formatter: "{value}"
+          formatter: "￥{value}"
         }
       }
     ],
@@ -233,7 +233,7 @@ const setNumber = () => {
     for (let i = 0; i < crudListMap.length; i++) {
       let option: echarts.EChartsOption = {
         title: {
-          text: `${crudListMap[i].value}`,
+          text: `￥${crudListMap[i].value}`,
           x: "center",
           y: "center",
           textStyle: {

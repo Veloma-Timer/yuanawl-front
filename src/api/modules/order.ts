@@ -79,3 +79,7 @@ export const orderExport = (params: any) => {
   const newParams = formatParams(params);
   return http.post(`${PORT3}/base_work_order/export${newParams}`);
 };
+// 今日公单
+export const workOrder = (params: any) => {
+  return http.get(`${PORT3}/base_work_order/today`, params);
+};

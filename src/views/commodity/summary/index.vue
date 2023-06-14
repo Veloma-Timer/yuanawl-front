@@ -191,7 +191,7 @@ const deleteAccount = async (params: Commodity.Account) => {
 };
 const getFixed = (str: string) => {
   if (str) {
-    return parseFloat(str).toFixed(2);
+    return "￥" + parseFloat(str).toFixed(2);
   }
   return "--";
 };

@@ -182,7 +182,7 @@ const batchDelete = async (id: string[]) => {
   proTable.value?.getTableList();
 };
 const getFixed = (str: string) => {
-  return parseFloat(str).toFixed(2);
+  return "￥" + parseFloat(str).toFixed(2);
 };
 
 // 打开 drawer(新增、查看、编辑)

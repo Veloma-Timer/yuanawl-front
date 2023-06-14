@@ -74,7 +74,7 @@ const getTableList = (params: any) => {
   return summaryList(newParams);
 };
 const getFixed = (str: string) => {
-  return parseFloat(str).toFixed(2);
+  return "￥" + parseFloat(str).toFixed(2);
 };
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
