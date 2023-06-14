@@ -70,11 +70,11 @@ const getTodaySales = async (branchId: number, date: number) => {
   saleData.value = [
     {
       title: "今日销售金额",
-      value: salesPrice
+      value: `￥${salesPrice}`
     },
     {
       title: "客单价",
-      value: arpa
+      value: `￥${arpa}`
     },
     {
       title: "支付订单数",

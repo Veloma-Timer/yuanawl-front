@@ -48,7 +48,7 @@ const proTable = ref<ProTableInstance>();
 const { BUTTONS } = useAuthButtons();
 
 // 固定
-const initParam = reactive({ branchId: 1 });
+const initParam = reactive({ branchId: 4 });
 
 const getTableList = (params: any) => {
   return getSalesList(params);

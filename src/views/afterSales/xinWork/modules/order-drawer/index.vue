@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="900px" :title="`${drawerProps.title}`" :show-close="false">
+  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="1000px" :title="`${drawerProps.title}`" :show-close="false">
     <template #header>
       <div class="edit-btn">
         <span>{{ drawerProps.title }}</span>
@@ -45,10 +45,22 @@
         </el-select>
       </el-form-item>
       <el-form-item label="工单星级" prop="orderStar">
-        <el-input-number v-model="drawerProps.row!.orderStar" placeholder="请输入" class="order-input"></el-input-number>
+        <el-input-number
+          v-model="drawerProps.row!.orderStar"
+          :min="1"
+          :max="3"
+          placeholder="请输入"
+          class="order-input"
+        ></el-input-number>
       </el-form-item>
       <el-form-item label="处理时效" prop="handleTime">
-        <el-input-number v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input-number>
+        <el-input-number
+          v-model="drawerProps.row!.handleTime"
+          :min="1"
+          :max="5"
+          placeholder="请输入"
+          class="order-input"
+        ></el-input-number>
       </el-form-item>
       <el-button type="primary" @click="addProcess">添加处理</el-button>
       <div v-if="!drawerProps.row.detail || drawerProps.row.detail.length <= 0" class="not-data">暂无处理数据</div>
@@ -57,7 +69,12 @@
         <Header :title="`第${i + 1}次处理`" class="header"></Header>
         <el-row :gutter="10" style="margin-top: 24px">
           <el-col :span="8">
-            <el-form-item label="处理客服姓名" :prop="'detail.' + i + '.customerServiceId'" :rules="rules.customerServiceId">
+            <el-form-item
+              label="处理客服姓名"
+              :prop="'detail.' + i + '.customerServiceId'"
+              :rules="rules.customerServiceId"
+              label-width="120px"
+            >
               <el-select v-model="item.customerServiceId" placeholder="请选择" class="small-input" filterable>
                 <template v-for="item2 in userList" :key="item2.id">
                   <el-option :label="item2.userName" :value="item2.id" />
@@ -66,13 +83,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime">
+            <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime" label-width="100px">
               <el-date-picker v-model="item.handleTime" type="date" placeholder="请选择" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="处理结果" :prop="'detail.' + i + '.handleResult'" :rules="rules.handleResult">
-              <el-input v-model="item.handleResult" placeholder="请输入" clearable class="small-input"></el-input>
+            <el-form-item
+              label="处理结果"
+              :prop="'detail.' + i + '.handleResult'"
+              :rules="rules.handleResult"
+              label-width="100px"
+            >
+              <el-input v-model="item.handleResult" placeholder="请输入" clearable class="small-input" type="textarea"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -170,6 +192,7 @@ const userList = ref<UserObj[]>([]);
 // 接收父组件传过来的参数
 const acceptParams = async (params: DrawerProps) => {
   drawerProps.value = params;
+  drawerProps.value.row.handleTime = 5;
   getDetailInfo(params.row.id);
   const { data } = await getAllUser({});
   userList.value = data;

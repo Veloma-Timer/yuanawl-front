@@ -32,6 +32,9 @@ import dayjs from "dayjs";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 
+const getFixed = (str: string) => {
+  return str ? `￥${parseFloat(str).toFixed(2)}` : "--";
+};
 type Props = {
   selectBranchId: number;
 };
@@ -78,7 +81,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     prop: "salePrice",
     label: "出售金额",
     render: scope => {
-      return <span>￥{scope.row?.salePrice || "--"}</span>;
+      return getFixed(scope.row!.salePrice);
     }
   },
   {
@@ -94,7 +97,7 @@ const columns: ColumnProps<Data.SaleList>[] = [
     width: 180,
     render: scope => {
       const time = scope.row?.saleTime;
-      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+      return <span>{(time && dayjs(time).format("YYYY-MM-DD HH:mm:ss")) || "--"}</span>;
     },
     search: {
       el: "date-picker",

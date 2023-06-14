@@ -72,11 +72,11 @@ const getTodayRecycle = async (branchId: number, date: number) => {
   saleData.value = [
     {
       title: "今日回收金额",
-      value: recyclePrice
+      value: `￥${recyclePrice}`
     },
     {
       title: "客单价",
-      value: arpa
+      value: `￥${arpa}`
     },
     {
       title: "支付订单数",
