@@ -130,7 +130,7 @@ export namespace SalesOrder {
     newHandleResult: string;
     insure: string;
     recycleBranch: string;
-    handleTime: string;
+    handleTime: number;
     orderChecker: string;
     checkerResult: string;
     submitOrderTime: string;

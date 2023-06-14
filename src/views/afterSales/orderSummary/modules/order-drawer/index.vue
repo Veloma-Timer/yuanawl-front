@@ -45,10 +45,10 @@
         </el-select>
       </el-form-item>
       <el-form-item label="工单星级" prop="orderStar">
-        <el-input v-model="drawerProps.row!.orderStar" placeholder="请输入" clearable class="small-input"></el-input>
+        <el-input-number v-model="drawerProps.row!.orderStar" placeholder="请输入" class="order-input"></el-input-number>
       </el-form-item>
       <el-form-item label="处理时效" prop="handleTime">
-        <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" clearable class="small-input"></el-input>
+        <el-input-number v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input-number>
       </el-form-item>
       <el-button type="primary" @click="addProcess">添加处理</el-button>
       <div v-if="!drawerProps.row.detail || drawerProps.row.detail.length <= 0" class="not-data">暂无处理数据</div>
