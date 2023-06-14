@@ -7,7 +7,7 @@
         </el-badge>
       </template>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="通知(5)" name="first">
+        <el-tab-pane label="今日工单的通知(5)" name="first">
           <div class="message-list">
             <div class="message-item">
               <img src="@/assets/images/msg01.png" alt="" class="message-icon" />

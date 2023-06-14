@@ -22,13 +22,30 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+import { ElMessage } from "element-plus";
+import { useAuthStore } from "@/stores/modules/auth";
+const { callbackMap } = useAuthButtons();
+const authStore = useAuthStore();
 defineProps<{ menuList: Menu.MenuOptions[] }>();
 
 const router = useRouter();
 const handleClickMenu = (subItem: Menu.MenuOptions) => {
-  if (subItem.meta.isLink) return window.open(subItem.meta.isLink, "_blank");
-  router.push(subItem.path);
+  const statusObj = routerMenu(subItem);
+  console.log(statusObj);
+  if (statusObj.view) {
+    if (subItem.meta.isLink) return window.open(subItem.meta.isLink, "_blank");
+    router.push(subItem.path);
+  } else {
+    ElMessage.error("暂无权限");
+  }
+  // console.log();
+};
+const routerMenu = subItem => {
+  const authRouter = callbackMap(authStore.authButtonList, subItem.name);
+  let currentPageAuthRouter: { [key: string]: boolean } = {};
+  authRouter?.forEach(item => (currentPageAuthRouter[item.key] = item.value));
+  return currentPageAuthRouter;
 };
 </script>
 
@@ -37,6 +54,7 @@ const handleClickMenu = (subItem: Menu.MenuOptions) => {
   color: var(--el-menu-hover-text-color) !important;
   background-color: transparent !important;
 }
+
 .el-menu--collapse {
   .is-active {
     .el-sub-menu__title {
@@ -45,13 +63,16 @@ const handleClickMenu = (subItem: Menu.MenuOptions) => {
     }
   }
 }
+
 .el-menu-item {
   &:hover {
     color: var(--el-menu-hover-text-color);
   }
+
   &.is-active {
     color: var(--el-menu-active-color) !important;
     background-color: var(--el-menu-active-bg-color) !important;
+
     &::before {
       position: absolute;
       top: 0;
@@ -62,6 +83,7 @@ const handleClickMenu = (subItem: Menu.MenuOptions) => {
     }
   }
 }
+
 .vertical,
 .classic,
 .transverse {
@@ -73,6 +95,7 @@ const handleClickMenu = (subItem: Menu.MenuOptions) => {
     }
   }
 }
+
 .columns {
   .el-menu-item {
     &.is-active {
@@ -82,6 +105,7 @@ const handleClickMenu = (subItem: Menu.MenuOptions) => {
     }
   }
 }
+
 .classic,
 .transverse {
   #driver-highlighted-element-stage {

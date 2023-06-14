@@ -49,8 +49,8 @@ const analysis = [
   { label: "回收总额", yesterday: true },
   { label: "总销售量", yesterday: false },
   { label: "平台总回收量", yesterday: false },
-  { label: "平台日均新增销售", yesterday: false },
-  { label: "平台日均新增回收", yesterday: false }
+  { label: "平台日均新增销售量", yesterday: false },
+  { label: "平台日均新增回收量", yesterday: false }
 ];
 const saleGet = salesPriceMap => {
   let myChart: echarts.ECharts = echarts.init(proportionA.value as HTMLElement);
@@ -318,12 +318,6 @@ watch(
     /* ... */
     setCrud(count);
     wholeSetMap(count);
-  }
-);
-watch(
-  () => props.branchName,
-  value => {
-    console.log(`车变了`, value);
   }
 );
 </script>

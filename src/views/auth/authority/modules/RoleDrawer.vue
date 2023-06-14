@@ -9,7 +9,7 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="角色名称" prop="roleName">
-        <el-input v-model="drawerProps.row!.roleName" placeholder="请输入订单编号" clearable />
+        <el-input v-model="drawerProps.row!.roleName" placeholder="请输入角色名称" clearable />
       </el-form-item>
       <el-form-item label="角色描述" prop="roleDesc">
         <el-input

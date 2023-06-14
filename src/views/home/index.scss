@@ -13,20 +13,12 @@
         height: 29px;
         font-size: 12px;
         line-height: 26px;
-        color: #be59a9;
         text-align: center;
         cursor: pointer;
-        border: 2px solid #be59a9;
-        &:first-child {
-          border-radius: 16px 0 0 16px;
-        }
-        &:nth-child(3) {
-          border-radius: 0 16px 16px 0;
-        }
-        &.active {
-          color: white;
-          background: linear-gradient(180deg, #e76ba1, #773bb7);
-        }
+        color: white;
+        background: linear-gradient(180deg, #e76ba1, #773bb7);
+        //border: 2px solid #be59a9;
+        border-radius: 5px;
       }
     }
   }

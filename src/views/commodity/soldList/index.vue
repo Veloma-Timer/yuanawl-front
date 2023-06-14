@@ -118,7 +118,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     label: "出售金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row!.salePrice);
+      return <span>{getFixed(scope.row!.salePrice) || "--"}</span>;
     }
   },
   {
