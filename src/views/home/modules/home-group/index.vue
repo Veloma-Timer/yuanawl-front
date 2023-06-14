@@ -44,7 +44,7 @@ const groupGet = (data, value) => {
       }
     },
     legend: {
-      data: ["售出"],
+      data: ["金额"],
       bottom: 0
     },
     grid: {
@@ -69,7 +69,7 @@ const groupGet = (data, value) => {
     ],
     series: [
       {
-        name: "售出",
+        name: "金额",
         type: "bar",
         data: value
       }

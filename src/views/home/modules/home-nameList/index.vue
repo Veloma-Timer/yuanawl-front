@@ -89,7 +89,7 @@ getNameList();
     margin-bottom: 20px;
     .name-left-top {
       width: 780px;
-      //height: 300px;
+      height: 351px;
       padding: 30px 36px;
       margin-bottom: 32px;
       color: #ffffff;
@@ -108,7 +108,7 @@ getNameList();
         align-items: center;
         justify-content: space-around;
         width: 75%;
-        //height: calc(100% - 24px);
+        height: calc(100% - 24px);
         margin-left: 25%;
         .top-champion {
           .champion-button {
@@ -139,8 +139,9 @@ getNameList();
       }
     }
     .name-left-bottom {
-      width: 780px;
+      //width: 780px;
       //height: 300px;
+      flex: 1;
       padding: 20px 46px 32px 26px;
       background: #ffffff;
       border-radius: 25px;
@@ -191,6 +192,17 @@ getNameList();
           }
         }
       }
+    }
+  }
+}
+@media (width <= 1366px) {
+  .home-name-left {
+    display: block !important; /* 在此处添加你的样式 */
+    .name-left-top {
+      width: 100% !important;
+    }
+    .name-left-bottom {
+      width: 100% !important;
     }
   }
 }

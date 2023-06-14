@@ -2,26 +2,18 @@
   <div class="home table-box">
     <div class="home-tab mb30 flex">
       <div class="tab-list flex clear">
-        <div
-          class="tab-list-item"
-          v-for="item in cityList"
-          :class="{ active: cityName === item.id }"
-          :key="item.id"
-          @click="setValue(true, item.id)"
-        >
-          {{ item.branchName }}
-        </div>
+        <el-button-group>
+          <el-button type="primary" v-for="item in cityList" :key="item.id" @click="setValue(true, item.id, branchName)">
+            {{ item.branchName }}
+          </el-button>
+        </el-button-group>
       </div>
       <div class="tab-list flex ml34">
-        <div
-          class="tab-list-item"
-          v-for="item in monthList"
-          :class="{ active: monthName === item.id }"
-          :key="item.id"
-          @click="setValue(false, item.id, item.branchName)"
-        >
-          {{ item.branchName }}
-        </div>
+        <el-button-group>
+          <el-button type="primary" v-for="item in monthList" :key="item.id" @click="setValue(true, item.id, branchName)">
+            {{ item.branchName }}
+          </el-button>
+        </el-button-group>
       </div>
     </div>
     <!--    卡片-->

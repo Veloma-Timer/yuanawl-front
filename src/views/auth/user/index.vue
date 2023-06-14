@@ -40,7 +40,6 @@ import { editUser, addUser, getUserListMap, getUserTemptable, getUserUpload, get
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
-// const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -80,6 +79,15 @@ const getTableList = (params: any) => {
 const columns: ColumnProps<User.ResUserList>[] = [
   { prop: "userAccount", label: "登录名", search: { el: "input" } },
   { prop: "userTel", label: "手机号码", search: { el: "input" } },
+  { prop: "userCode", label: "员工工号" },
+  {
+    prop: "userBranch",
+    label: "门店",
+    render: scope => {
+      return <span>{scope.row!.userBranch!.branchName || "--"}</span>;
+    }
+  },
+  { prop: "userName", label: "姓名" },
   { prop: "userRoleId", label: "角色" },
   // { prop: "email", label: "状态" },
   { prop: "operation", label: "操作", width: 200 }

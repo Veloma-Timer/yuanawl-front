@@ -49,7 +49,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="所在组" prop="setId">
+          <el-form-item label="所在组">
             <el-select v-model="drawerProps.row!.setId" placeholder="请选择" class="check-select" filterable>
               <template v-for="item in setIdList" :key="item.value">
                 <el-option :label="item.label" :value="item.value" />
@@ -57,17 +57,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <!--        <el-col :span="12">-->
-        <!--          <el-form-item label="密码" prop="userPassword">-->
-        <!--            <el-input-->
-        <!--              type="userPassword"-->
-        <!--              v-model="drawerProps.row!.userPassword"-->
-        <!--              placeholder="请输入"-->
-        <!--              clearable-->
-        <!--              class="order-input"-->
-        <!--            ></el-input>-->
-        <!--          </el-form-item>-->
-        <!--        </el-col>-->
         <el-col :span="12">
           <el-form-item label="管理员" prop="isAdmin">
             <el-radio-group v-model="drawerProps.row!.isAdmin" class="ml-4">

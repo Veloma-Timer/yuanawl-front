@@ -3,7 +3,7 @@
   "data": [
     {
       "path": "/home/index",
-      "name": "home",
+      "name": "首页",
       "component": "/home/index",
       "meta": {
         "icon": "HomeFilled",
