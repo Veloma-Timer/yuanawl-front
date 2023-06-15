@@ -7,7 +7,6 @@
       :request-api="getTableList"
       :init-param="initParam"
       :data-callback="dataCallback"
-      :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">

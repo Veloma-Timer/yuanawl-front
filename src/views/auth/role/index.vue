@@ -1,13 +1,6 @@
 <template>
   <div class="table-box">
-    <ProTable
-      ref="proTable"
-      title="用户列表"
-      :columns="columns"
-      :request-api="getTableList"
-      :init-param="initParam"
-      :tool-button="false"
-    >
+    <ProTable ref="proTable" title="用户列表" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" plain @click="openDrawer('新增')">新建角色</el-button>
