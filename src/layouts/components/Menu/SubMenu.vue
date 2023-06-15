@@ -11,9 +11,9 @@
     </el-sub-menu>
     <div v-else-if="routerMenu(subItem).view">
       <el-menu-item :index="subItem.path" @click="handleClickMenu(subItem)">
-        <!-- <el-icon>
+        <el-icon v-if="subItem.name === '首页'">
           <component :is="subItem.meta.icon"></component>
-        </el-icon> -->
+        </el-icon>
         <template #title>
           <span class="sle">{{ subItem.meta.title }}</span>
         </template>
