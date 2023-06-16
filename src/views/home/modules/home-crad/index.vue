@@ -5,7 +5,7 @@
         <div class="crud-number" ref="crudNumberRef"></div>
         <div class="crud-total">
           <div class="total-name">
-            <span v-show="index <= 7">{{ props.branchName }}</span>
+            <span v-show="index < 7">{{ props.branchName }}</span>
             <span>{{ analysis[index].label }}</span>
           </div>
           <div v-if="analysis[index].yesterday" class="total-compare">昨日同比</div>

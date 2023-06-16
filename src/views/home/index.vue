@@ -10,7 +10,7 @@
       </div>
       <div class="tab-list flex ml34">
         <el-button-group>
-          <el-button type="primary" v-for="item in monthList" :key="item.id" @click="setValue(true, item.id, branchName)">
+          <el-button type="primary" v-for="item in monthList" :key="item.id" @click="setValue(true, item.id, item.branchName)">
             {{ item.branchName }}
           </el-button>
         </el-button-group>
@@ -58,6 +58,7 @@ const setValue = function (bol: boolean, state: number, name: string) {
     monthName.value = state;
   }
   branchName.value = name;
+  console.log(branchName);
   params = {
     ...params,
     date: monthName.value,

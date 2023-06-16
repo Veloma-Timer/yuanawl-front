@@ -242,7 +242,7 @@ onMounted(() => {
   setTimeout(() => {
     // 携带参数page跳转
     const { accountCode, accountType } = route.query;
-    const type = Number(accountType);
+    const type = accountType ? Number(accountType) : null;
     if (proTable.value) {
       proTable.value.searchParam.accountCode = accountCode;
       proTable.value.searchParam.accountType = type;
