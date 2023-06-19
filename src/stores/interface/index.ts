@@ -29,6 +29,28 @@ export interface UserState {
   userInfo: { name: string };
 }
 
+/* ProTableState */
+export interface ProTableColoum {
+  fixed?: string;
+  isFilterEnum: boolean;
+  isShow: boolean;
+  sortable: boolean;
+  type: string;
+  width: number;
+  prop?: string;
+  render?: () => {};
+  search?: () => {};
+}
+
+export interface ColoumItem {
+  key: string;
+  value: ProTableColoum[];
+}
+
+export interface ProTableState {
+  list: ColoumItem[];
+}
+
 /* tabsMenuProps */
 export interface TabsMenuProps {
   icon: string;
