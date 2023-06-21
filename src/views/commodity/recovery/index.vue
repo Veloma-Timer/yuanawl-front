@@ -235,20 +235,4 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   };
   drawerRef.value?.acceptParams(params);
 };
-const getAllTypeList = async () => {
-  await getAllList();
-};
-onMounted(() => {
-  setTimeout(() => {
-    // 携带参数page跳转
-    const { accountCode, accountType } = route.query;
-    const type = accountType ? Number(accountType) : null;
-    if (proTable.value) {
-      proTable.value.searchParam.accountCode = accountCode;
-      proTable.value.searchParam.accountType = type;
-      proTable.value?.search();
-    }
-  }, 300);
-  getAllTypeList();
-});
 </script>

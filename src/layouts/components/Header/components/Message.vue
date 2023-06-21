@@ -69,14 +69,13 @@ workList();
 
 .message-list {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
 
   .message-item {
-    display: flex;
-    align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid var(--el-border-color-light);
-
+    width: 100%;
     &:last-child {
       border: none;
     }

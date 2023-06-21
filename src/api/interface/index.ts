@@ -329,3 +329,22 @@ export namespace Data {
     accountRecyclerPrice: string;
   }
 }
+// 短信管理
+export namespace Message {
+  export interface Template {
+    signature: string;
+    corporateName: string;
+    content: string;
+    status: string;
+    time: string;
+    text: string;
+    phone: string;
+  }
+  export interface Sending {
+    accountId: string;
+    reduction: boolean;
+    message: string;
+    phones: string[];
+    sendingTime: number;
+  }
+}
