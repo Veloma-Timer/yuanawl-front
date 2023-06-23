@@ -285,6 +285,9 @@ export namespace HomeSet {
 
 // 数据统计
 export namespace Data {
+  export interface DateRange {
+    [key: string]: number;
+  }
   export interface keyValue {
     name: string;
     value: number;
