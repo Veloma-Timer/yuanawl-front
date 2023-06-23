@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import RecoveryChartPanel from "./modules/recovery-chart-panel/index.vue";
 import RecoveryListTable from "./modules/recovery-list-table/index.vue";
 
