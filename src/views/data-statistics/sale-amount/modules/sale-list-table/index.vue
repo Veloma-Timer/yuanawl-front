@@ -1,6 +1,6 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
+    <ProTable ref="proTable" title="销售数据" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link @click="openDrawer('查看', scope.row)" :icon="View">查看</el-button>

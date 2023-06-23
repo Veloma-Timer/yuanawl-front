@@ -3,7 +3,14 @@
 }
 .left {
   flex: 1;
+  position: relative;
   overflow: hidden;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--el-border-color-light);
   .content {
     .header {
       display: inline-block;
@@ -22,8 +29,13 @@
 }
 .right {
   position: relative;
-  margin-top: 6px;
-  margin-left: 20px;
+  margin-left: 10px;
+  background: #ffffff;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--el-border-color-light);
+  margin-bottom: 10px;
+  padding: 20px;
   .city-radio {
     position: absolute;
     right: 0;
