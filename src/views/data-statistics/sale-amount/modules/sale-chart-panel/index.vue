@@ -161,7 +161,7 @@ function initEcharts(xData: any[], yData: any[], legendName: string) {
       bottom: "1%"
     },
     grid: {
-      left: "3%",
+      left: "2%",
       right: "8px",
       bottom: "13%",
       containLabel: true

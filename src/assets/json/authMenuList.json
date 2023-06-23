@@ -203,11 +203,11 @@
       "children": [
         {
           "path": "/data/statistics/sale",
-          "name": "销售金额汇总",
+          "name": "销售数据",
           "component": "/data-statistics/sale-amount/index",
           "meta": {
             "icon": "Menu",
-            "title": "销售金额汇总",
+            "title": "销售数据",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -217,11 +217,25 @@
         },
         {
           "path": "/data/statistics/recovery",
-          "name": "回收金额汇总",
+          "name": "回收数据",
           "component": "/data-statistics/recovery-amount/index",
           "meta": {
             "icon": "Menu",
-            "title": "回收金额汇总",
+            "title": "回收数据",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/data/statistics/push",
+          "name": "发布数据",
+          "component": "/data-statistics/push-amount/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "发布数据",
             "isLink": "",
             "isHide": false,
             "isFull": false,
