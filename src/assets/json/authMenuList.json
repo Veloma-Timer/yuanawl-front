@@ -274,6 +274,20 @@
           }
         },
         {
+          "path": "/afterSales/addOrder",
+          "name": "工单新增",
+          "component": "/afterSales/addOrder/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "工单新增",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/afterSales/hangWork",
           "name": "杭州工单",
           "component": "/afterSales/hangWork/index",
