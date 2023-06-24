@@ -1,6 +1,6 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="杭州工单" :columns="columns" :request-api="getTableList" :init-param="initParam">
+    <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
@@ -15,6 +15,7 @@
         <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
     </ProTable>
+    <!-- <OrderDrawer ref="drawerRef" /> -->
     <OrderCheck ref="orderCheckRef" />
     <ImportExcel ref="dialogRef" />
   </div>
@@ -25,24 +26,21 @@ import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-// import { getAllBranch } from "@/api/modules/set";
+import { getAllBranch } from "@/api/modules/set";
 import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
-import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
+import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 const proTable = ref<ProTableInstance>();
+const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
-
+const route = useRoute();
 const router = useRouter();
-
-// 固定
-const initParam = reactive({ branchId: 4 });
-
 const getTableList = (params: any) => {
   return getSalesList(params);
 };
@@ -234,15 +232,15 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     render: scope => {
       return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
     }
+  },
+  {
+    prop: "branch",
+    label: "店铺",
+    width: 180,
+    enum: getAllBranch,
+    search: { el: "select", props: { filterable: true } },
+    fieldNames: { label: "branchName", value: "id" }
   }
-  // {
-  //   prop: "branch",
-  //   label: "店铺",
-  //   width: 180,
-  //   enum: getAllBranch,
-  //   search: { el: "select", props: { filterable: true } },
-  //   fieldNames: { label: "branchName", value: "id" }
-  // }
 ];
 
 const operatorOrder = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
@@ -284,4 +282,24 @@ const batchExport = async () => {
   const data = await orderExport(obj);
   saveFile(data, "工单报表");
 };
+onMounted(() => {
+  setTimeout(() => {
+    // 携带参数page跳转
+    const orderCode = route.query.orderCode;
+    if (proTable.value) {
+      proTable.value.searchParam.orderCode = orderCode;
+      proTable.value?.search();
+    }
+  }, 300);
+});
 </script>
+
+<style scoped lang="scss">
+:deep(.el-upload) {
+  display: inline-block;
+}
+.up-btn {
+  display: inline-block;
+  margin: 0 10px;
+}
+</style>

@@ -316,6 +316,34 @@
           }
         },
         {
+          "path": "/afterSales/openOrders",
+          "name": "未完结工单",
+          "component": "/afterSales/openOrders/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "未完结工单",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/afterSales/completedOrders",
+          "name": "已完结工单",
+          "component": "/afterSales/completedOrders/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "已完结工单",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/afterSales/workReport",
           "name": "工单处理汇总",
           "component": "/afterSales/workReport/index",

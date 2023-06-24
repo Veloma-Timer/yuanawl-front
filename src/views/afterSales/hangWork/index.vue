@@ -1,21 +1,20 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
+    <ProTable ref="proTable" title="杭州工单" :columns="columns" :request-api="getTableList" :init-param="initParam">
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" @click="openDrawer('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
+        <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
         <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
         <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
         <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
-        <el-button type="primary" link @click="openDrawer('查看', row)" v-if="BUTTONS.view" :icon="View">查看</el-button>
+        <el-button type="primary" link @click="operatorOrder('查看', row)" v-if="BUTTONS.view" :icon="View">查看</el-button>
         <el-button type="primary" link @click="openCheck(row)" v-if="BUTTONS.check" :icon="EditPen">审核</el-button>
         <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
     </ProTable>
-    <OrderDrawer ref="drawerRef" />
     <OrderCheck ref="orderCheckRef" />
     <ImportExcel ref="dialogRef" />
   </div>
@@ -24,19 +23,10 @@
 <script setup lang="tsx" name="useProTable">
 import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import OrderCheck from "./modules/order-check/index.vue";
-import OrderDrawer from "./modules/order-drawer/index.vue";
+import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 // import { getAllBranch } from "@/api/modules/set";
-import {
-  getSalesList,
-  addSalesList,
-  editSalesList,
-  delSalesOrder,
-  orderTemplate,
-  orderUpload,
-  orderExport
-} from "@/api/modules/order";
+import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
@@ -44,8 +34,11 @@ import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-pl
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import { saveFile } from "@/utils/file";
+import { useRouter } from "vue-router";
 const proTable = ref<ProTableInstance>();
 const { BUTTONS } = useAuthButtons();
+
+const router = useRouter();
 
 // 固定
 const initParam = reactive({ branchId: 1 });
@@ -252,17 +245,13 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   // }
 ];
 
-// 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof OrderDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
-  const params = {
-    title,
-    isView: title === "查看",
-    row: { ...row },
-    api: title === "新增工单" ? addSalesList : title === "查看" ? editSalesList : undefined,
-    getTableList: proTable.value?.getTableList
-  };
-  drawerRef.value?.acceptParams(params);
+const operatorOrder = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
+  const id = row.id;
+  if (id) {
+    router.push({ name: "工单新增", query: { id } });
+  } else {
+    router.push({ name: "工单新增" });
+  }
 };
 
 const orderCheckRef = ref<any>(null);
