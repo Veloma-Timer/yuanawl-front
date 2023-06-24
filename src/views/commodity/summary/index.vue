@@ -102,7 +102,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "accountNumber", label: "游戏编号", width: 160 },
+  {
+    prop: "accountNumber",
+    label: "游戏编号",
+    width: 160,
+    search: { el: "input" }
+  },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -132,6 +137,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "salePrice",
     label: "出售金额",
     width: 160,
+    search: { el: "input" },
     render: scope => {
       return <span>{getFixed(scope.row.salePrice) || "--"}</span>;
     }
@@ -140,6 +146,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountRecyclerPrice",
     label: "实际回收金额",
     width: 160,
+    search: { el: "input" },
     render: scope => {
       return <span>{getFixed(scope.row.accountRecyclerPrice) || "--"}</span>;
     }
@@ -157,8 +164,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
   },
   { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
-  { prop: "accountTel", label: "手机号", width: 160 },
-  { prop: "accountRemark", label: "备注", width: 160 },
+  { prop: "accountTel", label: "手机号", width: 160, search: { el: "input" } },
+  { prop: "accountRemark", label: "备注", width: 160, search: { el: "input" } },
   {
     prop: "haveSecondary",
     label: "有无二次",
@@ -179,7 +186,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "accountDesc", label: "账号描述", width: 160 },
+  { prop: "accountDesc", label: "账号描述", width: 160, search: { el: "input" } },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 

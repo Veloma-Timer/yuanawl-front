@@ -19,6 +19,7 @@ import "@/styles/element.scss";
 import "@/styles/tailwindcss.css";
 // svg icons
 import "virtual:svg-icons-register";
+import "default-passive-events";
 // element plus
 import ElementPlus from "element-plus";
 // element icons
@@ -33,7 +34,6 @@ import I18n from "@/languages/index";
 import pinia from "@/stores";
 // errorHandler
 import errorHandler from "@/utils/errorHandler";
-
 const app = createApp(App);
 
 app.config.errorHandler = errorHandler;

@@ -1,6 +1,6 @@
 <template>
-  <div class="home-name-right">
-    <span class="cell">平台销售额排名</span>
+  <div class="home-right">
+    <span class="cell">{{ props.title }}</span>
     <div class="home-table mt30">
       <div class="home-table-header flex">
         <div class="header-item">名次</div>
@@ -31,17 +31,25 @@ const nameClassObj = new Map([
   [5, "five"]
 ]);
 const props = defineProps({
-  salasRankingArr: Array
+  salasRankingArr: {
+    type: Array,
+    default: () => []
+  },
+  title: {
+    type: String,
+    default: "平台销售额排名"
+  }
 });
 </script>
 <style scoped lang="scss">
-.home-name-right {
+.home-right {
   width: 100%;
-  height: 576px;
-  padding: 52px;
+  height: 100%;
+  padding: 20px;
   background: #ffffff;
   border: 2px solid #f0f0f0;
   border-radius: 25px;
+  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
   .cell {
     font-size: 16px;
     color: #858585;

@@ -16,33 +16,29 @@
         </el-button-group>
       </div>
     </div>
-    <!--    卡片-->
-    <homeCard :crudListObj="crudListObj" :branchName="branchName" />
-    <homeNameList :platformSalas="crudListObj.platformSalas" :salasRanking="crudListObj.salasRanking" />
-    <div class="pb30">
-      <home-group title="销售组数据对比" :listArr="crudListObj.salesUnit" />
-      <home-group title="回收组数据对比" :listArr="crudListObj.recycleUnit" />
-      <home-group title="售后组数据对比" :listArr="crudListObj.afterSaleUnit" />
-      <home-group title="发布组数据对比" class-name="group" :listArr="crudListObj.publishUnit" />
-    </div>
+    <homeSale :crud-list-obj="crudListObj" :branch-name="branchName" title="销售数据汇总" />
+    <homeRecovery :crud-list-obj="crudListObj" :branch-name="branchName" title="回收数据汇总" />
+    <homeRelease :crud-list-obj="crudListObj" :branch-name="branchName" title="发布数据汇总" />
+    <homeNeed :crud-list-obj="crudListObj" :branch-name="branchName" title="待办工单" />
   </div>
 </template>
 
 <script setup lang="ts" name="home">
-import homeCard from "@/views/home/modules/home-crad/index.vue";
-import homeNameList from "@/views/home/modules/home-nameList/index.vue";
-import homeGroup from "@/views/home/modules/home-group/index.vue";
+import homeSale from "@/views/home/modules/home-sale/index.vue";
+import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
+import homeRelease from "@/views/home/modules/home-release/index.vue";
+import homeNeed from "@/views/home/modules/home-need/index.vue";
 import { getAllBranch } from "@/api/modules/set";
 import { getHomeList } from "@/api/modules/home";
 import { ref } from "vue";
-
 interface Item {
   branchName: string;
   id: number;
 }
 
-let cityList = ref([]);
+let cityList = ref([{ branchName: "全部", id: 0 }]);
 const monthList: Item[] = [
+  { branchName: "全部", id: 0 },
   { branchName: "今日", id: 0 },
   { branchName: "本周", id: 1 },
   { branchName: "本月", id: 2 }
@@ -58,31 +54,30 @@ const setValue = function (bol: boolean, state: number, name: string) {
     monthName.value = state;
   }
   branchName.value = name;
-  console.log(branchName);
   params = {
     ...params,
     date: monthName.value,
     branchId: cityName.value
   };
-  setHomeCradList(params);
+  setHomeCardList(params);
 };
 let crudListObj = ref({}); // 前13个数据
 // let behindObj = null; // 后面的数据
-const setHomeCradList = async count => {
+const setHomeCardList = async count => {
   const { data } = await getHomeList(count);
   crudListObj.value = data;
 };
 // 获取门店
 const branchAllList = async () => {
   const { data } = await getAllBranch({});
-  cityList.value = data;
+  cityList.value = [...cityList.value, ...data];
   cityName.value = data[0].id;
   params = {
     ...params,
     branchId: cityName.value,
     date: monthName.value
   };
-  await setHomeCradList(params);
+  await setHomeCardList(params);
 };
 onMounted(() => {
   branchAllList();
