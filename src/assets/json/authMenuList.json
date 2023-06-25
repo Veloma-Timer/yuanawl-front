@@ -58,6 +58,48 @@
           }
         },
         {
+          "path": "/commodity/sale",
+          "name": "销售列表",
+          "component": "/commodity/saleList/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "销售列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/commodity/release",
+          "name": "发布列表",
+          "component": "/commodity/release/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "发布列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/commodity/order",
+          "name": "工单列表",
+          "component": "/commodity/orderList/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "工单列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/commodity/soldList",
           "name": "已售列表",
           "component": "/commodity/soldList/index",

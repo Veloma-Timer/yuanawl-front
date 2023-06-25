@@ -23,12 +23,11 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
-    <UserDrawer ref="drawerRef" />
-    <ImportExcel ref="dialogRef" />
+    <recoverDrawer ref="drawerRef" />
   </div>
 </template>
 
@@ -36,11 +35,9 @@
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
-import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
+import recoverDrawer from "@/views/commodity/recovery/modules/recoverDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import { getUserAll } from "@/api/modules/user";
 import {
   addSummary,
   deleteSummary,
@@ -52,12 +49,11 @@ import {
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-import { parseTime } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBranch } from "@/api/modules/set";
-import { useRoute } from "vue-router";
+// import { useRoute } from "vue-router";
 
-const route = useRoute();
+// const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -91,18 +87,16 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
   {
-    prop: "accountStatus",
-    label: "账户状态",
+    prop: "branchId",
+    label: "所属问店",
     width: 160,
-    enum: [
-      { label: "已售", value: 1 },
-      { label: "未售", value: 0 }
-    ],
-    search: { el: "select" }
+    enum: getAllBranch,
+    search: { el: "select" },
+    fieldNames: { label: "branchName", value: "id" }
   },
-  { prop: "accountNumber", label: "游戏编号", width: 160 },
+  { prop: "accountCode", label: "分组", width: 160, search: { el: "input" } },
+  { prop: "accountNumber", label: "账号编号", width: 160 },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -112,74 +106,22 @@ const columns: ColumnProps<Commodity.Account>[] = [
     fieldNames: { label: "typeName", value: "id" }
   },
   { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
-  {
-    prop: "salePeopleId",
-    label: "出售人姓名",
-    width: 160,
-    enum: getUserAll,
-    search: { el: "select" },
-    fieldNames: { label: "userName", value: "id" }
-  },
-  {
-    prop: "saleTime",
-    label: "出售时间",
-    width: 160,
-    render: scope => {
-      return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}");
-    }
-  },
-  {
-    prop: "salePrice",
-    label: "出售金额",
-    width: 160,
-    render: scope => {
-      return <span>{getFixed(scope.row.salePrice) || "--"}</span>;
-    }
-  },
-  {
-    prop: "accountRecyclerPrice",
-    label: "实际回收金额",
-    width: 160,
-    render: scope => {
-      return <span>{getFixed(scope.row.accountRecyclerPrice) || "--"}</span>;
-    }
-  },
-  {
-    prop: "branchId",
-    label: "所属问店",
-    width: 160,
-    enum: getAllBranch,
-    search: { el: "select" },
-    fieldNames: { label: "branchName", value: "id" },
-    render: scope => {
-      return scope.row.branch?.branchName;
-    }
-  },
   { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
-  { prop: "accountTel", label: "手机号", width: 160 },
-  { prop: "accountRemark", label: "备注", width: 160 },
-  {
-    prop: "haveSecondary",
-    label: "有无二次",
-    width: 160,
-    enum: [
-      { label: "有", value: "1" },
-      { label: "无", value: "0" }
-    ],
-    search: { el: "select" }
-  },
-  {
-    prop: "isSave",
-    label: "资料是否存档",
-    width: 160,
-    enum: [
-      { label: "有", value: "0" },
-      { label: "无", value: "1" }
-    ],
-    search: { el: "select" }
-  },
-  { prop: "accountDesc", label: "账号描述", width: 160 },
+  { prop: "accountTel", label: "密保手机", width: 160 },
+  { prop: "accountRemark", label: "手机卡备注", width: 160 },
+  { prop: "accountRemark", label: "邮箱", width: 160 },
+  { prop: "accountRemark", label: "邮箱密保", width: 160 },
+  { prop: "accountRemark", label: "系统", width: 160 },
+  { prop: "accountRemark", label: "账号描述", width: 160 },
+  { prop: "accountRemark", label: "营地号", width: 160 },
+  { prop: "accountDesc", label: "实名情况", width: 160 },
+  { prop: "accountDesc", label: "回收价", width: 160 },
+  { prop: "accountDesc", label: "回收订单号", width: 160 },
+  { prop: "accountDesc", label: "回收店铺", width: 160 },
+  { prop: "accountDesc", label: "回收日期", width: 160 },
+  { prop: "accountDesc", label: "回收客服", width: 160 },
+  { prop: "accountDesc", label: "回收备注", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
@@ -187,12 +129,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
 const deleteAccount = async (params: Commodity.Account) => {
   await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
   proTable.value?.getTableList();
-};
-const getFixed = (str: string) => {
-  if (str) {
-    return "￥" + parseFloat(str).toFixed(2);
-  }
-  return "--";
 };
 // 批量删除用户信息
 // const batchDelete = async (id: string[]) => {

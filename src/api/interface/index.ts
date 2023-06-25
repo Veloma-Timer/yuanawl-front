@@ -393,6 +393,7 @@ export namespace Message {
   export interface Sending {
     accountId: string;
     reduction: boolean;
+    openAccountTime: string;
     message: string;
     phones: string[];
     sendingTime: number;

@@ -28,7 +28,7 @@
         <homeGroup :list-arr="publishUnit" class-name="maintain" title="账号回收占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台回收额排名" />
+        <nameRight title="平台回收额排名" :salas-ranking-arr="crudListObj.salasRanking" />
       </div>
     </div>
     <homeGroup :list-arr="publishUnit" title="回收组数据对比" />

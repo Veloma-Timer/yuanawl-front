@@ -28,7 +28,7 @@
         <homeGroup :list-arr="publishUnit" class-name="maintain" title="账号发布占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台发布额排名" />
+        <nameRight title="平台发布额排名" :salas-ranking-arr="crudListObj.salasRanking" />
       </div>
     </div>
     <homeGroup :list-arr="publishUnit" title="发布组数据对比">
@@ -147,7 +147,7 @@ const setCrud = obj => {
   publishUnit = obj.publishUnit;
   setNumber();
 };
-const setValue = (id: string) => {
+const setValue = (id: number) => {
   console.log(id);
 };
 watch(

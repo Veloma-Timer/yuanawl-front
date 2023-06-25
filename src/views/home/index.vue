@@ -2,7 +2,7 @@
   <div class="home table-box">
     <div class="home-tab mb30 flex">
       <div class="tab-list flex clear">
-        <el-button-group>
+        <el-button-group v-show="userRoleId === 1">
           <el-button type="primary" v-for="item in cityList" :key="item.id" @click="setValue(true, item.id, branchName)">
             {{ item.branchName }}
           </el-button>
@@ -24,18 +24,18 @@
 </template>
 
 <script setup lang="ts" name="home">
+import { ref, reactive, onMounted } from "vue";
 import homeSale from "@/views/home/modules/home-sale/index.vue";
 import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
 import homeRelease from "@/views/home/modules/home-release/index.vue";
 import homeNeed from "@/views/home/modules/home-need/index.vue";
 import { getAllBranch } from "@/api/modules/set";
 import { getHomeList } from "@/api/modules/home";
-import { ref } from "vue";
+import { userObj } from "@/views/home/modules/homeUtis.js";
 interface Item {
   branchName: string;
   id: number;
 }
-
 let cityList = ref([{ branchName: "全部", id: 0 }]);
 const monthList: Item[] = [
   { branchName: "全部", id: 0 },
@@ -47,6 +47,8 @@ let cityName = ref(0);
 let monthName = ref(0);
 let branchName = ref("今日");
 let params = reactive({});
+const obj = userObj();
+const userRoleId = ref(0);
 const setValue = function (bol: boolean, state: number, name: string) {
   if (bol) {
     cityName.value = state;
@@ -77,6 +79,7 @@ const branchAllList = async () => {
     branchId: cityName.value,
     date: monthName.value
   };
+  userRoleId.value = obj.userRole.id;
   await setHomeCardList(params);
 };
 onMounted(() => {

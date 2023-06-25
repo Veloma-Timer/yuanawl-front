@@ -19,6 +19,15 @@
           <el-radio :label="2">定时发送</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item v-show="ruleForm.sendingTime === 2" label="" prop="openAccountName">
+        <el-date-picker
+          v-model="ruleForm.openAccountName"
+          format="YYYY-MM-DD hh:mm:ss"
+          value-format="YYYY-MM-DD hh:mm:ss"
+          type="date"
+          placeholder="请选择"
+        />
+      </el-form-item>
       <el-form-item label="号码去重" prop="reduction">
         <el-radio-group v-model="ruleForm.reduction">
           <el-radio :label="true">是</el-radio>
@@ -35,11 +44,13 @@ const ruleForm: Partial<Message.Sending> = reactive({
   accountId: "",
   message: "",
   reduction: true,
-  sendingTime: 2
+  openAccountTime: "",
+  sendingTime: 1
 });
 const rules = reactive({
   accountId: [{ required: true, message: "必填项不能为空" }],
   message: [{ required: true, message: "必填项不能为空" }],
+  openAccountName: [{ required: true, message: "必填项不能为空" }],
   reduction: [{ required: true, message: "必填项不能为空" }],
   sendingTime: [{ required: true, message: "必填项不能为空" }]
 });
