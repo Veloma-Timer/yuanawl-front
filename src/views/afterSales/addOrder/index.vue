@@ -9,9 +9,9 @@
       label-width="120px"
       label-suffix=" :"
       :rules="rules"
-      :disabled="drawerProps.isView"
-      :model="drawerProps.row"
-      :hide-required-asterisk="drawerProps.isView"
+      :disabled="ruleForm.isView"
+      :model="ruleForm.row"
+      :hide-required-asterisk="ruleForm.isView"
     >
       <div class="first-header">
         <Header title="基本信息" class="header basic"></Header>
@@ -19,8 +19,8 @@
       </div>
       <el-row class="row-line" :gutter="10">
         <el-col :span="6">
-          <el-form-item label="游戏账号" prop="accountId">
-            <el-select v-model="drawerProps.row!.accountId" placeholder="请选择" class="order-input" filterable>
+          <el-form-item label="游戏账号" prop="basicAccountId">
+            <el-select v-model="ruleForm.row!.basicAccountId" placeholder="请选择" class="order-input" filterable>
               <template v-for="item in accountList" :key="item.id">
                 <el-option :label="item.accountNumber" :value="item.id" />
               </template>
@@ -28,23 +28,23 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="问题类型" prop="insure">
-            <el-select v-model="drawerProps.row!.insure" placeholder="请选择" filterable class="order-input">
+          <el-form-item label="问题类型" prop="basicQuestionType">
+            <el-select v-model="ruleForm.row!.basicQuestionType" placeholder="请选择" filterable class="order-input">
               <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="是否在保" prop="insure">
-            <el-select v-model="drawerProps.row!.insure" placeholder="请选择" filterable class="order-input">
+          <el-form-item label="是否在保" prop="basicInsure">
+            <el-select v-model="ruleForm.row!.basicInsure" placeholder="请选择" filterable class="order-input">
               <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="处理时效" prop="handleTime">
+          <el-form-item label="处理时效" prop="basicHandleTime">
             <el-input-number
-              v-model="drawerProps.row!.handleTime"
+              v-model="ruleForm.row!.basicHandleTime"
               :min="1"
               :max="5"
               placeholder="请输入"
@@ -57,49 +57,52 @@
       <el-row class="basic-info">
         <el-col :span="6">
           <el-form-item label="出售人姓名">
-            <span>张三</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoAellerName || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="出售时间">
-            <span>2023-05-05</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoSellerTime || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="出售渠道">
-            <span>交易猫</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoSellerChannel || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="订单编号">
-            <span>DDD123456</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoOrderNo || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="商品加价率">
-            <span>0.6</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoProductMarkupRate || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="商品周转周期">
-            <span>5天</span>
+            <span>{{
+              ruleForm.row?.basicAccSaleInfoProductTurnoverCycle ? ruleForm.row.basicAccSaleInfoProductTurnoverCycle + "天" : "-"
+            }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="买家手机号">
-            <span>15107384555</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoBuyerPhoneNumber || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="销售备注">
-            <span>测试测试</span>
+            <span>{{ ruleForm.row?.basicAccSaleInfoSellerMark || "-" }}</span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row class="basic-info">
         <el-col :span="24">
-          <el-form-item label="留言" prop="handleResult" :rules="rules.handleResult" label-width="120px">
+          <el-form-item label="留言" prop="basicMessage" label-width="120px">
             <el-input
+              v-model="ruleForm.row!.basicMessage"
               placeholder="请输入"
               clearable
               class="small-input"
@@ -108,11 +111,16 @@
             ></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="附件" prop="baiscAnnex" label-width="120px">
+            <UploadFiles v-model:file-list="ruleForm.row!.baiscAnnex" height="140px" width="140px"></UploadFiles>
+          </el-form-item>
+        </el-col>
       </el-row>
       <div class="add-process" v-if="!isAddProcess">
         <el-button type="primary" @click="addProcess" class="btn">添加处理</el-button>
       </div>
-      <template v-for="(item, i) in drawerProps.row?.detail" :key="i">
+      <template v-if="isAddProcess">
         <div class="first-header">
           <Header title="工单处理详情" class="header"></Header>
         </div>
@@ -120,13 +128,8 @@
           <div class="sub-title">售后部门:</div>
           <el-row :gutter="10" style="margin-top: 24px">
             <el-col :span="6">
-              <el-form-item
-                label="处理客服"
-                :prop="'detail.' + i + '.customerServiceId'"
-                :rules="rules.customerServiceId"
-                label-width="120px"
-              >
-                <el-select v-model="item.customerServiceId" placeholder="请选择" class="small-input" filterable>
+              <el-form-item label="处理客服" prop="AfterCustomerServiceId" label-width="120px">
+                <el-select v-model="ruleForm!.row!.AfterCustomerServiceId" placeholder="请选择" class="small-input" filterable>
                   <template v-for="item2 in userList" :key="item2.id">
                     <el-option :label="item2.userName" :value="item2.id" />
                   </template>
@@ -134,9 +137,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime" label-width="120px">
+              <el-form-item label="处理时间" prop="AfterHandleTime" label-width="120px">
                 <el-date-picker
-                  v-model="item.handleTime"
+                  v-model="ruleForm.row!.AfterHandleTime"
                   type="date"
                   placeholder="请选择"
                   class="order-time"
@@ -145,13 +148,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="处理结果"
-                :prop="'detail.' + i + '.handleResult'"
-                :rules="rules.handleResult"
-                label-width="120px"
-              >
-                <el-select v-model="item.handleResult" placeholder="请选择" class="small-input" filterable>
+              <el-form-item label="处理结果" prop="AfterHandleResult" label-width="120px">
+                <el-select v-model="ruleForm.row!.AfterHandleTime" placeholder="请选择" class="small-input" filterable>
                   <template v-for="item2 in handleResultList" :key="item2.value">
                     <el-option :label="item2.label" :value="item2.value" />
                   </template>
@@ -161,46 +159,35 @@
           </el-row>
           <el-row :gutter="10">
             <el-col :span="6">
-              <el-form-item
-                label="通知其他部门"
-                :prop="'detail.' + i + '.customerServiceId'"
-                :rules="rules.customerServiceId"
-                label-width="120px"
-              >
-                <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input>
+              <el-form-item label="通知其他部门" prop="AfterNotifyOtherDepartments" label-width="120px">
+                <el-input v-model="ruleForm.row!.AfterNotifyOtherDepartments" placeholder="请输入" class="order-input"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="赔付金额" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime" label-width="120px">
-                <el-input-number v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input-number>
+              <el-form-item label="赔付金额" prop="AfterCompensationAmount" label-width="120px">
+                <el-input-number
+                  v-model="ruleForm.row!.AfterCompensationAmount"
+                  placeholder="请输入"
+                  class="order-input"
+                ></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="新密保手机"
-                :prop="'detail.' + i + '.handleResult'"
-                :rules="rules.handleResult"
-                label-width="120px"
-              >
-                <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input>
+              <el-form-item label="新密保手机" prop="AfterNewSecurityPhone" label-width="120px">
+                <el-input v-model="ruleForm.row!.AfterNewSecurityPhone" placeholder="请输入" class="order-input"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="新密码"
-                :prop="'detail.' + i + '.handleResult'"
-                :rules="rules.handleResult"
-                label-width="120px"
-              >
-                <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input>
+              <el-form-item label="新密码" prop="AfterNewSecurityPassword" label-width="120px">
+                <el-input v-model="ruleForm.row!.AfterNewSecurityPassword" placeholder="请输入" class="order-input"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row :gutter="10" class="row-line">
             <el-col :span="6">
-              <el-form-item label="备注" :prop="'detail.' + i + '.assets'" :rules="rules.assets" :label-width="120">
+              <el-form-item label="附件" prop="AfterAnnex" :label-width="120">
                 <div class="up-box">
-                  <UploadFiles v-model:file-list="item.assets" height="140px" width="140px"></UploadFiles>
+                  <UploadFiles v-model:file-list="ruleForm.row!.AfterAnnex" height="140px" width="140px"></UploadFiles>
                   <div class="tip">可添加图片、视频、音频</div>
                 </div>
               </el-form-item>
@@ -211,13 +198,13 @@
           <div class="sub-title">发布部门:</div>
           <el-row :gutter="10" style="margin-top: 24px">
             <el-col :span="6">
-              <el-form-item
-                label="处理客服"
-                :prop="'detail.' + i + '.customerServiceId'"
-                :rules="rules.customerServiceId"
-                label-width="120px"
-              >
-                <el-select v-model="item.customerServiceId" placeholder="请选择" class="small-input" filterable>
+              <el-form-item label="处理客服" prop="publishHandleCustomerServiceId" label-width="120px">
+                <el-select
+                  v-model="ruleForm.row!.publishHandleCustomerServiceId"
+                  placeholder="请选择"
+                  class="small-input"
+                  filterable
+                >
                   <template v-for="item2 in userList" :key="item2.id">
                     <el-option :label="item2.userName" :value="item2.id" />
                   </template>
@@ -225,18 +212,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime" label-width="120px">
-                <el-date-picker v-model="item.handleTime" type="date" placeholder="请选择" style="width: 100%" />
+              <el-form-item label="处理时间" prop="publishHandleTime" label-width="120px">
+                <el-date-picker v-model="ruleForm.row!.publishHandleTime" type="date" placeholder="请选择" style="width: 100%" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="处理结果"
-                :prop="'detail.' + i + '.handleResult'"
-                :rules="rules.handleResult"
-                label-width="120px"
-              >
-                <el-select v-model="item.handleResult" placeholder="请选择" class="small-input" filterable>
+              <el-form-item label="处理结果" prop="publishHandleResult" label-width="120px">
+                <el-select v-model="ruleForm.row!.publishHandleResult" placeholder="请选择" class="small-input" filterable>
                   <template v-for="item2 in handleResultList" :key="item2.value">
                     <el-option :label="item2.label" :value="item2.value" />
                   </template>
@@ -246,9 +228,9 @@
           </el-row>
           <el-row :gutter="10" class="row-line">
             <el-col :span="6">
-              <el-form-item label="备注" :prop="'detail.' + i + '.assets'" :rules="rules.assets" :label-width="120">
+              <el-form-item label="附件" prop="publishAnnex" :label-width="120">
                 <div class="up-box">
-                  <UploadFiles v-model:file-list="item.assets" height="140px" width="140px"></UploadFiles>
+                  <UploadFiles v-model="ruleForm.row!.publishAnnex" height="140px" width="140px"></UploadFiles>
                   <div class="tip">可添加图片、视频、音频</div>
                 </div>
               </el-form-item>
@@ -259,13 +241,8 @@
           <div class="sub-title">销售部门:</div>
           <el-row :gutter="10" style="margin-top: 24px">
             <el-col :span="6">
-              <el-form-item
-                label="处理客服"
-                :prop="'detail.' + i + '.customerServiceId'"
-                :rules="rules.customerServiceId"
-                label-width="120px"
-              >
-                <el-select v-model="item.customerServiceId" placeholder="请选择" class="small-input" filterable>
+              <el-form-item label="处理客服" prop="saleHandleCustomerService" label-width="120px">
+                <el-select v-model="ruleForm.row!.saleHandleCustomerService" placeholder="请选择" class="small-input" filterable>
                   <template v-for="item2 in userList" :key="item2.id">
                     <el-option :label="item2.userName" :value="item2.id" />
                   </template>
@@ -273,18 +250,13 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="处理时间" :prop="'detail.' + i + '.handleTime'" :rules="rules.handleTime" label-width="120px">
-                <el-date-picker v-model="item.handleTime" type="date" placeholder="请选择" style="width: 100%" />
+              <el-form-item label="处理时间" prop="saleHandleTime" label-width="120px">
+                <el-date-picker v-model="ruleForm.row!.saleHandleTime" type="date" placeholder="请选择" style="width: 100%" />
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="处理结果"
-                :prop="'detail.' + i + '.handleResult'"
-                :rules="rules.handleResult"
-                label-width="120px"
-              >
-                <el-select v-model="item.handleResult" placeholder="请选择" class="small-input" filterable>
+              <el-form-item label="处理结果" prop="saleHandleResult" label-width="120px">
+                <el-select v-model="ruleForm.row!.saleHandleResult" placeholder="请选择" class="small-input" filterable>
                   <template v-for="item2 in handleResultList" :key="item2.value">
                     <el-option :label="item2.label" :value="item2.value" />
                   </template>
@@ -294,33 +266,22 @@
           </el-row>
           <el-row :gutter="10" class="row-line">
             <el-col :span="6">
-              <el-form-item
-                label="赔付用户金额"
-                :prop="'detail.' + i + '.handleTime'"
-                :rules="rules.handleTime"
-                label-width="120px"
-              >
-                <el-input-number v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input-number>
+              <el-form-item label="赔付用户金额" prop="saleCompensationUserAmount" label-width="120px">
+                <el-input-number
+                  v-model="ruleForm.row!.saleCompensationUserAmount"
+                  placeholder="请输入"
+                  class="order-input"
+                ></el-input-number>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="通知其他部门"
-                :prop="'detail.' + i + '.customerServiceId'"
-                :rules="rules.customerServiceId"
-                label-width="120px"
-              >
-                <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input>
+              <el-form-item label="通知其他部门" prop="saleNotifyOtherDepartments" label-width="120px">
+                <el-input v-model="ruleForm.row!.saleNotifyOtherDepartments" placeholder="请输入" class="order-input"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item
-                label="给用户换号"
-                :prop="'detail.' + i + '.handleResult'"
-                :rules="rules.handleResult"
-                label-width="120px"
-              >
-                <el-input v-model="drawerProps.row!.handleTime" placeholder="请输入" class="order-input"></el-input>
+              <el-form-item label="给用户换号" prop="saleChangeUserNumber" label-width="120px">
+                <el-input v-model="ruleForm.row!.saleChangeUserNumber" placeholder="请输入" class="order-input"></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -328,50 +289,52 @@
           <el-row class="basic-info">
             <el-col :span="6">
               <el-form-item label="出售人姓名">
-                <span>张三</span>
+                <span>{{ ruleForm.row?.sallerName || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="出售时间">
-                <span>2023-05-05</span>
+                <span>{{ ruleForm.row!.sallerTime || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="出售渠道">
-                <span>交易猫</span>
+                <span>{{ ruleForm.row?.sallerChannel || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="订单编号">
-                <span>DDD123456</span>
+                <span>{{ ruleForm.row?.saleAccorderNo || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="商品加价率">
-                <span>0.6</span>
+                <span>{{ ruleForm.row?.saleAccproductMarkupRate || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="商品周转周期">
-                <span>5天</span>
+                <span>{{
+                  ruleForm.row?.saleAccproductTurnoverCycle ? ruleForm.row?.saleAccproductTurnoverCycle + "天" : "-"
+                }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="买家手机号">
-                <span>15107384555</span>
+                <span>{{ ruleForm.row?.saleAccbuyerPhoneNumber || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="销售备注">
-                <span>测试测试</span>
+                <span>{{ ruleForm.row?.saleAccsellerMark || "-" }}</span>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row :gutter="10" class="row-line">
+          <el-row :gutter="10">
             <el-col :span="6">
-              <el-form-item label="备注" :prop="'detail.' + i + '.assets'" :rules="rules.assets" :label-width="120">
+              <el-form-item label="附件" prop="saleannex" :label-width="120">
                 <div class="up-box">
-                  <UploadFiles v-model:file-list="item.assets" height="140px" width="140px"></UploadFiles>
+                  <UploadFiles v-model:file-list="ruleForm.row!.saleannex" height="140px" width="140px"></UploadFiles>
                   <div class="tip">可添加图片、视频、音频</div>
                 </div>
               </el-form-item>
@@ -382,7 +345,7 @@
     </el-form>
     <div class="foot-btn">
       <el-button @click="goBack" class="cancel">取消</el-button>
-      <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit" class="ok">确定</el-button>
+      <el-button type="primary" v-show="!ruleForm.isView" @click="handleSubmit" class="ok">确定</el-button>
     </div>
   </div>
 </template>
@@ -393,7 +356,7 @@ import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
 import UploadFiles from "@/components/Upload/Files.vue";
 import Header from "@/components/Header/index.vue";
-import { detailSalesList } from "@/api/modules/order";
+import { addSalesList, editSalesList, detailSalesList } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
 import { getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
@@ -401,44 +364,49 @@ import { useRouter, useRoute } from "vue-router";
 // import { useAuthButtons } from "@/hooks/useAuthButtons";
 
 // const { BUTTONS } = useAuthButtons();
-const router = useRouter();
 const route = useRoute();
+const id = route.query.id;
+const api = id ? editSalesList : addSalesList;
+const router = useRouter();
 
 const rules = reactive({
-  orderCode: [{ required: true, message: "必填项不能为空" }],
-  customerService: [{ required: true, message: "必填项不能为空" }],
-  submitTime: [{ required: true, message: "必填项不能为空" }],
-  handleTime: [{ required: true, message: "必填项不能为空" }],
-  customerServiceId: [{ required: true, message: "必填项不能为空" }],
-  handleResult: [{ required: true, message: "必填项不能为空" }],
-  submitOrderTime: [{ required: true, message: "必填项不能为空" }],
-  assets: [{ required: true, message: "必填项不能为空" }],
-  username: [{ required: true, message: "必填项不能为空" }],
-  reportPersonId: [{ required: true, message: "必填项不能为空" }],
-  accountId: [{ required: true, message: "必填项不能为空" }],
-  newHandleResult: [{ required: true, message: "必填项不能为空" }],
-  handleTimes: [{ required: true, message: "必填项不能为空" }],
-  insure: [{ required: true, message: "必填项不能为空" }],
-  newHandleId: [{ required: true, message: "必填项不能为空" }],
-  recycleBranchId: [{ required: true, message: "必填项不能为空" }],
-  orderStar: [{ required: true, message: "必填项不能为空" }],
-  newHandleTime: [{ required: true, message: "必填项不能为空" }]
+  basicAccountId: [{ required: true, message: "必填项不能为空" }],
+  basicQuestionType: [{ required: true, message: "必填项不能为空" }],
+  basicInsure: [{ required: true, message: "必填项不能为空" }],
+  basicHandleTime: [{ required: true, message: "必填项不能为空" }],
+  basicMessage: [{ required: true, message: "必填项不能为空" }],
+  baiscAnnex: [{ required: true, message: "必填项不能为空" }],
+  AfterCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
+  AfterHandleTime: [{ required: true, message: "必填项不能为空" }],
+  AfterHandleResult: [{ required: true, message: "必填项不能为空" }],
+  // AfterNotifyOtherDepartments: [{ required: true, message: "必填项不能为空" }],
+  // AfterCompensationAmount: [{ required: true, message: "必填项不能为空" }],
+  // AfterNewSecurityPhone: [{ required: true, message: "必填项不能为空" }],
+  // AfterNewSecurityPassword: [{ required: true, message: "必填项不能为空" }],
+  AfterAnnex: [{ required: true, message: "必填项不能为空" }],
+  publishHandleCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
+  publishHandleTime: [{ required: true, message: "必填项不能为空" }],
+  publishHandleResult: [{ required: true, message: "必填项不能为空" }],
+  publishAnnex: [{ required: true, message: "必填项不能为空" }],
+  saleHandleCustomerService: [{ required: true, message: "必填项不能为空" }],
+  saleHandleTime: [{ required: true, message: "必填项不能为空" }],
+  saleHandleResult: [{ required: true, message: "必填项不能为空" }],
+  // saleCompensationUserAmount: [{ required: true, message: "必填项不能为空" }],
+  // saleNotifyOtherDepartments: [{ required: true, message: "必填项不能为空" }],
+  // saleChangeUserNumber: [{ required: true, message: "必填项不能为空" }],
+  sallerName: [{ required: true, message: "必填项不能为空" }],
+  sallerTime: [{ required: true, message: "必填项不能为空" }],
+  sallerChannel: [{ required: true, message: "必填项不能为空" }],
+  saleannex: [{ required: true, message: "必填项不能为空" }]
 });
 
-interface DrawerProps {
-  submitOrderTime?: Date | null;
-  title: string;
+interface IAddOrder {
   isView: boolean;
-  row: Partial<SalesOrder.ResSalesList>;
-  api?: (params: any) => Promise<any>;
-  getTableList?: () => void;
+  row: Partial<SalesOrder.AddWorkOrder>;
 }
 
-const drawerVisible = ref(false);
-const drawerProps = ref<DrawerProps>({
-  submitOrderTime: null,
+const ruleForm = ref<IAddOrder>({
   isView: false,
-  title: "",
   row: {}
 });
 
@@ -449,26 +417,25 @@ const getDetailInfo = async (id: any) => {
   }
   const { data } = await detailSalesList(id);
   if (data) {
-    drawerProps.value.row = {
-      ...data
-    };
-    drawerProps.value.row.detail = data?.detail?.map(item => {
-      return {
-        ...item,
-        assets: item.assets.map((imgItem: any) => {
-          return {
-            path: imgItem.path,
-            url: imgItem.path,
-            id: imgItem.id,
-            type: findFileType(imgItem.path)
-          };
-        })
-      };
-    });
+    ruleForm.value.row = data as unknown as SalesOrder.AddWorkOrder;
+    console.log(findFileType);
+    // ruleForm.value.row.detail = data?.detail?.map(item => {
+    //   return {
+    //     ...item,
+    //     assets: item.assets.map((imgItem: any) => {
+    //       return {
+    //         path: imgItem.path,
+    //         url: imgItem.path,
+    //         id: imgItem.id,
+    //         type: findFileType(imgItem.path)
+    //       };
+    //     })
+    //   };
+    // });
     // 如果有详情数据 隐藏添加按钮
-    if (drawerProps.value.row.detail.length > 0) {
-      isAddProcess.value = true;
-    }
+    // if (ruleForm.value.row.detail.length > 0) {
+    //   isAddProcess.value = true;
+    // }
   }
 };
 
@@ -506,54 +473,53 @@ getAllAccountList();
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
+    console.log("valid", valid, ElMessage, api);
     if (!valid) return;
     try {
-      const {
-        id,
-        orderCode,
-        accountId,
-        accountPrice,
-        userCompensationPrice,
-        platformCompensationPrice,
-        reportPersonId,
-        insure,
-        recycleBranchId,
-        handleTime,
-        orderStar,
-        branchId,
-        detail
-      } = drawerProps.value.row;
-      const newDetail = detail?.map(item => {
-        return {
-          customerServiceId: item.customerServiceId,
-          handleTime: item.handleTime,
-          handleResult: item.handleResult,
-          assets: item.assets.map((imgItem: any) => {
-            return {
-              path: imgItem?.response?.path || imgItem.url || imgItem.path,
-              id: imgItem.id || imgItem.uid
-            };
-          })
-        };
-      });
-      await drawerProps.value.api!({
-        id,
-        orderCode,
-        accountId,
-        accountPrice,
-        userCompensationPrice,
-        platformCompensationPrice,
-        reportPersonId,
-        insure,
-        recycleBranchId,
-        handleTime,
-        orderStar,
-        branchId,
-        detail: newDetail
-      });
-      ElMessage.success({ message: `操作成功！` });
-      drawerProps.value.getTableList!();
-      drawerVisible.value = false;
+      // const {
+      //   id,
+      //   orderCode,
+      //   accountId,
+      //   accountPrice,
+      //   userCompensationPrice,
+      //   platformCompensationPrice,
+      //   reportPersonId,
+      //   insure,
+      //   recycleBranchId,
+      //   handleTime,
+      //   orderStar,
+      //   branchId,
+      //   detail
+      // } = ruleForm.value.row;
+      // const newDetail = detail?.map(item => {
+      //   return {
+      //     customerServiceId: item.customerServiceId,
+      //     handleTime: item.handleTime,
+      //     handleResult: item.handleResult,
+      //     assets: item.assets.map((imgItem: any) => {
+      //       return {
+      //         path: imgItem?.response?.path || imgItem.url || imgItem.path,
+      //         id: imgItem.id || imgItem.uid
+      //       };
+      //     })
+      //   };
+      // });
+      // await api!({
+      //   id,
+      //   orderCode,
+      //   accountId,
+      //   accountPrice,
+      //   userCompensationPrice,
+      //   platformCompensationPrice,
+      //   reportPersonId,
+      //   insure,
+      //   recycleBranchId,
+      //   handleTime,
+      //   orderStar,
+      //   branchId,
+      //   detail: newDetail
+      // });
+      // ElMessage.success({ message: `操作成功！` });
     } catch (error) {
       console.log(error);
     }
@@ -565,26 +531,13 @@ const goBack = () => {
 };
 
 const edit = () => {
-  drawerProps.value.isView = false;
+  ruleForm.value.isView = false;
   console.log("编辑");
 };
 const isAddProcess = ref(false);
 
 const addProcess = () => {
-  try {
-    if (!drawerProps.value.row.detail) {
-      drawerProps.value.row.detail = [];
-    }
-    drawerProps.value.row.detail.push({
-      customerServiceId: "",
-      handleTime: "",
-      handleResult: "",
-      assets: []
-    });
-    isAddProcess.value = true;
-  } catch (error) {
-    console.log("添加处理", error);
-  }
+  isAddProcess.value = true;
 };
 
 type UserObj = { userName: string; id: number };
@@ -593,15 +546,15 @@ const userList = ref<UserObj[]>([]);
 // 回显用户下拉和订单数据
 const initOrderData = async () => {
   // 默认时效5
-  drawerProps.value.row.handleTime = 5;
+  ruleForm.value.row.basicHandleTime = 5;
   const { data } = await getAllUser({});
-  const id = route.query.id;
   getDetailInfo(id);
   userList.value = data;
-  drawerVisible.value = true;
 };
 
 initOrderData();
+
+// 售后
 </script>
 
 <style lang="scss" scoped>
@@ -675,6 +628,7 @@ initOrderData();
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  z-index: 999;
   .cancel {
     width: 112px;
     height: 38px;
