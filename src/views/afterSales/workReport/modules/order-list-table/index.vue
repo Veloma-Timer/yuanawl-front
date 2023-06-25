@@ -14,29 +14,29 @@
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link @click="openDrawer('查看', scope.row)" size="small" v-if="BUTTONS.view" :icon="View">
+        <el-button type="primary" link @click="operatorOrder('查看', scope.row)" size="small" v-if="BUTTONS.view" :icon="View">
           查看
         </el-button>
       </template>
     </ProTable>
-    <OrderDrawer ref="drawerRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
-import OrderDrawer from "@/views/afterSales/orderSummary/modules/order-drawer/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getSalesList, getSalesListToday, addSalesList, editSalesList, orderExport } from "@/api/modules/order";
+import { getSalesList, getSalesListToday, orderExport } from "@/api/modules/order";
 import { CHECK_RESULT, ORDER_STATUS } from "@/public/constant";
 import dayjs from "dayjs";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { View } from "@element-plus/icons-vue";
 import { saveFile } from "@/utils/file";
+import { useRouter } from "vue-router";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
+const router = useRouter();
 
 type Props = {
   selectBranchId: number;
@@ -192,17 +192,13 @@ function changeSelectDate(e: string | number | boolean) {
   currentTimeSelect.value = e as string;
 }
 
-// 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof OrderDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
-  const params = {
-    title,
-    isView: title === "查看",
-    row: { ...row },
-    api: title === "新增工单" ? addSalesList : title === "查看" ? editSalesList : undefined,
-    getTableList: proTable.value?.getTableList
-  };
-  drawerRef.value?.acceptParams(params);
+const operatorOrder = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
+  const id = row.id;
+  if (id) {
+    router.push({ name: "工单新增", query: { id } });
+  } else {
+    router.push({ name: "工单新增" });
+  }
 };
 
 // 获取表格数据

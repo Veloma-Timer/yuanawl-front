@@ -397,11 +397,12 @@ import { detailSalesList } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
 import { getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 // import { useAuthButtons } from "@/hooks/useAuthButtons";
 
 // const { BUTTONS } = useAuthButtons();
 const router = useRouter();
+const route = useRoute();
 
 const rules = reactive({
   orderCode: [{ required: true, message: "必填项不能为空" }],
@@ -464,19 +465,11 @@ const getDetailInfo = async (id: any) => {
         })
       };
     });
+    // 如果有详情数据 隐藏添加按钮
+    if (drawerProps.value.row.detail.length > 0) {
+      isAddProcess.value = true;
+    }
   }
-};
-
-type UserObj = { userName: string; id: number };
-const userList = ref<UserObj[]>([]);
-// 接收父组件传过来的参数
-const acceptParams = async (params: DrawerProps) => {
-  drawerProps.value = params;
-  drawerProps.value.row.handleTime = 5;
-  getDetailInfo(params.row.id);
-  const { data } = await getAllUser({});
-  userList.value = data;
-  drawerVisible.value = true;
 };
 
 // 账号状态
@@ -594,9 +587,21 @@ const addProcess = () => {
   }
 };
 
-defineExpose({
-  acceptParams
-});
+type UserObj = { userName: string; id: number };
+const userList = ref<UserObj[]>([]);
+
+// 回显用户下拉和订单数据
+const initOrderData = async () => {
+  // 默认时效5
+  drawerProps.value.row.handleTime = 5;
+  const { data } = await getAllUser({});
+  const id = route.query.id;
+  getDetailInfo(id);
+  userList.value = data;
+  drawerVisible.value = true;
+};
+
+initOrderData();
 </script>
 
 <style lang="scss" scoped>
