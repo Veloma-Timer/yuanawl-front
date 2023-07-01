@@ -101,6 +101,12 @@ import Pagination from "./components/Pagination.vue";
 import ColSetting from "./components/ColSetting.vue";
 import TableColumn from "./components/TableColumn.vue";
 import printJS from "print-js";
+import { userProTableStore } from "@/stores/modules/proTable";
+import { useAuthStore } from "@/stores/modules/auth";
+import { ProTableColoum } from "@/stores/interface";
+
+const proTableStore = userProTableStore();
+const authStore = useAuthStore();
 
 export interface ProTableProps {
   columns: ColumnProps[]; // 列配置项  ==> 必传
@@ -156,7 +162,29 @@ onMounted(() => props.requestAuto && getTableList());
 watch(() => props.initParam, getTableList, { deep: true });
 
 // 接收 columns 并设置为响应式
-const tableColumns = ref<ColumnProps[]>(props.columns);
+const currentColoumIndex = proTableStore.list.findIndex((item: any) => item.key === authStore.routeName);
+let cachecColumns = [];
+if (currentColoumIndex > -1) {
+  // 无操作项的普通列
+  let fileteColumns = props.columns.filter((item: any) => {
+    return !["selection", "index", "expand"].includes(item.type) && item.prop !== "operation";
+  });
+  // 操作项的数据列
+  let operationColumns = props.columns.filter((item: any) => {
+    return ["selection", "index", "expand"].includes(item.type) || item.prop === "operation";
+  });
+  // 合并列设置的isShow和sortable字段
+  cachecColumns = fileteColumns.map((item: any, index: number) => {
+    let obj = proTableStore.list[currentColoumIndex].value[index] || {};
+    return { ...item, isShow: obj.isShow, sortable: obj.sortable };
+  });
+  // 合并上面两个不同类型的列
+  cachecColumns = cachecColumns.concat(operationColumns);
+} else {
+  // eslint-disable-next-line vue/no-setup-props-destructure
+  cachecColumns = props.columns;
+}
+const tableColumns = ref<ColumnProps[]>(cachecColumns);
 
 // 定义 enumMap 存储 enum 值（避免异步请求无法格式化单元格内容 || 无法填充搜索下拉选择）
 const enumMap = ref(new Map<string, { [key: string]: any }[]>());
@@ -207,8 +235,10 @@ searchColumns.sort((a, b) => a.search!.order! - b.search!.order!);
 // 列设置 ==> 过滤掉不需要设置的列
 const colRef = ref();
 const colSetting = tableColumns.value!.filter(
-  item => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
+  // (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
+  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation"
 );
+proTableStore.setProTableState(authStore.routeName, colSetting as ProTableColoum[]);
 const openColSetting = () => colRef.value.openColSetting();
 
 // 🙅‍♀️ 不需要打印可以把以下方法删除，打印功能目前存在很多 bug

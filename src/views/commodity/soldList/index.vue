@@ -7,7 +7,6 @@
       :request-api="getTableList"
       :init-param="initParam"
       :data-callback="dataCallback"
-      :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
@@ -182,7 +181,7 @@ const batchDelete = async (id: string[]) => {
   proTable.value?.getTableList();
 };
 const getFixed = (str: string) => {
-  return parseFloat(str).toFixed(2);
+  return "￥" + parseFloat(str).toFixed(2);
 };
 
 // 打开 drawer(新增、查看、编辑)

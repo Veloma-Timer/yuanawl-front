@@ -75,6 +75,7 @@ export namespace Commodity {
     userCompensationPrice: 10.0; // 用户赔付金额
     platformCompensationPrice: 10.0; // 平台赔付金额
     branchId: string; // 门店id
+    branchName: string; // 门店名称
     salePeopleId: string;
   }
 }

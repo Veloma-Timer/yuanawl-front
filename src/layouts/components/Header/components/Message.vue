@@ -2,46 +2,16 @@
   <div class="message">
     <el-popover placement="bottom" :width="310" trigger="click">
       <template #reference>
-        <el-badge :value="5" class="item">
+        <el-badge :value="messageTtem.length" class="item">
           <i :class="'iconfont icon-xiaoxi'" class="toolBar-icon"></i>
         </el-badge>
       </template>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="今日工单的通知(5)" name="first">
+        <el-tab-pane label="今日工单的通知" name="first">
           <div class="message-list">
             <div class="message-item">
-              <img src="@/assets/images/msg01.png" alt="" class="message-icon" />
-              <div class="message-content">
-                <span class="message-title">一键三连 Geeker-Admin 🧡</span>
-                <span class="message-date">一分钟前</span>
-              </div>
-            </div>
-            <div class="message-item">
-              <img src="@/assets/images/msg02.png" alt="" class="message-icon" />
-              <div class="message-content">
-                <span class="message-title">一键三连 Geeker-Admin 💙</span>
-                <span class="message-date">一小时前</span>
-              </div>
-            </div>
-            <div class="message-item">
-              <img src="@/assets/images/msg03.png" alt="" class="message-icon" />
-              <div class="message-content">
-                <span class="message-title">一键三连 Geeker-Admin 💚</span>
-                <span class="message-date">半天前</span>
-              </div>
-            </div>
-            <div class="message-item">
-              <img src="@/assets/images/msg04.png" alt="" class="message-icon" />
-              <div class="message-content">
-                <span class="message-title">一键三连 Geeker-Admin 💜</span>
-                <span class="message-date">一星期前</span>
-              </div>
-            </div>
-            <div class="message-item">
-              <img src="@/assets/images/msg05.png" alt="" class="message-icon" />
-              <div class="message-content">
-                <span class="message-title">一键三连 Geeker-Admin 💛</span>
-                <span class="message-date">一个月前</span>
+              <div class="message-content" v-for="item in messageTtem" :key="item.orderCode">
+                <span class="message-title">{{ item.accountTitle }}</span>
               </div>
             </div>
           </div>
@@ -64,8 +34,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { workOrder } from "@/api/modules/order";
+import { useUserStore } from "@/stores/modules/user";
+import { decryption } from "@/utils/AESUtil";
+
 const activeName = ref("first");
+const messageTtem = ref([]);
+const userStore = useUserStore();
+
+const obj = JSON.parse(decryption("token", userStore.token));
+const workList = async () => {
+  const params = {
+    pageNum: 1,
+    pageSize: 10,
+    branchId: obj.branch.id
+  };
+  const {
+    data: { list = [] }
+  } = await workOrder(params);
+  messageTtem.value = list;
+};
+workList();
 </script>
 
 <style scoped lang="scss">
@@ -77,28 +66,34 @@ const activeName = ref("first");
   height: 260px;
   line-height: 45px;
 }
+
 .message-list {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
+
   .message-item {
-    display: flex;
-    align-items: center;
     padding: 20px 0;
     border-bottom: 1px solid var(--el-border-color-light);
+    width: 100%;
     &:last-child {
       border: none;
     }
+
     .message-icon {
       width: 40px;
       height: 40px;
       margin: 0 20px 0 5px;
     }
+
     .message-content {
       display: flex;
       flex-direction: column;
+
       .message-title {
         margin-bottom: 5px;
       }
+
       .message-date {
         font-size: 12px;
         color: var(--el-text-color-secondary);

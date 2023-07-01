@@ -44,6 +44,62 @@
           }
         },
         {
+          "path": "/commodity/recovery",
+          "name": "回收列表",
+          "component": "/commodity/recovery/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "回收列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/commodity/sale",
+          "name": "销售列表",
+          "component": "/commodity/saleList/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "销售列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/commodity/release",
+          "name": "发布列表",
+          "component": "/commodity/release/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "发布列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/commodity/order",
+          "name": "工单列表",
+          "component": "/commodity/orderList/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "工单列表",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/commodity/soldList",
           "name": "已售列表",
           "component": "/commodity/soldList/index",
@@ -102,6 +158,78 @@
       ]
     },
     {
+      "path": "/message",
+      "name": "message",
+      "component": "/message/template/index",
+      "meta": {
+        "icon": "MessageBox",
+        "title": "短信管理",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": false
+      },
+      "children": [
+        {
+          "path": "/message/template",
+          "name": "短信模板",
+          "component": "/message/template/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "短信模板",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/message/sending",
+          "name": "短信发送",
+          "component": "/message/sending/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "短信发送",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/message/smsLogs",
+          "name": "短信记录",
+          "component": "/message/smsLogs/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "短信记录",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/message/record",
+          "name": "回复记录",
+          "component": "/message/record/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "回复记录",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        }
+      ]
+    },
+    {
       "path": "/data",
       "name": "data",
       "redirect": "/data/statistics/recovery",
@@ -117,11 +245,11 @@
       "children": [
         {
           "path": "/data/statistics/sale",
-          "name": "销售金额汇总",
+          "name": "销售数据",
           "component": "/data-statistics/sale-amount/index",
           "meta": {
             "icon": "Menu",
-            "title": "销售金额汇总",
+            "title": "销售数据",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -131,11 +259,25 @@
         },
         {
           "path": "/data/statistics/recovery",
-          "name": "回收金额汇总",
+          "name": "回收数据",
           "component": "/data-statistics/recovery-amount/index",
           "meta": {
             "icon": "Menu",
-            "title": "回收金额汇总",
+            "title": "回收数据",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/data/statistics/push",
+          "name": "发布数据",
+          "component": "/data-statistics/push-amount/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "发布数据",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -174,6 +316,20 @@
           }
         },
         {
+          "path": "/afterSales/addOrder",
+          "name": "工单新增",
+          "component": "/afterSales/addOrder/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "工单新增",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/afterSales/hangWork",
           "name": "杭州工单",
           "component": "/afterSales/hangWork/index",
@@ -194,6 +350,34 @@
           "meta": {
             "icon": "Menu",
             "title": "信阳工单",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/afterSales/openOrders",
+          "name": "未完结工单",
+          "component": "/afterSales/openOrders/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "未完结工单",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
+          "path": "/afterSales/completedOrders",
+          "name": "已完结工单",
+          "component": "/afterSales/completedOrders/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "已完结工单",
             "isLink": "",
             "isHide": false,
             "isFull": false,

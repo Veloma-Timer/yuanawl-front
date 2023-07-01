@@ -7,7 +7,6 @@
       :request-api="getTableList"
       :init-param="initParam"
       :data-callback="dataCallback"
-      :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
@@ -72,8 +71,8 @@ const dataCallback = (data: any) => {
   return {
     list: data.list,
     total: data.total,
-    pageNum: data.pageNum,
-    pageSize: data.pageSize
+    pageNum: Number(data.pageNum),
+    pageSize: Number(data.pageSize)
   };
 };
 
@@ -103,7 +102,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "accountNumber", label: "游戏编号", width: 160 },
+  {
+    prop: "accountNumber",
+    label: "游戏编号",
+    width: 160,
+    search: { el: "input" }
+  },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -133,6 +137,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "salePrice",
     label: "出售金额",
     width: 160,
+    search: { el: "input" },
     render: scope => {
       return <span>{getFixed(scope.row.salePrice) || "--"}</span>;
     }
@@ -141,6 +146,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountRecyclerPrice",
     label: "实际回收金额",
     width: 160,
+    search: { el: "input" },
     render: scope => {
       return <span>{getFixed(scope.row.accountRecyclerPrice) || "--"}</span>;
     }
@@ -151,15 +157,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     enum: getAllBranch,
     search: { el: "select" },
-    fieldNames: { label: "branchName", value: "id" },
-    render: scope => {
-      return scope.row.branch?.branchName;
-    }
+    fieldNames: { label: "branchName", value: "id" }
   },
   { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
-  { prop: "accountTel", label: "手机号", width: 160 },
-  { prop: "accountRemark", label: "备注", width: 160 },
+  { prop: "accountTel", label: "手机号", width: 160, search: { el: "input" } },
+  { prop: "accountRemark", label: "备注", width: 160, search: { el: "input" } },
   {
     prop: "haveSecondary",
     label: "有无二次",
@@ -180,7 +183,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "accountDesc", label: "账号描述", width: 160 },
+  { prop: "accountDesc", label: "账号描述", width: 160, search: { el: "input" } },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
@@ -191,7 +194,7 @@ const deleteAccount = async (params: Commodity.Account) => {
 };
 const getFixed = (str: string) => {
   if (str) {
-    return parseFloat(str).toFixed(2);
+    return "￥" + parseFloat(str).toFixed(2);
   }
   return "--";
 };
@@ -243,7 +246,7 @@ onMounted(() => {
   setTimeout(() => {
     // 携带参数page跳转
     const { accountCode, accountType } = route.query;
-    const type = Number(accountType);
+    const type = accountType ? Number(accountType) : null;
     if (proTable.value) {
       proTable.value.searchParam.accountCode = accountCode;
       proTable.value.searchParam.accountType = type;

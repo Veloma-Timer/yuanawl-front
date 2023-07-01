@@ -7,7 +7,6 @@
       :request-api="getTableList"
       :init-param="initParam"
       :data-callback="dataCallback"
-      :tool-button="false"
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
@@ -106,6 +105,31 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
   {
     prop: "openAccountNumber",
     label: "开户主号码",
+    search: { el: "input" }
+  },
+  {
+    prop: "openAccountNumber",
+    label: "绑定QQ个数",
+    search: { el: "input" }
+  },
+  {
+    prop: "openAccountNumber",
+    label: "绑定原神个数",
+    search: { el: "input" }
+  },
+  {
+    prop: "openAccountNumber",
+    label: "绑定邮箱个数",
+    search: { el: "input" }
+  },
+  {
+    prop: "openAccountNumber",
+    label: "绑定微信个数",
+    search: { el: "input" }
+  },
+  {
+    prop: "openAccountNumber",
+    label: "运营商",
     search: { el: "input" }
   },
   {

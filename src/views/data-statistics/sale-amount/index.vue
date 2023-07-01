@@ -6,6 +6,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import SaleChartPanel from "./modules/sale-chart-panel/index.vue";
 import SaleListTable from "./modules/sale-list-table/index.vue";
 

@@ -142,6 +142,53 @@ export namespace SalesOrder {
     account: AccountType;
     orderCode: string;
   }
+  export interface AddWorkOrder {
+    // 基本信息
+    basicAccountId: string; // 游戏账号
+    basicQuestionType: string; // 问题类型
+    basicInsure: number; // 是否在保
+    basicHandleTime: any; // 处理失效
+    basicAccSaleInfoAellerName: string; // 出售人姓名
+    basicAccSaleInfoSellerTime: string; // 出售时间
+    basicAccSaleInfoSellerChannel: string; // 出售渠道
+    basicAccSaleInfoOrderNo: string; // 订单编号
+    basicAccSaleInfoProductMarkupRate: number; // 商品加价率
+    basicAccSaleInfoProductTurnoverCycle: number; // 商品周转周期
+    basicAccSaleInfoBuyerPhoneNumber: number; // 买家手机号
+    basicAccSaleInfoSellerMark: string; // 销售备注
+    basicMessage: string; // 留言
+    baiscAnnex: any[]; // 附件
+    // 售后部门
+    AfterCustomerServiceId: number; // 处理客服
+    AfterHandleTime: string; // 处理时间
+    AfterHandleResult: number; // 处理结果
+    AfterNotifyOtherDepartments?: number; // 通知其他部门
+    AfterCompensationAmount?: number; // 赔付金额
+    AfterNewSecurityPhone?: number; // 新密保手机
+    AfterNewSecurityPassword?: number; // 新密码
+    AfterAnnex: any[]; // 附件
+    // 发布部门
+    publishHandleCustomerServiceId: number; // 处理客服
+    publishHandleTime: string; // 处理时间
+    publishHandleResult: number; // 处理结果
+    publishAnnex: "any"; // 附件
+    // 销售部门
+    saleHandleCustomerService: number; // 处理客服
+    saleHandleTime: string; // 处理时间
+    saleHandleResult: number; // 处理结果
+    saleCompensationUserAmount?: number; // 赔付用户金额
+    saleNotifyOtherDepartments?: string; // 通知其他部门
+    saleChangeUserNumber: string; // 给用户换号
+    sallerName: string; // 出售人姓名
+    sallerTime: string; // 出售时间
+    sallerChannel: string; // 出售渠道
+    saleAccorderNo: string; // 订单编号
+    saleAccproductMarkupRate: number; // 商品加价率
+    saleAccproductTurnoverCycle: number; // 商品周转周期
+    saleAccbuyerPhoneNumber: number; // 买家手机号
+    saleAccsellerMark: string; // 销售备注
+    saleannex: any[]; // 附件
+  }
 
   export interface HistogramValue {
     name: string;
@@ -285,6 +332,9 @@ export namespace HomeSet {
 
 // 数据统计
 export namespace Data {
+  export interface DateRange {
+    [key: string]: number;
+  }
   export interface keyValue {
     name: string;
     value: number;
@@ -327,5 +377,25 @@ export namespace Data {
     accountRecyclerTime: string;
     accountStatus: number;
     accountRecyclerPrice: string;
+  }
+}
+// 短信管理
+export namespace Message {
+  export interface Template {
+    signature: string;
+    corporateName: string;
+    content: string;
+    status: string;
+    time: string;
+    text: string;
+    phone: string;
+  }
+  export interface Sending {
+    accountId: string;
+    reduction: boolean;
+    openAccountTime: string;
+    message: string;
+    phones: string[];
+    sendingTime: number;
   }
 }

@@ -45,21 +45,21 @@ export const sysAnalysisWork = (id: number, date: number) => {
   return http.get<SalesOrder.WorkReport>(`${PORT3}/sys_analysis/work?branchId=${id}&date=${date}`);
 };
 
-// 数据统计-日销售金额汇总-上边图表的
+// 数据统计-销售数据-上边图表的
 export const todaySales = (branchId: number, date: number) => {
   return http.get<Data.TodaySales>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
 };
 
-// 数据统计-日回收金额汇总-上边图表的
+// 数据统计-回收数据-上边图表的
 export const todayRecycle = (branchId: number, date: number) => {
   return http.get<Data.TodayRecycle>(`${PORT3}/sys_analysis/today_recycle?branchId=${branchId}&date=${date}`);
 };
 
-// 数据统计-日销售金额汇总-下边表格的
+// 数据统计-销售数据-下边表格的
 export const baseAccountSales = (params: any, branchId: number) => {
   return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_sales?branchId=${branchId}`, params);
 };
-// 数据统计-日回收金额汇总-下边表格的
+// 数据统计-回收数据-下边表格的
 export const baseAccountRecyle = (params: any, branchId: number) => {
   return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`, params);
 };
@@ -78,4 +78,8 @@ export const orderUpload = (file: FormData) => {
 export const orderExport = (params: any) => {
   const newParams = formatParams(params);
   return http.post(`${PORT3}/base_work_order/export${newParams}`);
+};
+// 今日公单
+export const workOrder = (params: any) => {
+  return http.get(`${PORT3}/base_work_order/today`, params);
 };
