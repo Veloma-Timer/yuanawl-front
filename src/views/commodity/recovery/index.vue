@@ -10,14 +10,13 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增回收列表</el-button>
+        <!--        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>-->
+        <!--        <el-button type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>-->
+        <!--        <el-button type="primary" :icon="Upload" plain @click="onExport">导出</el-button>-->
       </template>
-      <!-- Expand -->
-      <template #expand="scope">
-        {{ scope.row }}
+      <template #accountRecyclerPrice="scope">
+        {{ getFixed(scope.row.accountRecyclerPrice) || "--" }}
       </template>
       <!-- usernameHeader -->
       <!-- createTime -->
@@ -39,11 +38,11 @@ import recoverDrawer from "@/views/commodity/recovery/modules/recoverDrawer.vue"
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import {
-  addSummary,
+  addRecycle,
   deleteSummary,
-  editSummary,
+  editRecycle,
+  getRecycleList,
   summaryExport,
-  summaryList,
   summaryTemplate,
   summaryUpload
 } from "@/api/modules/commodity";
@@ -51,6 +50,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { getAllBranch } from "@/api/modules/set";
+import { getUserAll } from "@/api/modules/user";
 // import { useRoute } from "vue-router";
 
 // const route = useRoute();
@@ -79,13 +79,18 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return summaryList(newParams);
+  return getRecycleList(newParams);
 };
-
+const getFixed = (str: string) => {
+  if (str) {
+    return "￥" + parseFloat(str).toFixed(2);
+  }
+  return "--";
+};
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<Commodity.Account>[] = [
+const columns: ColumnProps<Commodity.Recovery>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
     prop: "branchId",
@@ -95,8 +100,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" }
   },
-  { prop: "accountCode", label: "分组", width: 160, search: { el: "input" } },
-  { prop: "accountNumber", label: "账号编号", width: 160 },
+  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -105,23 +109,54 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" },
     fieldNames: { label: "typeName", value: "id" }
   },
-  { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
-  { prop: "accountNumber", label: "账号", width: 160 },
+  { prop: "accountTitle", label: "账户标题", width: 160, search: { el: "input" } },
+  { prop: "accountNumber", label: "账号", width: 160, search: { el: "input" } },
   { prop: "accountPassword", label: "密码", width: 160 },
-  { prop: "accountTel", label: "密保手机", width: 160 },
-  { prop: "accountRemark", label: "手机卡备注", width: 160 },
-  { prop: "accountRemark", label: "邮箱", width: 160 },
-  { prop: "accountRemark", label: "邮箱密保", width: 160 },
-  { prop: "accountRemark", label: "系统", width: 160 },
-  { prop: "accountRemark", label: "账号描述", width: 160 },
-  { prop: "accountRemark", label: "营地号", width: 160 },
-  { prop: "accountDesc", label: "实名情况", width: 160 },
-  { prop: "accountDesc", label: "回收价", width: 160 },
-  { prop: "accountDesc", label: "回收订单号", width: 160 },
-  { prop: "accountDesc", label: "回收店铺", width: 160 },
-  { prop: "accountDesc", label: "回收日期", width: 160 },
-  { prop: "accountDesc", label: "回收客服", width: 160 },
-  { prop: "accountDesc", label: "回收备注", width: 160 },
+  { prop: "accountTel", label: "密保手机", width: 160, search: { el: "input" } },
+  { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },
+  { prop: "email", label: "邮箱", width: 160, search: { el: "input" } },
+  { prop: "emailSecret", label: "邮箱密保", width: 160, search: { el: "input" } },
+  {
+    prop: "systemId",
+    label: "系统",
+    width: 160,
+    search: { el: "select" },
+    enum: [
+      { label: "安卓QQ", value: 1 },
+      { label: "苹果QQ", value: 2 },
+      { label: "安卓微信", value: 3 },
+      { label: "苹果微信", value: 4 }
+    ]
+  },
+  { prop: "accountRemark", label: "账号描述", width: 160, search: { el: "input" } },
+  { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
+  {
+    prop: "haveSecondary",
+    label: "实名情况",
+    width: 160,
+    search: { el: "select" },
+    enum: [
+      { label: "有", value: "1" },
+      { label: "无", value: "0" }
+    ]
+  },
+  {
+    prop: "accountRecyclerPrice",
+    label: "回收价",
+    width: 160,
+    search: { el: "input" }
+  },
+  { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountRecyclerId",
+    label: "回收人",
+    width: 160,
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  { prop: "accountRecyclerTime", label: "回收日期", width: 160 },
+  { prop: "recycleRemark", label: "回收备注", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
@@ -161,12 +196,12 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
   const params = {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
+    api: title === "新增" ? addRecycle : title === "查看" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

@@ -58,12 +58,12 @@
           }
         },
         {
-          "path": "/commodity/sale",
-          "name": "销售列表",
-          "component": "/commodity/saleList/index",
+          "path": "/commodity/release",
+          "name": "发布列表",
+          "component": "/commodity/release/index",
           "meta": {
             "icon": "Menu",
-            "title": "销售列表",
+            "title": "发布列表",
             "isLink": "",
             "isHide": false,
             "isFull": false,
@@ -72,12 +72,12 @@
           }
         },
         {
-          "path": "/commodity/release",
-          "name": "发布列表",
-          "component": "/commodity/release/index",
+          "path": "/commodity/sale",
+          "name": "销售列表",
+          "component": "/commodity/saleList/index",
           "meta": {
             "icon": "Menu",
-            "title": "发布列表",
+            "title": "销售列表",
             "isLink": "",
             "isHide": false,
             "isFull": false,

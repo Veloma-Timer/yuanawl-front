@@ -1,61 +1,55 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="800px" :show-close="false">
+  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
     <template #header>
-      <Header :title="`${drawerProps.title}开户`" class="header" style="transform: translateY(7px)"></Header>
+      <Header :title="`${drawerProps.title}销售列表`" class="header" style="transform: translateY(7px)"></Header>
       <el-button type="primary" @click="edit" class="edit-btn">
         <div>编辑</div>
       </el-button>
     </template>
     <el-form
       ref="ruleFormRef"
-      label-width="200px"
+      label-width="120px"
       label-suffix=" :"
       :rules="rules"
       :disabled="drawerProps.isView"
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="出售人姓名" prop="openAccountName">
-        <el-select v-model="drawerProps.row!.openAccountName" placeholder="请选择" filterable>
-          <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
+      <el-form-item label="账户" prop="id">
+        <el-select v-model="drawerProps.row!.id" placeholder="请选择账户" filterable>
+          <el-option v-for="item in accountList" :key="item.id" :label="item.accountTitle" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="回收时间" prop="openAccountName">
+      <el-form-item label="出售人姓名" prop="salePeopleId">
+        <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择出售人" filterable>
+          <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="出售时间" prop="saleTime">
         <el-date-picker
-          v-model="drawerProps.row!.openAccountName"
+          v-model="drawerProps.row!.saleTime"
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
-          type="date"
-          placeholder="请选择"
+          type="datetime"
+          placeholder="请选择出售时间"
         />
       </el-form-item>
-      <el-form-item label="出售渠道" prop="openAccountName">
-        <el-select v-model="drawerProps.row!.openAccountName" placeholder="请选择" filterable>
-          <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
+      <el-form-item label="出售金额" prop="salePrice">
+        <el-input-number v-model="drawerProps.row!.salePrice" placeholder="请输入出售金额" clearable :controls="false" />
       </el-form-item>
-      <el-form-item label="出售金额" prop="transCatUploaded">
-        <el-input v-model="drawerProps.row!.openAccountName" placeholder="请输入开户人姓名" clearable />
+      <el-form-item label="出售平台" prop="salePlatform">
+        <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入出售平台" clearable />
       </el-form-item>
-      <el-form-item label="订单编号" prop="openAccountNumber">
-        <el-input v-model="drawerProps.row!.openAccountNumber" :maxlength="11" placeholder="请输入开户号码" clearable />
+      <el-form-item label="买家手机号" prop="buyerTel">
+        <el-input v-model="drawerProps.row!.buyerTel" :maxlength="11" placeholder="请输入买家手机号" clearable />
       </el-form-item>
-      <el-form-item label="买家手机号" prop="openAccountNumber">
-        <el-input v-model="drawerProps.row!.openAccountNumber" :maxlength="11" placeholder="请输入开户号码" clearable />
-      </el-form-item>
-      <el-form-item label="商品加价率" prop="openAccountNumber">
-        <el-input v-model="drawerProps.row!.openAccountNumber" :maxlength="11" placeholder="请输入开户号码" clearable />
-      </el-form-item>
-      <el-form-item label="商品周转周期" prop="openAccountNumber">
-        <el-input v-model="drawerProps.row!.openAccountNumber" :maxlength="11" placeholder="请输入开户号码" clearable />
-      </el-form-item>
-      <el-form-item label="销售备注" prop="openAccountNumber">
+      <el-form-item label="销售备注" prop="salesRemark">
         <el-input
           :autosize="{ minRows: 3, maxRows: 5 }"
           type="textarea"
           resize="none"
-          v-model="drawerProps.row!.openAccountNumber"
-          placeholder="请输入账号描述"
+          v-model="drawerProps.row!.salesRemark"
+          placeholder="请输入销售备注"
           clearable
         ></el-input>
       </el-form-item>
@@ -71,10 +65,17 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
+import { getUserAll } from "@/api/modules/user";
+import { getPublishList } from "@/api/modules/commodity";
 
 const rules = reactive({
-  openAccountName: [{ required: true, message: "请输入开户人姓名" }],
-  openAccountNumber: [{ required: true, message: "请输入开户号码" }]
+  salePeopleId: [{ required: true, message: "必填项不能为空" }],
+  id: [{ required: true, message: "必填项不能为空" }],
+  salesRemark: [{ required: true, message: "必填项不能为空" }],
+  salePrice: [{ required: true, message: "必填项不能为空" }],
+  salePlatform: [{ required: true, message: "必填项不能为空" }],
+  saleTime: [{ required: true, message: "必填项不能为空" }],
+  buyerTel: [{ required: true, message: "必填项不能为空" }]
 });
 const edit = () => {
   drawerProps.value.isView = false;
@@ -82,7 +83,7 @@ const edit = () => {
 interface DrawerProps {
   title: string;
   isView: boolean;
-  row: Partial<Commodity.phoneLibrary>;
+  row: Partial<Commodity.Sales>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => void;
 }
@@ -99,7 +100,8 @@ const acceptParams = (params: DrawerProps) => {
   drawerVisible.value = true;
 };
 // 上架
-const transCatUploadedMap = [];
+let transCatUploadedMap: object[] = reactive([]);
+let accountList: object[] = reactive([]);
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -115,7 +117,15 @@ const handleSubmit = () => {
     }
   });
 };
-
+const setAllList = async () => {
+  const { data = [] } = await getUserAll();
+  const {
+    data: { list = [] }
+  } = await getPublishList({});
+  transCatUploadedMap = data;
+  accountList = list;
+};
+setAllList();
 defineExpose({
   acceptParams
 });

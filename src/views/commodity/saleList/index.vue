@@ -10,14 +10,14 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增销售列表</el-button>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
-      <template #expand="scope">
-        {{ scope.row }}
+      <template #salePrice="scope">
+        {{ getFixed(scope.row.salePrice) || "--" }}
       </template>
       <!-- usernameHeader -->
       <!-- createTime -->
@@ -39,16 +39,18 @@ import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import {
-  addSummary,
+  addSales,
+  getSalesList,
   deleteSummary,
-  editSummary,
+  editSales,
   summaryExport,
-  summaryList,
   summaryTemplate,
   summaryUpload
 } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
+import { parseTime } from "@/utils";
+import { getUserAll } from "@/api/modules/user";
 // import { useRoute } from "vue-router";
 
 // const route = useRoute();
@@ -69,7 +71,12 @@ const dataCallback = (data: any) => {
     pageSize: Number(data.pageSize)
   };
 };
-
+const getFixed = (str: string) => {
+  if (str) {
+    return "￥" + parseFloat(str).toFixed(2);
+  }
+  return "--";
+};
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
@@ -77,23 +84,33 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return summaryList(newParams);
+  return getSalesList(newParams);
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<Commodity.Account>[] = [
+const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "出售人姓名", width: 160, search: { el: "input" } },
-  { prop: "accountNumber", label: "出售时间", width: 160 },
-  { prop: "accountTitle", label: "出售金额", width: 160, search: { el: "input" } },
-  { prop: "accountNumber", label: "出售渠道", width: 160 },
-  { prop: "accountPassword", label: "订单编号", width: 160 },
-  { prop: "accountTel", label: "买家手机号", width: 160 },
-  { prop: "accountRemark", label: "销售备注", width: 160 },
-  { prop: "accountRemark", label: "商品加价率", width: 160 },
-  { prop: "accountRemark", label: "商品周转周期", width: 160 },
+  {
+    prop: "salePeopleId",
+    label: "出售人姓名",
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "saleTime",
+    label: "出售时间",
+    render: scope => {
+      return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}:{s}");
+    }
+  },
+  { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
+  { prop: "salePlatform", label: "出售渠道", width: 160, search: { el: "input" } },
+  { prop: "accountCode", label: "订单编号", width: 160, search: { el: "input" } },
+  { prop: "buyerTel", label: "买家手机号", width: 160, search: { el: "input" } },
+  { prop: "salesRemark", label: "销售备注", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
@@ -127,12 +144,12 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
+    api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
