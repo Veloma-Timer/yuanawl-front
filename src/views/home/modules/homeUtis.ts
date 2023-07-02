@@ -1,8 +1,8 @@
 import { useUserStore } from "@/stores/modules/user";
-import { decryption } from "@/utils/AESUtil.ts";
+import { decryption } from "@/utils/AESUtil";
 
-export const setValues = (obj, key) => {
-  return Object.values(obj).map(item => {
+export const setValues = (obj: any, key: string) => {
+  return Object.values(obj).map((item: any) => {
     return item[key];
   });
 };

@@ -30,8 +30,8 @@ import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
 import homeRelease from "@/views/home/modules/home-release/index.vue";
 import homeNeed from "@/views/home/modules/home-need/index.vue";
 import { getAllBranch } from "@/api/modules/set";
-import { getHomeList } from "@/api/modules/home";
-import { userObj } from "@/views/home/modules/homeUtis.js";
+import { getHomeList, getHomeStatistics, IStatistics } from "@/api/modules/home";
+import { userObj } from "@/views/home/modules/homeUtis";
 interface Item {
   branchName: string;
   id: number;
@@ -43,10 +43,10 @@ const monthList: Item[] = [
   { branchName: "本周", id: 1 },
   { branchName: "本月", id: 2 }
 ];
-let cityName = ref(0);
-let monthName = ref(0);
-let branchName = ref("今日");
-let params = reactive({});
+const cityName = ref(0);
+const monthName = ref(0);
+const branchName = ref("今日");
+const params = ref<IStatistics>();
 const obj = userObj();
 const userRoleId = ref(0);
 const setValue = function (bol: boolean, state: number, name: string) {
@@ -56,17 +56,18 @@ const setValue = function (bol: boolean, state: number, name: string) {
     monthName.value = state;
   }
   branchName.value = name;
-  params = {
-    ...params,
+  params.value = {
+    ...params.value,
     date: monthName.value,
     branchId: cityName.value
   };
-  setHomeCardList(params);
+  setHomeCardList();
 };
 let crudListObj = ref({}); // 前13个数据
 // let behindObj = null; // 后面的数据
-const setHomeCardList = async count => {
-  const { data } = await getHomeList(count);
+const setHomeCardList = async () => {
+  const { data } = await getHomeList(params.value);
+  getHomeStatistics(params.value!);
   crudListObj.value = data;
 };
 // 获取门店
@@ -74,13 +75,13 @@ const branchAllList = async () => {
   const { data } = await getAllBranch({});
   cityList.value = [...cityList.value, ...data];
   cityName.value = data[0].id;
-  params = {
-    ...params,
+  params.value = {
+    ...params.value,
     branchId: cityName.value,
     date: monthName.value
   };
   userRoleId.value = obj.userRole.id;
-  await setHomeCardList(params);
+  await setHomeCardList();
 };
 onMounted(() => {
   branchAllList();

@@ -63,6 +63,9 @@ class RequestHttp {
           ElMessage.error(data.msg);
           return Promise.reject(data);
         }
+        if (data.success === undefined && data.code === undefined) return data;
+        // 如果data本身是空则也代表成功
+        if (!data) return data;
         // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）
         if (!data.success) {
           ElMessage.error(data.message);
