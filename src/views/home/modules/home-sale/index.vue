@@ -25,40 +25,38 @@
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="salesObj.salesRatio" class-name="maintain" title="账号销售占比" />
+        <homeGroup :list-arr="salesObj?.salesRatio" class-name="maintain" title="账号销售占比" />
       </div>
       <div class="home-name-right">
-        <nameRight :salas-ranking-arr="salesObj.salesRanking" :header="['姓名', '销售额', '销售数量']" />
+        <nameRight :salas-ranking-arr="salesObj?.salesRanking" :header="['姓名', '销售额', '销售数量']" />
       </div>
     </div>
-    <homeGroup :list-arr="salesObj.salesSetComparison" title="销售组数据对比" />
-    <homeGroup :list-arr="salesObj.salesChannelStatistics" title="渠道销售订单统计" />
+    <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售组数据对比" />
+    <homeGroup :list-arr="salesObj?.salesChannelStatistics" title="渠道销售订单统计" />
   </div>
 </template>
 <script setup lang="ts">
 import { CaretTop } from "@element-plus/icons-vue";
-import { ref, reactive, defineProps, nextTick, watch } from "vue";
+import { ref, reactive, nextTick, watch } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
+import { HomeSet } from "@/api/interface";
+
 const crudNumberRef = ref<HTMLElement>();
 
 // 处理数据
-const props = defineProps({
-  salesObj: {
-    type: Object,
-    default: () => {}
-  },
-  branchName: {
-    type: String,
-    default: "今日"
-  },
-  title: {
-    type: String,
-    default: ""
+const props = withDefaults(
+  defineProps<{
+    salesObj: HomeSet.ISalesStatistics;
+    branchName: string;
+    title: string;
+  }>(),
+  {
+    branchName: "今日"
   }
-});
+);
 const setNumber = () => {
   nextTick(() => {
     let crudNumber = document.getElementsByClassName("crud-number");
@@ -140,7 +138,8 @@ watch(
     crudListMap = [];
     /* ... */
     setCrud(count);
-  }
+  },
+  { deep: true, immediate: true }
 );
 </script>
 <style scoped lang="scss">

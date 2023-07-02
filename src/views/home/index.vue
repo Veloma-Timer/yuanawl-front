@@ -16,7 +16,7 @@
         </el-button-group>
       </div>
     </div>
-    <homeSale :sales-obj="salesObj" :branch-name="branchName" title="销售数据汇总" />
+    <homeSale v-if="salesObj" :sales-obj="salesObj" :branch-name="branchName" title="销售数据汇总" />
     <!--    <homeRecovery :crud-list-obj="crudListObj" :branch-name="branchName" title="回收数据汇总" />-->
     <!--    <homeRelease :crud-list-obj="crudListObj" :branch-name="branchName" title="发布数据汇总" />-->
     <!--    <homeNeed :crud-list-obj="crudListObj" :branch-name="branchName" title="待办工单" />-->
@@ -37,7 +37,7 @@ interface Item {
   branchName: string;
   id: number;
 }
-let cityList = ref([{ branchName: "全部", id: 0 }]);
+const cityList = ref([{ branchName: "全部", id: 0 }]);
 const monthList: Item[] = [
   { branchName: "全部", id: 0 },
   { branchName: "今日", id: 0 },
@@ -64,21 +64,15 @@ const setValue = function (bol: boolean, state: number, name: string) {
   };
   setHomeCardList();
 };
-let salesObj: object = ref<HomeSet.ISalesStatistics>({
-  markupPercentage: "",
-  salesAmount: 0,
-  salesChannelStatistics: [],
-  salesMoney: 0,
-  salesRanking: [],
-  salesRatio: [],
-  salesSetComparison: []
-}); // 销售组
+const salesObj = ref<HomeSet.ISalesStatistics>(); // 销售组
 // let behindObj = null; // 后面的数据
 const setHomeCardList = async () => {
   const {
     data: { sales }
-  } = await getHomeStatistics(params.value!);
-  salesObj.value = sales;
+  } = (await getHomeStatistics(params.value!)) as any;
+  salesObj.value = sales as any;
+
+  console.log("sales", sales);
 };
 // 获取门店
 const branchAllList = async () => {
