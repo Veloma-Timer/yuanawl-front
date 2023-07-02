@@ -39,6 +39,7 @@ import { editUser, addUser, getUserListMap, getUserTemptable, getUserUpload, get
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
+console.log(BUTTONS);
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();

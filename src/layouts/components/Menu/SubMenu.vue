@@ -9,24 +9,16 @@
       </template>
       <SubMenu :menuList="subItem.children" />
     </el-sub-menu>
-    <el-menu-item v-else :index="subItem.path" @click="handleClickMenu(subItem)">
-      <el-icon v-if="subItem.name === '首页'">
-        <component :is="subItem.meta.icon"></component>
-      </el-icon>
-      <template #title>
-        <span class="sle">{{ subItem.meta.title }}</span>
-      </template>
-    </el-menu-item>
-    <!--    <div v-else-if="routerMenu(subItem).view">-->
-    <!--      <el-menu-item :index="subItem.path" @click="handleClickMenu(subItem)">-->
-    <!--        <el-icon v-if="subItem.name === '首页'">-->
-    <!--          <component :is="subItem.meta.icon"></component>-->
-    <!--        </el-icon>-->
-    <!--        <template #title>-->
-    <!--          <span class="sle">{{ subItem.meta.title }}</span>-->
-    <!--        </template>-->
-    <!--      </el-menu-item>-->
-    <!--    </div>-->
+    <div v-else-if="routerMenu(subItem).view">
+      <el-menu-item :index="subItem.path" @click="handleClickMenu(subItem)">
+        <el-icon v-if="subItem.name === '首页'">
+          <component :is="subItem.meta.icon"></component>
+        </el-icon>
+        <template #title>
+          <span class="sle">{{ subItem.meta.title }}</span>
+        </template>
+      </el-menu-item>
+    </div>
   </template>
 </template>
 

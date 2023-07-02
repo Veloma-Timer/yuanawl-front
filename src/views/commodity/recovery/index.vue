@@ -10,10 +10,10 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增回收列表</el-button>
-        <!--        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>-->
-        <!--        <el-button type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>-->
-        <!--        <el-button type="primary" :icon="Upload" plain @click="onExport">导出</el-button>-->
+        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增回收列表</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <template #accountRecyclerPrice="scope">
         {{ getFixed(scope.row.accountRecyclerPrice) || "--" }}
@@ -22,7 +22,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -51,8 +51,14 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { getAllBranch } from "@/api/modules/set";
 import { getUserAll } from "@/api/modules/user";
+import { parseTime } from "@/utils/is";
+import { useUserStore } from "@/stores/modules/user";
+import { decryption } from "@/utils/AESUtil";
 // import { useRoute } from "vue-router";
-
+const userStore = useUserStore();
+const token = userStore.token; // 获取token
+const obj = JSON.parse(decryption("token", token));
+console.log(obj);
 // const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -196,11 +202,15 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
+// 当前时间
+const date = new Date();
+const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
+    status: title === "查看",
+    row: { ...row, accountRecyclerTime: time, accountRecyclerId: obj.user.id },
     api: title === "新增" ? addRecycle : title === "查看" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };

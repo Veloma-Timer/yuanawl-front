@@ -37,8 +37,10 @@
       <el-form-item label="出售金额" prop="salePrice">
         <el-input-number v-model="drawerProps.row!.salePrice" placeholder="请输入出售金额" clearable :controls="false" />
       </el-form-item>
-      <el-form-item label="出售平台" prop="salePlatform">
-        <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入出售平台" clearable />
+      <el-form-item label="出售平台" prop="salePlatformId">
+        <el-select v-model="drawerProps.row!.salePlatformId" placeholder="请选择" filterable>
+          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item label="买家手机号" prop="buyerTel">
         <el-input v-model="drawerProps.row!.buyerTel" :maxlength="11" placeholder="请输入买家手机号" clearable />
@@ -62,11 +64,12 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, reactive } from "vue";
+import { reactive, ref } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getUserAll } from "@/api/modules/user";
 import { getPublishList } from "@/api/modules/commodity";
+import { sellKeyMap } from "@/api/modules/dictionary";
 
 const rules = reactive({
   salePeopleId: [{ required: true, message: "必填项不能为空" }],
@@ -102,6 +105,17 @@ const acceptParams = (params: DrawerProps) => {
 // 上架
 let transCatUploadedMap: object[] = reactive([]);
 let accountList: object[] = reactive([]);
+let handleMap: object[] = reactive([]);
+const publishMap = () => {
+  sellKeyMap().then(res => {
+    const {
+      data: {
+        data: { publishPlatform = [] }
+      }
+    } = res;
+    handleMap = publishPlatform;
+  });
+};
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -117,6 +131,14 @@ const handleSubmit = () => {
     }
   });
 };
+// 获取出售平台名称
+const getPlatformName = value => {
+  const label = handleMap.find(item => item.value === value) || {};
+  drawerProps.value.row = {
+    ...drawerProps.value.row,
+    salePlatform: label.label
+  };
+};
 const setAllList = async () => {
   const { data = [] } = await getUserAll();
   const {
@@ -124,6 +146,7 @@ const setAllList = async () => {
   } = await getPublishList({});
   transCatUploadedMap = data;
   accountList = list;
+  await publishMap();
 };
 setAllList();
 defineExpose({
