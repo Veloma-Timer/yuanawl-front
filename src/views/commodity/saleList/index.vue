@@ -10,7 +10,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增销售列表</el-button>
+        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增销售列表</el-button>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
@@ -23,7 +23,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -51,6 +51,7 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { parseTime } from "@/utils";
 import { getUserAll } from "@/api/modules/user";
+import { sellKeyMap } from "@/api/modules/dictionary";
 // import { useRoute } from "vue-router";
 
 // const route = useRoute();
@@ -107,7 +108,17 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     }
   },
   { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
-  { prop: "salePlatform", label: "出售渠道", width: 160, search: { el: "input" } },
+  {
+    prop: "salePlatformId",
+    label: "出售渠道",
+    enum: async () => {
+      const {
+        data: { data }
+      } = await sellKeyMap();
+      return { data: data.publishPlatform };
+    },
+    search: { el: "select" }
+  },
   { prop: "accountCode", label: "订单编号", width: 160, search: { el: "input" } },
   { prop: "buyerTel", label: "买家手机号", width: 160, search: { el: "input" } },
   { prop: "salesRemark", label: "销售备注", width: 160 },
@@ -148,7 +159,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
+    row: { ...row, salePrice: Number(row.salePrice) },
     api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
     getTableList: proTable.value?.getTableList
   };

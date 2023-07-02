@@ -10,20 +10,23 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增发布列表</el-button>
+        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增发布列表</el-button>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
       <template #publishPrice="scope">
         {{ getFixed(scope.row.publishPrice) || "--" }}
       </template>
+      <template #publishPlatform="scope">
+        {{ setEcho(scope.row.publishPlatform) }}
+      </template>
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -51,6 +54,7 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { getUserAll } from "@/api/modules/user";
 import { parseTime } from "@/utils";
+import { sellKeyMap } from "@/api/modules/dictionary";
 // import { useRoute } from "vue-router";
 
 // const route = useRoute();
@@ -90,7 +94,7 @@ const getFixed = (str: string) => {
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<Commodity.Account>[] = [
+const columns: ColumnProps<Commodity.Release>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
     prop: "accountPublisherId",
@@ -108,13 +112,22 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   { prop: "publishPrice", label: "商品首次定价", search: { el: "input" } },
-  { prop: "publishPlatform", label: "发布渠道", search: { el: "input" } },
+  {
+    prop: "publishPlatform",
+    label: "发布渠道",
+    enum: async () => {
+      const {
+        data: { data }
+      } = await sellKeyMap();
+      return { data: data.publishPlatform };
+    },
+    search: { el: "select", multiple: true, collapseTags: true }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
-
 // 删除用户信息
 const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
+  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountTitle}】的账户`);
   proTable.value?.getTableList();
 };
 
@@ -124,7 +137,6 @@ const onExport = async () => {
   const data = await summaryExport(obj);
   saveFile(data, "账号汇总导出");
 };
-
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户
@@ -139,14 +151,40 @@ const batchAdd = (title: string) => {
   };
   dialogRef.value?.acceptParams(params);
 };
-
+// 发布平台
+let handleMap: object[] = reactive([]);
+const publishMap = () => {
+  sellKeyMap().then(res => {
+    const {
+      data: {
+        data: { publishPlatform = [] }
+      }
+    } = res;
+    handleMap = publishPlatform;
+  });
+};
+publishMap();
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+// 回显数据
+const setEcho = (arr: string[]) => {
+  const list = arr.map(item => Number(item));
+  let names = [];
+  const values = handleMap.filter(item => {
+    return list.includes(item.value);
+  });
+  names = values.map(item => item.label);
+  return names.join(",");
+};
+const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
+  let publishPlatform = [];
+  if (title === "查看") {
+    publishPlatform = row.publishPlatform?.map(item => Number(item));
+  }
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, publishPlatform: [0] },
+    row: { ...row, publishPlatform: publishPlatform },
     api: title === "新增" ? addPublish : title === "查看" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList
   };

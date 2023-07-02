@@ -16,12 +16,12 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="账户" prop="id">
-        <el-select v-model="drawerProps.row!.id" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.id" placeholder="请选择账户" filterable>
           <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="发布人" prop="accountPublisherId">
-        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择发布人" filterable>
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -31,17 +31,17 @@
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
           type="datetime"
-          placeholder="请选择"
+          placeholder="请选择发布时间"
         />
       </el-form-item>
       <el-form-item label="商品首次定价" prop="publishPrice">
-        <el-input-number v-model="drawerProps.row!.publishPrice" placeholder="请输入开户人姓名" clearable :controls="false" />
+        <el-input-number v-model="drawerProps.row!.publishPrice" placeholder="请输入商品首次定价" clearable :controls="false" />
       </el-form-item>
-      <!--      <el-form-item label="发布平台" prop="publishPlatform">-->
-      <!--        <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择" filterable multiple collapse-tags>-->
-      <!--          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
+      <el-form-item label="发布平台" prop="publishPlatform">
+        <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple collapse-tags>
+          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
@@ -56,13 +56,14 @@ import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getUserAll } from "@/api/modules/user";
 import { getRecycleList } from "@/api/modules/commodity";
+import { sellKeyMap } from "@/api/modules/dictionary";
 
 const rules = reactive({
   accountPublisherId: [{ required: true, message: "必填项不能为空" }],
   id: [{ required: true, message: "必填项不能为空" }],
   accountPublisherTimer: [{ required: true, message: "必填项不能为空" }],
   publishPrice: [{ required: true, message: "必填项不能为空" }],
-  publishPlatform: [{ required: true, message: "请输入开户号码" }]
+  publishPlatform: [{ required: true, message: "必填项不能为空" }]
 });
 
 interface DrawerProps {
@@ -91,6 +92,18 @@ const edit = () => {
 let transCatUploadedMap: object[] = reactive([]);
 // 回收账户列表
 let customerMap: object[] = reactive([]);
+// 发布平台
+let handleMap: object[] = reactive([]);
+const publishMap = () => {
+  sellKeyMap().then(res => {
+    const {
+      data: {
+        data: { publishPlatform = [] }
+      }
+    } = res;
+    handleMap = publishPlatform;
+  });
+};
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -113,6 +126,7 @@ const setAllList = async () => {
   } = await getRecycleList({});
   transCatUploadedMap = data;
   customerMap = list;
+  await publishMap();
 };
 setAllList();
 defineExpose({

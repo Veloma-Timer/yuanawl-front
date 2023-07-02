@@ -110,7 +110,7 @@ export namespace Commodity {
     salePeopleId: number; // 出售人ID
     saleTime: string; // 出售时间
     salePrice: number; // 出售金额
-    salePlatform: string; // 出售平台
+    salePlatformId: string; // 出售平台
     // "accountCode": string; // 账号编码
     buyerTel: string; // 买家手机号
     salesRemark: string; // 销售备注

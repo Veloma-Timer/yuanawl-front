@@ -11,28 +11,27 @@
       label-width="120px"
       label-suffix=" :"
       :rules="rules"
-      :disabled="drawerProps.isView"
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="所属门店" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" placeholder="请选择所属门店" filterable>
+        <el-select v-model="drawerProps.row!.branchId" :disabled="drawerProps.status" placeholder="请选择所属门店" filterable>
           <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="账号标题" prop="accountTitle">
-        <el-input v-model="drawerProps.row!.accountTitle" placeholder="请输入账号标题" clearable />
+        <el-input v-model="drawerProps.row!.accountTitle" :disabled="drawerProps.isView" placeholder="请输入账号标题" clearable />
       </el-form-item>
       <el-form-item label="账号编号" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编号" clearable />
+        <el-input v-model="drawerProps.row!.accountCode" :disabled="drawerProps.isView" placeholder="请输入账号编号" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
-        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择账号分类" filterable>
+        <el-select v-model="drawerProps.row!.accountType" :disabled="drawerProps.isView" placeholder="请选择账号分类" filterable>
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="账号" prop="accountNumber">
-        <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable />
+        <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable :disabled="drawerProps.isView" />
       </el-form-item>
       <el-form-item label="密码" prop="accountPassword">
         <el-input
@@ -41,22 +40,39 @@
           placeholder="请输入密码"
           show-password
           clearable
+          :disabled="drawerProps.isView"
         ></el-input>
       </el-form-item>
       <el-form-item label="密保手机" prop="accountTel">
-        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入密保手机" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.accountTel"
+          placeholder="请输入密保手机"
+          :disabled="drawerProps.isView"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item label="手机卡备注" prop="phoneRemark">
-        <el-input v-model="drawerProps.row!.phoneRemark" placeholder="请输入手机卡备注" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.phoneRemark"
+          placeholder="请输入手机卡备注"
+          :disabled="drawerProps.isView"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="drawerProps.row!.email" placeholder="请输入邮箱" clearable></el-input>
+        <el-input v-model="drawerProps.row!.email" placeholder="请输入邮箱" :disabled="drawerProps.isView" clearable></el-input>
       </el-form-item>
       <el-form-item label="邮箱密保" prop="emailSecret">
-        <el-input v-model="drawerProps.row!.emailSecret" placeholder="请输入邮箱密保" clearable :maxlength="11"></el-input>
+        <el-input
+          v-model="drawerProps.row!.emailSecret"
+          placeholder="请输入邮箱密保"
+          :disabled="drawerProps.isView"
+          clearable
+          :maxlength="11"
+        ></el-input>
       </el-form-item>
       <el-form-item label="系统" prop="systemId">
-        <el-select v-model="drawerProps.row!.systemId" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.systemId" :disabled="drawerProps.isView" placeholder="请选择" filterable>
           <el-option v-for="item in systemMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -66,31 +82,47 @@
           type="textarea"
           resize="none"
           v-model="drawerProps.row!.accountRemark"
+          :disabled="drawerProps.isView"
           placeholder="请输入账号描述"
           clearable
         ></el-input>
       </el-form-item>
       <el-form-item label="营地号" prop="campId">
-        <el-input v-model="drawerProps.row!.campId" placeholder="请输入营地号" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.campId"
+          placeholder="请输入营地号"
+          clearable
+          :disabled="drawerProps.isView"
+        ></el-input>
       </el-form-item>
       <el-form-item label="实名情况" prop="haveSecondary">
-        <el-select v-model="drawerProps.row!.haveSecondary" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.haveSecondary" :disabled="drawerProps.isView" placeholder="请选择" filterable>
           <el-option v-for="item in haveSecondaryMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收订单号" prop="recycleOrder">
-        <el-input v-model="drawerProps.row!.recycleOrder" placeholder="请输入交易猫UID" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.recycleOrder"
+          placeholder="请输入回收订单号"
+          clearable
+          :disabled="drawerProps.isView"
+        ></el-input>
       </el-form-item>
       <el-form-item label="回收价格" prop="accountRecyclerPrice">
-        <el-input v-model="drawerProps.row!.accountRecyclerPrice" placeholder="请输入回收价格" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.accountRecyclerPrice"
+          placeholder="请输入回收价格"
+          clearable
+          :disabled="drawerProps.isView"
+        ></el-input>
       </el-form-item>
       <el-form-item label="回收人" prop="accountRecyclerId">
-        <el-select v-model="drawerProps.row!.accountRecyclerId" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.accountRecyclerId" :disabled="drawerProps.isView" placeholder="请选择回收人" filterable>
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收店铺" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.storeId" :disabled="drawerProps.isView" placeholder="请选择回收店铺" filterable>
           <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -100,7 +132,8 @@
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
           type="datetime"
-          placeholder="请选择"
+          placeholder="请选择回收时间"
+          :disabled="drawerProps.isView"
         />
       </el-form-item>
       <el-form-item label="回收备注" prop="recycleRemark">
@@ -109,7 +142,8 @@
           type="textarea"
           resize="none"
           v-model="drawerProps.row!.recycleRemark"
-          placeholder="请输入账号描述"
+          placeholder="请输入回收备注"
+          :disabled="drawerProps.isView"
           clearable
         ></el-input>
       </el-form-item>
@@ -156,6 +190,7 @@ const rules = reactive({
 interface DrawerProps {
   title: string;
   isView: boolean;
+  status: boolean;
   row: Partial<Commodity.Recovery>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => void;
@@ -164,6 +199,7 @@ interface DrawerProps {
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
   isView: false,
+  status: true,
   title: "",
   row: {}
 });
