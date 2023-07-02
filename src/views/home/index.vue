@@ -66,9 +66,9 @@ const setValue = function (bol: boolean, state: number, name: string) {
 let crudListObj = ref({}); // 前13个数据
 // let behindObj = null; // 后面的数据
 const setHomeCardList = async () => {
-  const { data } = await getHomeList(params.value);
+  // const { data } = await getHomeList(params.value);
   getHomeStatistics(params.value!);
-  crudListObj.value = data;
+  // crudListObj.value = data;
 };
 // 获取门店
 const branchAllList = async () => {

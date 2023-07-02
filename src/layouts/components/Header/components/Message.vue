@@ -47,7 +47,7 @@ const workList = async () => {
   const params = {
     pageNum: 1,
     pageSize: 10,
-    branchId: obj.branch.id
+    branchId: obj.user.branchId
   };
   const {
     data: { list = [] }
