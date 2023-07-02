@@ -117,7 +117,12 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="回收人" prop="accountRecyclerId">
-        <el-select v-model="drawerProps.row!.accountRecyclerId" :disabled="drawerProps.isView" placeholder="请选择回收人" filterable>
+        <el-select
+          v-model="drawerProps.row!.accountRecyclerId"
+          :disabled="drawerProps.isView"
+          placeholder="请选择回收人"
+          filterable
+        >
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
