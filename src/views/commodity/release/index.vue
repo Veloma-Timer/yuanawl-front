@@ -55,7 +55,12 @@ import { saveFile } from "@/utils/file";
 import { getUserAll } from "@/api/modules/user";
 import { parseTime } from "@/utils";
 import { sellKeyMap } from "@/api/modules/dictionary";
+import { useUserStore } from "@/stores/modules/user";
+import { decryption } from "@/utils/AESUtil";
 // import { useRoute } from "vue-router";
+const userStore = useUserStore();
+const token = userStore.token; // 获取token
+const obj = JSON.parse(decryption("token", token));
 
 // const route = useRoute();
 // 跳转详情页
@@ -176,6 +181,8 @@ const setEcho = (arr: string[]) => {
   names = values.map(item => item.label);
   return names.join(",");
 };
+const date = new Date();
+const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   let publishPlatform = [];
   if (title === "查看") {
@@ -184,7 +191,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, publishPlatform: publishPlatform },
+    row: { ...row, publishPlatform: publishPlatform, accountPublisherTimer: time, accountPublisherId: obj.user.id },
     api: title === "新增" ? addPublish : title === "查看" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList
   };

@@ -16,22 +16,23 @@
         </el-button-group>
       </div>
     </div>
-    <homeSale :crud-list-obj="crudListObj" :branch-name="branchName" title="销售数据汇总" />
-    <homeRecovery :crud-list-obj="crudListObj" :branch-name="branchName" title="回收数据汇总" />
-    <homeRelease :crud-list-obj="crudListObj" :branch-name="branchName" title="发布数据汇总" />
-    <homeNeed :crud-list-obj="crudListObj" :branch-name="branchName" title="待办工单" />
+    <homeSale :sales-obj="salesObj" :branch-name="branchName" title="销售数据汇总" />
+    <!--    <homeRecovery :crud-list-obj="crudListObj" :branch-name="branchName" title="回收数据汇总" />-->
+    <!--    <homeRelease :crud-list-obj="crudListObj" :branch-name="branchName" title="发布数据汇总" />-->
+    <!--    <homeNeed :crud-list-obj="crudListObj" :branch-name="branchName" title="待办工单" />-->
   </div>
 </template>
 
 <script setup lang="ts" name="home">
-import { ref, reactive, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import homeSale from "@/views/home/modules/home-sale/index.vue";
-import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
-import homeRelease from "@/views/home/modules/home-release/index.vue";
-import homeNeed from "@/views/home/modules/home-need/index.vue";
+// import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
+// import homeRelease from "@/views/home/modules/home-release/index.vue";
+// import homeNeed from "@/views/home/modules/home-need/index.vue";
 import { getAllBranch } from "@/api/modules/set";
-import { getHomeList, getHomeStatistics, IStatistics } from "@/api/modules/home";
+import { getHomeStatistics, IStatistics } from "@/api/modules/home";
 import { userObj } from "@/views/home/modules/homeUtis";
+import { HomeSet } from "@/api/interface";
 interface Item {
   branchName: string;
   id: number;
@@ -63,12 +64,21 @@ const setValue = function (bol: boolean, state: number, name: string) {
   };
   setHomeCardList();
 };
-let crudListObj = ref({}); // 前13个数据
+let salesObj: object = ref<HomeSet.ISalesStatistics>({
+  markupPercentage: "",
+  salesAmount: 0,
+  salesChannelStatistics: [],
+  salesMoney: 0,
+  salesRanking: [],
+  salesRatio: [],
+  salesSetComparison: []
+}); // 销售组
 // let behindObj = null; // 后面的数据
 const setHomeCardList = async () => {
-  // const { data } = await getHomeList(params.value);
-  getHomeStatistics(params.value!);
-  // crudListObj.value = data;
+  const {
+    data: { sales }
+  } = await getHomeStatistics(params.value!);
+  salesObj.value = sales;
 };
 // 获取门店
 const branchAllList = async () => {
@@ -83,6 +93,7 @@ const branchAllList = async () => {
   userRoleId.value = obj.userRole.id;
   await setHomeCardList();
 };
+// 获取首页统计
 onMounted(() => {
   branchAllList();
 });

@@ -14,6 +14,7 @@ import { defineProps } from "vue";
 import { ref, watch, toRef } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
+import { setValues } from "@/views/home/modules/homeUtis";
 // import { setValues } from "@/views/home/modules/homeUtis.js";
 const groupRef = ref<HTMLElement>();
 const myArrayRef = toRef(props, "listArr");
@@ -31,14 +32,17 @@ const props = defineProps({
     default: ""
   }
 });
-watch(myArrayRef, () => {
-  // let data,
-  //   value = [];
-  // data = setValues(newValue, "name");
-  // value = setValues(newValue, "value");
-  groupGet();
+watch(myArrayRef, newValue => {
+  let data,
+    name,
+    value = [];
+  console.log(newValue);
+  data = setValues(newValue, "amount");
+  name = setValues(newValue, "name");
+  value = setValues(newValue, "money");
+  groupGet(data, value, name);
 });
-const groupGet = () => {
+const groupGet = (data: number[], value: number[], name: string[]) => {
   let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
   let option: {
     yAxis: {
@@ -78,7 +82,7 @@ const groupGet = () => {
     xAxis: [
       {
         type: "category",
-        data: ["王者", "火影", "英雄联盟", "枪战王者", "地下城", "穿越火线"],
+        data: name,
         axisPointer: {
           type: "shadow"
         }
@@ -115,7 +119,7 @@ const groupGet = () => {
             return value;
           }
         },
-        data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+        data: value
       },
       {
         name: "数量",
@@ -125,7 +129,7 @@ const groupGet = () => {
             return value;
           }
         },
-        data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
+        data
       }
     ]
   };

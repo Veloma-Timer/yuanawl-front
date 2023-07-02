@@ -328,6 +328,39 @@ export namespace HomeSet {
     // 发布组数据对比 -> 统计发布数据
     publishUnit: IDataComparison[];
   }
+  export interface INameAndAmountAndMonty {
+    name: string;
+    amount: number;
+    money: number;
+  }
+  // 销售数据
+  export interface ISalesStatistics {
+    salesMoney: number; //   今日销售金额
+    salesAmount: number; //   今日销售数量
+    markupPercentage: string; //   今日销售加价率
+    salesRatio: INameAndAmountAndMonty[]; //   账号销售占比：按照游戏分类，有数量和金额
+    salesRanking: INameAndAmountAndMonty[]; //   平台销售额排名：姓名 销售额 销售数量
+    salesSetComparison: INameAndAmountAndMonty[]; //   销售组数据对比：按照员工分类 有数量和金额
+    salesChannelStatistics: INameAndAmountAndMonty[]; //   渠道销售统计：按照渠道分类(publishPlatform) 有数量和金额
+  }
+  // 回收数据
+  export interface IRecycleStatistics {
+    recycleMoney: number; // 今日回收金额
+    recycleAmount: number; // 今日回收数量
+    recycleAveMoney: number; // 今日回收均价
+    recycleRatio: INameAndAmountAndMonty[]; // 账号回收占比：游戏分类 数量 金额
+    recycleRanking: INameAndAmountAndMonty[]; // 回收排名：用户 数量 金额
+    recycleSetComparison: INameAndAmountAndMonty[]; // 回收组数据对比：用户 金额 数量
+  }
+  // 发布数据
+  export interface IPublishStatistics {
+    publishMoney: number; // 发布金额
+    publishAmount: number; // 发布数量
+    publishAveMoney: number; // 发布均价
+    publishRatio: INameAndAmountAndMonty[]; // 账号发布占比：用户 金额 数量
+    publishRanking: INameAndAmountAndMonty[]; // 发布额排名：用户 金额 数量
+    publishSetComparison?: Record<string | number, INameAndAmountAndMonty[]>; // 发布组数据对比：用户 金额 数量
+  }
 }
 
 // 数据统计
