@@ -10,14 +10,14 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增发布列表</el-button>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
+        <el-button type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
-      <template #expand="scope">
-        {{ scope.row }}
+      <template #publishPrice="scope">
+        {{ getFixed(scope.row.publishPrice) || "--" }}
       </template>
       <!-- usernameHeader -->
       <!-- createTime -->
@@ -39,16 +39,18 @@ import releaseDrawer from "@/views/commodity/release/modules/releaseDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import {
-  addSummary,
+  addPublish,
   deleteSummary,
-  editSummary,
+  editPublish,
+  getPublishList,
   summaryExport,
-  summaryList,
   summaryTemplate,
   summaryUpload
 } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
+import { getUserAll } from "@/api/modules/user";
+import { parseTime } from "@/utils";
 // import { useRoute } from "vue-router";
 
 // const route = useRoute();
@@ -77,21 +79,36 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return summaryList(newParams);
+  return getPublishList(newParams);
 };
-
+const getFixed = (str: string) => {
+  if (str) {
+    return "￥" + parseFloat(str).toFixed(2);
+  }
+  return "--";
+};
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "发布客服", search: { el: "input" } },
-  { prop: "accountNumber", label: "发布时间" },
-  { prop: "accountTitle", label: "商品首次定价", search: { el: "input" } },
-  { prop: "accountNumber", label: "发布渠道" },
-  { prop: "accountPassword", label: "添加处理" },
-  { prop: "accountTel", label: "客服名字" },
-  { prop: "accountRemark", label: "回滚日期" },
+  {
+    prop: "accountPublisherId",
+    label: "发布人",
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  { prop: "accountTitle", label: "账户标题", search: { el: "input" } },
+  {
+    prop: "accountPublisherTimer",
+    label: "发布时间",
+    render: scope => {
+      return parseTime(scope.row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
+    }
+  },
+  { prop: "publishPrice", label: "商品首次定价", search: { el: "input" } },
+  { prop: "publishPlatform", label: "发布渠道", search: { el: "input" } },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
@@ -129,8 +146,8 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
-    api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
+    row: { ...row, publishPlatform: [0] },
+    api: title === "新增" ? addPublish : title === "查看" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

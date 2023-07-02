@@ -1,61 +1,47 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="800px" :show-close="false">
+  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
     <template #header>
-      <Header :title="`${drawerProps.title}开户`" class="header" style="transform: translateY(7px)"></Header>
+      <Header :title="`${drawerProps.title}发布列表`" class="header" style="transform: translateY(7px)"></Header>
       <el-button type="primary" @click="edit" class="edit-btn">
         <div>编辑</div>
       </el-button>
     </template>
     <el-form
       ref="ruleFormRef"
-      label-width="200px"
+      label-width="120px"
       label-suffix=" :"
       :rules="rules"
       :disabled="drawerProps.isView"
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="发布客服" prop="openAccountName">
-        <el-select v-model="drawerProps.row!.openAccountName" placeholder="请选择" filterable>
-          <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
+      <el-form-item label="账户" prop="id">
+        <el-select v-model="drawerProps.row!.id" placeholder="请选择" filterable>
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="发布时间" prop="openAccountName">
+      <el-form-item label="发布人" prop="accountPublisherId">
+        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择" filterable>
+          <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="发布时间" prop="accountPublisherTimer">
         <el-date-picker
-          v-model="drawerProps.row!.openAccountName"
+          v-model="drawerProps.row!.accountPublisherTimer"
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
-          type="date"
+          type="datetime"
           placeholder="请选择"
         />
       </el-form-item>
-      <el-form-item label="商品首次定价" prop="openAccountName">
-        <el-input v-model="drawerProps.row!.openAccountName" placeholder="请输入开户人姓名" clearable />
+      <el-form-item label="商品首次定价" prop="publishPrice">
+        <el-input-number v-model="drawerProps.row!.publishPrice" placeholder="请输入开户人姓名" clearable :controls="false" />
       </el-form-item>
-      <el-form-item label="发布渠道" prop="transCatUploaded">
-        <el-select v-model="drawerProps.row!.openAccountName" placeholder="请选择" filterable>
-          <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="添加处理" prop="openAccountNumber">
-        <el-select v-model="drawerProps.row!.openAccountName" placeholder="请选择" filterable>
-          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="客服名字" prop="openAccountNumber">
-        <el-select v-model="drawerProps.row!.openAccountName" placeholder="请选择" filterable>
-          <el-option v-for="item in customerMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="回滚日期" prop="openAccountNumber">
-        <el-date-picker
-          v-model="drawerProps.row!.openAccountName"
-          format="YYYY-MM-DD hh:mm:ss"
-          value-format="YYYY-MM-DD hh:mm:ss"
-          type="date"
-          placeholder="请选择"
-        />
-      </el-form-item>
+      <!--      <el-form-item label="发布平台" prop="publishPlatform">-->
+      <!--        <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择" filterable multiple collapse-tags>-->
+      <!--          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />-->
+      <!--        </el-select>-->
+      <!--      </el-form-item>-->
     </el-form>
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
@@ -68,16 +54,21 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
+import { getUserAll } from "@/api/modules/user";
+import { getRecycleList } from "@/api/modules/commodity";
 
 const rules = reactive({
-  openAccountName: [{ required: true, message: "请输入开户人姓名" }],
-  openAccountNumber: [{ required: true, message: "请输入开户号码" }]
+  accountPublisherId: [{ required: true, message: "必填项不能为空" }],
+  id: [{ required: true, message: "必填项不能为空" }],
+  accountPublisherTimer: [{ required: true, message: "必填项不能为空" }],
+  publishPrice: [{ required: true, message: "必填项不能为空" }],
+  publishPlatform: [{ required: true, message: "请输入开户号码" }]
 });
 
 interface DrawerProps {
   title: string;
   isView: boolean;
-  row: Partial<Commodity.phoneLibrary>;
+  row: Partial<Commodity.Release>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => void;
 }
@@ -96,19 +87,10 @@ const acceptParams = (params: DrawerProps) => {
 const edit = () => {
   drawerProps.value.isView = false;
 };
-// 上架
-const transCatUploadedMap = [];
-// 处理
-const handleMap = [
-  { label: "第一次循环", value: 1 },
-  { label: "第二次循环", value: 2 },
-  { label: "第三次循环", value: 3 }
-];
-const customerMap = [
-  { label: "客服1", value: 1 },
-  { label: "客服2", value: 2 },
-  { label: "客服3", value: 3 }
-];
+// 发布人
+let transCatUploadedMap: object[] = reactive([]);
+// 回收账户列表
+let customerMap: object[] = reactive([]);
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -124,7 +106,15 @@ const handleSubmit = () => {
     }
   });
 };
-
+const setAllList = async () => {
+  const { data = [] } = await getUserAll();
+  const {
+    data: { list = [] }
+  } = await getRecycleList({});
+  transCatUploadedMap = data;
+  customerMap = list;
+};
+setAllList();
 defineExpose({
   acceptParams
 });

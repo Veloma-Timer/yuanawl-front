@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="800px" :show-close="false">
+  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
     <template #header>
       <Header :title="`${drawerProps.title}用户`" class="header" style="transform: translateY(7px)"></Header>
       <el-button type="primary" @click="edit" class="edit-btn">
@@ -16,25 +16,23 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="所属门店" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.branchId" placeholder="请选择所属门店" filterable>
           <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="分组" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" placeholder="请选择" filterable>
-          <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
-        </el-select>
+      <el-form-item label="账号标题" prop="accountTitle">
+        <el-input v-model="drawerProps.row!.accountTitle" placeholder="请输入账号标题" clearable />
       </el-form-item>
       <el-form-item label="账号编号" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" disabled placeholder="请输入账号编号" clearable />
+        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编号" clearable />
       </el-form-item>
-      <el-form-item label="游戏分类" prop="accountType">
-        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable>
+      <el-form-item label="账号分类" prop="accountType">
+        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择账号分类" filterable>
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号" prop="accountTitle">
-        <el-input v-model="drawerProps.row!.accountTitle" placeholder="请输入标题" clearable />
+      <el-form-item label="账号" prop="accountNumber">
+        <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable />
       </el-form-item>
       <el-form-item label="密码" prop="accountPassword">
         <el-input
@@ -45,40 +43,55 @@
           clearable
         ></el-input>
       </el-form-item>
-      <el-form-item label="密保手机">
-        <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
+      <el-form-item label="密保手机" prop="accountTel">
+        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入密保手机" clearable></el-input>
       </el-form-item>
-      <el-form-item label="手机卡备注" prop="accountNumber">
-        <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable></el-input>
+      <el-form-item label="手机卡备注" prop="phoneRemark">
+        <el-input v-model="drawerProps.row!.phoneRemark" placeholder="请输入手机卡备注" clearable></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="campId">
-        <el-input v-model="drawerProps.row!.campId" placeholder="请输入账号" clearable></el-input>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="drawerProps.row!.email" placeholder="请输入邮箱" clearable></el-input>
       </el-form-item>
-      <el-form-item label="邮箱密保" prop="accountTel">
-        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable :maxlength="11"></el-input>
+      <el-form-item label="邮箱密保" prop="emailSecret">
+        <el-input v-model="drawerProps.row!.emailSecret" placeholder="请输入邮箱密保" clearable :maxlength="11"></el-input>
       </el-form-item>
-      <el-form-item label="系统">
-        <el-select v-model="drawerProps.row!.haveSecondary" placeholder="请选择" filterable>
+      <el-form-item label="系统" prop="systemId">
+        <el-select v-model="drawerProps.row!.systemId" placeholder="请选择" filterable>
           <el-option v-for="item in systemMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号描述" prop="accountDesc">
-        <el-input v-model="drawerProps.row!.accountDesc" placeholder="请输入账号描述" clearable></el-input>
+      <el-form-item label="账号描述" prop="accountRemark">
+        <el-input
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          type="textarea"
+          resize="none"
+          v-model="drawerProps.row!.accountRemark"
+          placeholder="请输入账号描述"
+          clearable
+        ></el-input>
       </el-form-item>
-      <el-form-item label="营地号" prop="accountDesc">
-        <el-input v-model="drawerProps.row!.accountDesc" placeholder="请输入账号描述" clearable></el-input>
+      <el-form-item label="营地号" prop="campId">
+        <el-input v-model="drawerProps.row!.campId" placeholder="请输入营地号" clearable></el-input>
       </el-form-item>
-      <el-form-item label="实名情况" prop="isSave">
-        <el-select v-model="drawerProps.row!.isSave" placeholder="请选择" filterable>
+      <el-form-item label="实名情况" prop="haveSecondary">
+        <el-select v-model="drawerProps.row!.haveSecondary" placeholder="请选择" filterable>
           <el-option v-for="item in haveSecondaryMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="回收订单号" prop="transCatUid">
-        <el-input v-model="drawerProps.row!.transCatUid" placeholder="请输入交易猫UID" clearable></el-input>
+      <el-form-item label="回收订单号" prop="recycleOrder">
+        <el-input v-model="drawerProps.row!.recycleOrder" placeholder="请输入交易猫UID" clearable></el-input>
       </el-form-item>
-      <el-form-item label="回收店铺" prop="transCatUploaded">
-        <el-select v-model="drawerProps.row!.transCatUploaded" placeholder="请选择" filterable>
-          <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
+      <el-form-item label="回收价格" prop="accountRecyclerPrice">
+        <el-input v-model="drawerProps.row!.accountRecyclerPrice" placeholder="请输入回收价格" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="回收人" prop="accountRecyclerId">
+        <el-select v-model="drawerProps.row!.accountRecyclerId" placeholder="请选择" filterable>
+          <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="回收店铺" prop="storeId">
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择" filterable>
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收时间" prop="accountRecyclerTime">
@@ -86,19 +99,16 @@
           v-model="drawerProps.row!.accountRecyclerTime"
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
-          type="date"
+          type="datetime"
           placeholder="请选择"
         />
       </el-form-item>
-      <el-form-item label="回收客服" prop="accountLevel">
-        <el-input v-model="drawerProps.row!.accountLevel" placeholder="请输入账号等级" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="回收备注" prop="accountLevel">
+      <el-form-item label="回收备注" prop="recycleRemark">
         <el-input
           :autosize="{ minRows: 3, maxRows: 5 }"
           type="textarea"
           resize="none"
-          v-model="drawerProps.row!.accountDesc"
+          v-model="drawerProps.row!.recycleRemark"
           placeholder="请输入账号描述"
           clearable
         ></el-input>
@@ -119,43 +129,34 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
+import { getRecycleList } from "@/api/modules/commodity";
 const rules = reactive({
+  accountTitle: [{ required: true, message: "必填项不能为空" }],
+  branchId: [{ required: true, message: "必填项不能为空" }],
   accountCode: [{ required: true, message: "必填项不能为空" }],
   accountType: [{ required: true, message: "必填项不能为空" }],
-  accountTitle: [{ required: true, message: "必填项不能为空" }],
-  accountRecycler: [{ required: true, message: "必填项不能为空" }],
-  accountRecyclerTime: [{ required: true, message: "必填项不能为空" }],
-  accountRecyclerPrice: [{ required: true, message: "必填项不能为空" }],
-  accountPublisherId: [{ required: true, message: "必填项不能为空" }],
-  accountPublisherTimer: [{ required: true, message: "必填项不能为空" }],
-  salePlatform: [{ required: true, message: "必填项不能为空" }],
-  saleTime: [{ required: true, message: "必填项不能为空" }],
-  salePrice: [{ required: true, message: "必填项不能为空" }],
   accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
-  accountTel: [{ required: true, message: "必填项不能为空" }],
+  phoneRemark: [{ required: true, message: "必填项不能为空" }],
+  email: [{ required: true, message: "必填项不能为空" }],
+  emailSecret: [{ required: true, message: "必填项不能为空" }],
+  systemId: [{ required: true, message: "必填项不能为空" }],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
   campId: [{ required: true, message: "必填项不能为空" }],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
-  isSave: [{ required: true, message: "必填项不能为空" }],
-  accountDesc: [{ required: true, message: "必填项不能为空" }],
-  accountStatus: [{ required: true, message: "必填项不能为空" }],
-  netUpload: [{ required: true, message: "必填项不能为空" }],
-  transCatUploaded: [{ required: true, message: "必填项不能为空" }],
-  transCatUid: [{ required: true, message: "必填项不能为空" }],
-  accountLevel: [{ required: true, message: "必填项不能为空" }],
-  accountPrice: [{ required: true, message: "必填项不能为空" }],
-  userCompensationPrice: [{ required: true, message: "必填项不能为空" }],
-  branchId: [{ required: true, message: "必填项不能为空" }],
-  platformCompensationPrice: [{ required: true, message: "必填项不能为空" }],
-  accountRecyclerId: [{ required: true, message: "必填项不能为空" }],
-  salePeopleId: [{ required: true, message: "必填项不能为空" }]
+  accountRecyclerPrice: [{ required: true, message: "必填项不能为空" }],
+  recycleOrder: [{ required: true, message: "必填项不能为空" }],
+  recycleRemark: [{ required: true, message: "必填项不能为空" }],
+  storeId: [{ required: true, message: "必填项不能为空" }],
+  accountTel: [{ required: true, message: "必填项不能为空" }],
+  accountRecyclerTime: [{ required: true, message: "必填项不能为空" }],
+  accountRecyclerId: [{ required: true, message: "必填项不能为空" }]
 });
 
 interface DrawerProps {
   title: string;
   isView: boolean;
-  row: Partial<Commodity.Account>;
+  row: Partial<Commodity.Recovery>;
   api?: (params: any) => Promise<any>;
   getTableList?: () => void;
 }
@@ -197,23 +198,28 @@ const haveSecondaryMap = [
   { label: "无", value: "0" }
 ];
 const systemMap = [
-  { label: "安卓QQ", value: "1" },
-  { label: "苹果QQ", value: "2" },
-  { label: "安卓微信", value: "3" },
-  { label: "苹果微信", value: "4" }
+  { label: "安卓QQ", value: 1 },
+  { label: "苹果QQ", value: 2 },
+  { label: "安卓微信", value: 3 },
+  { label: "苹果微信", value: 4 }
 ];
-// 上架
-const transCatUploadedMap = [
-  { label: "已上架", value: "1" },
-  { label: "未上架", value: "0" }
-];
-// 存档
+// 回收人
+let transCatUploadedMap: unknown = [];
+// 账号分类
 let accountTypeMap: unknown = [];
+// 门店
 let branchMap: unknown = [];
+// 回收店铺
+let customerMap: Array<object> = [];
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
   const { data } = await getAllBranch({});
+  const {
+    data: { list = [] }
+  } = await getRecycleList({});
+  customerMap = list;
+  transCatUploadedMap = reloads.data;
   accountTypeMap = res.data;
   branchMap = data;
 };
@@ -227,9 +233,5 @@ defineExpose({
   div {
     color: var(--el-color-white) !important;
   }
-}
-.order-input,
-.el-input {
-  width: 400px !important;
 }
 </style>

@@ -95,7 +95,7 @@ watch(
     width: 100%;
 
     .crud-list-item {
-      width: 26%;
+      width: 33.33%;
       height: 181px;
       padding: 18px 22px;
       margin-bottom: 10px;
