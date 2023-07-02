@@ -43,7 +43,6 @@ const messageTtem = ref([]);
 const userStore = useUserStore();
 
 const obj = JSON.parse(decryption("token", userStore.token));
-const branch = obj.branch || { id: null };
 const workList = async () => {
   const params = {
     pageNum: 1,

@@ -12,7 +12,7 @@
             <div class="total-compare mb22">昨日同比</div>
             <div class="total-proportion flex flx-align-center flx-justify-between">
               <div>
-                <span class="mr-2">{{ item.preValue }}</span>
+                <span class="mr-2">{{ item }}</span>
                 <el-icon>
                   <CaretTop />
                 </el-icon>
@@ -25,14 +25,14 @@
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="publishUnit" class-name="maintain" title="账号销售占比" />
+        <homeGroup :list-arr="salesObj.salesRatio" class-name="maintain" title="账号销售占比" />
       </div>
       <div class="home-name-right">
-        <nameRight />
+        <nameRight :salas-ranking-arr="salesObj.salesRanking" :header="['姓名', '销售额', '销售数量']" />
       </div>
     </div>
-    <homeGroup :list-arr="publishUnit" title="销售组数据对比" />
-    <homeGroup :list-arr="publishUnit" title="渠道销售订单统计" />
+    <homeGroup :list-arr="salesObj.salesSetComparison" title="销售组数据对比" />
+    <homeGroup :list-arr="salesObj.salesChannelStatistics" title="渠道销售订单统计" />
   </div>
 </template>
 <script setup lang="ts">
@@ -46,7 +46,7 @@ const crudNumberRef = ref<HTMLElement>();
 
 // 处理数据
 const props = defineProps({
-  crudListObj: {
+  salesObj: {
     type: Object,
     default: () => {}
   },
@@ -65,7 +65,7 @@ const setNumber = () => {
     for (let i = 0; i < crudListMap.length; i++) {
       let option = {
         title: {
-          text: `￥${crudListMap[i].value}`,
+          text: `￥${crudListMap[i]}`,
           x: "center",
           y: "center",
           textStyle: {
@@ -129,15 +129,13 @@ const setNumber = () => {
 };
 // 处理数据
 let crudListMap = reactive([]);
-let publishUnit = reactive([]);
 setNumber();
 const setCrud = obj => {
-  crudListMap = [obj.totalSales, obj.salesQuantity, obj.recyclingQuantity];
-  publishUnit = obj.publishUnit;
+  crudListMap = [obj.salesMoney, obj.salesAmount, obj.markupPercentage];
   setNumber();
 };
 watch(
-  () => props.crudListObj,
+  () => props.salesObj,
   count => {
     crudListMap = [];
     /* ... */

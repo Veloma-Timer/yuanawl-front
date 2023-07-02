@@ -119,7 +119,7 @@ export namespace Commodity {
   }
   export interface Release {
     id: 5;
-    accountPublisherId: 1; // 发布人ID
+    accountPublisherId: number; // 发布人ID
     // "accountPublisher"?: SysUserEntity; // 发布人
     accountPublisherTimer: string; // 发布时间
     publishPrice: number; // 商品首次定价

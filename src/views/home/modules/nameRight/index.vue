@@ -3,19 +3,16 @@
     <span class="cell">{{ props.title }}</span>
     <div class="home-table mt30">
       <div class="home-table-header flex">
-        <div class="header-item">名次</div>
-        <div class="header-item">姓名</div>
-        <div class="header-item">销售额</div>
-        <div class="header-item">店铺</div>
+        <div class="header-item" v-for="(item, index) in props.header" :key="item + index">{{ item }}</div>
       </div>
       <div class="home-table-row mt26">
         <div class="table-row-cell flex" v-for="(item, index) in props.salasRankingArr" :key="item.index + index">
-          <div class="cell-item">
-            <span :class="nameClassObj.get(item.index)">{{ item.index }}</span>
-          </div>
+          <!--          <div class="cell-item">-->
+          <!--            <span :class="nameClassObj.get(item.index)">{{ item.index }}</span>-->
+          <!--          </div>-->
           <div class="cell-item">{{ item.name }}</div>
-          <div class="cell-item">{{ item.salas }}</div>
-          <div class="cell-item">{{ item.branch }}</div>
+          <div class="cell-item">{{ item.amount }}</div>
+          <div class="cell-item">{{ item.money }}</div>
         </div>
       </div>
     </div>
@@ -38,6 +35,10 @@ const props = defineProps({
   title: {
     type: String,
     default: "平台销售额排名"
+  },
+  header: {
+    type: Array,
+    default: () => []
   }
 });
 </script>
@@ -61,7 +62,7 @@ const props = defineProps({
       height: 30px;
       line-height: 30px;
       .header-item {
-        width: 25%;
+        width: 33%;
         height: 100%;
         font-size: 12px;
         color: #858585;
@@ -83,7 +84,7 @@ const props = defineProps({
           margin: 0;
         }
         .cell-item {
-          width: 25%;
+          width: 33%;
           height: 100%;
           padding-left: 6px;
           font-size: 12px;

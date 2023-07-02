@@ -58,7 +58,6 @@ import { decryption } from "@/utils/AESUtil";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
 const obj = JSON.parse(decryption("token", token));
-console.log(obj);
 // const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
