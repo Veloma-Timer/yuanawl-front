@@ -1,4 +1,4 @@
-import { ResPage, ResultData, SalesOrder, Data } from "@/api/interface/index";
+import { ResPage, ResultData, SalesOrder, Data, ProblemList } from "@/api/interface/index";
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 import { formatParams } from "@/utils/index";
@@ -82,4 +82,29 @@ export const orderExport = (params: any) => {
 // 今日公单
 export const workOrder = (params: any) => {
   return http.get(`${PORT3}/base_work_order/today`, params);
+};
+
+// 数据字典-问题类型
+export const getProblemTypes = () => {
+  return http.get<ProblemList>(`${PORT3}/sys_map?key=problemTypes`);
+};
+
+// 数据字典-处理结果
+export const getHandleTypes = () => {
+  return http.get<ProblemList>(`${PORT3}/sys_map?key=handleTypes`);
+};
+
+// 新增工单售后信息
+export const addAfterInfo = (params: any) => {
+  return http.post(`${PORT3}/base_work_order/after-sales`, params);
+};
+
+// 新增工单销售信息
+export const addSalesInfo = (params: any) => {
+  return http.post(`${PORT3}/base_work_order/sales`, params);
+};
+
+// 新增工单发布信息
+export const addPublishInfo = (params: any) => {
+  return http.post(`${PORT3}/base_work_order/publish`, params);
 };

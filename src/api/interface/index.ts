@@ -119,6 +119,7 @@ export namespace SalesOrder {
   export interface ResSalesList {
     detail: any[];
     id: string;
+    problemTypeId: string;
     accountId: string;
     accountNumber: number;
     reportPersonId: number;
@@ -138,6 +139,8 @@ export namespace SalesOrder {
     insure: string;
     recycleBranch: string;
     handleTime: number;
+    createdTime: number;
+    remark: string;
     orderChecker: string;
     checkerResult: string;
     submitOrderTime: string;
@@ -151,6 +154,8 @@ export namespace SalesOrder {
   }
   export interface AddWorkOrder {
     // 基本信息
+    basicOrderCode: string; // 工单编号
+    basicOrderStar: number; // 工单星级
     basicAccountId: string; // 游戏账号
     basicQuestionType: string; // 问题类型
     basicInsure: number; // 是否在保
@@ -166,19 +171,23 @@ export namespace SalesOrder {
     basicMessage: string; // 留言
     baiscAnnex: any[]; // 附件
     // 售后部门
-    AfterCustomerServiceId: number; // 处理客服
-    AfterHandleTime: string; // 处理时间
-    AfterHandleResult: number; // 处理结果
-    AfterNotifyOtherDepartments?: number; // 通知其他部门
-    AfterCompensationAmount?: number; // 赔付金额
-    AfterNewSecurityPhone?: number; // 新密保手机
-    AfterNewSecurityPassword?: number; // 新密码
-    AfterAnnex: any[]; // 附件
+    afterCustomerServiceId: number; // 处理客服
+    afterHandleTime: string; // 处理时间
+    afterHandleResult: number; // 处理结果
+    afterNotifyOtherDepartments?: number; // 通知其他部门
+    afterCompensationAmount?: number; // 赔付金额
+    afterNewSecurityPhone?: number; // 新密保手机
+    afterNewSecurityPassword?: number; // 新密码
+    afterSpecHandleResult: string; // 售后处理结果备注
+    afterSalesRemark: string; // 售后备注
+    afterAnnex: any[]; // 附件
     // 发布部门
     publishHandleCustomerServiceId: number; // 处理客服
     publishHandleTime: string; // 处理时间
     publishHandleResult: number; // 处理结果
-    publishAnnex: "any"; // 附件
+    publishResultRemark: string; // 发布处理结果备注
+    publishRemark: string; // 发布备注
+    publishAnnex: any[]; // 附件
     // 销售部门
     saleHandleCustomerService: number; // 处理客服
     saleHandleTime: string; // 处理时间
@@ -194,6 +203,8 @@ export namespace SalesOrder {
     saleAccproductTurnoverCycle: number; // 商品周转周期
     saleAccbuyerPhoneNumber: number; // 买家手机号
     saleAccsellerMark: string; // 销售备注
+    salesResultRemark: string; // 销售处理结果备注
+    salesRemark: string; // 销售备注填的
     saleannex: any[]; // 附件
   }
 
@@ -417,6 +428,13 @@ export namespace Data {
     accountRecyclerTime: string;
     accountStatus: number;
     accountRecyclerPrice: string;
+  }
+  export interface keyValue {
+    label: string;
+    value: number;
+  }
+  export interface ProblemList {
+    problemTypes: keyValue[];
   }
 }
 // 短信管理
