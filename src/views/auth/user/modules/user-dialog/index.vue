@@ -124,7 +124,7 @@ const acceptParams = async (params: DrawerProps & any) => {
   const { data } = await getAllRole({});
   userList.value = data;
   userListMap();
-  setListMap();
+  // setListMap();
 };
 const userListMap = async () => {
   const { data } = await getAllBranch({});

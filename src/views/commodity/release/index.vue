@@ -126,7 +126,13 @@ const columns: ColumnProps<Commodity.Release>[] = [
       } = await sellKeyMap();
       return { data: data.publishPlatform };
     },
-    search: { el: "select", multiple: true, collapseTags: true }
+    search: {
+      el: "select",
+      props: {
+        multiple: true,
+        collapseTags: true
+      }
+    }
   },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];

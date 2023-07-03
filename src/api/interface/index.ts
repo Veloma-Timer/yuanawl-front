@@ -101,6 +101,13 @@ export namespace User {
     setId: number; // 用户所在组
     isAdmin: number; // 是否为管理员
   }
+  export interface Tree {
+    id: string;
+    name: string;
+    leaf?: boolean;
+    isLeaf?: boolean;
+    children?: Tree[];
+  }
 }
 
 // 售后工单管理模块

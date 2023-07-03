@@ -4,8 +4,6 @@
     v-bind="{ ...handleSearchProps, ...placeholder, searchParam, clearable }"
     v-model.trim="searchParam[column.search?.key ?? handleProp(column.prop!)]"
     :data="column.search?.el === 'tree-select' ? columnEnum : []"
-    :multiple="column.search?.multiple"
-    :collapse-tags="column.search?.collapseTags"
     :options="['cascader', 'select-v2'].includes(column.search?.el!) ? columnEnum : []"
   >
     <template #default="{ data }" v-if="column.search?.el === 'cascader'">

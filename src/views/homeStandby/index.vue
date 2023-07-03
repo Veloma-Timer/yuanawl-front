@@ -96,7 +96,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-@import "./index.scss";
+@import "@/views/home/index";
 .group {
   margin-bottom: 0;
 }

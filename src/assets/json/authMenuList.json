@@ -16,6 +16,15 @@
       }
     },
     {
+      "path": "/homeStandby/index",
+      "name": "用户数据",
+      "component": "/homeStandby/index",
+      "meta": {
+        "title": "用户数据",
+        "isHide": false
+      }
+    },
+    {
       "path": "/commodity",
       "name": "账号管理",
       "redirect": "/commodity",

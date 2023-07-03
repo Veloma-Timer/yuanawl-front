@@ -3,16 +3,16 @@
     <div class="home-crud">
       <div class="title">{{ props.title }}</div>
       <div class="crud-list flex">
-        <div v-for="item in crudListMap" :key="item.id" class="crud-list-item flex">
+        <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
           <div class="recovery-number" ref="recoveryRef"></div>
           <div class="crud-total">
             <div class="total-name">
-              <span>{{ props.branchName }}回收金额</span>
+              <span>{{ props.branchName }}{{ namesList[index] }}</span>
             </div>
             <div class="total-compare mb22">昨日同比</div>
             <div class="total-proportion flex flx-align-center flx-justify-between">
               <div>
-                <span class="mr-2">{{ item.preValue }}</span>
+                <span class="mr-2">{{ item }}</span>
                 <el-icon>
                   <CaretTop />
                 </el-icon>
@@ -25,13 +25,13 @@
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="publishUnit" class-name="maintain" title="账号回收占比" />
+        <homeGroup :list-arr="statisticsObj?.recycleRatio" class-name="maintain" title="账号回收占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台回收额排名" :salas-ranking-arr="crudListObj.salasRanking" />
+        <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['用户', '金额', '数量']" />
       </div>
     </div>
-    <homeGroup :list-arr="publishUnit" title="回收组数据对比" />
+    <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
   </div>
 </template>
 <script setup lang="ts">
@@ -41,30 +41,27 @@ import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
+import { HomeSet } from "@/api/interface";
 const recoveryRef = ref<HTMLElement>();
-
+const namesList: string[] = ["回收金额", "回收数量", "回收均价"];
 // 处理数据
-const props = defineProps({
-  crudListObj: {
-    type: Object,
-    default: () => {}
-  },
-  branchName: {
-    type: String,
-    default: "今日"
-  },
-  title: {
-    type: String,
-    default: ""
+const props = withDefaults(
+  defineProps<{
+    statisticsObj: HomeSet.IRecycleStatistics;
+    branchName: string;
+    title: string;
+  }>(),
+  {
+    branchName: "今日"
   }
-});
+);
 const setNumber = () => {
   nextTick(() => {
     let recoveryNumber = document.getElementsByClassName("recovery-number");
     for (let i = 0; i < crudListMap.length; i++) {
       let option = {
         title: {
-          text: `￥${crudListMap[i].value}`,
+          text: `￥${crudListMap[i]}`,
           x: "center",
           y: "center",
           textStyle: {
@@ -128,20 +125,19 @@ const setNumber = () => {
 };
 // 处理数据
 let crudListMap = reactive([]);
-let publishUnit = reactive([]);
 setNumber();
 const setCrud = obj => {
-  crudListMap = [obj.totalSales, obj.salesQuantity, obj.recyclingQuantity];
-  publishUnit = obj.publishUnit;
+  crudListMap = [obj.recycleMoney, obj.recycleAmount, obj.recycleAveMoney];
   setNumber();
 };
 watch(
-  () => props.crudListObj,
+  () => props.statisticsObj,
   count => {
     crudListMap = [];
     /* ... */
     setCrud(count);
-  }
+  },
+  { deep: true, immediate: true }
 );
 </script>
 <style scoped lang="scss">

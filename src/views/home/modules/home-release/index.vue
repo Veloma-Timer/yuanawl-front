@@ -3,16 +3,16 @@
     <div class="home-crud">
       <div class="title">{{ props.title }}</div>
       <div class="crud-list flex">
-        <div v-for="item in crudListMap" :key="item.id" class="crud-list-item flex">
+        <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
           <div class="release-number" ref="releaseRef"></div>
           <div class="crud-total">
             <div class="total-name">
-              <span>{{ props.branchName }}发布金额</span>
+              <span>{{ props.branchName }}{{ namesList[index] }}</span>
             </div>
             <div class="total-compare mb22">昨日同比</div>
             <div class="total-proportion flex flx-align-center flx-justify-between">
               <div>
-                <span class="mr-2">{{ item.preValue }}</span>
+                <span class="mr-2">{{ item }}</span>
                 <el-icon>
                   <CaretTop />
                 </el-icon>
@@ -25,19 +25,17 @@
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="publishUnit" class-name="maintain" title="账号发布占比" />
+        <homeGroup :list-arr="publishObj?.publishRatio" class-name="maintain" title="账号发布占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台发布额排名" :salas-ranking-arr="crudListObj.salasRanking" />
+        <nameRight title="平台发布额排名" :salas-ranking-arr="publishObj?.publishRanking" :header="['用户', '数量', '金额']" />
       </div>
     </div>
     <homeGroup :list-arr="publishUnit" title="发布组数据对比">
       <div class="release-button-list">
-        <el-button-group>
-          <el-button type="primary" v-for="item in releaseButtonList" :key="item.id" @click="setValue(item.id)">
-            {{ item.label }}
-          </el-button>
-        </el-button-group>
+        <el-select v-model="publishId" placeholder="查看" filterable @change="setValue">
+          <el-option v-for="item in publishObj.publishSetComparison" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
       </div>
     </homeGroup>
   </div>
@@ -49,34 +47,28 @@ import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
+import { HomeSet } from "@/api/interface";
 const releaseRef = ref<HTMLElement>();
-const releaseButtonList = reactive([
-  { label: "转转", id: 1 },
-  { label: "网站", id: 2 },
-  { label: "循环", id: 3 }
-]);
+const namesList: string[] = ["发布金额", "发布数量", "发布均价"];
+const publishId = ref();
 // 处理数据
-const props = defineProps({
-  crudListObj: {
-    type: Object,
-    default: () => {}
-  },
-  branchName: {
-    type: String,
-    default: "今日"
-  },
-  title: {
-    type: String,
-    default: ""
+const props = withDefaults(
+  defineProps<{
+    publishObj: HomeSet.IPublishStatistics;
+    branchName: string;
+    title: string;
+  }>(),
+  {
+    branchName: "今日"
   }
-});
+);
 const setNumber = () => {
   nextTick(() => {
     let releaseNumber = document.getElementsByClassName("release-number");
     for (let i = 0; i < crudListMap.length; i++) {
       let option = {
         title: {
-          text: `￥${crudListMap[i].value}`,
+          text: `￥${crudListMap[i]}`,
           x: "center",
           y: "center",
           textStyle: {
@@ -140,23 +132,26 @@ const setNumber = () => {
 };
 // 处理数据
 let crudListMap = reactive([]);
-let publishUnit = reactive([]);
+let publishUnit = ref([]);
 setNumber();
 const setCrud = obj => {
-  crudListMap = [obj.totalSales, obj.salesQuantity, obj.recyclingQuantity];
-  publishUnit = obj.publishUnit;
+  crudListMap = [obj.publishMoney, obj.publishAmount, obj.publishAveMoney];
+  publishUnit.value = obj.publishRatio;
   setNumber();
 };
-const setValue = (id: number) => {
-  console.log(id);
+const setValue = (status: number) => {
+  const publishSetComparison = props.publishObj.publishSetComparison;
+  const values = publishSetComparison.find(item => item.id === status);
+  return (publishUnit.value = values.data);
 };
 watch(
-  () => props.crudListObj,
+  () => props.publishObj,
   count => {
     crudListMap = [];
     /* ... */
     setCrud(count);
-  }
+  },
+  { deep: true, immediate: true }
 );
 </script>
 <style scoped lang="scss">

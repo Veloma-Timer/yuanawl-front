@@ -21,6 +21,11 @@
       <el-form-item label="开户号码" prop="openAccountNumber">
         <el-input v-model="drawerProps.row!.openAccountNumber" :maxlength="11" placeholder="请输入开户号码" clearable />
       </el-form-item>
+      <el-form-item label="运营商" prop="VNO">
+        <el-select v-model="drawerProps.row!.VNO" placeholder="请选择运营商" filterable>
+          <el-option v-for="item in operateList" :key="item.value" :label="item.label" :value="item.label" />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
@@ -36,7 +41,8 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 
 const rules = reactive({
   openAccountName: [{ required: true, message: "请输入开户人姓名" }],
-  openAccountNumber: [{ required: true, message: "请输入开户号码" }]
+  openAccountNumber: [{ required: true, message: "请输入开户号码" }],
+  VNO: [{ required: true, message: "请选择运营商" }]
 });
 
 interface DrawerProps {
@@ -58,7 +64,11 @@ const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
   drawerVisible.value = true;
 };
-
+const operateList = [
+  { label: "移动", value: 1 },
+  { label: "联通", value: 2 },
+  { label: "电信", value: 3 }
+];
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {

@@ -3,11 +3,11 @@
     <div class="home-crud">
       <div class="title">{{ props.title }}</div>
       <div class="crud-list flex">
-        <div v-for="item in crudListMap" :key="item.id" class="crud-list-item flex">
+        <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
           <div class="crud-number" ref="crudNumberRef"></div>
           <div class="crud-total">
             <div class="total-name">
-              <span>{{ props.branchName }}销售金额</span>
+              <span>{{ props.branchName }}{{ namesList[index] }}</span>
             </div>
             <div class="total-compare mb22">昨日同比</div>
             <div class="total-proportion flex flx-align-center flx-justify-between">
@@ -45,7 +45,7 @@ import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 
 const crudNumberRef = ref<HTMLElement>();
-
+const namesList: string[] = ["销售金额", "销售数量", "销售加价率"];
 // 处理数据
 const props = withDefaults(
   defineProps<{

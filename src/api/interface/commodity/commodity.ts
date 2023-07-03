@@ -10,6 +10,7 @@ export namespace Commodity {
     openAccountName: string;
     openAccountNumber: string;
     bindingTimes: number;
+    VNO: string;
     openAccountTime: string;
   }
 

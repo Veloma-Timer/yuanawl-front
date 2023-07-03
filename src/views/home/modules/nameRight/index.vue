@@ -6,7 +6,7 @@
         <div class="header-item" v-for="(item, index) in props.header" :key="item + index">{{ item }}</div>
       </div>
       <div class="home-table-row mt26">
-        <div class="table-row-cell flex" v-for="(item, index) in props.salasRankingArr" :key="item.index + index">
+        <div class="table-row-cell flex" v-for="(item, index) in props.salasRankingArr" :key="item.amount + index">
           <!--          <div class="cell-item">-->
           <!--            <span :class="nameClassObj.get(item.index)">{{ item.index }}</span>-->
           <!--          </div>-->
@@ -20,27 +20,17 @@
 </template>
 <script setup lang="ts">
 import { defineProps } from "vue";
-const nameClassObj = new Map([
-  [1, "one"],
-  [2, "two"],
-  [3, "three"],
-  [4, "four"],
-  [5, "five"]
-]);
-const props = defineProps({
-  salasRankingArr: {
-    type: Array,
-    default: () => []
-  },
-  title: {
-    type: String,
-    default: "平台销售额排名"
-  },
-  header: {
-    type: Array,
-    default: () => []
+import { HomeSet } from "@/api/interface";
+const props = withDefaults(
+  defineProps<{
+    salasRankingArr: HomeSet.INameAndAmountAndMonty;
+    title: string;
+    header: Array;
+  }>(),
+  {
+    title: "平台销售额排名"
   }
-});
+);
 </script>
 <style scoped lang="scss">
 .home-right {
