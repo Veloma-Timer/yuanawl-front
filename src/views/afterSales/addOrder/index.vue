@@ -20,7 +20,13 @@
       <el-row class="row-line" :gutter="10">
         <el-col :span="6">
           <el-form-item label="游戏账号" prop="basicAccountId">
-            <el-select v-model="ruleForm.row!.basicAccountId" placeholder="请选择" class="order-input" filterable>
+            <el-select
+              v-model="ruleForm.row!.basicAccountId"
+              placeholder="请选择"
+              class="order-input"
+              filterable
+              @change="onChange"
+            >
               <template v-for="item in accountList" :key="item.id">
                 <el-option :label="item.accountNumber" :value="item.id" />
               </template>

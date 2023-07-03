@@ -3,7 +3,10 @@
     <el-tree :data="dataList" :props="defaultProps" class="w-1/2">
       <template #default="{ node, data }">
         <span class="custom-tree-node">
-          <span class="cursor-pointer" @click="setRouter(data)">
+          <el-link v-if="data.leaf" @click="setRouter(data)">
+            {{ node.label }}
+          </el-link>
+          <span v-else class="cursor-pointer">
             {{ node.label }}
           </span>
         </span>
