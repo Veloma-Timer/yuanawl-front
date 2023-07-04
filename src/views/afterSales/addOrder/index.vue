@@ -355,49 +355,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!-- <div class="sub-title">账号销售信息:</div>
-          <el-row class="basic-info">
-            <el-col :span="6">
-              <el-form-item label="出售人姓名">
-                <span>{{ baseObj?.sallerName || "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="出售时间">
-                <span>{{ baseObj?.saleTime || "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="出售渠道">
-                <span>{{ chanelMap[baseObj?.salePlatformId] || "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="订单编号">
-                <span>{{ baseObj?.accountCode || "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="商品加价率">
-                <span>{{ baseObj.addPriceRate || "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="商品周转周期">
-                <span>{{ baseObj.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="买家手机号">
-                <span>{{ baseObj.buyerTel || "-" }}</span>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="销售备注">
-                <span>{{ baseObj.salesRemark || "-" }}</span>
-              </el-form-item>
-            </el-col>
-          </el-row> -->
           <el-row :gutter="10">
             <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === handleOtherId">
               <el-form-item label="处理结果备注" prop="salesResultRemark" label-width="120px">
@@ -535,13 +492,11 @@ const getDetailInfo = async (id: any) => {
   }
   const { data } = await detailSalesList(id);
   if (data) {
-    // ruleForm.value.row = data as unknown as SalesOrder.AddWorkOrder;
     const afterInfo: any = data.detail.find(item => item.handleDept === 1);
     const saleInfo: any = data.detail.find(item => item.handleDept === 2);
     const publistInfo: any = data.detail.find(item => item.handleDept === 3);
-    console.log(999, publistInfo);
-    ruleForm.value.row = {
-      // 基本
+    // 基本
+    const basicObj = {
       basicOrderCode: data.orderCode,
       basicAccountId: data.accountId,
       basicQuestionType: data.problemTypeId,
@@ -557,53 +512,75 @@ const getDetailInfo = async (id: any) => {
           type: findFileType(imgItem.path)
         };
       })
-      // 售后
-      // afterHandleResult: afterInfo.afterSaleResultId,
-      // afterHandleTime: afterInfo.afterSaleHandleTime,
-      // afterSpecHandleResult: afterInfo.afterSalesResultRemark,
-      // afterCompensationAmount: afterInfo.afterSalesCompensationAmount,
-      // afterNewSecurityPhone: afterInfo.newSecretCellPhone,
-      // afterNewSecurityPassword: afterInfo.newPassword,
-      // afterSalesRemark: afterInfo.afterSalesRemark,
-      // afterAnnex: afterInfo.afterSaleAssets?.map((imgItem: any) => {
-      //   return {
-      //     path: imgItem.path,
-      //     url: imgItem.path,
-      //     id: imgItem.id,
-      //     type: findFileType(imgItem.path)
-      //   };
-      // }),
-      // // 发布
-      // publishHandleCustomerServiceId: publistInfo.publishServiceId,
-      // publishHandleTime: publistInfo.publishHandleTime,
-      // publishHandleResult: publistInfo.publishResultId,
-      // publishResultRemark: publistInfo.publishResultRemark,
-      // publishRemark: publistInfo.publishRemark,
-      // publishAnnex: publistInfo.publishAssets?.map((imgItem: any) => {
-      //   return {
-      //     path: imgItem.path,
-      //     url: imgItem.path,
-      //     id: imgItem.id,
-      //     type: findFileType(imgItem.path)
-      //   };
-      // }),
-      // // 销售
-      // saleHandleCustomerService: saleInfo.salesResultId,
-      // saleHandleTime: saleInfo.salesHandleTime,
-      // saleHandleResult: saleInfo.salesResultId,
-      // saleCompensationUserAmount: saleInfo.salesCompensationAmount,
-      // saleChangeUserNumber: saleInfo.newAccountId,
-      // salesResultRemark: saleInfo.salesResultRemark,
-      // salesRemark: saleInfo.salesRemark,
-      // saleannex: saleInfo.salesAssets?.map((imgItem: any) => {
-      //   return {
-      //     path: imgItem.path,
-      //     url: imgItem.path,
-      //     id: imgItem.id,
-      //     type: findFileType(imgItem.path)
-      //   };
-      // })
     };
+    // 售后
+    let afterObj = {};
+    if (afterInfo) {
+      afterObj = {
+        afterHandleResult: afterInfo.afterSaleResultId,
+        afterHandleTime: afterInfo.afterSaleHandleTime,
+        afterSpecHandleResult: afterInfo.afterSalesResultRemark,
+        afterCompensationAmount: afterInfo.afterSalesCompensationAmount,
+        afterNewSecurityPhone: afterInfo.newSecretCellPhone,
+        afterNewSecurityPassword: afterInfo.newPassword,
+        afterSalesRemark: afterInfo.afterSalesRemark,
+        afterCustomerServiceId: afterInfo.afterSaleServiceId,
+        afterAnnex: afterInfo.afterSaleAssets?.map((imgItem: any) => {
+          return {
+            path: imgItem.path,
+            url: imgItem.path,
+            id: imgItem.id,
+            type: findFileType(imgItem.path)
+          };
+        })
+      };
+    }
+    // 发布
+    let publishObj = {};
+    if (publistInfo) {
+      publishObj = {
+        publishHandleCustomerServiceId: publistInfo.publishServiceId,
+        publishHandleTime: publistInfo.publishHandleTime,
+        publishHandleResult: publistInfo.publishResultId,
+        publishResultRemark: publistInfo.publishResultRemark,
+        publishRemark: publistInfo.publishRemark,
+        publishAnnex: publistInfo.publishAssets?.map((imgItem: any) => {
+          return {
+            path: imgItem.path,
+            url: imgItem.path,
+            id: imgItem.id,
+            type: findFileType(imgItem.path)
+          };
+        })
+      };
+    }
+    // 销售
+    let saleObj = {};
+    if (saleInfo) {
+      saleObj = {
+        saleHandleCustomerService: saleInfo.salesResultId,
+        saleHandleTime: saleInfo.salesHandleTime,
+        saleHandleResult: saleInfo.salesResultId,
+        saleCompensationUserAmount: saleInfo.salesCompensationAmount,
+        saleChangeUserNumber: saleInfo.newAccountId,
+        salesResultRemark: saleInfo.salesResultRemark,
+        salesRemark: saleInfo.salesRemark,
+        saleannex: saleInfo.salesAssets?.map((imgItem: any) => {
+          return {
+            path: imgItem.path,
+            url: imgItem.path,
+            id: imgItem.id,
+            type: findFileType(imgItem.path)
+          };
+        })
+      };
+    }
+    ruleForm.value.row = {
+      ...basicObj,
+      ...afterObj,
+      ...publishObj,
+      ...saleObj
+    } as unknown as SalesOrder.AddWorkOrder;
     // 账号销售数据信息默认
     onChangeAccount(data.accountId);
     // 如果有详情数据 隐藏添加按钮
@@ -708,7 +685,7 @@ const handleSubmit = () => {
       };
       console.log(baseData);
       // 基本信息
-      const { data } = await api!(baseData);
+      const { data }: any = await api!(baseData);
       // 售后信息
       await addAfterInfo({
         orderId: data.id,
@@ -791,12 +768,14 @@ initOrderData();
 const chanelMap = ref();
 async function getChanelMap() {
   const { data }: any = await sellKeyMap();
-  const obj: { [key: number]: string } = (data?.publishPlatform || []).reduce((acc, curr) => {
-    acc[curr.value] = curr.label;
-    return acc;
-  }, {});
+  const obj: { [key: number]: string } = (data?.publishPlatform || []).reduce(
+    (acc: { [x: string]: any }, curr: { value: string | number; label: any }) => {
+      acc[curr.value] = curr.label;
+      return acc;
+    },
+    {}
+  );
   chanelMap.value = obj;
-  console.log(5555, data, obj);
 }
 getChanelMap();
 </script>
@@ -810,8 +789,8 @@ getChanelMap();
   }
 }
 .first-header {
-  display: flex;
   position: relative;
+  display: flex;
   margin-bottom: 20px;
   .basic {
     :deep(.title) {
@@ -820,8 +799,8 @@ getChanelMap();
   }
   .edit-btn {
     position: absolute;
-    right: 0;
     top: 5px;
+    right: 0;
   }
 }
 .rule-form-full {
@@ -836,24 +815,24 @@ getChanelMap();
     border-bottom: 1px solid #ebebeb;
   }
   .sub-title {
-    font-size: 16px;
-    text-align: right;
-    color: rgb(42, 42, 42);
-    white-space: nowrap;
-    letter-spacing: 0px;
-    word-break: normal;
-    text-align: left;
     margin: 10px 0;
+    font-size: 16px;
+    color: rgb(42 42 42);
+    text-align: right;
+    text-align: left;
+    letter-spacing: 0;
+    word-break: normal;
+    white-space: nowrap;
   }
   .basic-info {
-    color: #7f7f7f;
-    font-size: 14px;
     margin: 10px 0;
+    font-size: 14px;
+    color: #7f7f7f;
   }
   .add-process {
-    width: 100%;
     display: flex;
     justify-content: center;
+    width: 100%;
     .btn {
       width: 182px;
       height: 50px;
@@ -869,10 +848,10 @@ getChanelMap();
   }
 }
 .foot-btn {
-  width: 100%;
+  z-index: 999;
   display: flex;
   justify-content: flex-end;
-  z-index: 999;
+  width: 100%;
   .cancel {
     width: 112px;
     height: 38px;
