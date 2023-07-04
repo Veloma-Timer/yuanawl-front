@@ -1,0 +1,145 @@
+<template>
+  <div class="table-box">
+    <ProTable ref="proTable" title="销售金额汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
+      <!-- 表格操作 -->
+      <template #operation="scope">
+        <el-button type="primary" link @click="openDrawer('查看', scope.row)" :icon="View">查看</el-button>
+      </template>
+      <!-- 表格 header 按钮 -->
+      <template #tableHeader>
+        <el-radio-group v-model="currentTimeSelect" size="large" @change="changeCityDate" class="city-radio">
+          <template v-for="(item, index) in tabCityList" :key="index">
+            <el-radio-button :label="item.title" />
+          </template>
+        </el-radio-group>
+      </template>
+    </ProTable>
+    <RecoveryDrawer ref="recoveryDrawerRef" />
+  </div>
+</template>
+
+<script setup lang="tsx" name="useProTable">
+import { Data } from "@/api/interface";
+import { Commodity } from "@/api/interface/commodity/commodity";
+import ProTable from "@/components/ProTable/index.vue";
+import RecoveryDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
+import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
+import { baseAccountRecyle } from "@/api/modules/order";
+import { summaryListHistory, addSummary, editSummary } from "@/api/modules/commodity";
+import { getAllList } from "@/api/modules/accountClass";
+import { View } from "@element-plus/icons-vue";
+import dayjs from "dayjs";
+const proTable = ref<ProTableInstance>();
+const initParam = reactive({});
+
+type Props = {
+  selectBranchId: number;
+};
+const tableProps = withDefaults(defineProps<Props>(), {
+  selectBranchId: 0
+});
+
+const getTableList = (params: any) => {
+  if (currentTimeSelect.value === "今日回收") {
+    return baseAccountRecyle(params, tableProps.selectBranchId);
+  } else {
+    return summaryListHistory({ ...params, branchId: tableProps.selectBranchId });
+  }
+};
+
+// 表格配置项
+const columns: ColumnProps<Data.RecycleList>[] = [
+  { type: "selection", fixed: "left", width: 80 },
+  { prop: "operation", label: "操作", fixed: "right", width: 130 },
+  {
+    prop: "accountCode",
+    label: "订单编号",
+    search: { el: "input" },
+    render: scope => {
+      return <span>{scope.row.accountCode || "--"}</span>;
+    }
+  },
+  {
+    prop: "accountType",
+    label: "游戏分类",
+    enum: getAllList,
+    search: { el: "select" },
+    fieldNames: { label: "typeName", value: "id" }
+  },
+  { prop: "accountTitle", label: "标题" },
+  {
+    prop: "accountRecyclerPrice",
+    label: "回收金额",
+    render: scope => {
+      return <span>￥{scope.row.accountRecyclerPrice || "--"}</span>;
+    }
+  },
+  {
+    prop: "accountRecycler",
+    label: "回收人姓名",
+    render: scope => {
+      return <span>{scope.row?.accountRecycler?.userName || "--"}</span>;
+    }
+  },
+  {
+    prop: "accountRecyclerTime",
+    label: "回收时间",
+    width: 180,
+    render: scope => {
+      const time = scope.row?.accountRecyclerTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
+    },
+    search: {
+      el: "date-picker",
+      span: 1,
+      props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" }
+    }
+  },
+  {
+    prop: "accountStatus",
+    label: "账号状态",
+    render: scope => {
+      return <span>{scope.row.accountStatus === 1 ? "已售" : "未售"}</span>;
+    }
+  }
+];
+
+// 打开 drawer(新增、查看、编辑)
+const recoveryDrawerRef = ref<InstanceType<typeof RecoveryDrawer> | null>(null);
+const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+  const params = {
+    title,
+    isView: title === "查看",
+    row: { ...row },
+    api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
+    getTableList: proTable.value?.getTableList
+  };
+  recoveryDrawerRef.value?.acceptParams(params);
+};
+
+const currentTimeSelect = ref("今日回收");
+const tabCityList = ref([
+  {
+    title: "今日回收",
+    key: "today"
+  },
+  {
+    title: "历史回收",
+    key: "history"
+  }
+]);
+function changeCityDate(e: string | number | boolean) {
+  currentTimeSelect.value = e as string;
+  proTable.value?.getTableList();
+}
+
+// 监听 selectBranchId
+watch(
+  () => tableProps.selectBranchId,
+  value => {
+    if (value) {
+      proTable.value?.getTableList();
+    }
+  }
+);
+</script>
