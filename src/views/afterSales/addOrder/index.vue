@@ -15,7 +15,11 @@
     >
       <div class="first-header">
         <Header title="基本信息" class="header basic"></Header>
-        <el-button type="primary" @click="edit" class="edit-btn" style="width: 112px"> 编辑 </el-button>
+        <el-form label-width="0" class="edit-btn">
+          <el-form-item>
+            <el-button v-if="id" type="primary" @click="edit" :disabled="false" style="width: 112px"> 编辑 </el-button>
+          </el-form-item>
+        </el-form>
       </div>
       <el-row class="row-line" :gutter="10">
         <el-col :span="6">
@@ -176,13 +180,17 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="通知其他部门" prop="afterSalesInformDeptId" label-width="120px">
+                <el-select v-model="ruleForm.row!.afterSalesInformDeptId" placeholder="请选择" class="order-input" filterable>
+                  <template v-for="item in setTypeList" :key="item.value">
+                    <el-option :label="item.label" :value="item.value" />
+                  </template>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="10">
-            <!-- <el-col :span="6">
-              <el-form-item label="通知其他部门" prop="afterNotifyOtherDepartments" label-width="120px">
-                <el-input v-model="ruleForm.row!.afterNotifyOtherDepartments" placeholder="请输入" class="order-input"></el-input>
-              </el-form-item>
-            </el-col> -->
             <el-col :span="6">
               <el-form-item label="赔付金额" prop="afterCompensationAmount" label-width="120px">
                 <el-input-number
@@ -271,6 +279,15 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="通知其他部门" prop="publishInformDeptId" label-width="120px">
+                <el-select v-model="ruleForm.row!.publishInformDeptId" placeholder="请选择" class="order-input" filterable>
+                  <template v-for="item in setTypeList" :key="item.value">
+                    <el-option :label="item.label" :value="item.value" />
+                  </template>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
           <el-row :gutter="10" class="row-line">
             <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === handleOtherId">
@@ -333,8 +350,17 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="通知其他部门" prop="salesInformDeptId" label-width="120px">
+                <el-select v-model="ruleForm.row!.salesInformDeptId" placeholder="请选择" class="order-input" filterable>
+                  <template v-for="item in setTypeList" :key="item.value">
+                    <el-option :label="item.label" :value="item.value" />
+                  </template>
+                </el-select>
+              </el-form-item>
+            </el-col>
           </el-row>
-          <el-row :gutter="10" class="row-line">
+          <el-row :gutter="10">
             <el-col :span="6">
               <el-form-item label="赔付用户金额" prop="saleCompensationUserAmount" label-width="120px">
                 <el-input-number
@@ -345,13 +371,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="通知其他部门" prop="saleNotifyOtherDepartments" label-width="120px">
-                <el-input v-model="ruleForm.row!.saleNotifyOtherDepartments" placeholder="请输入" class="order-input"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
               <el-form-item label="给用户换号" prop="saleChangeUserNumber" label-width="120px">
-                <el-input v-model="ruleForm.row!.saleChangeUserNumber" placeholder="请输入" class="order-input"></el-input>
+                <el-select
+                  v-model="ruleForm.row!.saleChangeUserNumber"
+                  placeholder="请选择"
+                  class="order-input"
+                  filterable
+                  @change="onChangeAccount"
+                >
+                  <template v-for="item in accountList" :key="item.id">
+                    <el-option :label="item.accountNumber" :value="item.id" />
+                  </template>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -411,12 +442,12 @@ import {
   detailSalesList,
   getProblemTypes,
   getHandleTypes,
+  getSetTypes,
   addAfterInfo,
   addSalesInfo,
   addPublishInfo
 } from "@/api/modules/order";
-import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
-import { getAllUser } from "@/api/modules/set";
+import { getAllBranch, getAllBaseAccount, getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
 import { useRouter, useRoute } from "vue-router";
 import { sellKeyMap } from "@/api/modules/dictionary";
@@ -474,7 +505,8 @@ interface IAddOrder {
 }
 
 const ruleForm = ref<IAddOrder>({
-  isView: false,
+  // 编辑: 默认禁用
+  isView: id ? true : false,
   row: {}
 });
 
@@ -524,6 +556,7 @@ const getDetailInfo = async (id: any) => {
         afterNewSecurityPhone: afterInfo.newSecretCellPhone,
         afterNewSecurityPassword: afterInfo.newPassword,
         afterSalesRemark: afterInfo.afterSalesRemark,
+        afterSalesInformDeptId: afterInfo.afterSalesInformDeptId,
         afterCustomerServiceId: afterInfo.afterSaleServiceId,
         afterAnnex: afterInfo.afterSaleAssets?.map((imgItem: any) => {
           return {
@@ -544,6 +577,7 @@ const getDetailInfo = async (id: any) => {
         publishHandleResult: publistInfo.publishResultId,
         publishResultRemark: publistInfo.publishResultRemark,
         publishRemark: publistInfo.publishRemark,
+        publishInformDeptId: afterInfo.publishInformDeptId,
         publishAnnex: publistInfo.publishAssets?.map((imgItem: any) => {
           return {
             path: imgItem.path,
@@ -565,6 +599,7 @@ const getDetailInfo = async (id: any) => {
         saleChangeUserNumber: saleInfo.newAccountId,
         salesResultRemark: saleInfo.salesResultRemark,
         salesRemark: saleInfo.salesRemark,
+        salesInformDeptId: afterInfo.salesInformDeptId,
         saleannex: saleInfo.salesAssets?.map((imgItem: any) => {
           return {
             path: imgItem.path,
@@ -633,6 +668,14 @@ const getHandleTypesFun = async () => {
   handleOtherId.value = otherObj.id;
 };
 getHandleTypesFun();
+
+// 数据字典-部门列表
+const setTypeList = ref<listTypeObj[]>([]);
+const getSetTypeFun = async () => {
+  const { data } = await getSetTypes();
+  setTypeList.value = data.set;
+};
+getSetTypeFun();
 
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
@@ -743,7 +786,6 @@ const goBack = () => {
 
 const edit = () => {
   ruleForm.value.isView = false;
-  console.log("编辑");
 };
 const isAddProcess = ref(false);
 

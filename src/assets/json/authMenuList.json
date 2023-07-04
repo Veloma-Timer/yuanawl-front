@@ -332,35 +332,7 @@
             "icon": "Menu",
             "title": "工单新增",
             "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/afterSales/hangWork",
-          "name": "杭州工单",
-          "component": "/afterSales/hangWork/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "杭州工单",
-            "isLink": "",
-            "isHide": false,
-            "isFull": false,
-            "isAffix": false,
-            "isKeepAlive": false
-          }
-        },
-        {
-          "path": "/afterSales/xinWork",
-          "name": "信阳工单",
-          "component": "/afterSales/xinWork/index",
-          "meta": {
-            "icon": "Menu",
-            "title": "信阳工单",
-            "isLink": "",
-            "isHide": false,
+            "isHide": true,
             "isFull": false,
             "isAffix": false,
             "isKeepAlive": false

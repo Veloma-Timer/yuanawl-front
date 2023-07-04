@@ -181,6 +181,7 @@ export namespace SalesOrder {
     afterNewSecurityPhone?: number; // 新密保手机
     afterNewSecurityPassword?: number; // 新密码
     afterSpecHandleResult: string; // 售后处理结果备注
+    afterSalesInformDeptId: number;
     afterSalesRemark: string; // 售后备注
     afterAnnex: any[]; // 附件
     // 发布部门
@@ -189,6 +190,7 @@ export namespace SalesOrder {
     publishHandleResult: number; // 处理结果
     publishResultRemark: string; // 发布处理结果备注
     publishRemark: string; // 发布备注
+    publishInformDeptId: number;
     publishAnnex: any[]; // 附件
     // 销售部门
     saleHandleCustomerService: number; // 处理客服
@@ -207,6 +209,7 @@ export namespace SalesOrder {
     saleAccsellerMark: string; // 销售备注
     salesResultRemark: string; // 销售处理结果备注
     salesRemark: string; // 销售备注填的
+    salesInformDeptId: number;
     saleannex: any[]; // 附件
   }
 

@@ -26,9 +26,9 @@ import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getAllBranch } from "@/api/modules/set";
 import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
-import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
+import { INSURE_STATUS } from "@/public/constant";
+import { getProblemTypes } from "@/api/modules/order";
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
@@ -53,7 +53,6 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     prop: "orderCode",
     label: "工单编号",
     search: { el: "input" },
-    width: 180,
     render: scope => {
       return <span>{scope.row.orderCode || "--"}</span>;
     }
@@ -62,184 +61,95 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     prop: "accountCode",
     label: "账号编号",
     search: { el: "input" },
-    width: 180,
     render: scope => {
       return (
         <el-button type="primary" link>
-          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.account?.accountCode || "" } }}>
-            {scope.row?.account?.accountCode || "--"}
+          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.accountId || "" } }}>
+            {scope.row?.accountId || "--"}
           </router-link>
         </el-button>
       );
     }
   },
   {
-    prop: "accountNumber",
-    label: "账号",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row?.account?.accountNumber || "--"}</span>;
-    }
+    prop: "problemTypeId",
+    label: "问题类型",
+    enum: async () => {
+      const {
+        data: { problemTypes }
+      } = await getProblemTypes();
+      return { data: problemTypes };
+    },
+    search: { el: "select", props: { filterable: true } },
+    fieldNames: { label: "label", value: "value" },
+    width: 180
   },
   {
-    prop: "accountPrice",
-    label: "实付金额",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.accountPrice || "--"}</span>;
-    }
-  },
-  {
-    prop: "userCompensationPrice",
-    label: "用户赔付金额",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.userCompensationPrice || "--"}</span>;
-    }
-  },
-  {
-    prop: "platformCompensationPrice",
-    label: "平台赔付金额",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.platformCompensationPrice || "--"}</span>;
-    }
-  },
-  {
-    prop: "reportPerson",
+    prop: "reportPersonId",
     label: "上报人姓名",
+    search: { el: "input" },
     width: 180,
     render: scope => {
-      return <span>{scope.row.reportPerson || "--"}</span>;
+      return <span>{scope.row.reportPersonId || "--"}</span>;
     }
   },
   {
-    prop: "newHandle",
-    label: "最新处理客服姓名",
+    prop: "createdTime",
+    label: "上报日期",
     width: 180,
+    search: {
+      el: "date-picker",
+      span: 1,
+      props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" }
+    },
     render: scope => {
-      return <span>{scope.row.newHandle || "--"}</span>;
-    }
-  },
-  {
-    prop: "newHandleResult",
-    label: "最新处理结果",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.newHandleResult || "--"}</span>;
-    }
-  },
-  {
-    prop: "handleTimes",
-    label: "处理次数",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.handleTimes || "-"}</span>;
+      const time = scope.row?.createdTime;
+      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
     }
   },
   {
     prop: "insure",
     label: "是否投保",
     width: 180,
+    search: { el: "select", props: { filterable: true } },
+    enum: [
+      {
+        label: "否",
+        value: 0
+      },
+      {
+        label: "是",
+        value: 1
+      }
+    ],
     render: scope => {
       return <span>{INSURE_STATUS[scope.row.insure as any] || "--"}</span>;
     }
   },
   {
-    prop: "recycleBranch",
-    label: "回收店铺",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.recycleBranch || "--"}</span>;
-    }
-  },
-  {
-    prop: "submitOrderTime",
-    label: "提交工单时间",
-    width: 180,
-    render: scope => {
-      const time = scope.row?.submitOrderTime;
-      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
-    }
-  },
-  {
-    prop: "newHandleTime",
-    label: "最新处理时间",
-    width: 180,
-    render: scope => {
-      const time = scope.row?.newHandleTime;
-      return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
-    }
-  },
-  {
-    prop: "handleTime",
-    label: "处理时效",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.handleTime || "--"}</span>;
-    }
-  },
-  {
     prop: "orderStar",
     label: "工单星级",
+    search: { el: "input" },
     width: 180,
     render: scope => {
       return <el-rate v-model={scope.row.orderStar} max={3} disabled />;
     }
   },
   {
-    prop: "orderStatus",
-    label: "状态",
-    enum: [
-      {
-        label: "待处理",
-        value: "0"
-      },
-      {
-        label: "已处理",
-        value: "1"
-      }
-    ],
+    prop: "handleTime",
+    label: "处理时效",
+    search: { el: "input" },
     width: 180,
-    search: { el: "select", props: { filterable: true } },
     render: scope => {
-      return <span>{ORDER_STATUS[scope.row.orderStatus as any] || "--"}</span>;
+      return <span>{scope.row.handleTime || "--"}</span>;
     }
   },
   {
-    prop: "orderChecker",
-    label: "审核人",
-    width: 180,
+    prop: "remark",
+    label: "留言",
     render: scope => {
-      return <span>{scope.row.orderChecker || "--"}</span>;
+      return <span>{scope.row.remark || "-"}</span>;
     }
-  },
-  {
-    prop: "checkerResult",
-    label: "审核结果",
-    width: 180,
-    search: { el: "select", props: { filterable: true } },
-    enum: [
-      {
-        label: "未通过",
-        value: "0"
-      },
-      {
-        label: "通过",
-        value: "1"
-      }
-    ],
-    render: scope => {
-      return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
-    }
-  },
-  {
-    prop: "branch",
-    label: "店铺",
-    width: 180,
-    enum: getAllBranch,
-    search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "branchName", value: "id" }
   }
 ];
 

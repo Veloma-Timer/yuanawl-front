@@ -35,6 +35,7 @@ import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-pl
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
+import { getProblemTypes } from "@/api/modules/order";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -60,7 +61,6 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     prop: "accountCode",
     label: "账号编号",
     search: { el: "input" },
-    width: 180,
     render: scope => {
       return (
         <el-button type="primary" link>
@@ -74,14 +74,20 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "problemTypeId",
     label: "问题类型",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.problemTypeId || "--"}</span>;
-    }
+    enum: async () => {
+      const {
+        data: { problemTypes }
+      } = await getProblemTypes();
+      return { data: problemTypes };
+    },
+    search: { el: "select", props: { filterable: true } },
+    fieldNames: { label: "label", value: "value" },
+    width: 180
   },
   {
     prop: "reportPersonId",
     label: "上报人姓名",
+    search: { el: "input" },
     width: 180,
     render: scope => {
       return <span>{scope.row.reportPersonId || "--"}</span>;
@@ -91,6 +97,11 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     prop: "createdTime",
     label: "上报日期",
     width: 180,
+    search: {
+      el: "date-picker",
+      span: 1,
+      props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" }
+    },
     render: scope => {
       const time = scope.row?.createdTime;
       return <span>{dayjs(time).format("YYYY-MM-DD HH:mm:ss") || "--"}</span>;
@@ -100,6 +111,17 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     prop: "insure",
     label: "是否投保",
     width: 180,
+    search: { el: "select", props: { filterable: true } },
+    enum: [
+      {
+        label: "否",
+        value: 0
+      },
+      {
+        label: "是",
+        value: 1
+      }
+    ],
     render: scope => {
       return <span>{INSURE_STATUS[scope.row.insure as any] || "--"}</span>;
     }
@@ -107,6 +129,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "orderStar",
     label: "工单星级",
+    search: { el: "input" },
     width: 180,
     render: scope => {
       return <el-rate v-model={scope.row.orderStar} max={3} disabled />;
@@ -115,6 +138,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "handleTime",
     label: "处理时效",
+    search: { el: "input" },
     width: 180,
     render: scope => {
       return <span>{scope.row.handleTime || "--"}</span>;

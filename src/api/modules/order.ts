@@ -94,6 +94,11 @@ export const getHandleTypes = () => {
   return http.get<ProblemList>(`${PORT3}/sys_map?key=handleTypes`);
 };
 
+// 数据字典-部门列表
+export const getSetTypes = () => {
+  return http.get<ProblemList>(`${PORT3}/sys_map?key=set`);
+};
+
 // 新增工单售后信息
 export const addAfterInfo = (params: any) => {
   return http.post(`${PORT3}/base_work_order/after-sales`, params);
