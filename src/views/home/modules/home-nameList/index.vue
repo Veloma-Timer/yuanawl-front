@@ -4,7 +4,7 @@
       <div class="name-left-bottom">
         <div class="flex">
           <div class="left-progress mt30">
-            <el-progress type="circle" :percentage="nameList.length" :width="197">
+            <el-progress type="circle" :percentage="awaitWorkOrder?.untreatedAmount" :width="197">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">总未处理</span>
@@ -12,22 +12,15 @@
             </el-progress>
           </div>
           <div class="left-progress mt30">
-            <el-progress type="circle" :percentage="nameList.length" :width="197">
+            <el-progress type="circle" :percentage="awaitWorkOrder?.finishedAmount" :width="197">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">今日完成</span>
               </template>
             </el-progress>
           </div>
-          <div class="left-table mr-20">
-            <div class="table-item flx-align-center" v-for="item in nameList" :key="item.id">
-              <div class="operate">【待处理】</div>
-              <div class="content">订单[{{ item.orderCode }}]</div>
-              <div class="bottom" @click="setRouterLink(item)">立即处理&gt;</div>
-            </div>
-          </div>
           <div class="left-table">
-            <div class="table-item flx-align-center" v-for="item in nameList" :key="item.id">
+            <div class="table-item flx-align-center" v-for="item in awaitWorkOrder?.pendingList" :key="item.id">
               <div class="operate">【待处理】</div>
               <div class="content">订单[{{ item.orderCode }}]</div>
               <div class="bottom" @click="setRouterLink(item)">立即处理&gt;</div>
@@ -39,23 +32,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { homeOrder } from "@/api/modules/home";
-import { defineProps, reactive, toRef, watch } from "vue";
+import { defineProps, watch } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-interface plat {
-  branch: string;
-  index: number;
-  name: string;
-  salas: number;
-}
-let platformList: plat[] | undefined = reactive([]);
-let nameList = reactive([]);
-const myArrayRef = toRef(props, "platformSalas");
-const getNameList = async () => {
-  const { data } = await homeOrder({ pageSize: 5, pageNum: 1 });
-  nameList = data.list || [];
-};
+const getNameList = async () => {};
 const setRouterLink = item => {
   router.push({
     path: "/afterSales/orderSummary",
@@ -64,19 +44,35 @@ const setRouterLink = item => {
     }
   });
 };
+// 处理数据
 const props = defineProps({
   platformSalas: {
     type: Array,
     default: () => []
+  },
+  awaitWorkOrder: {
+    type: Object,
+    default: () => {
+      return {
+        untreatedAmount: 0,
+        finishedAmount: 0,
+        pendingList: []
+      };
+    }
   },
   salasRanking: {
     type: Array,
     default: () => []
   }
 });
-watch(myArrayRef, newValue => {
-  platformList = newValue;
-});
+watch(
+  () => props.awaitWorkOrder,
+  count => {
+    /* ... */
+    props.awaitWorkOrder = count;
+  },
+  { deep: true, immediate: true }
+);
 getNameList();
 </script>
 <style scoped lang="scss">
@@ -101,10 +97,11 @@ getNameList();
         margin-right: 50px;
       }
       .left-table {
-        width: 412px;
+        width: calc(100% - 297px);
         .table-item {
-          width: 100%;
+          width: 412px;
           height: 41px;
+          float: left;
           padding: 0 16px;
           margin-bottom: 7px;
           background: #ffffff;
@@ -133,8 +130,8 @@ getNameList();
             background: #f85d5d;
             border-radius: 14px;
           }
-          &:last-child {
-            margin: 0;
+          &:nth-child(1n) {
+            margin: 6px 20px;
           }
         }
       }

@@ -169,7 +169,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="账号描述" prop="accountDesc">
-        <el-input v-model="drawerProps.row!.accountDesc" placeholder="请输入账号描述" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.accountDesc"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          type="textarea"
+          resize="none"
+          placeholder="请输入账号描述"
+          clearable
+        ></el-input>
       </el-form-item>
       <!--      <el-form-item label="账号状态" prop="accountStatus">-->
       <!--        <el-select v-model="drawerProps.row!.accountStatus" placeholder="请选择" filterable>-->

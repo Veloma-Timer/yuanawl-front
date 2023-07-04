@@ -13,12 +13,12 @@
       </el-form-item>
       <el-form-item label="角色描述" prop="roleDesc">
         <el-input
-          autosize
+          :autosize="{ minRows: 3, maxRows: 5 }"
           type="textarea"
+          resize="none"
           v-model="drawerProps.row!.roleDesc"
           placeholder="请输入角色描述"
           clearable
-          resize="none"
         ></el-input>
       </el-form-item>
     </el-form>

@@ -39,7 +39,7 @@ const getFixed = (str: string) => {
   }
   return "--";
 };
-const groupGet = (data: number[], value: number[], name: string[]) => {
+const groupGet = (data: number[], name: number[]) => {
   nextTick(() => {
     let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
     let option = {
@@ -51,7 +51,7 @@ const groupGet = (data: number[], value: number[], name: string[]) => {
         }
       },
       legend: {
-        data: ["金额", "数量"],
+        data: ["数量"],
         bottom: 0
       },
       grid: {
@@ -73,9 +73,6 @@ const groupGet = (data: number[], value: number[], name: string[]) => {
         {
           type: "value",
           name: "",
-          min: 0,
-          max: 250,
-          interval: 50,
           axisLabel: {
             formatter: "{value}"
           }
@@ -83,9 +80,6 @@ const groupGet = (data: number[], value: number[], name: string[]) => {
         {
           type: "value",
           name: "",
-          min: 0,
-          max: 25,
-          interval: 5,
           axisLabel: {
             formatter: "{value}"
           }
@@ -93,21 +87,11 @@ const groupGet = (data: number[], value: number[], name: string[]) => {
       ],
       series: [
         {
-          name: "金额",
+          name: "数量",
           type: "bar",
           tooltip: {
             valueFormatter: function (value) {
               return getFixed(value);
-            }
-          },
-          data: value
-        },
-        {
-          name: "数量",
-          type: "line",
-          tooltip: {
-            valueFormatter: function (value) {
-              return value;
             }
           },
           data
@@ -124,13 +108,12 @@ const groupGet = (data: number[], value: number[], name: string[]) => {
 watch(
   myArrayRef,
   newValue => {
+    console.log(newValue);
     let data,
-      name,
-      value = [];
+      name = [];
     data = setValues(newValue, "amount");
     name = setValues(newValue, "name");
-    value = setValues(newValue, "money");
-    groupGet(data, name, value);
+    groupGet(data, name);
   },
   { deep: true, immediate: true }
 );

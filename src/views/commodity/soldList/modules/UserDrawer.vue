@@ -108,7 +108,14 @@
         <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号/邮箱密保" clearable :maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="账号备注" prop="accountRemark">
-        <el-input v-model="drawerProps.row!.accountRemark" placeholder="请输入备注" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.accountRemark"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          type="textarea"
+          resize="none"
+          placeholder="请输入备注"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item label="有无二次" prop="haveSecondary">
         <el-select v-model="drawerProps.row!.haveSecondary" placeholder="请选择" filterable>
@@ -126,7 +133,14 @@
         </el-select>
       </el-form-item>
       <el-form-item label="账号描述" prop="accountDesc">
-        <el-input v-model="drawerProps.row!.accountDesc" placeholder="请输入账号描述" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.accountDesc"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          type="textarea"
+          resize="none"
+          placeholder="请输入账号描述"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item label="账号状态" prop="accountStatus">
         <el-select v-model="drawerProps.row!.accountStatus" placeholder="请选择" filterable>

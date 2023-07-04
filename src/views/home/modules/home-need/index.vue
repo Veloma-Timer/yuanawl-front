@@ -2,77 +2,95 @@
   <div>
     <div class="home-crud">
       <div class="title">{{ props.title }}</div>
-      <div class="crud-list flex">
-        <homeNameList />
+      <div class="crud-list">
+        <homeNameList :await-work-order="awaitWorkOrder" />
       </div>
     </div>
-    <homeGroup :list-arr="publishUnit" title="售后工单类型">
+    <homeNeed :list-arr="publishUnitTypesObj?.typeList" title="售后工单类型">
       <div>
-        <el-select v-model="value" class="m-2" clearable placeholder="Select">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        <el-select v-model="publishUnitTypesObj.typeId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
+          <el-option v-for="item in workOrderObj?.workOrderTypes" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-    </homeGroup>
-    <homeGroup :list-arr="publishUnit" title="售后组数据对比">
-      <el-select v-model="value" class="m-2" clearable placeholder="Select">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+    </homeNeed>
+    <homeNeed :list-arr="afterPublishUnitObj?.afterList" title="售后组数据对比">
+      <el-select v-model="afterPublishUnitObj.afterId" class="m-2" clearable placeholder="查看数据" @change="setAfter">
+        <el-option v-for="item in workOrderObj?.afterSalesSetComparison" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
-    </homeGroup>
+    </homeNeed>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, defineProps, watch } from "vue";
+import { defineProps, ref, watch } from "vue";
 import homeNameList from "@/views/home/modules/home-nameList/index.vue";
-import homeGroup from "@/views/home/modules/home-group/index.vue";
+import homeNeed from "@/views/home/modules/home-group/need.vue";
+import { HomeSet } from "@/api/interface";
 // 处理数据
-const props = defineProps({
-  crudListObj: {
-    type: Object,
-    default: () => {}
-  },
-  branchName: {
-    type: String,
-    default: "今日"
-  },
-  title: {
-    type: String,
-    default: ""
+const props = withDefaults(
+  defineProps<{
+    workOrderObj: HomeSet.IAfterSalesStatistics;
+    branchName: string;
+    title: string;
+  }>(),
+  {
+    branchName: "今日"
   }
+);
+
+let publishUnitTypesObj = ref({
+  typeList: [],
+  typeId: ""
 });
-let publishUnit = reactive([]);
-let value = ref("");
-const options = [
-  {
-    value: "Option1",
-    label: "Option1"
-  },
-  {
-    value: "Option2",
-    label: "Option2"
-  },
-  {
-    value: "Option3",
-    label: "Option3"
-  },
-  {
-    value: "Option4",
-    label: "Option4"
-  },
-  {
-    value: "Option5",
-    label: "Option5"
-  }
-];
+let afterPublishUnitObj = ref({
+  afterList: [],
+  afterId: ""
+});
+const setTypes = (status: string) => {
+  const publishSetComparison = props.workOrderObj.workOrderTypes;
+  const values = publishSetComparison.find(item => item.id === status);
+  const obj = {
+    ...publishUnitTypesObj,
+    typeList: values.data,
+    typeId: values.id
+  };
+  return (publishUnitTypesObj.value = obj);
+};
+const setAfter = (status: string) => {
+  const publishSetComparison = props.workOrderObj.afterSalesSetComparison;
+  const values = publishSetComparison.find(item => item.id === status);
+  const obj = {
+    ...publishUnitTypesObj,
+    afterList: values.data,
+    afterId: values.id
+  };
+  return (afterPublishUnitObj.value = obj);
+};
+let awaitWorkOrder = ref({});
 const setCrud = obj => {
-  publishUnit = obj.publishUnit;
+  awaitWorkOrder.value = obj.awaitWorkOrder;
+  if (obj.workOrderTypes.length > 0) {
+    publishUnitTypesObj.value = {
+      ...publishUnitTypesObj.value,
+      typeList: obj.workOrderTypes[0].data,
+      typeId: obj.workOrderTypes[0].id
+    };
+  }
+  if (obj.afterSalesSetComparison > 0) {
+    afterPublishUnitObj.value = {
+      ...afterPublishUnitObj.value,
+      afterList: obj.afterSalesSetComparison[0].data,
+      afterId: obj.afterSalesSetComparison[0].id
+    };
+  }
 };
 
 watch(
-  () => props.crudListObj,
+  () => props.workOrderObj,
   count => {
     /* ... */
     setCrud(count);
-  }
+  },
+  { deep: true, immediate: true }
 );
 </script>
 <style scoped lang="scss">

@@ -19,7 +19,7 @@
     <homeSale v-if="salesObj" :sales-obj="salesObj" :branch-name="branchName" title="销售数据汇总" />
     <homeRecovery v-if="statisticsObj" :statistics-obj="statisticsObj" :branch-name="branchName" title="回收数据汇总" />
     <homeRelease v-if="publishObj" :publish-obj="publishObj" :branch-name="branchName" title="发布数据汇总" />
-    <!--    <homeNeed :crud-list-obj="crudListObj" :branch-name="branchName" title="待办工单" />-->
+    <homeNeed v-if="workOrderObj" :work-order-obj="workOrderObj" :branch-name="branchName" title="待办工单" />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import { ref, onMounted } from "vue";
 import homeSale from "@/views/home/modules/home-sale/index.vue";
 import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
 import homeRelease from "@/views/home/modules/home-release/index.vue";
-// import homeNeed from "@/views/home/modules/home-need/index.vue";
+import homeNeed from "@/views/home/modules/home-need/index.vue";
 import { getAllBranch } from "@/api/modules/set";
 import { getHomeStatistics, IStatistics } from "@/api/modules/home";
 import { userObj } from "@/views/home/modules/homeUtis";
@@ -50,7 +50,7 @@ const branchName = ref("今日");
 const params = ref<IStatistics>();
 const obj = userObj();
 const userRoleId = ref(0);
-const setValue = function (bol: boolean, state: number | string, name: string) {
+const setValue = function (bol: boolean, state: number, name: string) {
   if (bol) {
     cityName.value = state;
   } else {
@@ -67,14 +67,16 @@ const setValue = function (bol: boolean, state: number | string, name: string) {
 const salesObj = ref<HomeSet.ISalesStatistics>(); // 销售组
 const statisticsObj = ref<HomeSet.IRecycleStatistics>(); // 回收组
 const publishObj = ref<HomeSet.IPublishStatistics>(); // 回收组
+const workOrderObj = ref<HomeSet.IAfterSalesStatistics>(); // 售后
 // let behindObj = null; // 后面的数据
 const setHomeCardList = async () => {
   const {
-    data: { sales, recycle, publish }
+    data: { sales, recycle, publish, workOrder }
   } = (await getHomeStatistics(params.value!)) as any;
   salesObj.value = sales as any;
   statisticsObj.value = recycle as any;
   publishObj.value = publish as any;
+  workOrderObj.value = workOrder as any;
 };
 // 获取门店
 const branchAllList = async () => {

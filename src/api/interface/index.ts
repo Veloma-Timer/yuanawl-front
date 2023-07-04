@@ -384,6 +384,43 @@ export namespace HomeSet {
     publishRanking: INameAndAmountAndMonty[]; // 发布额排名：用户 金额 数量
     publishSetComparison?: Record<string | number, INameAndAmountAndMonty[]>; // 发布组数据对比：用户 金额 数量
   }
+  export interface BaseWorkOrderEntity {
+    account: null;
+    accountId: number;
+    checkerResult: null;
+    createdBy: null;
+    createdTime: string;
+    detail: string[];
+    handleTime: number;
+    handleTimes: number;
+    id: number;
+    insure: string;
+    isDelete: string;
+    newHandleId: null;
+    newHandleResult: null;
+    newHandleTime: string;
+    orderChecker: null;
+    orderCheckerId: null;
+    orderCode: string;
+    orderStar: number;
+    orderStatus: string;
+    problemTypeId: number;
+    reason: null;
+    reportPersonId: number;
+    submitOrderTime: string;
+    updatedBy: null;
+    updatedTime: string;
+  }
+  // 售后数据
+  export interface IAfterSalesStatistics {
+    awaitWorkOrder: {
+      untreatedAmount: number; // 总共未处理
+      finishedAmount: number; // 今日已完成
+      pendingList: BaseWorkOrderEntity[]; // 待处理工单列表
+    }; // 待办工单
+    workOrderTypes: INameAndAmountAndMonty[][]; // 售后工单类型：按照星级筛选 显示 工单类型 工单数量
+    afterSalesSetComparison: INameAndAmountAndMonty[][]; // 售后组数据对比：按照星级筛选，显示人 和 数量
+  }
 }
 
 // 数据统计
