@@ -947,7 +947,7 @@ const orderStatus = computed(() => {
   display: flex;
   justify-content: flex-start;
   width: 100%;
-  margin-left: 36px;
+  margin-left: 10px;
 }
 .content-box {
   flex: 1;
