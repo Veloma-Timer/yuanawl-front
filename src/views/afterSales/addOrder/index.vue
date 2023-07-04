@@ -1,428 +1,440 @@
 <template>
   <div class="table-box card">
-    <div class="edit-btn" v-if="!isAddProcess">
-      <el-button type="primary" @click="goBack" style="width: 112px"> 返回 </el-button>
-    </div>
-    <el-form
-      :class="{ 'rule-form': true, 'rule-form-full': !isAddProcess }"
-      ref="ruleFormRef"
-      label-width="120px"
-      label-suffix=" :"
-      :rules="rules"
-      :disabled="ruleForm.isView"
-      :model="ruleForm.row"
-      :hide-required-asterisk="ruleForm.isView"
-    >
-      <div class="first-header">
-        <Header title="基本信息" class="header basic"></Header>
-        <el-form label-width="0" class="edit-btn">
-          <el-form-item>
-            <el-button v-if="id" type="primary" @click="edit" :disabled="false" style="width: 112px"> 编辑 </el-button>
-          </el-form-item>
-        </el-form>
+    <div class="content-box">
+      <div class="back-btn" v-if="!isAddProcess">
+        <el-button type="primary" @click="goBack" style="width: 112px"> 返回 </el-button>
       </div>
-      <el-row class="row-line" :gutter="10">
-        <el-col :span="6">
-          <el-form-item label="工单编号" prop="basicOrderCode">
-            <el-input v-model="ruleForm.row!.basicOrderCode" placeholder="请选择" class="order-input"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="游戏账号" prop="basicAccountId">
-            <el-select
-              v-model="ruleForm.row!.basicAccountId"
-              placeholder="请选择"
-              class="order-input"
-              filterable
-              @change="onChangeAccount"
-            >
-              <template v-for="item in accountList" :key="item.id">
-                <el-option :label="item.accountNumber" :value="item.id" />
-              </template>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="问题类型" prop="basicQuestionType">
-            <el-select v-model="ruleForm.row!.basicQuestionType" placeholder="请选择" filterable class="order-input">
-              <el-option v-for="item in problemTypeList" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="是否在保" prop="basicInsure">
-            <el-select v-model="ruleForm.row!.basicInsure" placeholder="请选择" filterable class="order-input">
-              <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="处理时效" prop="basicHandleTime">
-            <el-input-number
-              v-model="ruleForm.row!.basicHandleTime"
-              :min="1"
-              :max="5"
-              placeholder="请输入"
-              class="order-input"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="工单星级" prop="basicOrderStar">
-            <el-input-number
-              v-model="ruleForm.row!.basicOrderStar"
-              :min="1"
-              :max="3"
-              placeholder="请输入"
-              class="order-input"
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <div class="sub-title">账号信息:</div>
-      <el-row class="basic-info">
-        <el-col :span="6">
-          <el-form-item label="出售人姓名">
-            <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="出售时间">
-            <span>{{ baseObj?.saleTime ? dayjs(baseObj.saleTime).format("YYYY-MM-DD HH:mm:ss") : "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="出售渠道">
-            <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="订单编号">
-            <span>{{ baseObj?.accountCode || "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="商品加价率">
-            <span>{{ baseObj?.addPriceRate || "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="商品周转周期">
-            <span>{{ baseObj?.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="买家手机号">
-            <span>{{ baseObj?.buyerTel || "-" }}</span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="销售备注">
-            <span>{{ baseObj?.salesRemark || "-" }}</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row class="basic-info">
-        <el-col :span="24">
-          <el-form-item label="备注" prop="basicMessage" label-width="120px">
-            <el-input
-              v-model="ruleForm.row!.basicMessage"
-              placeholder="请输入"
-              clearable
-              class="small-input"
-              type="textarea"
-              :autosize="{ minRows: 3, maxRows: 6 }"
-            ></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="附件" prop="baiscAnnex" label-width="120px">
-            <UploadFiles v-model:file-list="ruleForm.row!.baiscAnnex" height="140px" width="140px"></UploadFiles>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <div class="add-process" v-if="!isAddProcess">
-        <el-button type="primary" @click="addProcess" class="btn">添加处理</el-button>
-      </div>
-      <template v-if="isAddProcess">
+      <el-form
+        :class="{ 'rule-form': true }"
+        ref="ruleFormRef"
+        label-width="120px"
+        label-suffix=" :"
+        :rules="rules"
+        :disabled="ruleForm.isView"
+        :model="ruleForm.row"
+        :hide-required-asterisk="ruleForm.isView"
+      >
         <div class="first-header">
-          <Header title="工单处理详情" class="header"></Header>
+          <Header title="基本信息" class="header basic"></Header>
+          <el-form label-width="0" class="edit-btn">
+            <el-form-item>
+              <el-button v-if="id" type="primary" @click="edit" :disabled="false" style="width: 112px"> 编辑 </el-button>
+            </el-form-item>
+          </el-form>
         </div>
-        <template v-if="orderStatus.includes(1)">
-          <div class="sub-title">售后部门:</div>
-          <el-row :gutter="10" style="margin-top: 24px">
-            <el-col :span="6">
-              <el-form-item label="处理客服" prop="afterCustomerServiceId" label-width="120px">
-                <el-select v-model="ruleForm!.row!.afterCustomerServiceId" placeholder="请选择" class="small-input" filterable>
-                  <template v-for="item2 in userList" :key="item2.id">
-                    <el-option :label="item2.userName" :value="item2.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="处理时间" prop="afterHandleTime" label-width="120px">
-                <el-date-picker
-                  v-model="ruleForm.row!.afterHandleTime"
-                  type="date"
-                  placeholder="请选择"
-                  class="order-time"
-                  style="width: 100%"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="处理结果" prop="afterHandleResult" label-width="120px">
-                <el-select v-model="ruleForm.row!.afterHandleResult" placeholder="请选择" class="small-input" filterable>
-                  <template v-for="item2 in handleTypeList" :key="item2.id">
-                    <el-option :label="item2.label" :value="item2.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="通知其他部门" prop="afterSalesInformDeptId" label-width="120px">
-                <el-select v-model="ruleForm.row!.afterSalesInformDeptId" placeholder="请选择" class="order-input" filterable>
-                  <template v-for="item in setTypeList" :key="item.value">
-                    <el-option :label="item.label" :value="item.value" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="6">
-              <el-form-item label="赔付金额" prop="afterCompensationAmount" label-width="120px">
-                <el-input-number
-                  v-model="ruleForm.row!.afterCompensationAmount"
-                  placeholder="请输入"
-                  class="order-input"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="新密保手机" prop="afterNewSecurityPhone" label-width="120px">
-                <el-input v-model="ruleForm.row!.afterNewSecurityPhone" placeholder="请输入" class="order-input"></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="新密码" prop="afterNewSecurityPassword" label-width="120px">
-                <el-input v-model="ruleForm.row!.afterNewSecurityPassword" placeholder="请输入" class="order-input"></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row class="basic-info">
-            <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === 7">
-              <el-form-item label="处理结果备注" prop="afterSpecHandleResult" label-width="120px">
-                <el-input
-                  v-model="ruleForm.row!.afterSpecHandleResult"
-                  placeholder="请输入"
-                  clearable
-                  class="small-input"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 6 }"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="售后备注" prop="afterSalesRemark" label-width="120px">
-                <el-input
-                  v-model="ruleForm.row!.afterSalesRemark"
-                  placeholder="请输入"
-                  clearable
-                  class="small-input"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 6 }"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10" class="row-line">
-            <el-col :span="6">
-              <el-form-item label="附件" prop="afterAnnex" :label-width="120">
-                <div class="up-box">
-                  <UploadFiles v-model:file-list="ruleForm.row!.afterAnnex" height="140px" width="140px"></UploadFiles>
-                  <div class="tip">可添加图片、视频、音频</div>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
+        <el-row class="row-line" :gutter="10">
+          <el-col :span="6">
+            <el-form-item label="工单编号" prop="basicOrderCode">
+              <el-input v-model="ruleForm.row!.basicOrderCode" placeholder="请选择" class="order-input"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="游戏账号" prop="basicAccountId">
+              <el-select
+                v-model="ruleForm.row!.basicAccountId"
+                placeholder="请选择"
+                class="order-input"
+                filterable
+                @change="onChangeAccount"
+              >
+                <template v-for="item in accountList" :key="item.id">
+                  <el-option :label="item.accountNumber" :value="item.id" />
+                </template>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="问题类型" prop="basicQuestionType">
+              <el-select v-model="ruleForm.row!.basicQuestionType" placeholder="请选择" filterable class="order-input">
+                <el-option v-for="item in problemTypeList" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="是否在保" prop="basicInsure">
+              <el-select v-model="ruleForm.row!.basicInsure" placeholder="请选择" filterable class="order-input">
+                <el-option v-for="item in insureList" :key="item.value" :label="item.label" :value="item.value" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="处理时效" prop="basicHandleTime">
+              <el-input-number
+                v-model="ruleForm.row!.basicHandleTime"
+                :min="1"
+                :max="5"
+                placeholder="请输入"
+                class="order-input"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="工单星级" prop="basicOrderStar">
+              <el-input-number
+                v-model="ruleForm.row!.basicOrderStar"
+                :min="1"
+                :max="3"
+                placeholder="请输入"
+                class="order-input"
+              ></el-input-number>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <div class="sub-title">账号信息:</div>
+        <el-row class="basic-info">
+          <el-col :span="6">
+            <el-form-item label="出售人姓名">
+              <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="出售时间">
+              <span>{{ baseObj?.saleTime ? dayjs(baseObj.saleTime).format("YYYY-MM-DD HH:mm:ss") : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="出售渠道">
+              <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="订单编号">
+              <span>{{ baseObj?.accountCode || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="商品加价率">
+              <span>{{ baseObj?.addPriceRate || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="商品周转周期">
+              <span>{{ baseObj?.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="买家手机号">
+              <span>{{ baseObj?.buyerTel || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="销售备注">
+              <span>{{ baseObj?.salesRemark || "-" }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row class="basic-info">
+          <el-col :span="24">
+            <el-form-item label="备注" prop="basicMessage" label-width="120px">
+              <el-input
+                v-model="ruleForm.row!.basicMessage"
+                placeholder="请输入"
+                clearable
+                class="small-input"
+                type="textarea"
+                :autosize="{ minRows: 3, maxRows: 6 }"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="附件" prop="baiscAnnex" label-width="120px">
+              <UploadFiles v-model:file-list="ruleForm.row!.baiscAnnex" height="140px" width="140px"></UploadFiles>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <div class="add-process" v-if="!isAddProcess">
+          <el-button type="primary" @click="addProcess" class="btn">添加处理</el-button>
+        </div>
+        <template v-if="isAddProcess">
+          <div class="first-header" v-if="orderStatus.length > 0">
+            <Header title="工单处理详情" class="header"></Header>
+          </div>
+          <template v-if="orderStatus.includes(1)">
+            <div class="sub-title">售后部门:</div>
+            <el-row :gutter="10" style="margin-top: 24px">
+              <el-col :span="6">
+                <el-form-item label="处理客服" prop="afterCustomerServiceId" label-width="120px">
+                  <el-select v-model="ruleForm!.row!.afterCustomerServiceId" placeholder="请选择" class="small-input" filterable>
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理时间" prop="afterHandleTime" label-width="120px">
+                  <el-date-picker
+                    v-model="ruleForm.row!.afterHandleTime"
+                    type="date"
+                    placeholder="请选择"
+                    class="order-time"
+                    style="width: 100%"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理结果" prop="afterHandleResult" label-width="120px">
+                  <el-select v-model="ruleForm.row!.afterHandleResult" placeholder="请选择" class="small-input" filterable>
+                    <template v-for="item2 in handleTypeList" :key="item2.id">
+                      <el-option :label="item2.label" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知其他部门" prop="afterSalesInformDeptId" label-width="120px">
+                  <el-select v-model="ruleForm.row!.afterSalesInformDeptId" placeholder="请选择" class="order-input" filterable>
+                    <template v-for="item in setTypeList" :key="item.value">
+                      <el-option :label="item.label" :value="item.value" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="6">
+                <el-form-item label="赔付金额" prop="afterCompensationAmount" label-width="120px">
+                  <el-input-number
+                    v-model="ruleForm.row!.afterCompensationAmount"
+                    placeholder="请输入"
+                    class="order-input"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="新密保手机" prop="afterNewSecurityPhone" label-width="120px">
+                  <el-input v-model="ruleForm.row!.afterNewSecurityPhone" placeholder="请输入" class="order-input"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="新密码" prop="afterNewSecurityPassword" label-width="120px">
+                  <el-input v-model="ruleForm.row!.afterNewSecurityPassword" placeholder="请输入" class="order-input"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row class="basic-info">
+              <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === 7">
+                <el-form-item label="处理结果备注" prop="afterSpecHandleResult" label-width="120px">
+                  <el-input
+                    v-model="ruleForm.row!.afterSpecHandleResult"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="售后备注" prop="afterSalesRemark" label-width="120px">
+                  <el-input
+                    v-model="ruleForm.row!.afterSalesRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" class="row-line">
+              <el-col :span="6">
+                <el-form-item label="附件" prop="afterAnnex" :label-width="120">
+                  <div class="up-box">
+                    <UploadFiles v-model:file-list="ruleForm.row!.afterAnnex" height="140px" width="140px"></UploadFiles>
+                    <div class="tip">可添加图片、视频、音频</div>
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </template>
+          <template v-if="orderStatus.includes(2)">
+            <div class="sub-title">发布部门:</div>
+            <el-row :gutter="10" style="margin-top: 24px">
+              <el-col :span="6">
+                <el-form-item label="处理客服" prop="publishHandleCustomerServiceId" label-width="120px">
+                  <el-select
+                    v-model="ruleForm.row!.publishHandleCustomerServiceId"
+                    placeholder="请选择"
+                    class="small-input"
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理时间" prop="publishHandleTime" label-width="120px">
+                  <el-date-picker
+                    v-model="ruleForm.row!.publishHandleTime"
+                    type="date"
+                    placeholder="请选择"
+                    style="width: 100%"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理结果" prop="publishHandleResult" label-width="120px">
+                  <el-select v-model="ruleForm.row!.publishHandleResult" placeholder="请选择" class="small-input" filterable>
+                    <template v-for="item2 in handleTypeList" :key="item2.id">
+                      <el-option :label="item2.label" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知其他部门" prop="publishInformDeptId" label-width="120px">
+                  <el-select v-model="ruleForm.row!.publishInformDeptId" placeholder="请选择" class="order-input" filterable>
+                    <template v-for="item in setTypeList" :key="item.value">
+                      <el-option :label="item.label" :value="item.value" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" class="row-line">
+              <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === 7">
+                <el-form-item label="处理结果备注" prop="publishResultRemark" label-width="120px">
+                  <el-input
+                    v-model="ruleForm.row!.publishResultRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="发布备注" prop="publishRemark" label-width="120px">
+                  <el-input
+                    v-model="ruleForm.row!.publishRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="附件" prop="publishAnnex" :label-width="120">
+                  <div class="up-box">
+                    <UploadFiles v-model:file-list="ruleForm.row!.publishAnnex" height="140px" width="140px"></UploadFiles>
+                    <div class="tip">可添加图片、视频、音频</div>
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </template>
+          <template v-if="orderStatus.includes(3)">
+            <div class="sub-title">销售部门:</div>
+            <el-row :gutter="10" style="margin-top: 24px">
+              <el-col :span="6">
+                <el-form-item label="处理客服" prop="saleHandleCustomerService" label-width="120px">
+                  <el-select
+                    v-model="ruleForm.row!.saleHandleCustomerService"
+                    placeholder="请选择"
+                    class="small-input"
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理时间" prop="saleHandleTime" label-width="120px">
+                  <el-date-picker v-model="ruleForm.row!.saleHandleTime" type="date" placeholder="请选择" style="width: 100%" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理结果" prop="saleHandleResult" label-width="120px">
+                  <el-select v-model="ruleForm.row!.saleHandleResult" placeholder="请选择" class="small-input" filterable>
+                    <template v-for="item2 in handleTypeList" :key="item2.id">
+                      <el-option :label="item2.label" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知其他部门" prop="salesInformDeptId" label-width="120px">
+                  <el-select v-model="ruleForm.row!.salesInformDeptId" placeholder="请选择" class="order-input" filterable>
+                    <template v-for="item in setTypeList" :key="item.value">
+                      <el-option :label="item.label" :value="item.value" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="6">
+                <el-form-item label="赔付用户金额" prop="saleCompensationUserAmount" label-width="120px">
+                  <el-input-number
+                    v-model="ruleForm.row!.saleCompensationUserAmount"
+                    placeholder="请输入"
+                    class="order-input"
+                  ></el-input-number>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="给用户换号" prop="saleChangeUserNumber" label-width="120px">
+                  <el-select
+                    v-model="ruleForm.row!.saleChangeUserNumber"
+                    placeholder="请选择"
+                    class="order-input"
+                    filterable
+                    @change="onChangeAccount"
+                  >
+                    <template v-for="item in accountList" :key="item.id">
+                      <el-option :label="item.accountNumber" :value="item.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10">
+              <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === 7">
+                <el-form-item label="处理结果备注" prop="salesResultRemark" label-width="120px">
+                  <el-input
+                    v-model="ruleForm.row!.salesResultRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="销售备注" prop="salesRemark" label-width="120px">
+                  <el-input
+                    v-model="ruleForm.row!.salesRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="附件" prop="saleannex" :label-width="120">
+                  <div class="up-box">
+                    <UploadFiles v-model:file-list="ruleForm.row!.saleannex" height="140px" width="140px"></UploadFiles>
+                    <div class="tip">可添加图片、视频、音频</div>
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </template>
         </template>
-        <template v-if="orderStatus.includes(2)">
-          <div class="sub-title">发布部门:</div>
-          <el-row :gutter="10" style="margin-top: 24px">
-            <el-col :span="6">
-              <el-form-item label="处理客服" prop="publishHandleCustomerServiceId" label-width="120px">
-                <el-select
-                  v-model="ruleForm.row!.publishHandleCustomerServiceId"
-                  placeholder="请选择"
-                  class="small-input"
-                  filterable
-                >
-                  <template v-for="item2 in userList" :key="item2.id">
-                    <el-option :label="item2.userName" :value="item2.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="处理时间" prop="publishHandleTime" label-width="120px">
-                <el-date-picker v-model="ruleForm.row!.publishHandleTime" type="date" placeholder="请选择" style="width: 100%" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="处理结果" prop="publishHandleResult" label-width="120px">
-                <el-select v-model="ruleForm.row!.publishHandleResult" placeholder="请选择" class="small-input" filterable>
-                  <template v-for="item2 in handleTypeList" :key="item2.id">
-                    <el-option :label="item2.label" :value="item2.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="通知其他部门" prop="publishInformDeptId" label-width="120px">
-                <el-select v-model="ruleForm.row!.publishInformDeptId" placeholder="请选择" class="order-input" filterable>
-                  <template v-for="item in setTypeList" :key="item.value">
-                    <el-option :label="item.label" :value="item.value" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10" class="row-line">
-            <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === 7">
-              <el-form-item label="处理结果备注" prop="publishResultRemark" label-width="120px">
-                <el-input
-                  v-model="ruleForm.row!.publishResultRemark"
-                  placeholder="请输入"
-                  clearable
-                  class="small-input"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 6 }"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="发布备注" prop="publishRemark" label-width="120px">
-                <el-input
-                  v-model="ruleForm.row!.publishRemark"
-                  placeholder="请输入"
-                  clearable
-                  class="small-input"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 6 }"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="附件" prop="publishAnnex" :label-width="120">
-                <div class="up-box">
-                  <UploadFiles v-model:file-list="ruleForm.row!.publishAnnex" height="140px" width="140px"></UploadFiles>
-                  <div class="tip">可添加图片、视频、音频</div>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </template>
-        <template v-if="orderStatus.includes(3)">
-          <div class="sub-title">销售部门:</div>
-          <el-row :gutter="10" style="margin-top: 24px">
-            <el-col :span="6">
-              <el-form-item label="处理客服" prop="saleHandleCustomerService" label-width="120px">
-                <el-select v-model="ruleForm.row!.saleHandleCustomerService" placeholder="请选择" class="small-input" filterable>
-                  <template v-for="item2 in userList" :key="item2.id">
-                    <el-option :label="item2.userName" :value="item2.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="处理时间" prop="saleHandleTime" label-width="120px">
-                <el-date-picker v-model="ruleForm.row!.saleHandleTime" type="date" placeholder="请选择" style="width: 100%" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="处理结果" prop="saleHandleResult" label-width="120px">
-                <el-select v-model="ruleForm.row!.saleHandleResult" placeholder="请选择" class="small-input" filterable>
-                  <template v-for="item2 in handleTypeList" :key="item2.id">
-                    <el-option :label="item2.label" :value="item2.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="通知其他部门" prop="salesInformDeptId" label-width="120px">
-                <el-select v-model="ruleForm.row!.salesInformDeptId" placeholder="请选择" class="order-input" filterable>
-                  <template v-for="item in setTypeList" :key="item.value">
-                    <el-option :label="item.label" :value="item.value" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="6">
-              <el-form-item label="赔付用户金额" prop="saleCompensationUserAmount" label-width="120px">
-                <el-input-number
-                  v-model="ruleForm.row!.saleCompensationUserAmount"
-                  placeholder="请输入"
-                  class="order-input"
-                ></el-input-number>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="给用户换号" prop="saleChangeUserNumber" label-width="120px">
-                <el-select
-                  v-model="ruleForm.row!.saleChangeUserNumber"
-                  placeholder="请选择"
-                  class="order-input"
-                  filterable
-                  @change="onChangeAccount"
-                >
-                  <template v-for="item in accountList" :key="item.id">
-                    <el-option :label="item.accountNumber" :value="item.id" />
-                  </template>
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row :gutter="10">
-            <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === 7">
-              <el-form-item label="处理结果备注" prop="salesResultRemark" label-width="120px">
-                <el-input
-                  v-model="ruleForm.row!.salesResultRemark"
-                  placeholder="请输入"
-                  clearable
-                  class="small-input"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 6 }"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item label="销售备注" prop="salesRemark" label-width="120px">
-                <el-input
-                  v-model="ruleForm.row!.salesRemark"
-                  placeholder="请输入"
-                  clearable
-                  class="small-input"
-                  type="textarea"
-                  :autosize="{ minRows: 3, maxRows: 6 }"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="6">
-              <el-form-item label="附件" prop="saleannex" :label-width="120">
-                <div class="up-box">
-                  <UploadFiles v-model:file-list="ruleForm.row!.saleannex" height="140px" width="140px"></UploadFiles>
-                  <div class="tip">可添加图片、视频、音频</div>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </template>
-      </template>
-    </el-form>
+      </el-form>
+    </div>
     <div class="foot-btn">
       <el-button @click="goBack" class="cancel">取消</el-button>
       <el-button type="primary" v-show="!ruleForm.isView" @click="handleSubmit" class="ok">确定</el-button>
@@ -844,8 +856,8 @@ const orderStatus = computed(() => {
   // if (账号已售 && 售后处理类型是没有追回) {
   //   // 显示售后、销售、发布
   // }
-  let isSales = baseObj.value.isSales;
-  let handleType = ruleForm.value.row.afterHandleResult;
+  let isSales = baseObj?.value?.isSales;
+  let handleType = ruleForm?.value?.row?.afterHandleResult;
   let haveExpired = 1;
   if (isSales === 0 && handleType === 6) {
     return [1];
@@ -861,7 +873,7 @@ const orderStatus = computed(() => {
   if (isSales === 1 && handleType === 8) {
     return [1, 2, 3];
   }
-  return [];
+  return [1, 2, 3];
 });
 </script>
 
@@ -873,26 +885,10 @@ const orderStatus = computed(() => {
     right: 20px;
   }
 }
-.first-header {
-  position: relative;
-  display: flex;
-  margin-bottom: 20px;
-  .basic {
-    :deep(.title) {
-      padding: 10px 31px;
-    }
-  }
-  .edit-btn {
-    position: absolute;
-    top: 5px;
-    right: 0;
-  }
-}
 .rule-form-full {
   height: 100%;
 }
 .rule-form {
-  padding: 20px;
   :deep(.el-form-item__label) {
     justify-content: flex-center;
   }
@@ -932,11 +928,53 @@ const orderStatus = computed(() => {
     }
   }
 }
+.first-header {
+  position: relative;
+  display: flex;
+  margin-bottom: 20px;
+  .basic {
+    :deep(.title) {
+      padding: 10px 31px;
+      overflow: hidden;
+    }
+  }
+  .edit-btn {
+    position: absolute;
+    right: 0;
+  }
+}
+.back-btn {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  margin-left: 36px;
+}
+.content-box {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+  .hide-scroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+}
+.card {
+  padding-bottom: 0;
+  padding-right: 0;
+}
+.rule-form {
+  width: 100%;
+  padding-right: 20px;
+}
 .foot-btn {
   z-index: 999;
   display: flex;
   justify-content: flex-end;
   width: 100%;
+  border-top: 1px solid #ebebeb;
+  padding: 10px 20px 10px 0;
+  overflow: hidden;
   .cancel {
     width: 112px;
     height: 38px;
