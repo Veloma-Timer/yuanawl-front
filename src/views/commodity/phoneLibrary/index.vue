@@ -173,9 +173,9 @@ const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.phoneLibrary> = {}) => {
   const params = {
     title,
-    isView: title === "查看",
+    isView: false,
     row: { ...row },
-    api: title === "新增" ? addPhone : title === "查看" ? setPhone : undefined,
+    api: title === "新增" ? addPhone : title === "编辑" ? setPhone : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

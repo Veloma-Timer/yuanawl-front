@@ -122,9 +122,9 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "发布渠道",
     enum: async () => {
       const {
-        data: { data }
+        data: { publishPlatform }
       } = await sellKeyMap();
-      return { data: data.publishPlatform };
+      return { data: publishPlatform };
     },
     search: {
       el: "select",
