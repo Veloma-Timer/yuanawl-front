@@ -709,7 +709,10 @@ const handleSubmit = () => {
         saleChangeUserNumber,
         saleannex,
         salesResultRemark,
-        salesRemark
+        salesRemark,
+        afterSalesInformDeptId,
+        salesInformDeptId,
+        publishInformDeptId
       } = ruleForm.value.row;
       const baseData = {
         orderCode: basicOrderCode,
@@ -738,6 +741,7 @@ const handleSubmit = () => {
         newSecretCellPhone: afterNewSecurityPhone, // 新密保手机
         newPassword: afterNewSecurityPassword, // 新密码
         afterSalesRemark: afterSalesRemark, // 售后备注
+        afterSalesInformDeptId: afterSalesInformDeptId,
         afterSaleAssets: afterAnnex?.map(item => {
           return {
             path: item?.response?.path || item.url || item.path,
@@ -751,6 +755,7 @@ const handleSubmit = () => {
         publishResultId: publishHandleResult, // 发布处理结果
         publishResultRemark: publishResultRemark, // 销售处理结果备注
         publishRemark: publishRemark, // 发布备注
+        publishInformDeptId: publishInformDeptId,
         publishAssets: publishAnnex?.map(item => {
           return {
             path: item?.response?.path || item.url || item.path,
@@ -766,6 +771,7 @@ const handleSubmit = () => {
         newAccountId: saleChangeUserNumber, // 给用户换号: 新账号id
         salesResultRemark: salesResultRemark, // 销售处理结果备注
         salesRemark: salesRemark, // 销售备注
+        salesInformDeptId: salesInformDeptId,
         salesAssets: saleannex?.map(item => {
           return {
             path: item?.response?.path || item.url || item.path,
