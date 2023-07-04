@@ -117,6 +117,7 @@ export namespace SalesOrder {
     accountNumber: number;
   }
   export interface ResSalesList {
+    assets: any;
     detail: any[];
     id: string;
     problemTypeId: string;
@@ -158,7 +159,7 @@ export namespace SalesOrder {
     basicOrderStar: number; // 工单星级
     basicAccountId: string; // 游戏账号
     basicQuestionType: string; // 问题类型
-    basicInsure: number; // 是否在保
+    basicInsure: number | string; // 是否在保
     basicHandleTime: any; // 处理失效
     basicAccSaleInfoAellerName: string; // 出售人姓名
     basicAccSaleInfoSellerTime: string; // 出售时间
@@ -170,6 +171,7 @@ export namespace SalesOrder {
     basicAccSaleInfoSellerMark: string; // 销售备注
     basicMessage: string; // 留言
     baiscAnnex: any[]; // 附件
+    assets: any[];
     // 售后部门
     afterCustomerServiceId: number; // 处理客服
     afterHandleTime: string; // 处理时间

@@ -302,7 +302,7 @@ export function findItemNested(enumData: any, callValue: any, value: string, chi
  * */
 export function findFileType(fileName: string) {
   const extension = fileName?.split(".").pop()!.toLowerCase();
-  const imageFile = ["jpeg", "png", "gif", "webp"];
+  const imageFile = ["jpeg", "png", "gif", "webp", "jpg"];
   const audioFile = ["mpeg", "mp3", "wav", "ogg"];
   const videoFile = ["mp4", "avi", "mov", "m4v"];
 

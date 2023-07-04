@@ -30,7 +30,7 @@
               placeholder="请选择"
               class="order-input"
               filterable
-              @change="onChange"
+              @change="onChangeAccount"
             >
               <template v-for="item in accountList" :key="item.id">
                 <el-option :label="item.accountNumber" :value="item.id" />
@@ -79,44 +79,42 @@
       <el-row class="basic-info">
         <el-col :span="6">
           <el-form-item label="出售人姓名">
-            <span>{{ ruleForm.row?.basicAccSaleInfoAellerName || "-" }}</span>
+            <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="出售时间">
-            <span>{{ ruleForm.row?.basicAccSaleInfoSellerTime || "-" }}</span>
+            <span>{{ baseObj?.saleTime ? dayjs(baseObj.saleTime).format("YYYY-MM-DD HH:mm:ss") : "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="出售渠道">
-            <span>{{ ruleForm.row?.basicAccSaleInfoSellerChannel || "-" }}</span>
+            <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="订单编号">
-            <span>{{ ruleForm.row?.basicAccSaleInfoOrderNo || "-" }}</span>
+            <span>{{ baseObj?.accountCode || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="商品加价率">
-            <span>{{ ruleForm.row?.basicAccSaleInfoProductMarkupRate || "-" }}</span>
+            <span>{{ baseObj?.addPriceRate || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="商品周转周期">
-            <span>{{
-              ruleForm.row?.basicAccSaleInfoProductTurnoverCycle ? ruleForm.row.basicAccSaleInfoProductTurnoverCycle + "天" : "-"
-            }}</span>
+            <span>{{ baseObj?.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="买家手机号">
-            <span>{{ ruleForm.row?.basicAccSaleInfoBuyerPhoneNumber || "-" }}</span>
+            <span>{{ baseObj?.buyerTel || "-" }}</span>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="销售备注">
-            <span>{{ ruleForm.row?.basicAccSaleInfoSellerMark || "-" }}</span>
+            <span>{{ baseObj?.salesRemark || "-" }}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -180,11 +178,11 @@
             </el-col>
           </el-row>
           <el-row :gutter="10">
-            <el-col :span="6">
+            <!-- <el-col :span="6">
               <el-form-item label="通知其他部门" prop="afterNotifyOtherDepartments" label-width="120px">
                 <el-input v-model="ruleForm.row!.afterNotifyOtherDepartments" placeholder="请输入" class="order-input"></el-input>
               </el-form-item>
-            </el-col>
+            </el-col> -->
             <el-col :span="6">
               <el-form-item label="赔付金额" prop="afterCompensationAmount" label-width="120px">
                 <el-input-number
@@ -300,10 +298,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <!-- --{{ ruleForm.row.publishAnnex }}-- -->
               <el-form-item label="附件" prop="publishAnnex" :label-width="120">
                 <div class="up-box">
-                  <UploadFiles v-model="ruleForm.row!.publishAnnex" height="140px" width="140px"></UploadFiles>
+                  <UploadFiles v-model:file-list="ruleForm.row!.publishAnnex" height="140px" width="140px"></UploadFiles>
                   <div class="tip">可添加图片、视频、音频</div>
                 </div>
               </el-form-item>
@@ -358,51 +355,49 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <div class="sub-title">账号销售信息:</div>
+          <!-- <div class="sub-title">账号销售信息:</div>
           <el-row class="basic-info">
             <el-col :span="6">
               <el-form-item label="出售人姓名">
-                <span>{{ ruleForm.row?.sallerName || "-" }}</span>
+                <span>{{ baseObj?.sallerName || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="出售时间">
-                <span>{{ ruleForm.row!.sallerTime || "-" }}</span>
+                <span>{{ baseObj?.saleTime || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="出售渠道">
-                <span>{{ ruleForm.row?.sallerChannel || "-" }}</span>
+                <span>{{ chanelMap[baseObj?.salePlatformId] || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="订单编号">
-                <span>{{ ruleForm.row?.saleAccorderNo || "-" }}</span>
+                <span>{{ baseObj?.accountCode || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="商品加价率">
-                <span>{{ ruleForm.row?.saleAccproductMarkupRate || "-" }}</span>
+                <span>{{ baseObj.addPriceRate || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="商品周转周期">
-                <span>{{
-                  ruleForm.row?.saleAccproductTurnoverCycle ? ruleForm.row?.saleAccproductTurnoverCycle + "天" : "-"
-                }}</span>
+                <span>{{ baseObj.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="买家手机号">
-                <span>{{ ruleForm.row?.saleAccbuyerPhoneNumber || "-" }}</span>
+                <span>{{ baseObj.buyerTel || "-" }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="销售备注">
-                <span>{{ ruleForm.row?.saleAccsellerMark || "-" }}</span>
+                <span>{{ baseObj.salesRemark || "-" }}</span>
               </el-form-item>
             </el-col>
-          </el-row>
+          </el-row> -->
           <el-row :gutter="10">
             <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === handleOtherId">
               <el-form-item label="处理结果备注" prop="salesResultRemark" label-width="120px">
@@ -467,6 +462,8 @@ import { getAllBranch, getAllBaseAccount } from "@/api/modules/set";
 import { getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
 import { useRouter, useRoute } from "vue-router";
+import { sellKeyMap } from "@/api/modules/dictionary";
+import dayjs from "dayjs";
 // import { useAuthButtons } from "@/hooks/useAuthButtons";
 
 // const { BUTTONS } = useAuthButtons();
@@ -524,6 +521,13 @@ const ruleForm = ref<IAddOrder>({
   row: {}
 });
 
+const baseObj = ref();
+function onChangeAccount(e: any) {
+  const obj = accountList.value.find(item => item.id === e);
+  baseObj.value = obj;
+  console.log(baseObj.value);
+}
+
 // 返显数据处理
 const getDetailInfo = async (id: any) => {
   if (!id) {
@@ -531,25 +535,81 @@ const getDetailInfo = async (id: any) => {
   }
   const { data } = await detailSalesList(id);
   if (data) {
-    ruleForm.value.row = data as unknown as SalesOrder.AddWorkOrder;
-    console.log(findFileType);
-    // ruleForm.value.row.detail = data?.detail?.map(item => {
-    //   return {
-    //     ...item,
-    //     assets: item.assets.map((imgItem: any) => {
-    //       return {
-    //         path: imgItem.path,
-    //         url: imgItem.path,
-    //         id: imgItem.id,
-    //         type: findFileType(imgItem.path)
-    //       };
-    //     })
-    //   };
-    // });
+    // ruleForm.value.row = data as unknown as SalesOrder.AddWorkOrder;
+    const afterInfo: any = data.detail.find(item => item.handleDept === 1);
+    const saleInfo: any = data.detail.find(item => item.handleDept === 2);
+    const publistInfo: any = data.detail.find(item => item.handleDept === 3);
+    console.log(999, publistInfo);
+    ruleForm.value.row = {
+      // 基本
+      basicOrderCode: data.orderCode,
+      basicAccountId: data.accountId,
+      basicQuestionType: data.problemTypeId,
+      basicInsure: data.insure,
+      basicOrderStar: data.orderStar,
+      basicHandleTime: data.handleTime,
+      basicMessage: data.remark,
+      baiscAnnex: data.assets.map((imgItem: any) => {
+        return {
+          path: imgItem.path,
+          url: imgItem.path,
+          id: imgItem.id,
+          type: findFileType(imgItem.path)
+        };
+      })
+      // 售后
+      // afterHandleResult: afterInfo.afterSaleResultId,
+      // afterHandleTime: afterInfo.afterSaleHandleTime,
+      // afterSpecHandleResult: afterInfo.afterSalesResultRemark,
+      // afterCompensationAmount: afterInfo.afterSalesCompensationAmount,
+      // afterNewSecurityPhone: afterInfo.newSecretCellPhone,
+      // afterNewSecurityPassword: afterInfo.newPassword,
+      // afterSalesRemark: afterInfo.afterSalesRemark,
+      // afterAnnex: afterInfo.afterSaleAssets?.map((imgItem: any) => {
+      //   return {
+      //     path: imgItem.path,
+      //     url: imgItem.path,
+      //     id: imgItem.id,
+      //     type: findFileType(imgItem.path)
+      //   };
+      // }),
+      // // 发布
+      // publishHandleCustomerServiceId: publistInfo.publishServiceId,
+      // publishHandleTime: publistInfo.publishHandleTime,
+      // publishHandleResult: publistInfo.publishResultId,
+      // publishResultRemark: publistInfo.publishResultRemark,
+      // publishRemark: publistInfo.publishRemark,
+      // publishAnnex: publistInfo.publishAssets?.map((imgItem: any) => {
+      //   return {
+      //     path: imgItem.path,
+      //     url: imgItem.path,
+      //     id: imgItem.id,
+      //     type: findFileType(imgItem.path)
+      //   };
+      // }),
+      // // 销售
+      // saleHandleCustomerService: saleInfo.salesResultId,
+      // saleHandleTime: saleInfo.salesHandleTime,
+      // saleHandleResult: saleInfo.salesResultId,
+      // saleCompensationUserAmount: saleInfo.salesCompensationAmount,
+      // saleChangeUserNumber: saleInfo.newAccountId,
+      // salesResultRemark: saleInfo.salesResultRemark,
+      // salesRemark: saleInfo.salesRemark,
+      // saleannex: saleInfo.salesAssets?.map((imgItem: any) => {
+      //   return {
+      //     path: imgItem.path,
+      //     url: imgItem.path,
+      //     id: imgItem.id,
+      //     type: findFileType(imgItem.path)
+      //   };
+      // })
+    };
+    // 账号销售数据信息默认
+    onChangeAccount(data.accountId);
     // 如果有详情数据 隐藏添加按钮
-    // if (ruleForm.value.row.detail.length > 0) {
-    //   isAddProcess.value = true;
-    // }
+    if (data.detail.length > 0) {
+      isAddProcess.value = true;
+    }
   }
 };
 
@@ -728,7 +788,17 @@ const initOrderData = async () => {
 
 initOrderData();
 
-// 售后
+const chanelMap = ref();
+async function getChanelMap() {
+  const { data }: any = await sellKeyMap();
+  const obj: { [key: number]: string } = (data?.publishPlatform || []).reduce((acc, curr) => {
+    acc[curr.value] = curr.label;
+    return acc;
+  }, {});
+  chanelMap.value = obj;
+  console.log(5555, data, obj);
+}
+getChanelMap();
 </script>
 
 <style lang="scss" scoped>
