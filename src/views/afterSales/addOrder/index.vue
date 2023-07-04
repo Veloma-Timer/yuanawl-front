@@ -79,7 +79,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <div class="sub-title">账号销售信息:</div>
+      <div class="sub-title">账号信息:</div>
       <el-row class="basic-info">
         <el-col :span="6">
           <el-form-item label="出售人姓名">
@@ -148,7 +148,7 @@
         <div class="first-header">
           <Header title="工单处理详情" class="header"></Header>
         </div>
-        <template v-if="1 === 1">
+        <template v-if="orderStatus.includes(1)">
           <div class="sub-title">售后部门:</div>
           <el-row :gutter="10" style="margin-top: 24px">
             <el-col :span="6">
@@ -212,7 +212,7 @@
             </el-col>
           </el-row>
           <el-row class="basic-info">
-            <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === handleOtherId">
+            <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === 7">
               <el-form-item label="处理结果备注" prop="afterSpecHandleResult" label-width="120px">
                 <el-input
                   v-model="ruleForm.row!.afterSpecHandleResult"
@@ -248,7 +248,7 @@
             </el-col>
           </el-row>
         </template>
-        <template v-if="2 === 2">
+        <template v-if="orderStatus.includes(2)">
           <div class="sub-title">发布部门:</div>
           <el-row :gutter="10" style="margin-top: 24px">
             <el-col :span="6">
@@ -290,7 +290,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="10" class="row-line">
-            <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === handleOtherId">
+            <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === 7">
               <el-form-item label="处理结果备注" prop="publishResultRemark" label-width="120px">
                 <el-input
                   v-model="ruleForm.row!.publishResultRemark"
@@ -324,7 +324,7 @@
             </el-col>
           </el-row>
         </template>
-        <template v-if="3 === 3">
+        <template v-if="orderStatus.includes(3)">
           <div class="sub-title">销售部门:</div>
           <el-row :gutter="10" style="margin-top: 24px">
             <el-col :span="6">
@@ -387,7 +387,7 @@
             </el-col>
           </el-row>
           <el-row :gutter="10">
-            <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === handleOtherId">
+            <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === 7">
               <el-form-item label="处理结果备注" prop="salesResultRemark" label-width="120px">
                 <el-input
                   v-model="ruleForm.row!.salesResultRemark"
@@ -431,7 +431,7 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { SalesOrder } from "@/api/interface";
 import UploadFiles from "@/components/Upload/Files.vue";
@@ -514,7 +514,7 @@ const baseObj = ref();
 function onChangeAccount(e: any) {
   const obj = accountList.value.find(item => item.id === e);
   baseObj.value = obj;
-  console.log(baseObj.value);
+  console.log("9999", baseObj.value);
 }
 
 // 返显数据处理
@@ -660,12 +660,9 @@ getProblemTypesFun();
 
 // 数据字典-处理结果
 const handleTypeList = ref<listTypeObj[]>([]);
-const handleOtherId = ref<any>();
 const getHandleTypesFun = async () => {
   const { data } = await getHandleTypes();
   handleTypeList.value = data.handleTypes;
-  const otherObj = data.handleTypes.find((item: any) => item.label === "其他");
-  handleOtherId.value = otherObj.id;
 };
 getHandleTypesFun();
 
@@ -826,6 +823,46 @@ async function getChanelMap() {
   chanelMap.value = obj;
 }
 getChanelMap();
+
+const orderStatus = computed(() => {
+  // 显示条件                             售后部门 => 1    发布部门 => 2 销售部门 =>3
+  // isSales(账号销售状态)                未售     => 0    已售出   => 1
+  // haveExpired(账号是否过了工单处理时效) 没过期   => 0    过期     => 1
+  // handleTypes(售后处理类型)            换号     => 1    给客户赔钱 => 2 已重新发布 => 3 未重新发布 => 4 追回 => 5 卖家赔钱 => 6 其他 => 7  未追回 => 8
+
+  // if (账号未售 && 售后处理类型是卖家赔钱) {
+  //   // 只显示售后
+  // } else if (账号未售) {
+  //   // 显示售后 和 发布
+  // }
+  // if (账号已售 && 售后处理类型是成功追回) {
+  //   // 显示售后和销售
+  // }
+  // if (账号已售 && 当前时间过了工单的处理时效) {
+  //   // 显示售后和销售
+  // }
+  // if (账号已售 && 售后处理类型是没有追回) {
+  //   // 显示售后、销售、发布
+  // }
+  let isSales = baseObj.value.isSales;
+  let handleType = ruleForm.value.row.afterHandleResult;
+  let haveExpired = 1;
+  if (isSales === 0 && handleType === 6) {
+    return [1];
+  } else if (isSales === 0) {
+    return [1, 2];
+  }
+  if (isSales === 1 && handleType === 5) {
+    return [2, 3];
+  }
+  if (isSales === 1 && haveExpired === 1) {
+    return [1, 3];
+  }
+  if (isSales === 1 && handleType === 8) {
+    return [1, 2, 3];
+  }
+  return [];
+});
 </script>
 
 <style lang="scss" scoped>
