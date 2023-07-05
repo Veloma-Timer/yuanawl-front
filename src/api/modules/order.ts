@@ -1,4 +1,4 @@
-import { ResPage, ResultData, SalesOrder, Data, ProblemList } from "@/api/interface/index";
+import { ResPage, ResultData, SalesOrder, Data } from "@/api/interface/index";
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 import { formatParams } from "@/utils/index";
@@ -86,17 +86,17 @@ export const workOrder = (params: any) => {
 
 // 数据字典-问题类型
 export const getProblemTypes = () => {
-  return http.get<ProblemList>(`${PORT3}/sys_map?key=problemTypes`);
+  return http.get<Data.ProblemList>(`${PORT3}/sys_map?key=problemTypes`);
 };
 
 // 数据字典-处理结果
 export const getHandleTypes = () => {
-  return http.get<ProblemList>(`${PORT3}/sys_map?key=handleTypes`);
+  return http.get<Data.HandleTypeList>(`${PORT3}/sys_map?key=handleTypes`);
 };
 
 // 数据字典-部门列表
 export const getSetTypes = () => {
-  return http.get<ProblemList>(`${PORT3}/sys_map?key=set`);
+  return http.get<Data.SetList>(`${PORT3}/sys_map?key=set`);
 };
 
 // 新增工单售后信息
@@ -104,12 +104,27 @@ export const addAfterInfo = (params: any) => {
   return http.post(`${PORT3}/base_work_order/after-sales`, params);
 };
 
+// 修改工单售后信息
+export const editfterInfo = (params: any) => {
+  return http.put(`${PORT3}/base_work_order/after-sales`, params);
+};
+
 // 新增工单销售信息
 export const addSalesInfo = (params: any) => {
   return http.post(`${PORT3}/base_work_order/sales`, params);
 };
 
+// 修改工单销售信息
+export const editSalesInfo = (params: any) => {
+  return http.put(`${PORT3}/base_work_order/sales`, params);
+};
+
 // 新增工单发布信息
 export const addPublishInfo = (params: any) => {
   return http.post(`${PORT3}/base_work_order/publish`, params);
+};
+
+// 修改工单发布信息
+export const editPublishInfo = (params: any) => {
+  return http.put(`${PORT3}/base_work_order/publish`, params);
 };

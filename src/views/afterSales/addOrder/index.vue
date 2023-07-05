@@ -457,7 +457,10 @@ import {
   getSetTypes,
   addAfterInfo,
   addSalesInfo,
-  addPublishInfo
+  addPublishInfo,
+  editfterInfo,
+  editSalesInfo,
+  editPublishInfo
 } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount, getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
@@ -469,7 +472,10 @@ import dayjs from "dayjs";
 // const { BUTTONS } = useAuthButtons();
 const route = useRoute();
 const id = route.query.id;
-const api = id ? editSalesList : addSalesList;
+const baseApi = id ? editSalesList : addSalesList;
+const afterApi = id ? editfterInfo : addAfterInfo;
+const salesApi = id ? editSalesInfo : addSalesInfo;
+const publishApi = id ? editPublishInfo : addPublishInfo;
 const router = useRouter();
 
 const rules = reactive({
@@ -541,14 +547,14 @@ const getDetailInfo = async (id: any) => {
     const publistInfo: any = data.detail.find(item => item.handleDept === 3);
     // 基本
     const basicObj = {
-      basicOrderCode: data.orderCode,
-      basicAccountId: data.accountId,
-      basicQuestionType: data.problemTypeId,
-      basicInsure: data.insure,
-      basicOrderStar: data.orderStar,
-      basicHandleTime: data.handleTime,
-      basicMessage: data.remark,
-      baiscAnnex: data.assets.map((imgItem: any) => {
+      basicOrderCode: data?.orderCode,
+      basicAccountId: data?.accountId,
+      basicQuestionType: data?.problemTypeId,
+      basicInsure: data?.insure,
+      basicOrderStar: data?.orderStar,
+      basicHandleTime: data?.handleTime,
+      basicMessage: data?.remark,
+      baiscAnnex: (data?.assets || []).map((imgItem: any) => {
         return {
           path: imgItem.path,
           url: imgItem.path,
@@ -561,16 +567,16 @@ const getDetailInfo = async (id: any) => {
     let afterObj = {};
     if (afterInfo) {
       afterObj = {
-        afterHandleResult: afterInfo.afterSaleResultId,
-        afterHandleTime: afterInfo.afterSaleHandleTime,
-        afterSpecHandleResult: afterInfo.afterSalesResultRemark,
-        afterCompensationAmount: afterInfo.afterSalesCompensationAmount,
-        afterNewSecurityPhone: afterInfo.newSecretCellPhone,
-        afterNewSecurityPassword: afterInfo.newPassword,
-        afterSalesRemark: afterInfo.afterSalesRemark,
-        afterSalesInformDeptId: afterInfo.afterSalesInformDeptId,
-        afterCustomerServiceId: afterInfo.afterSaleServiceId,
-        afterAnnex: afterInfo.afterSaleAssets?.map((imgItem: any) => {
+        afterHandleResult: afterInfo?.afterSaleResultId,
+        afterHandleTime: afterInfo?.afterSaleHandleTime,
+        afterSpecHandleResult: afterInfo?.afterSalesResultRemark,
+        afterCompensationAmount: afterInfo?.afterSalesCompensationAmount,
+        afterNewSecurityPhone: afterInfo?.newSecretCellPhone,
+        afterNewSecurityPassword: afterInfo?.newPassword,
+        afterSalesRemark: afterInfo?.afterSalesRemark,
+        afterSalesInformDeptId: afterInfo?.afterSalesInformDeptId,
+        afterCustomerServiceId: afterInfo?.afterSaleServiceId,
+        afterAnnex: (afterInfo?.afterSaleAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
             url: imgItem.path,
@@ -584,13 +590,13 @@ const getDetailInfo = async (id: any) => {
     let publishObj = {};
     if (publistInfo) {
       publishObj = {
-        publishHandleCustomerServiceId: publistInfo.publishServiceId,
-        publishHandleTime: publistInfo.publishHandleTime,
-        publishHandleResult: publistInfo.publishResultId,
-        publishResultRemark: publistInfo.publishResultRemark,
-        publishRemark: publistInfo.publishRemark,
-        publishInformDeptId: afterInfo.publishInformDeptId,
-        publishAnnex: publistInfo.publishAssets?.map((imgItem: any) => {
+        publishHandleCustomerServiceId: publistInfo?.publishServiceId,
+        publishHandleTime: publistInfo?.publishHandleTime,
+        publishHandleResult: publistInfo?.publishResultId,
+        publishResultRemark: publistInfo?.publishResultRemark,
+        publishRemark: publistInfo?.publishRemark,
+        publishInformDeptId: publistInfo?.publishInformDeptId,
+        publishAnnex: (publistInfo?.publishAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
             url: imgItem.path,
@@ -604,15 +610,15 @@ const getDetailInfo = async (id: any) => {
     let saleObj = {};
     if (saleInfo) {
       saleObj = {
-        saleHandleCustomerService: saleInfo.salesResultId,
-        saleHandleTime: saleInfo.salesHandleTime,
-        saleHandleResult: saleInfo.salesResultId,
-        saleCompensationUserAmount: saleInfo.salesCompensationAmount,
-        saleChangeUserNumber: saleInfo.newAccountId,
-        salesResultRemark: saleInfo.salesResultRemark,
-        salesRemark: saleInfo.salesRemark,
-        salesInformDeptId: afterInfo.salesInformDeptId,
-        saleannex: saleInfo.salesAssets?.map((imgItem: any) => {
+        saleHandleCustomerService: saleInfo?.salesResultId,
+        saleHandleTime: saleInfo?.salesHandleTime,
+        saleHandleResult: saleInfo?.salesResultId,
+        saleCompensationUserAmount: saleInfo?.salesCompensationAmount,
+        saleChangeUserNumber: saleInfo?.newAccountId,
+        salesResultRemark: saleInfo?.salesResultRemark,
+        salesRemark: saleInfo?.salesRemark,
+        salesInformDeptId: afterInfo?.salesInformDeptId,
+        saleannex: (saleInfo?.salesAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
             url: imgItem.path,
@@ -662,8 +668,7 @@ const getAllAccountList = async () => {
 getAllAccountList();
 
 // 数据字典-问题类型
-type listTypeObj = { label: string; id: number; value: number };
-const problemTypeList = ref<listTypeObj[]>([]);
+const problemTypeList: Ref = ref([]);
 const getProblemTypesFun = async () => {
   const { data } = await getProblemTypes();
   problemTypeList.value = data.problemTypes;
@@ -671,7 +676,7 @@ const getProblemTypesFun = async () => {
 getProblemTypesFun();
 
 // 数据字典-处理结果
-const handleTypeList = ref<listTypeObj[]>([]);
+const handleTypeList: Ref = ref([]);
 const getHandleTypesFun = async () => {
   const { data } = await getHandleTypes();
   handleTypeList.value = data.handleTypes;
@@ -679,7 +684,7 @@ const getHandleTypesFun = async () => {
 getHandleTypesFun();
 
 // 数据字典-部门列表
-const setTypeList = ref<listTypeObj[]>([]);
+const setTypeList: Ref = ref([]);
 const getSetTypeFun = async () => {
   const { data } = await getSetTypes();
   setTypeList.value = data.set;
@@ -690,7 +695,6 @@ getSetTypeFun();
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
-    console.log("valid", valid, ElMessage, api);
     if (!valid) return;
     try {
       const {
@@ -723,7 +727,13 @@ const handleSubmit = () => {
         salesInformDeptId,
         publishInformDeptId
       } = ruleForm.value.row;
+      // 工单的记录id
+      let idObj = {};
+      if (id) {
+        idObj = { id };
+      }
       const baseData = {
+        ...idObj,
         orderCode: basicOrderCode,
         accountId: basicAccountId,
         problemTypeId: basicQuestionType,
@@ -738,12 +748,12 @@ const handleSubmit = () => {
           };
         })
       };
-      console.log(baseData);
       // 基本信息
-      const { data }: any = await api!(baseData);
+      const { data }: any = await baseApi!(baseData);
       // 售后信息
-      await addAfterInfo({
-        orderId: data.id,
+      await afterApi({
+        ...idObj,
+        orderId: data.id || id,
         afterSaleResultId: afterHandleResult, // 售后处理结果
         afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
         afterSalesCompensationAmount: afterCompensationAmount, // 售后赔付金额
@@ -759,7 +769,8 @@ const handleSubmit = () => {
         }) // 售后提交资源
       });
       // 发布信息
-      await addPublishInfo({
+      await publishApi({
+        ...idObj,
         orderId: data.id, // 工单id
         publishResultId: publishHandleResult, // 发布处理结果
         publishResultRemark: publishResultRemark, // 销售处理结果备注
@@ -773,7 +784,8 @@ const handleSubmit = () => {
         }) // 发布提交资源
       });
       // 销售信息
-      await addSalesInfo({
+      await salesApi({
+        ...idObj,
         orderId: data.id, // 工单id
         salesResultId: saleHandleResult, // 销售处理结果
         salesCompensationAmount: saleCompensationUserAmount, // 赔付用户金额
@@ -789,6 +801,7 @@ const handleSubmit = () => {
         }) // 销售提交资源
       });
       ElMessage.success({ message: `操作成功！` });
+      goBack();
     } catch (error) {
       console.log(error);
     }

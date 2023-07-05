@@ -474,9 +474,16 @@ export namespace Data {
   export interface keyValue {
     label: string;
     value: number;
+    id?: number;
   }
   export interface ProblemList {
     problemTypes: keyValue[];
+  }
+  export interface SetList {
+    set: keyValue[];
+  }
+  export interface HandleTypeList {
+    handleTypes: keyValue[];
   }
 }
 // 短信管理
