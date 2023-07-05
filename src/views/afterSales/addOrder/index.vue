@@ -38,7 +38,12 @@
                 @change="onChangeAccount"
               >
                 <template v-for="item in accountList" :key="item.id">
-                  <el-option :label="item.accountNumber" :value="item.id" />
+                  <el-option :label="item.accountNumber" :value="item.id">
+                    <span style="float: left">{{ item.accountCode }}</span>
+                    <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{
+                      item.accountNumber
+                    }}</span>
+                  </el-option>
                 </template>
               </el-select>
             </el-form-item>
@@ -391,7 +396,12 @@
                     @change="onChangeAccount"
                   >
                     <template v-for="item in accountList" :key="item.id">
-                      <el-option :label="item.accountNumber" :value="item.id" />
+                      <el-option :label="item.accountNumber" :value="item.id">
+                        <span style="float: left">{{ item.accountCode }}</span>
+                        <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{
+                          item.accountNumber
+                        }}</span>
+                      </el-option>
                     </template>
                   </el-select>
                 </el-form-item>
@@ -532,7 +542,6 @@ const baseObj = ref();
 function onChangeAccount(e: any) {
   const obj = accountList.value.find(item => item.id === e);
   baseObj.value = obj;
-  console.log("9999", baseObj.value);
 }
 
 // 返显数据处理
@@ -659,7 +668,7 @@ const getBranchList = async () => {
 getBranchList();
 
 // 账号列表
-type AccountObj = { accountNumber: string; id: number };
+type AccountObj = { accountNumber: string; accountCode: string; id: number };
 const accountList = ref<AccountObj[]>([]);
 const getAllAccountList = async () => {
   const { data } = await getAllBaseAccount({});

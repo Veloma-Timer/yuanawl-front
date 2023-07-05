@@ -28,7 +28,10 @@
       <el-form-item label="账号" prop="accountId">
         <el-select v-model="drawerProps.row!.accountId" placeholder="请选择" class="order-input" filterable>
           <template v-for="item in accountList" :key="item.id">
-            <el-option :label="item.accountNumber" :value="item.id" />
+            <el-option :label="item.accountNumber" :value="item.id">
+              <span style="float: left">{{ item.accountCode }}</span>
+              <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{ item.accountNumber }}</span>
+            </el-option>
           </template>
         </el-select>
       </el-form-item>
@@ -216,7 +219,7 @@ const getBranchList = async () => {
 getBranchList();
 
 // 账号列表
-type AccountObj = { accountNumber: string; id: number };
+type AccountObj = { accountNumber: string; accountCode: string; id: number };
 const accountList = ref<AccountObj[]>([]);
 const getAllAccountList = async () => {
   const { data } = await getAllBaseAccount({});
