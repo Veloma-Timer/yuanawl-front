@@ -9,13 +9,19 @@ export const getHomeList = (params: any) => {
 };
 
 export interface IStatistics {
-  branchId: number;
+  branchId?: number;
   date: number;
+  userId?: number;
 }
 
 // 获取首页数据
 export const getHomeStatistics = (params: IStatistics) => {
   return http.get(`${baseUrl}/statistics`, params);
+};
+
+// 个人首页数据
+export const getUserProfile = (params: IStatistics) => {
+  return http.get(`${baseUrl}/statistics/profile`, params);
 };
 
 // 获取首页销售 平台销售额排名

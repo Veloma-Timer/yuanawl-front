@@ -17,10 +17,10 @@
     },
     {
       "path": "/homeStandby/index",
-      "name": "用户数据",
+      "name": "员工个人分析",
       "component": "/homeStandby/index",
       "meta": {
-        "title": "用户数据",
+        "title": "员工个人分析",
         "isHide": false
       }
     },

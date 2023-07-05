@@ -43,7 +43,7 @@ import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { getAllBranch } from "@/api/modules/set";
+import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 const { BUTTONS } = useAuthButtons();
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -80,7 +80,16 @@ const getFixed = (str: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountCode",
+    label: "账号编号",
+    width: 160,
+    enum: getAllBaseAccount,
+    fieldNames: { label: "accountCode", value: "id" },
+    search: {
+      el: "select"
+    }
+  },
   {
     prop: "accountStatus",
     label: "账户状态",
@@ -91,7 +100,16 @@ const columns: ColumnProps<Commodity.Account>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "accountNumber", label: "游戏编号", width: 160 },
+  {
+    prop: "accountNumber",
+    label: "游戏编号",
+    width: 160,
+    enum: getAllBaseAccount,
+    fieldNames: { label: "accountNumber", value: "id" },
+    search: {
+      el: "select"
+    }
+  },
   {
     prop: "accountType",
     label: "游戏分类",

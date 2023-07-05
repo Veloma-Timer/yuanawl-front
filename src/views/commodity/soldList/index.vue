@@ -45,6 +45,7 @@ import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { parseTime } from "@/utils";
 import { getAllBranch } from "@/api/modules/set";
+import { Commodity } from "@/api/interface/commodity/commodity";
 
 const { BUTTONS } = useAuthButtons();
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -74,9 +75,16 @@ const getTableList = (params: any) => {
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountCode",
+    label: "账号编号",
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
   {
     prop: "accountStatus",
     label: "账户状态",
@@ -86,7 +94,14 @@ const columns: ColumnProps<User.ResUserList>[] = [
       { label: "未售", value: 0 }
     ]
   },
-  { prop: "accountNumber", label: "游戏编号", width: 160 },
+  {
+    prop: "accountNumber",
+    label: "游戏编号",
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -109,7 +124,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     label: "出售时间",
     width: 160,
     render: scope => {
-      return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}");
+      return parseTime(scope.row?.saleTime, "{y}-{m}-{d} {h}:{i}");
     }
   },
   {
@@ -117,7 +132,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     label: "出售金额",
     width: 160,
     render: scope => {
-      return <span>{getFixed(scope.row!.salePrice) || "--"}</span>;
+      return <span>{getFixed(scope.row?.salePrice) || "--"}</span>;
     }
   },
   {
@@ -125,7 +140,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
     label: "实际回收金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row!.accountRecyclerPrice);
+      return getFixed(scope.row?.accountRecyclerPrice);
     }
   },
   {

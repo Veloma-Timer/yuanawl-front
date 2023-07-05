@@ -27,12 +27,14 @@
       </template>
     </ProTable>
     <recoverDrawer ref="drawerRef" />
+    <ImportExcel ref="dialogRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import recoverDrawer from "@/views/commodity/recovery/modules/recoverDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
@@ -49,7 +51,7 @@ import {
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
-import { getAllBranch } from "@/api/modules/set";
+import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { getUserAll } from "@/api/modules/user";
 import { parseTime } from "@/utils/is";
 import { useUserStore } from "@/stores/modules/user";
@@ -99,13 +101,20 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
     prop: "branchId",
-    label: "所属问店",
+    label: "所属门店",
     width: 160,
     enum: getAllBranch,
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" }
   },
-  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountCode",
+    label: "账号编号",
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -200,11 +209,11 @@ const batchAdd = (title: string) => {
 };
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-// 当前时间
-const date = new Date();
-const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
+const drawerRef = ref<InstanceType<typeof recoverDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
+  // 当前时间
+  const date = new Date();
+  const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
   const params = {
     title,
     isView: title === "查看",

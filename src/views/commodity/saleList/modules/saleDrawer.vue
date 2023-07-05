@@ -63,7 +63,7 @@
   </el-drawer>
 </template>
 
-<script setup lang="ts" name="UserDrawer">
+<script setup lang="ts" name="saleDrawer">
 import { reactive, ref } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";

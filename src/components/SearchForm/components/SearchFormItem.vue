@@ -16,7 +16,9 @@
         :key="index"
         :label="col[fieldNames.label]"
         :value="col[fieldNames.value]"
-      ></component>
+      >
+        <slot v-if="column.search?.slotName" :name="column.search?.slotName" :slotItme="col"> </slot>
+      </component>
     </template>
     <slot v-else></slot>
   </component>

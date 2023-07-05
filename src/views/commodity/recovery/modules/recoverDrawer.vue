@@ -220,7 +220,6 @@ const acceptParams = (params: DrawerProps) => {
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
-    console.log(valid);
     if (!valid) return;
     try {
       await drawerProps.value.api!(drawerProps.value.row);

@@ -31,12 +31,14 @@
       </template>
     </ProTable>
     <releaseDrawer ref="drawerRef" />
+    <ImportExcel ref="dialogRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import releaseDrawer from "@/views/commodity/release/modules/releaseDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
@@ -176,7 +178,7 @@ const publishMap = () => {
 };
 publishMap();
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
+const drawerRef = ref<InstanceType<typeof releaseDrawer> | null>(null);
 // 回显数据
 const setEcho = (arr: string[]) => {
   const list = arr.map(item => Number(item));

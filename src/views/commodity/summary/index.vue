@@ -54,9 +54,8 @@ import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { parseTime } from "@/utils";
 import { saveFile } from "@/utils/file";
-import { getAllBranch } from "@/api/modules/set";
+import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
-
 const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -91,7 +90,14 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountCode",
+    label: "账号编号",
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
   {
     prop: "accountStatus",
     label: "账户状态",
@@ -106,7 +112,9 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountNumber",
     label: "游戏编号",
     width: 160,
-    search: { el: "input" }
+    search: {
+      el: "input"
+    }
   },
   {
     prop: "accountType",
@@ -186,7 +194,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
   { prop: "accountDesc", label: "账号描述", width: 160, search: { el: "input" } },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
-
+// 账号列表
+type AccountObj = { accountNumber: string; accountCode: string; id: number };
+const accountList = reactive<AccountObj[]>([]);
+const getAllAccountList = async () => {
+  const { data } = await getAllBaseAccount({});
+  accountList.value = data;
+};
+getAllAccountList();
 // 删除用户信息
 const deleteAccount = async (params: Commodity.Account) => {
   await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);

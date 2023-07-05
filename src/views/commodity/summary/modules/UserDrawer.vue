@@ -326,8 +326,4 @@ defineExpose({
     color: var(--el-color-white) !important;
   }
 }
-.order-input,
-.el-input {
-  width: 400px !important;
-}
 </style>

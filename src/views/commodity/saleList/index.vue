@@ -28,11 +28,13 @@
       </template>
     </ProTable>
     <saleDrawer ref="drawerRef" />
+    <ImportExcel ref="dialogRef" />
   </div>
 </template>
 
 <script setup lang="tsx" name="useProTable">
 import { useHandleData } from "@/hooks/useHandleData";
+import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
@@ -104,7 +106,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     prop: "saleTime",
     label: "出售时间",
     render: scope => {
-      return parseTime(scope.row!.saleTime, "{y}-{m}-{d} {h}:{i}:{s}");
+      return parseTime(scope.row?.saleTime, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
   { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
@@ -154,7 +156,7 @@ const batchAdd = (title: string) => {
 };
 
 // 打开 drawer(新增、查看、编辑)
-const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
+const drawerRef = ref<InstanceType<typeof saleDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
