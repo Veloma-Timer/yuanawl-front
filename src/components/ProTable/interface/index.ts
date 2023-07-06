@@ -43,7 +43,7 @@ export type SearchProps = {
   order?: number; // 搜索项排序（从大到小）
   span?: number; // 搜索项所占用的列数，默认为1列
   offset?: number; // 搜索字段左侧偏移列数
-  slotName?: string; // 自定义内容
+  slotName?: boolean; // 自定义内容
   slotRender?: any; // 自定义内容
   multiple?: boolean; // 选择框多选
   collapseTags?: boolean; // 多选时是否将选中值按文字的形式展示
@@ -54,6 +54,7 @@ export type SearchProps = {
 export type FieldNamesProps = {
   label: string;
   value: string;
+  name?: string;
   children?: string;
 };
 

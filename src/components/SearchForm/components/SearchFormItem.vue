@@ -17,7 +17,10 @@
         :label="col[fieldNames.label]"
         :value="col[fieldNames.value]"
       >
-        <slot v-if="column.search?.slotName" :name="column.search?.slotName" :slotItme="col"> </slot>
+        <template v-if="column.search?.slotName">
+          <span style="float: left">{{ col[fieldNames.label] }}</span>
+          <span style="float: right; font-size: 13px">{{ col[fieldNames.name] }}</span>
+        </template>
       </component>
     </template>
     <slot v-else></slot>
@@ -40,6 +43,7 @@ const fieldNames = computed(() => {
   return {
     label: props.column.fieldNames?.label ?? "label",
     value: props.column.fieldNames?.value ?? "value",
+    name: props.column.fieldNames?.name ?? "name",
     children: props.column.fieldNames?.children ?? "children"
   };
 });

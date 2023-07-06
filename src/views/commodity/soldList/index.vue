@@ -44,7 +44,7 @@ import { deleteUser, getUserAll } from "@/api/modules/user";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { parseTime } from "@/utils";
-import { getAllBranch } from "@/api/modules/set";
+import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { Commodity } from "@/api/interface/commodity/commodity";
 
 const { BUTTONS } = useAuthButtons();
@@ -81,8 +81,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountCode",
     label: "账号编号",
     width: 160,
+    enum: getAllBaseAccount,
     search: {
-      el: "input"
+      el: "select",
+      slotName: true
+    },
+    fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
+    render: scope => {
+      return <span>{scope.row?.accountCode}</span>;
     }
   },
   {
@@ -98,8 +104,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountNumber",
     label: "游戏编号",
     width: 160,
+    enum: getAllBaseAccount,
     search: {
-      el: "input"
+      el: "select",
+      slotName: true
+    },
+    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
+    render: scope => {
+      return <span>{scope.row?.accountNumber}</span>;
     }
   },
   {
@@ -182,6 +194,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
   { prop: "accountDesc", label: "账号描述", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
+// 账号列表
+type AccountObj = { accountNumber: string; accountCode: string; id: number };
+const accountList = reactive<AccountObj[]>([]);
+const getAllAccountList = async () => {
+  const { data } = await getAllBaseAccount({});
+  accountList.value = data;
+};
+getAllAccountList();
 
 // 删除用户信息
 const deleteAccount = async (params: User.ResUserList) => {

@@ -64,7 +64,14 @@ const obj = JSON.parse(decryption("token", token));
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
-
+// 账号列表
+type AccountObj = { accountNumber: string; accountCode: string; id: number };
+const accountList = reactive<AccountObj[]>([]);
+const getAllAccountList = async () => {
+  const { data } = await getAllBaseAccount({});
+  accountList.value = data;
+};
+getAllAccountList();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -108,11 +115,17 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     fieldNames: { label: "branchName", value: "id" }
   },
   {
-    prop: "accountCode",
-    label: "账号编号",
+    prop: "accountNumber",
+    label: "游戏编号",
     width: 160,
+    enum: getAllBaseAccount,
     search: {
-      el: "input"
+      el: "select",
+      slotName: true
+    },
+    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
+    render: scope => {
+      return <span>{scope.row?.accountNumber}</span>;
     }
   },
   {
@@ -124,7 +137,15 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     fieldNames: { label: "typeName", value: "id" }
   },
   { prop: "accountTitle", label: "账户标题", width: 160, search: { el: "input" } },
-  { prop: "accountNumber", label: "账号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountNumber",
+    label: "账号",
+    width: 160,
+    search: { el: "input" },
+    render: scope => {
+      return <span>{scope.row?.accountNumber}</span>;
+    }
+  },
   { prop: "accountPassword", label: "密码", width: 160 },
   { prop: "accountTel", label: "密保手机", width: 160, search: { el: "input" } },
   { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },

@@ -94,8 +94,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountCode",
     label: "账号编号",
     width: 160,
+    enum: getAllBaseAccount,
     search: {
-      el: "input"
+      el: "select",
+      slotName: true
+    },
+    fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
+    render: scope => {
+      return <span>{scope.row?.accountCode}</span>;
     }
   },
   {
@@ -112,8 +118,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountNumber",
     label: "游戏编号",
     width: 160,
+    enum: getAllBaseAccount,
     search: {
-      el: "input"
+      el: "select",
+      slotName: true
+    },
+    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
+    render: scope => {
+      return <span>{scope.row?.accountNumber}</span>;
     }
   },
   {
