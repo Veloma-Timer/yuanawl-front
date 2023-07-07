@@ -50,8 +50,10 @@ const echartsRef = ref<HTMLElement>();
 // 时间范围选择
 const currentTimeSelect = ref<string>("本日");
 
-const xData = ["张三", "张三", "张三", "张三", "张三", "张三"];
-const yData = [20, 30, 40, 50, 60, 70];
+// const xData = ["张三", "张三", "张三", "张三", "张三", "张三"];
+// const yData = [20, 30, 40, 50, 60, 70];
+const xData: Ref = ref([]);
+const yData: Ref = ref([]);
 interface SelectSale {
   title: string;
   value?: string;
@@ -59,36 +61,39 @@ interface SelectSale {
 const saleData: Ref = ref([]);
 const selectSale: Ref = ref({});
 const selectIndex: Ref = ref(0);
+const chatData: Ref = ref({});
 let charTitle = ref("本日销售总额");
 
 const getTodaySales = async (branchId: number, date: number, selectSale?: SelectSale) => {
   const {
-    data: { salesPrice, arpa, paidOrders, buyNumber }
+    data: { salesTotalMoney, salesTotalNumber, markupPercentage, platformNumber, chat }
   } = await todaySales(branchId, date);
   saleData.value = [
     {
       title: `${currentTimeSelect.value}销售总额`,
-      value: `￥${salesPrice}`
+      value: `￥${salesTotalMoney}`
     },
     {
       title: `${currentTimeSelect.value}订单总量`,
-      value: `￥${arpa || 0}`
+      value: `${salesTotalNumber || 0}`
     },
     {
       title: `${currentTimeSelect.value}商品加价率`,
-      value: paidOrders
+      value: markupPercentage
     },
     {
       title: "出售渠道个数",
-      value: buyNumber
+      value: platformNumber
     }
   ];
+  chatData.value = chat;
   if (selectSale) {
     charTitle.value = selectSale.title;
   } else {
     charTitle.value = saleData.value[selectIndex.value].title;
   }
-  initEcharts(xData, yData, legendName.value);
+  chatSwitch(selectIndex.value);
+  initEcharts(xData.value, yData.value, legendName.value);
 };
 
 const tabDateList = ref(["本日", "本周", "本月"]);
@@ -206,6 +211,25 @@ function switchChart(item: SelectSale, index: number) {
   selectIndex.value = index;
 }
 
+function chatSwitch(value: number) {
+  if (value === 0) {
+    xData.value = chatData.value.salesTotalMoney.map((item: any) => item.name);
+    yData.value = chatData.value.salesTotalMoney.map((item: any) => item.value);
+  }
+  if (value === 1) {
+    xData.value = chatData.value.salesTotalNumber.map((item: any) => item.name);
+    yData.value = chatData.value.salesTotalNumber.map((item: any) => item.value);
+  }
+  if (value === 2) {
+    xData.value = chatData.value.markupPercentage.map((item: any) => item.name);
+    yData.value = chatData.value.markupPercentage.map((item: any) => item.value);
+  }
+  if (value === 3) {
+    xData.value = chatData.value.platformNumber.map((item: any) => item.name);
+    yData.value = chatData.value.platformNumber.map((item: any) => item.value);
+  }
+}
+
 let id = computed(() => {
   const selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
   return selectObj?.id;
@@ -241,6 +265,7 @@ watch(
   () => selectSale.value,
   () => {
     if (typeof id.value === "number" && typeof date.value === "number") {
+      chatSwitch(selectIndex.value);
       getTodaySales(id.value, date.value, selectSale.value);
     }
   }

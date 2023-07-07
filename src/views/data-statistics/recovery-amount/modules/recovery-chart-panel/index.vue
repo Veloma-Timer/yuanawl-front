@@ -3,9 +3,9 @@
     <div class="left">
       <div class="content">
         <template v-if="selectIndex === 2">
-          <el-select v-model="value1" placeholder="请选择" class="type-input" @change="typeChange" size="large" filterable>
-            <template v-for="item in typeList" :key="item.id">
-              <el-option :label="item.name" :value="item.id" />
+          <el-select v-model="selectTypeId" placeholder="请选择" class="type-input" size="large" filterable>
+            <template v-for="item in allTypeList" :key="item.id">
+              <el-option :label="item.typeName" :value="item.id" />
             </template>
           </el-select>
         </template>
@@ -49,41 +49,31 @@ import type { Ref } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { getAllBranch } from "@/api/modules/set";
-import { todayRecycle } from "@/api/modules/order";
+import { todayRecycles } from "@/api/modules/order";
 import { Data } from "@/api/interface/index";
 import { SeriesOption, YAXisComponentOption } from "echarts";
+import { getAllList } from "@/api/modules/accountClass";
 // import { getAllUser } from "@/api/modules/set";
 
-type TypeObj = { name: string; id: number };
-const typeList = ref<TypeObj[]>([]);
-const value1 = ref(-1);
+const selectTypeId: Ref = ref();
 
-const getType = async () => {
-  // const { data } = await getAllUser({});
-  typeList.value = [
-    {
-      name: "全部",
-      id: -1
-    },
-    {
-      name: "王者",
-      id: 1
-    },
-    {
-      name: "精英",
-      id: 2
-    }
-  ];
+const allTypeList: Ref = ref([]);
+const setAllTypeList = async () => {
+  const { data } = await getAllList();
+  allTypeList.value = data;
 };
-getType();
+setAllTypeList();
 
 const emit = defineEmits(["change-id"]);
 const echartsRef = ref<HTMLElement>();
 // 时间范围选择
 const currentTimeSelect = ref<string>("本日");
 
-const xData: any = ref(["张三", "张三", "张三", "张三", "张三", "精英"]);
-const yData: any = ref([20, 30, 40, 50, 60, 70]);
+// const xData: any = ref(["张三", "张三", "张三", "张三", "张三", "精英"]);
+// const yData: any = ref([20, 30, 40, 50, 60, 70]);
+const xData: Ref = ref([]);
+const yData: Ref = ref([]);
+const yData2: Ref = ref([]); // 七日未售 有y轴有两个值 数量和金额 这里用做金额
 interface SelectSale {
   title: string;
   value?: string;
@@ -91,28 +81,30 @@ interface SelectSale {
 const saleData: Ref = ref([]);
 const selectSale: Ref = ref({});
 const selectIndex: Ref = ref(0);
+const chatData: Ref = ref({});
 let charTitle = ref("本日销售总额");
 
 const getTodaySales = async (branchId: number, date: number, selectSale?: SelectSale) => {
+  const postData = selectTypeId.value ? { branchId, date, id: selectTypeId.value } : { branchId, date };
   const {
-    data: { recyclePrice, arpa, recycleOrders, buyNumber }
-  } = await todayRecycle(branchId, date);
+    data: { recycleTotalMoney, recycleTotalNumber, gameCategory, sevenDaysTotalNumber, chat }
+  } = await todayRecycles(postData);
   saleData.value = [
     {
       title: `${currentTimeSelect.value}回收金额`,
-      value: `￥${recyclePrice}`
+      value: `￥${recycleTotalMoney}`
     },
     {
       title: `${currentTimeSelect.value}回收订单总量`,
-      value: `￥${arpa || 0}`
+      value: `￥${recycleTotalNumber || 0}`
     },
     {
       title: `${currentTimeSelect.value}回收游戏品类`,
-      value: recycleOrders
+      value: gameCategory
     },
     {
       title: "七日未售出数量",
-      value: buyNumber
+      value: sevenDaysTotalNumber
     }
   ];
   if (selectSale) {
@@ -120,7 +112,9 @@ const getTodaySales = async (branchId: number, date: number, selectSale?: Select
   } else {
     charTitle.value = saleData.value[selectIndex.value].title;
   }
-  initEcharts(xData.value, yData.value, legendName.value);
+  chatData.value = chat;
+  chatSwitch(selectIndex.value);
+  initEcharts(xData.value, yData.value, yData2.value, legendName.value);
 };
 
 const tabDateList = ref(["本日", "本周", "本月"]);
@@ -165,7 +159,7 @@ function changeSelectDate(e: any) {
   currentTimeSelect.value = e;
 }
 
-function initEcharts(xData: any[], yData: any[], legendName: string[]) {
+function initEcharts(xData: any[], yData: any[], yData2: any[], legendName: string[]) {
   let seriesTemp;
   let colorTemp;
   let yTemp;
@@ -186,7 +180,7 @@ function initEcharts(xData: any[], yData: any[], legendName: string[]) {
         emphasis: {
           focus: "series"
         },
-        data: yData
+        data: yData2
       }
     ];
     yTemp = [
@@ -289,6 +283,26 @@ function switchChart(item: SelectSale, index: number) {
   selectIndex.value = index;
 }
 
+function chatSwitch(value: number) {
+  if (value === 0) {
+    xData.value = chatData.value.recycleTotalMoney.map((item: any) => item.name);
+    yData.value = chatData.value.recycleTotalMoney.map((item: any) => item.value);
+  }
+  if (value === 1) {
+    xData.value = chatData.value.recycleTotalNumber.map((item: any) => item.name);
+    yData.value = chatData.value.recycleTotalNumber.map((item: any) => item.value);
+  }
+  if (value === 2) {
+    xData.value = chatData.value.gameCategory.map((item: any) => item.name);
+    yData.value = chatData.value.gameCategory.map((item: any) => item.value);
+  }
+  if (value === 3) {
+    xData.value = chatData.value.sevenDaysTotalNumber.map((item: any) => item.name);
+    yData.value = chatData.value.sevenDaysTotalNumber.map((item: any) => item.value);
+    yData2.value = chatData.value.sevenDaysTotalNumber.map((item: any) => item.money);
+  }
+}
+
 let id = computed(() => {
   const selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
   return selectObj?.id;
@@ -313,16 +327,17 @@ let legendName = computed(() => {
   }
 });
 
-function typeChange() {
-  // e: any id
-  // console.log(1112, e);
-  const xData = ref(["精英"]);
-  const yData = ref([70]);
-  initEcharts(xData.value, yData.value, legendName.value);
-}
-
 watch(
   () => currentTimeSelect.value,
+  () => {
+    if (typeof id.value === "number") {
+      getTodaySales(id.value, date.value);
+    }
+  }
+);
+
+watch(
+  () => selectTypeId.value,
   () => {
     if (typeof id.value === "number") {
       getTodaySales(id.value, date.value);
@@ -334,6 +349,7 @@ watch(
   () => selectSale.value,
   () => {
     if (typeof id.value === "number" && typeof date.value === "number") {
+      chatSwitch(selectIndex.value);
       getTodaySales(id.value, date.value, selectSale.value);
     }
   }

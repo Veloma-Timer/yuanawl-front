@@ -428,19 +428,47 @@ export namespace Data {
   export interface DateRange {
     [key: string]: number;
   }
-  export interface keyValue {
+  export interface INameAndValue {
     name: string;
     value: number;
   }
   export interface TodaySales {
-    salesMap: {
-      current: keyValue[];
-      preCurrent: keyValue[];
-    };
-    salesPrice: number;
-    arpa: number;
-    paidOrders: number;
-    buyNumber: number;
+    salesTotalMoney: number; // 销售总额
+    salesTotalNumber: number; // 销售订单量
+    markupPercentage: string; // 商品加价率
+    platformNumber: number; // 出售渠道个数
+
+    chat: {
+      salesTotalMoney: INameAndValue[];
+      salesTotalNumber: INameAndValue[];
+      markupPercentage: INameAndValue[];
+      platformNumber: INameAndValue[];
+    }; // 图表数据
+  }
+  export interface TodayPublish {
+    tenTenTotalNumber: number; // 转转发布总数
+    webTotalNumber: number; // 网站发布总数
+    cycleTotalNumber: number; // 循环发布总数
+    totalNumber: number; // 总发布数
+    chat: {
+      tenTenTotalNumber: INameAndValue[]; // 回收金额
+      webTotalNumber: INameAndValue[]; // 回收订单总量
+      cycleTotalNumber: INameAndValue[]; // 回收游戏品类
+      totalNumber: INameAndValue[]; // 七日未售出数量
+    }; // 图表数据
+  }
+  export interface TodayRecycles {
+    recycleTotalMoney: number; // 回收金额
+    recycleTotalNumber: number; // 回收订单总量
+    gameCategory: number; // 回收游戏品类
+    sevenDaysTotalNumber: number; // 七日未售出数量
+
+    chat: {
+      recycleTotalMoney: INameAndValue[]; // 回收金额
+      recycleTotalNumber: INameAndValue[]; // 回收订单总量
+      gameCategory: INameAndValue[]; // 回收游戏品类
+      sevenDaysTotalNumber: INameAndValue[]; // 七日未售出数量
+    }; // 图表数据
   }
   export interface TodayRecycle {
     recycleNumber: {

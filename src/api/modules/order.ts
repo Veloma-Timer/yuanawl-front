@@ -47,17 +47,21 @@ export const sysAnalysisWork = (id: number, date: number) => {
 
 // 数据统计-销售数据-上边图表的
 export const todaySales = (branchId: number, date: number) => {
-  return http.get<Data.TodaySales>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
+  // return http.get<Data.TodaySales>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
+  return http.get<Data.TodaySales>(`${PORT3}/sys_statistics/sales?branchId=${branchId}&date=${date}`);
 };
 
 // 数据统计-回收数据-上边图表的
-export const todayRecycle = (branchId: number, date: number) => {
-  return http.get<Data.TodayRecycle>(`${PORT3}/sys_analysis/today_recycle?branchId=${branchId}&date=${date}`);
+export const todayRecycles = (params: any) => {
+  const newParams = formatParams(params);
+  // return http.get<Data.TodayRecycle>(`${PORT3}/sys_analysis/today_recycle?branchId=${branchId}&date=${date}`);
+  return http.get<Data.TodayRecycles>(`${PORT3}/sys_statistics/recycle${newParams}`);
 };
 
-// 数据统计-销售数据-下边表格的
-export const baseAccountSales = (params: any, branchId: number) => {
-  return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_sales?branchId=${branchId}`, params);
+// 数据统计-发布数据-下边表格的
+export const todayPublishs = (branchId: number, date: number) => {
+  // return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_sales?branchId=${branchId}`, params);
+  return http.get<Data.TodayPublish>(`${PORT3}/sys_statistics/publish?branchId=${branchId}&date=${date}`);
 };
 // 数据统计-回收数据-下边表格的
 export const baseAccountRecyle = (params: any, branchId: number) => {
