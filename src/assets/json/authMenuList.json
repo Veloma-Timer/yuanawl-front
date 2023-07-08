@@ -439,6 +439,20 @@
           }
         },
         {
+          "path": "/auth/userTree",
+          "name": "用户数据",
+          "component": "/auth/user/user-tree/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "用户数据",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/auth/operationLog",
           "name": "操作日志",
           "component": "/auth/operationLog/index",
