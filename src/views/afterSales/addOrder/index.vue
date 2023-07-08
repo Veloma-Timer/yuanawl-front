@@ -680,7 +680,7 @@ getAllAccountList();
 const problemTypeList: Ref = ref([]);
 const getProblemTypesFun = async () => {
   const { data } = await getProblemTypes();
-  problemTypeList.value = data.problemTypes;
+  problemTypeList.value = data?.problemTypes || [];
 };
 getProblemTypesFun();
 
@@ -688,7 +688,7 @@ getProblemTypesFun();
 const handleTypeList: Ref = ref([]);
 const getHandleTypesFun = async () => {
   const { data } = await getHandleTypes();
-  handleTypeList.value = data.handleTypes;
+  handleTypeList.value = data?.handleTypes || [];
 };
 getHandleTypesFun();
 
@@ -696,7 +696,7 @@ getHandleTypesFun();
 const setTypeList: Ref = ref([]);
 const getSetTypeFun = async () => {
   const { data } = await getSetTypes();
-  setTypeList.value = data.set;
+  setTypeList.value = data?.set || [];
 };
 getSetTypeFun();
 
