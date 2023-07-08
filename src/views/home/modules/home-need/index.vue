@@ -21,7 +21,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, ref, watch } from "vue";
+import { ref, watch } from "vue";
 import homeNameList from "@/views/home/modules/home-nameList/index.vue";
 import homeNeed from "@/views/home/modules/home-group/need.vue";
 import { HomeSet } from "@/api/interface";

@@ -32,7 +32,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps, watch } from "vue";
+import { watch } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const getNameList = async () => {};

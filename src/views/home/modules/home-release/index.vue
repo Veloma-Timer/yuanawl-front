@@ -42,7 +42,7 @@
 </template>
 <script setup lang="ts">
 import { CaretTop } from "@element-plus/icons-vue";
-import { ref, reactive, defineProps, nextTick, watch } from "vue";
+import { ref, reactive, nextTick, watch } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";

@@ -19,7 +19,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { HomeSet } from "@/api/interface";
 const props = withDefaults(
   defineProps<{

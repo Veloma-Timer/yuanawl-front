@@ -12,7 +12,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineProps } from "vue";
 import { ref, watch, toRef } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
