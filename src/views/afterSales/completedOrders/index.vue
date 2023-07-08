@@ -1,6 +1,13 @@
 <template>
   <div class="table-box">
-    <ProTable ref="proTable" title="售后工单汇总" :columns="columns" :request-api="getTableList" :init-param="initParam">
+    <ProTable
+      ref="proTable"
+      title="售后工单汇总"
+      :columns="columns"
+      :request-api="getTableList"
+      :init-param="initParam"
+      :pagination="false"
+    >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
@@ -25,7 +32,7 @@ import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
+import { getSalesListFinished, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
 import { INSURE_STATUS } from "@/public/constant";
 import { getProblemTypes } from "@/api/modules/order";
 import { useHandleData } from "@/hooks/useHandleData";
@@ -41,7 +48,7 @@ const { BUTTONS } = useAuthButtons();
 const route = useRoute();
 const router = useRouter();
 const getTableList = (params: any) => {
-  return getSalesList(params);
+  return getSalesListFinished(params);
 };
 
 // 表格配置项

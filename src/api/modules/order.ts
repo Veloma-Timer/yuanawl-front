@@ -10,6 +10,16 @@ export const getSalesList = (params: any) => {
   return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order`, params);
 };
 
+// 售后工单-未完成工单
+export const getSalesListUnfinished = (params: any) => {
+  return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/unfinished`, params);
+};
+
+// 售后工单-已完成工单
+export const getSalesListFinished = (params: any) => {
+  return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/finished`, params);
+};
+
 // 售后工单汇总表格
 export const getSalesListToday = (params: any) => {
   return http.get<ResPage<SalesOrder.ResSalesList>>(`${PORT3}/base_work_order/today`, params);
