@@ -441,7 +441,7 @@
         {
           "path": "/auth/userTree",
           "name": "用户数据",
-          "component": "/auth/user/user-tree/index",
+          "component": "/auth/user/modules/user-tree/index",
           "meta": {
             "icon": "Menu",
             "title": "用户数据",

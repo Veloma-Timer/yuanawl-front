@@ -22,13 +22,12 @@ const defaultProps = {
   label: "name"
 };
 const setRouter = data => {
-  console.log(data);
-  // router.push({
-  //   path: "/homeStandby/index",
-  //   query: {
-  //     id: data.id
-  //   }
-  // });
+  router.push({
+    path: "/homeStandby/index",
+    query: {
+      id: data.id
+    }
+  });
 };
 let dataList = ref([]);
 const getTableList = () => {
