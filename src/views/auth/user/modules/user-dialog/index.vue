@@ -49,20 +49,20 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="所在组">
-            <el-select v-model="drawerProps.row!.setId" placeholder="请选择" class="check-select" filterable>
-              <template v-for="item in setIdList" :key="item.value">
-                <el-option :label="item.label" :value="item.value" />
-              </template>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
           <el-form-item label="管理员" prop="isAdmin">
             <el-radio-group v-model="drawerProps.row!.isAdmin" class="ml-4">
               <el-radio label="1" size="large">是</el-radio>
               <el-radio label="0" size="large">否</el-radio>
             </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="drawerProps.row!.isAdmin === '1'">
+          <el-form-item label="所在组" prop="setId">
+            <el-select v-model="drawerProps.row!.setId" placeholder="请选择" class="check-select" filterable>
+              <template v-for="item in setIdList" :key="item.value">
+                <el-option :label="item.label" :value="item.value" />
+              </template>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -123,8 +123,8 @@ const acceptParams = async (params: DrawerProps & any) => {
   drawerVisible.value = true;
   const { data } = await getAllRole({});
   userList.value = data;
-  userListMap();
-  // setListMap();
+  await userListMap();
+  await setListMap();
 };
 const userListMap = async () => {
   const { data } = await getAllBranch({});
@@ -132,7 +132,7 @@ const userListMap = async () => {
 };
 const setListMap = async () => {
   const { data } = await getGroupListMap({ ket: "set" });
-  setIdList.value = data!.data["set"] || [];
+  setIdList.value = data.set || [];
 };
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();

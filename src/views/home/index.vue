@@ -3,7 +3,7 @@
     <div class="home-tab mb30 flex">
       <div class="tab-list flex clear">
         <el-button-group v-show="userRoleId === 1">
-          <el-button type="primary" v-for="item in cityList" :key="item.id" @click="setValue(true, item.id, branchName)">
+          <el-button type="primary" v-for="item in cityList" :key="item.id" @click="setValue(true, item.id, item.branchName)">
             {{ item.branchName }}
           </el-button>
         </el-button-group>
@@ -37,7 +37,7 @@ interface Item {
   branchName: string;
   id: number | null;
 }
-const cityList = ref([{ branchName: "全部", id: 0 }]);
+const cityList = ref([{ branchName: "全部", id: null }]);
 const monthList: Item[] = [
   { branchName: "全部", id: null },
   { branchName: "今日", id: 0 },
@@ -50,13 +50,14 @@ const branchName = ref("今日");
 const params = ref<IStatistics>();
 const obj = userObj();
 const userRoleId = ref(0);
-const setValue = function (bol: boolean, state: number, name: string) {
+const setValue = function (bol: boolean, state: number | null, name: string) {
   if (bol) {
-    cityName.value = state;
+    typeof state === "number" ? (cityName.value = state) : null;
   } else {
-    monthName.value = state;
+    typeof state === "number" ? (monthName.value = state) : null;
   }
   branchName.value = name;
+  console.log(branchName);
   params.value = {
     ...params.value,
     date: monthName.value,
@@ -74,6 +75,7 @@ const setHomeCardList = async () => {
     data: { sales, recycle, publish, workOrder }
   } = (await getHomeStatistics(params.value!)) as any;
   salesObj.value = sales as any;
+  console.log(salesObj);
   statisticsObj.value = recycle as any;
   publishObj.value = publish as any;
   workOrderObj.value = workOrder as any;

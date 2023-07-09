@@ -1,6 +1,6 @@
 <template>
   <div class="tree-box">
-    <el-tree :data="dataList" :props="defaultProps" class="w-1/2">
+    <el-tree :data="dataList" :props="defaultProps" class="w-1/2" default-expand-all>
       <template #default="{ node, data }">
         <span class="custom-tree-node">
           <span class="cursor-pointer" @click="setRouter(data)">

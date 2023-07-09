@@ -107,7 +107,6 @@ const groupGet = (data: number[], name: number[]) => {
 watch(
   myArrayRef,
   newValue => {
-    console.log(newValue);
     let data,
       name = [];
     data = setValues(newValue, "amount");
