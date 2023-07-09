@@ -91,7 +91,7 @@ async function getBoradData(id: number, date: number) {
   ];
 }
 
-async function getLineData(id: number, date: number) {
+async function getLineData(id: number, date: number, { legendName1, legendName2 }: any) {
   const {
     data: { current, preCurrent }
   } = await workOrderAllLine(id, date);
@@ -104,7 +104,7 @@ async function getLineData(id: number, date: number) {
   const yesterdayY = preCurrent.map((item: any) => {
     return item.value;
   });
-  initEcharts(toDayX, toDayY, yesterdayY);
+  initEcharts(toDayX, toDayY, yesterdayY, { legendName1, legendName2 });
 }
 
 // 日期范围选择
@@ -132,12 +132,32 @@ function changeSelectDate(e: any) {
   }
 }
 
+function legendObj() {
+  let legend1 = "";
+  let legend2 = "";
+  if (currentTimeValue.value === 0) {
+    legend1 = "昨日";
+    legend2 = "今日";
+  } else if (currentTimeValue.value === 1) {
+    legend1 = "本周";
+    legend2 = "上周";
+  } else if (currentTimeValue.value === 2) {
+    legend1 = "本月";
+    legend2 = "上月";
+  }
+  return {
+    legend1,
+    legend2
+  };
+}
+
 watch(
   () => currentTimeValue.value,
   value => {
     if (value) {
+      const { legend1, legend2 } = legendObj();
       getBoradData(tableProps.selectBranchId, currentTimeValue.value);
-      getLineData(tableProps.selectBranchId, currentTimeValue.value);
+      getLineData(tableProps.selectBranchId, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });
     }
   },
   { deep: true, immediate: true }
@@ -146,8 +166,9 @@ watch(
   () => currentCitySelect.value,
   value => {
     if (value) {
+      const { legend1, legend2 } = legendObj();
       getBoradData(tableProps.selectBranchId, currentTimeValue.value);
-      getLineData(tableProps.selectBranchId, currentTimeValue.value);
+      getLineData(tableProps.selectBranchId, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });
     }
   }
 );
@@ -167,7 +188,7 @@ watch(
 
 // 渲染图表
 // x轴一条 y轴两条数据
-function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
+function initEcharts(toDayX: any, toDayY: any, yesterdayY: any, { legendName1, legendName2 }: any) {
   let myChart: echarts.ECharts = echarts.init(echartsRef.value as HTMLElement);
   let option: echarts.EChartsOption = {
     tooltip: {
@@ -180,7 +201,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
       }
     },
     legend: {
-      data: ["昨日", "今日"],
+      data: [legendName1, legendName2],
       textStyle: {
         color: "#a1a1a1"
       },
@@ -212,7 +233,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
     ],
     series: [
       {
-        name: "昨日",
+        name: legendName1,
         type: "line",
         lineStyle: {
           color: "#2ED7FF"
@@ -223,7 +244,7 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
         data: yesterdayY
       },
       {
-        name: "今日",
+        name: legendName2,
         type: "line",
         lineStyle: {
           color: "#63ECFF"

@@ -152,3 +152,8 @@ export const addPublishInfo = (params: any) => {
 export const editPublishInfo = (params: any) => {
   return http.put(`${PORT3}/base_work_order/publish`, params);
 };
+
+// 获取当前工单应该处理的部门
+export const getProcessingDept = (id: number) => {
+  return http.get<{ afterSales: boolean; sales: false; publish: boolean }>(`${PORT3}/base_work_order/processing/dept/${id}`);
+};
