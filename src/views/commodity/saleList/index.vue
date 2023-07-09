@@ -196,7 +196,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, salePrice: Number(row.salePrice), id: row.accountCode },
+    row: { ...row, salePrice: Number(row.salePrice), accountCode: row.accountCode },
     api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
     getTableList: proTable.value?.getTableList
   };

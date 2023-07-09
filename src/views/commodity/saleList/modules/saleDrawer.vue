@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="出售人姓名" prop="salePeopleId">
-        <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择出售人" filterable>
+        <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择出售人" filterable disabled>
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -29,6 +29,7 @@
         <el-date-picker
           v-model="drawerProps.row!.saleTime"
           format="YYYY-MM-DD hh:mm:ss"
+          disabled
           value-format="YYYY-MM-DD hh:mm:ss"
           type="datetime"
           placeholder="请选择出售时间"
@@ -121,7 +122,7 @@ const handleSubmit = () => {
     if (!valid) return;
     try {
       await drawerProps.value.api!(drawerProps.value.row);
-      ElMessage.success({ message: `${drawerProps.value.title}用户成功！` });
+      ElMessage.success({ message: `${drawerProps.value.title}销售订单成功！` });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
     } catch (error) {

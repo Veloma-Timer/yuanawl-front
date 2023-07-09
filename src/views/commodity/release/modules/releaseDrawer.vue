@@ -21,7 +21,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="发布人" prop="accountPublisherId">
-        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择发布人" filterable>
+        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择发布人" filterable disabled>
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -29,6 +29,7 @@
         <el-date-picker
           v-model="drawerProps.row!.accountPublisherTimer"
           format="YYYY-MM-DD hh:mm:ss"
+          disabled
           value-format="YYYY-MM-DD hh:mm:ss"
           type="datetime"
           placeholder="请选择发布时间"

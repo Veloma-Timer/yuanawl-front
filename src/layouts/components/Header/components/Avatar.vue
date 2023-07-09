@@ -47,7 +47,7 @@ const logout = () => {
     await logoutApi();
 
     // 2.清除 Token
-    userStore.setToken("");
+    userStore.cleanToken("");
 
     // 3.重定向到登陆页
     router.replace(LOGIN_URL);

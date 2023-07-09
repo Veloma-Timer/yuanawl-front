@@ -44,7 +44,6 @@ import md5 from "js-md5";
 import { initDynamicRouter } from "@/routers/modules/dynamicRouter";
 import { HOME_URL } from "@/config";
 import { getTimeState } from "@/utils";
-
 const router = useRouter();
 const userStore = useUserStore();
 const tabsStore = useTabsStore();

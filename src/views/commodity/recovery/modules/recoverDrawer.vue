@@ -117,28 +117,23 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="回收人" prop="accountRecyclerId">
-        <el-select
-          v-model="drawerProps.row!.accountRecyclerId"
-          :disabled="drawerProps.isView"
-          placeholder="请选择回收人"
-          filterable
-        >
+        <el-select v-model="drawerProps.row!.accountRecyclerId" disabled placeholder="请选择回收人" filterable>
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="回收店铺" prop="storeId">
+      <el-form-item label="回收门店店铺" prop="storeId">
         <el-select v-model="drawerProps.row!.storeId" :disabled="drawerProps.isView" placeholder="请选择回收店铺" filterable>
-          <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收时间" prop="accountRecyclerTime">
         <el-date-picker
+          disabled
           v-model="drawerProps.row!.accountRecyclerTime"
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
           type="datetime"
           placeholder="请选择回收时间"
-          :disabled="drawerProps.isView"
         />
       </el-form-item>
       <el-form-item label="回收备注" prop="recycleRemark">
@@ -168,7 +163,6 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
-import { getRecycleList } from "@/api/modules/commodity";
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
@@ -255,10 +249,10 @@ const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
   const { data } = await getAllBranch({});
-  const {
-    data: { list = [] }
-  } = await getRecycleList({});
-  customerMap = list;
+  // const {
+  //   data: { list = [] }
+  // } = await getRecycleList({});
+  customerMap = data;
   transCatUploadedMap = reloads.data;
   accountTypeMap = res.data;
   branchMap = data;
