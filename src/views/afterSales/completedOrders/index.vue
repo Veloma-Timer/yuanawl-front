@@ -71,7 +71,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       return (
         <el-button type="primary" link>
           <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.accountId || "" } }}>
-            {scope.row?.accountId || "--"}
+            {scope.row?.account?.accountCode || "--"}
           </router-link>
         </el-button>
       );

@@ -11,6 +11,9 @@
       <!-- 表格操作 -->
       <template #operation="{ row }">
         <el-button type="primary" link @click="operatorOrder('查看', row)" v-if="BUTTONS.view" :icon="View">查看</el-button>
+        <el-button type="primary" link @click="changeOrder('处理工单', row)" v-if="row.isNeedHandle === '1'" :icon="Edit"
+          >处理工单</el-button
+        >
         <el-button type="primary" link @click="openCheck(row)" v-if="BUTTONS.check" :icon="EditPen">审核</el-button>
         <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
@@ -31,7 +34,7 @@ import { INSURE_STATUS } from "@/public/constant"; // CHECK_RESULT, ORDER_STATUS
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Edit, Download, Upload, View } from "@element-plus/icons-vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
@@ -48,7 +51,7 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "operation", label: "操作", fixed: "right", width: 220 },
+  { prop: "operation", label: "操作", fixed: "right", width: 340 },
   {
     prop: "orderCode",
     label: "工单编号",
@@ -65,7 +68,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       return (
         <el-button type="primary" link>
           <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.accountId || "" } }}>
-            {scope.row?.accountId || "--"}
+            {scope.row?.account?.accountCode || "--"}
           </router-link>
         </el-button>
       );
@@ -154,6 +157,15 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
 ];
 
 const operatorOrder = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
+  const id = row.id;
+  if (id) {
+    router.push({ name: "工单新增", query: { id, isView: "true" } });
+  } else {
+    router.push({ name: "工单新增" });
+  }
+};
+
+const changeOrder = (title: string, row: Partial<SalesOrder.ResSalesList> = {}) => {
   const id = row.id;
   if (id) {
     router.push({ name: "工单新增", query: { id } });
