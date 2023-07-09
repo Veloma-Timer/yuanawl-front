@@ -1,7 +1,7 @@
 <template>
   <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
     <template #header>
-      <Header :title="`${drawerProps.title}销售列表`" class="header" style="transform: translateY(7px)"></Header>
+      <Header :title="`${drawerProps.title}销售订单`" class="header" style="transform: translateY(7px)"></Header>
       <el-button type="primary" @click="edit" class="edit-btn">
         <div>编辑</div>
       </el-button>
@@ -15,9 +15,9 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="账户" prop="id">
-        <el-select v-model="drawerProps.row!.id" placeholder="请选择账户" filterable>
-          <el-option v-for="item in accountList" :key="item.id" :label="item.accountTitle" :value="item.id" />
+      <el-form-item label="账号编码" prop="accountCode">
+        <el-select v-model="drawerProps.row!.accountCode" placeholder="请选择账户" filterable disabled>
+          <el-option v-for="item in accountList" :key="item.id" :label="item.accountCode" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="出售人姓名" prop="salePeopleId">
@@ -109,9 +109,7 @@ let handleMap: object[] = reactive([]);
 const publishMap = () => {
   sellKeyMap().then(res => {
     const {
-      data: {
-        data: { publishPlatform = [] }
-      }
+      data: { publishPlatform = [] }
     } = res;
     handleMap = publishPlatform;
   });
@@ -132,13 +130,13 @@ const handleSubmit = () => {
   });
 };
 // 获取出售平台名称
-const getPlatformName = value => {
-  const label = handleMap.find(item => item.value === value) || {};
-  drawerProps.value.row = {
-    ...drawerProps.value.row,
-    salePlatform: label.label
-  };
-};
+// const getPlatformName = value => {
+//   const label = handleMap.find(item => item.value === value) || {};
+//   drawerProps.value.row = {
+//     ...drawerProps.value.row,
+//     salePlatform: label.label
+//   };
+// };
 const setAllList = async () => {
   const { data = [] } = await getUserAll();
   const {

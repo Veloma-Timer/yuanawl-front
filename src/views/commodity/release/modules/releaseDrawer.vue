@@ -1,7 +1,7 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
+  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="660px" :show-close="false">
     <template #header>
-      <Header :title="`${drawerProps.title}发布列表`" class="header" style="transform: translateY(7px)"></Header>
+      <Header :title="`${drawerProps.title}发布订单`" class="header" style="transform: translateY(7px)"></Header>
       <el-button type="primary" @click="edit" class="edit-btn">
         <div>编辑</div>
       </el-button>
@@ -15,8 +15,8 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="账户" prop="id">
-        <el-select v-model="drawerProps.row!.id" placeholder="请选择账户" filterable>
+      <el-form-item label="账号编码" prop="id">
+        <el-select v-model="drawerProps.row!.id" placeholder="请选择账户" filterable disabled>
           <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -97,9 +97,7 @@ let handleMap: object[] = reactive([]);
 const publishMap = () => {
   sellKeyMap().then(res => {
     const {
-      data: {
-        data: { publishPlatform = [] }
-      }
+      data: { publishPlatform = [] }
     } = res;
     handleMap = publishPlatform;
   });
@@ -111,7 +109,7 @@ const handleSubmit = () => {
     if (!valid) return;
     try {
       await drawerProps.value.api!(drawerProps.value.row);
-      ElMessage.success({ message: `${drawerProps.value.title}用户成功！` });
+      ElMessage.success({ message: `${drawerProps.value.title}发布订单成功！` });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
     } catch (error) {
@@ -138,5 +136,8 @@ defineExpose({
   div {
     color: var(--el-color-white) !important;
   }
+}
+.el-input-number {
+  width: 190px !important;
 }
 </style>

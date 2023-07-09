@@ -10,8 +10,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增销售列表</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载销售模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
@@ -23,6 +22,9 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
+        <el-button v-if="BUTTONS.add" type="primary" link :icon="CirclePlus" @click="openDrawer('新增', scope.row)">
+          销售
+        </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
@@ -95,8 +97,20 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", fixed: "left", width: 80 },
+  { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountRecyclerId",
+    label: "回收人",
+    width: 160,
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  { prop: "accountRecyclerTime", label: "回收日期", width: 180 },
+  { prop: "recycleRemark", label: "回收备注", width: 160 },
   {
     prop: "salePeopleId",
+    width: 160,
     label: "出售人姓名",
     enum: getUserAll,
     search: { el: "select" },
@@ -105,26 +119,47 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   {
     prop: "saleTime",
     label: "出售时间",
+    width: 180,
     render: scope => {
       return parseTime(scope.row?.saleTime, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
   { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
   {
+    prop: "isSales",
+    label: "销售状态",
+    search: { el: "select" },
+    width: 160,
+    enum: [
+      { label: "未发布", value: "0" },
+      { label: "已发布", value: "1" }
+    ],
+    render: ({ row }) => {
+      const status = row.isSales === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未发布" : "已发布"}</span>
+        </div>
+      );
+    }
+  },
+  {
     prop: "salePlatformId",
+    width: 160,
     label: "出售渠道",
     enum: async () => {
       const {
-        data: { data }
+        data: { publishPlatform = [] }
       } = await sellKeyMap();
-      return { data: data.publishPlatform };
+      return { publishPlatform };
     },
     search: { el: "select" }
   },
   { prop: "accountCode", label: "订单编号", width: 160, search: { el: "input" } },
   { prop: "buyerTel", label: "买家手机号", width: 160, search: { el: "input" } },
   { prop: "salesRemark", label: "销售备注", width: 160 },
-  { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  { prop: "operation", label: "操作", fixed: "right", width: 260 }
 ];
 
 // 删除用户信息
@@ -161,10 +196,27 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, salePrice: Number(row.salePrice) },
+    row: { ...row, salePrice: Number(row.salePrice), id: row.accountCode },
     api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
 </script>
+<style lang="scss">
+.circle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.v-red {
+  @extend .circle;
+  background-color: var(--el-color-error);
+}
+.v-green {
+  @extend .circle;
+  background-color: var(--el-color-success);
+}
+</style>

@@ -108,26 +108,6 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
     search: { el: "input" }
   },
   {
-    prop: "openAccountNumber",
-    label: "绑定QQ个数",
-    search: { el: "input" }
-  },
-  {
-    prop: "openAccountNumber",
-    label: "绑定原神个数",
-    search: { el: "input" }
-  },
-  {
-    prop: "openAccountNumber",
-    label: "绑定邮箱个数",
-    search: { el: "input" }
-  },
-  {
-    prop: "openAccountNumber",
-    label: "绑定微信个数",
-    search: { el: "input" }
-  },
-  {
     prop: "VNO",
     label: "运营商",
     search: { el: "input" }

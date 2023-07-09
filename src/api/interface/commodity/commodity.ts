@@ -7,6 +7,7 @@ export namespace Commodity {
 
   export interface phoneLibrary {
     id: string;
+    index?: number;
     openAccountName: string;
     openAccountNumber: string;
     bindingTimes: number;
@@ -110,20 +111,65 @@ export namespace Commodity {
     // "salePeople"?: SysUserEntity; // 出售人
     salePeopleId: number; // 出售人ID
     saleTime: string; // 出售时间
-    salePrice: number; // 出售金额
+    salePrice: string; // 出售金额
     salePlatformId: string; // 出售平台
-    // "accountCode": string; // 账号编码
     buyerTel: string; // 买家手机号
     salesRemark: string; // 销售备注
+    accountTitle: string; // 账号标题
+    branchId: number; // 所属门店ID
+    accountCode: string; // 账号编码
+    accountType: number; // 账号分类
+    accountNumber: string; // 账号
+    accountPassword: string; // 密码
+    phoneRemark: string; // 手机卡备注
+    email: string; // 邮箱
+    emailSecret: string; // 邮箱密保
+    // system?: SysMapEntity; // 系统
+    systemId: number; // 系统ID
+    accountRemark: string; // 账号备注
+    campId: string; // 营地号
+    haveSecondary: string; // 实名情况
+    accountRecyclerPrice: number; // 回收价格
+    recycleOrder: string; // 回收订单号
+    recycleRemark: string; // 回收备注
+    storeId: number; // 回收店铺ID
+    // store?: SysMapEntity; // 回收店铺
+    accountTel: string; // 密保手机
+    accountRecyclerTime: string; // 回收时间
+    // accountRecycler?: SysUserEntity; // 回收人
+    accountRecyclerId: number; // 回收人ID
     // "addPriceRate"?: number; // 商品加价率
     // "conversionCycle"?: number; // 商品周转周期
   }
   export interface Release {
     id: 5;
     accountPublisherId: number; // 发布人ID
+    accountTitle: string; // 账号标题
+    branchId: number; // 所属门店ID
+    accountCode: string; // 账号编码
+    accountType: number; // 账号分类
+    accountNumber: string; // 账号
+    accountPassword: string; // 密码
+    phoneRemark: string; // 手机卡备注
+    email: string; // 邮箱
+    emailSecret: string; // 邮箱密保
+    // system?: SysMapEntity; // 系统
+    systemId: number; // 系统ID
+    accountRemark: string; // 账号备注
+    campId: string; // 营地号
+    haveSecondary: string; // 实名情况
+    accountRecyclerPrice: number; // 回收价格
+    recycleOrder: string; // 回收订单号
+    recycleRemark: string; // 回收备注
+    storeId: number; // 回收店铺ID
+    // store?: SysMapEntity; // 回收店铺
+    accountTel: string; // 密保手机
+    accountRecyclerTime: string; // 回收时间
+    // accountRecycler?: SysUserEntity; // 回收人
+    accountRecyclerId: number; // 回收人ID
     // "accountPublisher"?: SysUserEntity; // 发布人
     accountPublisherTimer: string; // 发布时间
-    publishPrice: number; // 商品首次定价
+    publishPrice: string; // 商品首次定价
     publishPlatform: number[]; // 发布平台(可以是多个)
     // "accountHandle": string; // 账号处理
     // "handleUserId": number; // 账号处理人ID

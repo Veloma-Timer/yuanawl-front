@@ -10,8 +10,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增发布列表</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载发布模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
@@ -26,6 +25,9 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
+        <el-button v-if="BUTTONS.add" link type="primary" :icon="CirclePlus" @click="openDrawer('新增', scope.row)">
+          发布
+        </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
@@ -103,6 +105,17 @@ const getFixed = (str: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Release>[] = [
   { type: "selection", fixed: "left", width: 80 },
+  { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountRecyclerId",
+    label: "回收人",
+    width: 160,
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  { prop: "accountRecyclerTime", label: "回收日期", width: 180 },
+  { prop: "recycleRemark", label: "回收备注", width: 160 },
   {
     prop: "accountPublisherId",
     label: "发布人",
@@ -112,10 +125,28 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   { prop: "accountTitle", label: "账户标题", search: { el: "input" } },
   {
+    prop: "isPublish",
+    label: "发布状态",
+    search: { el: "select" },
+    enum: [
+      { label: "未发布", value: "0" },
+      { label: "已发布", value: "1" }
+    ],
+    render: ({ row }) => {
+      const status = row.isPublish === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未发布" : "已发布"}</span>
+        </div>
+      );
+    }
+  },
+  {
     prop: "accountPublisherTimer",
     label: "发布时间",
-    render: scope => {
-      return parseTime(scope.row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
+    render: ({ row }) => {
+      return parseTime(row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
   { prop: "publishPrice", label: "商品首次定价", search: { el: "input" } },
@@ -124,19 +155,15 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "发布渠道",
     enum: async () => {
       const {
-        data: { publishPlatform }
+        data: { publishPlatform = [] }
       } = await sellKeyMap();
       return { data: publishPlatform };
     },
     search: {
-      el: "select",
-      props: {
-        multiple: true,
-        collapseTags: true
-      }
+      el: "select"
     }
   },
-  { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  { prop: "operation", label: "操作", fixed: "right", width: 260 }
 ];
 // 删除用户信息
 const deleteAccount = async (params: Commodity.Account) => {
@@ -169,9 +196,7 @@ let handleMap: object[] = reactive([]);
 const publishMap = () => {
   sellKeyMap().then(res => {
     const {
-      data: {
-        data: { publishPlatform = [] }
-      }
+      data: { publishPlatform = [] }
     } = res;
     handleMap = publishPlatform;
   });
@@ -181,13 +206,17 @@ publishMap();
 const drawerRef = ref<InstanceType<typeof releaseDrawer> | null>(null);
 // 回显数据
 const setEcho = (arr: string[]) => {
-  const list = arr.map(item => Number(item));
-  let names = [];
-  const values = handleMap.filter(item => {
-    return list.includes(item.value);
-  });
-  names = values.map(item => item.label);
-  return names.join(",");
+  if (arr) {
+    const list = arr.map(item => Number(item));
+    let names = [];
+    const values = handleMap.filter(item => {
+      return list.includes(item.value);
+    });
+    names = values.map(item => item.label);
+    return names.join(",");
+  } else {
+    return "--";
+  }
 };
 const date = new Date();
 const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
@@ -199,10 +228,33 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, publishPlatform: publishPlatform, accountPublisherTimer: time, accountPublisherId: obj.user.id },
+    row: {
+      ...row,
+      publishPlatform: publishPlatform,
+      accountPublisherTimer: time,
+      accountPublisherId: obj.user.id,
+      accountCode: row.accountCode
+    },
     api: title === "新增" ? addPublish : title === "查看" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
 </script>
+<style lang="scss">
+.circle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.v-red {
+  @extend .circle;
+  background-color: var(--el-color-error);
+}
+.v-green {
+  @extend .circle;
+  background-color: var(--el-color-success);
+}
+</style>
