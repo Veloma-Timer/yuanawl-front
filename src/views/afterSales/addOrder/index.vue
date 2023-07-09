@@ -18,7 +18,9 @@
           <Header title="基本信息" class="header basic"></Header>
           <el-form label-width="0" class="edit-btn">
             <el-form-item>
-              <el-button v-if="id" type="primary" @click="edit" :disabled="false" style="width: 112px"> 编辑 </el-button>
+              <el-button v-if="!ruleForm.isView && id" type="primary" @click="edit" :disabled="false" style="width: 112px">
+                编辑
+              </el-button>
             </el-form-item>
           </el-form>
         </div>
