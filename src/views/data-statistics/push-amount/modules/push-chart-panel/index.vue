@@ -71,11 +71,11 @@ const getTodaySales = async (branchId: number, date: number, selectSale?: Select
   saleData.value = [
     {
       title: `转转发布总数`,
-      value: `￥${tenTenTotalNumber}`
+      value: `${tenTenTotalNumber}`
     },
     {
       title: `网站发布总数`,
-      value: `￥${webTotalNumber || 0}`
+      value: `${webTotalNumber || 0}`
     },
     {
       title: `循环发布总数`,
