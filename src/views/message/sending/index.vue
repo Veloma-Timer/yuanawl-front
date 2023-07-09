@@ -34,6 +34,9 @@
           <el-radio :label="false">否</el-radio>
         </el-radio-group>
       </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">提交</el-button>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -54,6 +57,9 @@ const rules = reactive({
   reduction: [{ required: true, message: "必填项不能为空" }],
   sendingTime: [{ required: true, message: "必填项不能为空" }]
 });
+const onSubmit = () => {
+  console.log("submit!");
+};
 </script>
 <style scoped lang="scss">
 .table-box {
