@@ -131,12 +131,12 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="商品加价率">
-              <span>{{ baseObj?.addPriceRate || "-" }}</span>
+              <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate).toFixed(2) : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="商品周转周期">
-              <span>{{ baseObj?.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
+              <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle).toFixed(2) + "天" : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
