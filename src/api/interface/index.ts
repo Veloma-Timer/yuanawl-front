@@ -218,14 +218,14 @@ export namespace SalesOrder {
     value: number;
   }
   export interface WorkReport {
-    handleWorkNumber: {
-      current: HistogramValue[];
-      preCurrent: HistogramValue[];
-    };
-    workTotal: number;
-    addedToday: number;
-    passWork: number;
-    failedWork: number;
+    totalNumber: number;
+    incrementNumber: number;
+    approveNumber: number;
+    unApproveNumber: number;
+  }
+  export interface WorOrderkLine {
+    current: HistogramValue[];
+    preCurrent: HistogramValue[];
   }
 }
 // 权限管理模块

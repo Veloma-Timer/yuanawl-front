@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import { sysAnalysisWork } from "@/api/modules/order";
+import { workOrderAllBoard, workOrderAllLine } from "@/api/modules/order";
 // import { getAllBranch } from "@/api/modules/set";
 import Header from "@/components/Header/index.vue";
 import { ref } from "vue";
@@ -67,35 +67,41 @@ async function changeCityDate(e: any) {
 
 // 获取门店统计数据
 const saleData: any = ref([]);
-async function getCityData(id: number, date: number) {
+async function getBoradData(id: number, date: number) {
   const {
-    data: { workTotal, addedToday, passWork, failedWork, handleWorkNumber }
-  } = await sysAnalysisWork(id, date);
+    data: { totalNumber, incrementNumber, approveNumber, unApproveNumber }
+  } = await workOrderAllBoard(id, date);
   saleData.value = [
     {
       title: "工单总数",
-      value: workTotal
+      value: totalNumber
     },
     {
       title: "今日新增",
-      value: addedToday
+      value: incrementNumber
     },
     {
       title: "审核通过单数",
-      value: passWork
+      value: approveNumber
     },
     {
       title: "审核未通过单数",
-      value: failedWork
+      value: unApproveNumber
     }
   ];
-  const toDayX = handleWorkNumber.current.map((item: any) => {
+}
+
+async function getLineData(id: number, date: number) {
+  const {
+    data: { current, preCurrent }
+  } = await workOrderAllLine(id, date);
+  const toDayX = current.map((item: any) => {
     return item.name;
   });
-  const toDayY = handleWorkNumber.current.map((item: any) => {
+  const toDayY = current.map((item: any) => {
     return item.value;
   });
-  const yesterdayY = handleWorkNumber.preCurrent.map((item: any) => {
+  const yesterdayY = preCurrent.map((item: any) => {
     return item.value;
   });
   initEcharts(toDayX, toDayY, yesterdayY);
@@ -128,16 +134,22 @@ function changeSelectDate(e: any) {
 
 watch(
   () => currentTimeValue.value,
-  () => {
-    getCityData(tableProps.selectBranchId, currentTimeValue.value);
-  }
-);
-watch(
-  () => tableProps.selectBranchId,
-  () => {
-    getCityData(tableProps.selectBranchId, currentTimeValue.value);
+  value => {
+    if (value) {
+      getBoradData(tableProps.selectBranchId, currentTimeValue.value);
+      getLineData(tableProps.selectBranchId, currentTimeValue.value);
+    }
   },
   { deep: true, immediate: true }
+);
+watch(
+  () => currentCitySelect.value,
+  value => {
+    if (value) {
+      getBoradData(tableProps.selectBranchId, currentTimeValue.value);
+      getLineData(tableProps.selectBranchId, currentTimeValue.value);
+    }
+  }
 );
 
 type BranchObj = { branchName: string; id: number };
@@ -147,9 +159,10 @@ watch(
   value => {
     if (value) {
       newBranchList.value = value;
-      currentCitySelect.value = value[0].branchName;
+      currentCitySelect.value = value[0]?.branchName;
     }
-  }
+  },
+  { deep: true, immediate: true }
 );
 
 // 渲染图表
@@ -201,7 +214,6 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
       {
         name: "昨日",
         type: "line",
-        // stack: "Total",
         lineStyle: {
           color: "#2ED7FF"
         },
@@ -213,7 +225,6 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any) {
       {
         name: "今日",
         type: "line",
-        // stack: "Total",
         lineStyle: {
           color: "#63ECFF"
         },
