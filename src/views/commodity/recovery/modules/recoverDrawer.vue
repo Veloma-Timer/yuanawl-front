@@ -122,8 +122,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="回收店铺" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable disabled>
-          <el-option v-for="item in customerMap" :key="item.id" :label="item.branchName" :value="item.id" />
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable>
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收时间" prop="accountRecyclerTime">
@@ -247,13 +247,10 @@ let branchMap: unknown = [];
 let customerMap: Array<object> = [];
 const setAllList = async () => {
   const res = await getAllList();
-  const list = await getGroupListMap({ ket: "recycleShop" });
+  const list = await getGroupListMap({ key: "recycleShop" });
   const reloads = await getUserAll();
   const { data } = await getAllBranch({});
-  // const {
-  //   data: { list = [] }
-  // } = await getRecycleList({});
-  customerMap = list.set;
+  customerMap = list.data.recycleShop;
   transCatUploadedMap = reloads.data;
   accountTypeMap = res.data;
   branchMap = data;

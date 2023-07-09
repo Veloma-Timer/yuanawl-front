@@ -135,7 +135,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "未发布" : "已发布"}</span>
+          <span>{status ? "未销售" : "已销售"}</span>
         </div>
       );
     }

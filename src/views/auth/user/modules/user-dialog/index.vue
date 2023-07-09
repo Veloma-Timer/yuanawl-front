@@ -56,7 +56,7 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="drawerProps.row!.isAdmin === '1'">
+        <el-col :span="12" v-if="drawerProps.row!.isAdmin === '0'">
           <el-form-item label="所在组" prop="setId">
             <el-select v-model="drawerProps.row!.setId" placeholder="请选择" class="check-select" filterable>
               <template v-for="item in setIdList" :key="item.value">
@@ -131,7 +131,7 @@ const userListMap = async () => {
   branchList.value = data;
 };
 const setListMap = async () => {
-  const { data } = await getGroupListMap({ ket: "set" });
+  const { data } = await getGroupListMap({ key: "set" });
   setIdList.value = data.set || [];
 };
 // 提交数据（新增/编辑）

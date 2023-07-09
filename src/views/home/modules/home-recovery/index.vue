@@ -59,9 +59,10 @@ const setNumber = () => {
   nextTick(() => {
     let recoveryNumber = document.getElementsByClassName("recovery-number");
     for (let i = 0; i < crudListMap.length; i++) {
+      const valueName = i !== 1 ? "￥" : "";
       let option = {
         title: {
-          text: `￥${crudListMap[i]}`,
+          text: `${valueName}${crudListMap[i]}`,
           x: "center",
           y: "center",
           textStyle: {
