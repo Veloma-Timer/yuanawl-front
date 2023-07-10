@@ -9,11 +9,6 @@
       :data-callback="dataCallback"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载销售模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
-      </template>
       <!-- Expand -->
       <template #salePrice="scope">
         {{ getFixed(scope.row.salePrice) || "--" }}
@@ -56,8 +51,8 @@ import { saveFile } from "@/utils/file";
 import { parseTime } from "@/utils";
 import { getUserAll } from "@/api/modules/user";
 import { sellKeyMap } from "@/api/modules/dictionary";
+import { useUserStore } from "@/stores/modules/user";
 // import { useRoute } from "vue-router";
-
 // const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -66,6 +61,7 @@ const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
+const userObj = useUserStore();
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -139,7 +135,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "未发布" : "已发布"}</span>
+          <span>{status ? "未销售" : "已销售"}</span>
         </div>
       );
     }
@@ -152,7 +148,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
       const {
         data: { publishPlatform = [] }
       } = await sellKeyMap();
-      return { publishPlatform };
+      return { data: publishPlatform };
     },
     search: { el: "select" }
   },
@@ -189,14 +185,21 @@ const batchAdd = (title: string) => {
   };
   dialogRef.value?.acceptParams(params);
 };
-
+const date = new Date();
+const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof saleDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, salePrice: Number(row.salePrice), accountCode: row.accountCode },
+    row: {
+      ...row,
+      salePrice: Number(row.salePrice),
+      accountCode: row.accountCode,
+      saleTime: time,
+      salePeopleId: userObj.userInfo.id
+    },
     api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
     getTableList: proTable.value?.getTableList
   };

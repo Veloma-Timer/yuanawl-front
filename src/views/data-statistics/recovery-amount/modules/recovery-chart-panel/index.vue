@@ -96,7 +96,7 @@ const getTodaySales = async (branchId: number, date: number, selectSale?: Select
     },
     {
       title: `${currentTimeSelect.value}回收订单总量`,
-      value: `￥${recycleTotalNumber || 0}`
+      value: `${recycleTotalNumber || 0}`
     },
     {
       title: `${currentTimeSelect.value}回收游戏品类`,

@@ -239,7 +239,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
     title,
     isView: title === "查看",
     status: title === "查看",
-    row: { ...row, accountRecyclerTime: time, accountRecyclerId: obj.user.id },
+    row: { ...row, accountRecyclerTime: time, accountRecyclerId: obj.user.id, storeId: obj.user.userBranchId },
     api: title === "新增" ? addRecycle : title === "查看" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };

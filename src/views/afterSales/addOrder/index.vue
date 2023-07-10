@@ -18,7 +18,9 @@
           <Header title="基本信息" class="header basic"></Header>
           <el-form label-width="0" class="edit-btn">
             <el-form-item>
-              <el-button v-if="id" type="primary" @click="edit" :disabled="false" style="width: 112px"> 编辑 </el-button>
+              <el-button v-if="!ruleForm.isView && id" type="primary" @click="edit" :disabled="false" style="width: 112px">
+                编辑
+              </el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -129,12 +131,12 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="商品加价率">
-              <span>{{ baseObj?.addPriceRate || "-" }}</span>
+              <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate).toFixed(2) : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="商品周转周期">
-              <span>{{ baseObj?.conversionCycle ? baseObj.conversionCycle + "天" : "-" }}</span>
+              <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle).toFixed(2) + "天" : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">

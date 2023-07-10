@@ -121,9 +121,9 @@
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="回收门店" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" :disabled="drawerProps.isView" placeholder="请选择回收店铺" filterable>
-          <el-option v-for="item in customerMap" :key="item.id" :label="item.branchName" :value="item.id" />
+      <el-form-item label="回收店铺" prop="storeId">
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable>
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收时间" prop="accountRecyclerTime">
@@ -161,7 +161,7 @@ import { ElMessage, FormInstance } from "element-plus";
 import Header from "@/components/Header/index.vue";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
-import { getUserAll } from "@/api/modules/user";
+import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
@@ -217,7 +217,7 @@ const handleSubmit = () => {
     if (!valid) return;
     try {
       await drawerProps.value.api!(drawerProps.value.row);
-      ElMessage.success({ message: `${drawerProps.value.title}用户成功！` });
+      ElMessage.success({ message: `${drawerProps.value.title}账户成功！` });
       drawerProps.value.getTableList!();
       drawerVisible.value = false;
     } catch (error) {
@@ -247,12 +247,10 @@ let branchMap: unknown = [];
 let customerMap: Array<object> = [];
 const setAllList = async () => {
   const res = await getAllList();
+  const list = await getGroupListMap({ key: "recycleShop" });
   const reloads = await getUserAll();
   const { data } = await getAllBranch({});
-  // const {
-  //   data: { list = [] }
-  // } = await getRecycleList({});
-  customerMap = data;
+  customerMap = list.data.recycleShop;
   transCatUploadedMap = reloads.data;
   accountTypeMap = res.data;
   branchMap = data;

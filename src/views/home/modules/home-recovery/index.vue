@@ -28,7 +28,7 @@
         <homeGroup :list-arr="statisticsObj?.recycleRatio" class-name="maintain" title="账号回收占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['用户', '金额', '数量']" />
+        <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
       </div>
     </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
@@ -59,9 +59,10 @@ const setNumber = () => {
   nextTick(() => {
     let recoveryNumber = document.getElementsByClassName("recovery-number");
     for (let i = 0; i < crudListMap.length; i++) {
+      const valueName = i !== 1 ? "￥" : "";
       let option = {
         title: {
-          text: `￥${crudListMap[i]}`,
+          text: `${valueName}${crudListMap[i]}`,
           x: "center",
           y: "center",
           textStyle: {

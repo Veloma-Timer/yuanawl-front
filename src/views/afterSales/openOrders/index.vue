@@ -62,6 +62,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "orderCode",
     label: "工单编号",
+    width: 180,
     search: { el: "input" },
     render: scope => {
       return <span>{scope.row.orderCode || "--"}</span>;
@@ -70,6 +71,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "accountCode",
     label: "账号编号",
+    width: 180,
     search: { el: "input" },
     render: scope => {
       return (
