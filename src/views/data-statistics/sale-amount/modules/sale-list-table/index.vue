@@ -1,5 +1,5 @@
 <template>
-  <SoldList />
+  <SoldList :isShowTableHeadeBtn="false" />
 </template>
 
 <script setup lang="tsx">

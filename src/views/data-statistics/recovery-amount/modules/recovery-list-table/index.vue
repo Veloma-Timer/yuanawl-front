@@ -1,5 +1,5 @@
 <template>
-  <RecoveryList />
+  <RecoveryList :isShowTableHeadeBtn="false" />
 </template>
 
 <script setup lang="tsx">

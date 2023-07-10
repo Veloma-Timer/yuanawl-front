@@ -175,7 +175,8 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <div class="add-process" v-if="!isShowAddProcess">
+        <!-- (setId === 2 || isAdmin) 普通用户 售后才显示 -->
+        <div class="add-process" v-if="!isShowAddProcess && (setId === 2 || isAdmin)">
           <el-button type="primary" @click="addProcess" class="btn">添加处理</el-button>
         </div>
         <template v-if="isShowAddProcess">

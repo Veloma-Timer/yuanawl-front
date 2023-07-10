@@ -1,5 +1,5 @@
 <template>
-  <ReleaseList />
+  <ReleaseList :isShowTableHeadeBtn="false" />
 </template>
 
 <script setup lang="tsx">
