@@ -10,7 +10,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <div v-if="props.isShowTableHeadeBtn">
+        <div v-if="props?.isShowTableHeadeBtn">
           <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增回收列表</el-button>
           <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
           <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>

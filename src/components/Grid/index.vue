@@ -113,7 +113,7 @@ const findIndex = () => {
   }
   try {
     let find = false;
-    fields.reduce((prev = 0, current, index) => {
+    fields?.reduce((prev = 0, current, index) => {
       prev +=
         ((current as VNode)!.props![breakPoint.value]?.span ?? (current as VNode)!.props?.span ?? 1) +
         ((current as VNode)!.props![breakPoint.value]?.offset ?? (current as VNode)!.props?.offset ?? 0);

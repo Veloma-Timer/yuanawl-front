@@ -10,7 +10,7 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <div v-if="props.isShowTableHeadeBtn">
+        <div v-if="props?.isShowTableHeadeBtn">
           <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">
             导出
           </el-button>
