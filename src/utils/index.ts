@@ -359,3 +359,10 @@ export const formatParams = (obj: any) => {
   }
   return `?${params.slice(0, -1)}`;
 };
+export const setPhone = accountTel => {
+  return accountTel.replace(/^[0-9]*$/g, "***********");
+};
+export const getPhone = phone => {
+  if (!phone) return "--";
+  return phone;
+};

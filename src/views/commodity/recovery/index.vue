@@ -21,7 +21,7 @@
       <template #accountTel="{ row }">
         <div class="flx-justify-between">
           <span>{{ row.status ? getPhone(row.accountTel) : setPhone(row.accountTel) }}</span>
-          <span class="cursor-pointer" @click="row.status = !row.status">
+          <span class="cursor-pointer" @click="onSetPhone(row)">
             <el-icon v-show="row.status"><View /></el-icon>
             <el-icon v-show="!row.status"><Hide /></el-icon>
           </span>
@@ -53,6 +53,7 @@ import {
   deleteSummary,
   editRecycle,
   getRecycleList,
+  pointBury,
   summaryExport,
   summaryTemplate,
   summaryUpload
@@ -65,6 +66,7 @@ import { getUserAll } from "@/api/modules/user";
 import { parseTime } from "@/utils/is";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
+import { getPhone, setPhone } from "@/utils";
 // import { useRoute } from "vue-router";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
@@ -251,17 +253,29 @@ const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
     title,
     isView: title === "查看",
     status: title === "查看",
-    row: { ...row, accountRecyclerTime: time, accountRecyclerId: obj.user.id, storeId: obj.user.userBranchId },
+    row: {
+      ...row,
+      accountRecyclerTime: time,
+      accountRecyclerId: obj.user.id,
+      storeId: obj.user.userBranchId,
+      branchId: obj.user.userBranchId
+    },
     api: title === "新增" ? addRecycle : title === "查看" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
-const setPhone = accountTel => {
-  return accountTel.replace(/^[0-9]*$/g, "***********");
-};
-const getPhone = phone => {
-  if (!phone) return "--";
-  return phone;
+const onSetPhone = row => {
+  const params = {
+    accountId: row.id,
+    tel: row.accountTel
+  };
+  pointBury(params)
+    .then(res => {
+      console.log(res);
+    })
+    .finally(() => {
+      row.status = !row.status;
+    });
 };
 </script>

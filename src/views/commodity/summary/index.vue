@@ -19,6 +19,18 @@
       <template #expand="scope">
         {{ scope.row }}
       </template>
+      <template #accountNumber="scope">
+        {{ scope.row.accountNumber }}
+      </template>
+      <template #accountTel="{ row }">
+        <div class="flx-justify-between">
+          <span>{{ row.status ? getPhone(row.accountTel) : setPhone(row.accountTel) }}</span>
+          <span class="cursor-pointer" @click="onSetPhone(row)">
+            <el-icon v-show="row.status"><View /></el-icon>
+            <el-icon v-show="!row.status"><Hide /></el-icon>
+          </span>
+        </div>
+      </template>
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
@@ -39,12 +51,13 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Download, Hide, Upload, View } from "@element-plus/icons-vue";
 import { getUserAll } from "@/api/modules/user";
 import {
   addSummary,
   deleteSummary,
   editSummary,
+  pointBury,
   summaryExport,
   summaryList,
   summaryTemplate,
@@ -52,7 +65,7 @@ import {
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-import { parseTime } from "@/utils";
+import { getPhone, parseTime, setPhone } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
@@ -282,4 +295,15 @@ onMounted(() => {
   }, 300);
   getAllTypeList();
 });
+const onSetPhone = row => {
+  const params = {
+    accountId: row.id,
+    tel: row.accountTel
+  };
+  pointBury(params)
+    .then(() => {})
+    .finally(() => {
+      row.status = !row.status;
+    });
+};
 </script>
