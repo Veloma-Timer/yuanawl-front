@@ -10,7 +10,7 @@
       </div>
       <div class="tab-list flex ml34">
         <el-button-group>
-          <el-button type="primary" v-for="item in monthList" :key="item.id" @click="setValue(true, item.id, item.branchName)">
+          <el-button type="primary" v-for="item in monthList" :key="item.id" @click="setValue(false, item.id, item.branchName)">
             {{ item.branchName }}
           </el-button>
         </el-button-group>
@@ -44,20 +44,20 @@ const monthList: Item[] = [
   { branchName: "本周", id: 1 },
   { branchName: "本月", id: 2 }
 ];
-const cityName = ref(0);
-const monthName = ref(0);
-const branchName = ref("今日");
+const cityName = ref();
+const monthName = ref();
+const branchName = ref("全部");
 const params = ref<IStatistics>();
 const obj = userObj();
 const userRoleId = ref(0);
-const setValue = function (bol: boolean, state: number | null, name: string) {
+const setValue = function (bol: boolean, state: any, name: string) {
   if (bol) {
-    typeof state === "number" ? (cityName.value = state) : null;
+    cityName.value = state;
   } else {
-    typeof state === "number" ? (monthName.value = state) : null;
+    monthName.value = state;
   }
   branchName.value = name;
-  console.log(branchName);
+  console.log(cityName, monthName);
   params.value = {
     ...params.value,
     date: monthName.value,
@@ -67,7 +67,7 @@ const setValue = function (bol: boolean, state: number | null, name: string) {
 };
 const salesObj = ref<HomeSet.ISalesStatistics>(); // 销售组
 const statisticsObj = ref<HomeSet.IRecycleStatistics>(); // 回收组
-const publishObj = ref<HomeSet.IPublishStatistics>(); // 回收组
+const publishObj = ref<HomeSet.IPublishStatistics>(); // 发布组
 const workOrderObj = ref<HomeSet.IAfterSalesStatistics>(); // 售后
 // let behindObj = null; // 后面的数据
 const setHomeCardList = async () => {
@@ -75,7 +75,6 @@ const setHomeCardList = async () => {
     data: { sales, recycle, publish, workOrder }
   } = (await getHomeStatistics(params.value!)) as any;
   salesObj.value = sales as any;
-  console.log(salesObj);
   statisticsObj.value = recycle as any;
   publishObj.value = publish as any;
   workOrderObj.value = workOrder as any;
@@ -84,7 +83,7 @@ const setHomeCardList = async () => {
 const branchAllList = async () => {
   const { data } = await getAllBranch({});
   cityList.value = [...cityList.value, ...data];
-  cityName.value = data[0].id;
+  // cityName.value = data[0].id;
   params.value = {
     ...params.value,
     branchId: cityName.value,

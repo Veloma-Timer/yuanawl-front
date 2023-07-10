@@ -24,7 +24,7 @@ export const deleteSummary = (params: any) => {
 };
 // 账号模块
 export const summaryTemplate = () => {
-  return http.get(`${baseUrl}/static/template/account.xlsx`, {}, { responseType: "blob" });
+  return http.get(`${PORT3}/static/template/account.xlsx`, {}, { responseType: "blob" });
 };
 
 // 账号导入
