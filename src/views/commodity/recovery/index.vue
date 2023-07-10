@@ -18,6 +18,15 @@
       <template #accountRecyclerPrice="scope">
         {{ getFixed(scope.row.accountRecyclerPrice) || "--" }}
       </template>
+      <template #accountTel="{ row }">
+        <div class="flx-justify-between">
+          <span>{{ row.status ? getPhone(row.accountTel) : setPhone(row.accountTel) }}</span>
+          <span class="cursor-pointer" @click="row.status = !row.status">
+            <el-icon v-show="row.status"><View /></el-icon>
+            <el-icon v-show="!row.status"><Hide /></el-icon>
+          </span>
+        </div>
+      </template>
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
@@ -38,7 +47,7 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import recoverDrawer from "@/views/commodity/recovery/modules/recoverDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Download, Hide, Upload, View } from "@element-plus/icons-vue";
 import {
   addRecycle,
   deleteSummary,
@@ -147,7 +156,12 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     }
   },
   { prop: "accountPassword", label: "密码", width: 160 },
-  { prop: "accountTel", label: "密保手机", width: 160, search: { el: "input" } },
+  {
+    prop: "accountTel",
+    label: "密保手机",
+    width: 180,
+    search: { el: "input" }
+  },
   { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },
   { prop: "email", label: "邮箱", width: 160, search: { el: "input" } },
   { prop: "emailSecret", label: "邮箱密保", width: 160, search: { el: "input" } },
@@ -214,8 +228,6 @@ const onExport = async () => {
   saveFile(data, "账号汇总导出");
 };
 
-// 重置用户密码
-// 切换用户状态
 // 批量添加用户
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
@@ -244,5 +256,12 @@ const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
+};
+const setPhone = accountTel => {
+  return accountTel.replace(/^[0-9]*$/g, "***********");
+};
+const getPhone = phone => {
+  if (!phone) return "--";
+  return phone;
 };
 </script>
