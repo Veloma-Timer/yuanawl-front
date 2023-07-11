@@ -19,6 +19,9 @@
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
+      <template #tableHeader>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+      </template>
       <template #operation="scope">
         <el-button v-if="BUTTONS.add" link type="primary" :icon="CirclePlus" @click="openDrawer('新增', scope.row)">
           发布
@@ -170,7 +173,7 @@ const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
   delete obj.total;
   const data = await summaryExport(obj);
-  saveFile(data, "账号汇总导出");
+  saveFile(data, "发布列表导出");
 };
 // 重置用户密码
 // 切换用户状态

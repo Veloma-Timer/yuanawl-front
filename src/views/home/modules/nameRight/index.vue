@@ -12,8 +12,8 @@
             <span :class="nameClassObj.get(index + 1)">{{ index + 1 }}</span>
           </div>
           <div class="cell-item">{{ item.name }}</div>
-          <div class="cell-item">{{ item.amount }}</div>
           <div class="cell-item">{{ item.money }}</div>
+          <div class="cell-item">{{ item.amount }}</div>
         </div>
       </div>
     </div>

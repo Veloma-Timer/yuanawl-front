@@ -9,6 +9,9 @@
       :data-callback="dataCallback"
     >
       <!-- 表格 header 按钮 -->
+      <template #tableHeader>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+      </template>
       <!-- Expand -->
       <template #salePrice="scope">
         {{ getFixed(scope.row.salePrice) || "--" }}
@@ -36,16 +39,8 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import {
-  addSales,
-  getSalesList,
-  deleteSummary,
-  editSales,
-  summaryExport,
-  summaryTemplate,
-  summaryUpload
-} from "@/api/modules/commodity";
+import { CirclePlus, Delete, Upload, View } from "@element-plus/icons-vue";
+import { addSales, getSalesList, deleteSummary, editSales, summaryExport } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { parseTime } from "@/utils";
@@ -122,6 +117,14 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   },
   { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
   {
+    prop: "noSaleResidenceTime",
+    label: "滞留时间",
+    width: 160,
+    render: scope => {
+      return parseTime(scope.row!.noSaleResidenceTime, "{y}-{m}-{d} {h}:{i}");
+    }
+  },
+  {
     prop: "isSales",
     label: "销售状态",
     search: { el: "select" },
@@ -168,23 +171,23 @@ const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
   delete obj.total;
   const data = await summaryExport(obj);
-  saveFile(data, "账号汇总导出");
+  saveFile(data, "销售列表导出");
 };
 
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
-const batchAdd = (title: string) => {
-  const params = {
-    title: `${title}账号`,
-    status: title === "下载",
-    tempApi: summaryTemplate,
-    updateApi: summaryUpload,
-    getTableList: proTable.value?.getTableList
-  };
-  dialogRef.value?.acceptParams(params);
-};
+// const batchAdd = (title: string) => {
+//   const params = {
+//     title: `${title}账号`,
+//     status: title === "下载",
+//     tempApi: summaryTemplate,
+//     updateApi: summaryUpload,
+//     getTableList: proTable.value?.getTableList
+//   };
+//   dialogRef.value?.acceptParams(params);
+// };
 const date = new Date();
 const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 // 打开 drawer(新增、查看、编辑)
