@@ -763,15 +763,15 @@ const getDetailInfo = async (id: any) => {
     let afterObj = {};
     if (afterInfo) {
       afterObj = {
+        afterCustomerServiceId: userId,
+        afterHandleTime: getCurrentDate(),
         afterHandleResult: afterInfo?.afterSaleResultId,
-        afterHandleTime: afterInfo?.afterSaleHandleTime,
         afterSpecHandleResult: afterInfo?.afterSalesResultRemark,
         afterCompensationAmount: afterInfo?.afterSalesCompensationAmount,
         afterNewSecurityPhone: afterInfo?.newSecretCellPhone,
         afterNewSecurityPassword: afterInfo?.newPassword,
         afterSalesRemark: afterInfo?.afterSalesRemark,
         afterSalesInformDeptId: afterInfo?.afterSalesInformDeptId,
-        afterCustomerServiceId: afterInfo?.afterSaleServiceId,
         afterAnnex: (afterInfo?.afterSaleAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
@@ -781,13 +781,18 @@ const getDetailInfo = async (id: any) => {
           };
         })
       };
+    } else {
+      afterObj = {
+        afterCustomerServiceId: userId,
+        afterHandleTime: getCurrentDate()
+      };
     }
     // 发布
     let publishObj = {};
     if (publistInfo) {
       publishObj = {
-        publishHandleCustomerServiceId: publistInfo?.publishServiceId,
-        publishHandleTime: publistInfo?.publishHandleTime,
+        publishHandleCustomerServiceId: userId,
+        publishHandleTime: getCurrentDate(),
         publishHandleResult: publistInfo?.publishResultId,
         publishResultRemark: publistInfo?.publishResultRemark,
         publishRemark: publistInfo?.publishRemark,
@@ -801,13 +806,18 @@ const getDetailInfo = async (id: any) => {
           };
         })
       };
+    } else {
+      publishObj = {
+        publishHandleCustomerServiceId: userId,
+        publishHandleTime: getCurrentDate()
+      };
     }
     // 销售
     let saleObj = {};
     if (saleInfo) {
       saleObj = {
-        saleHandleCustomerService: saleInfo?.salesServiceId,
-        saleHandleTime: saleInfo?.salesHandleTime,
+        saleHandleCustomerService: userId,
+        saleHandleTime: getCurrentDate(),
         saleHandleResult: saleInfo?.salesResultId,
         saleCompensationUserAmount: saleInfo?.salesCompensationAmount,
         saleChangeUserNumber: saleInfo?.newAccountId,
@@ -822,6 +832,11 @@ const getDetailInfo = async (id: any) => {
             type: findFileType(imgItem.path)
           };
         })
+      };
+    } else {
+      saleObj = {
+        saleHandleCustomerService: userId,
+        saleHandleTime: getCurrentDate()
       };
     }
     ruleForm.value.row = {

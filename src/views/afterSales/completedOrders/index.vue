@@ -185,6 +185,14 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     render: scope => {
       return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
     }
+  },
+  {
+    prop: "reason",
+    label: "未通过原因",
+    width: 180,
+    render: scope => {
+      return <span>{scope.row.reason || "--"}</span>;
+    }
   }
 ];
 
