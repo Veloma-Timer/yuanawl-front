@@ -193,7 +193,7 @@
                     placeholder="请选择"
                     class="small-input"
                     filterable
-                    :disabled="ruleForm.idEdit2"
+                    disabled
                   >
                     <template v-for="item2 in userList" :key="item2.id">
                       <el-option :label="item2.userName" :value="item2.id" />
@@ -204,7 +204,7 @@
               <el-col :span="6">
                 <el-form-item label="处理时间" prop="afterHandleTime" label-width="120px">
                   <el-date-picker
-                    :disabled="ruleForm.idEdit2"
+                    disabled
                     v-model="ruleForm.row!.afterHandleTime"
                     type="date"
                     placeholder="请选择"
@@ -326,7 +326,7 @@
               <el-col :span="6">
                 <el-form-item label="处理客服" prop="publishHandleCustomerServiceId" label-width="120px">
                   <el-select
-                    :disabled="ruleForm.idEdit3"
+                    disabled
                     v-model="ruleForm.row!.publishHandleCustomerServiceId"
                     placeholder="请选择"
                     class="small-input"
@@ -341,7 +341,7 @@
               <el-col :span="6">
                 <el-form-item label="处理时间" prop="publishHandleTime" label-width="120px">
                   <el-date-picker
-                    :disabled="ruleForm.idEdit3"
+                    disabled
                     v-model="ruleForm.row!.publishHandleTime"
                     type="date"
                     placeholder="请选择"
@@ -432,7 +432,7 @@
                     placeholder="请选择"
                     class="small-input"
                     filterable
-                    :disabled="ruleForm.idEdit0"
+                    disabled
                   >
                     <template v-for="item2 in userList" :key="item2.id">
                       <el-option :label="item2.userName" :value="item2.id" />
@@ -447,7 +447,7 @@
                     type="date"
                     placeholder="请选择"
                     style="width: 100%"
-                    :disabled="ruleForm.idEdit0"
+                    disabled
                   />
                 </el-form-item>
               </el-col>
@@ -692,6 +692,22 @@ interface IAddOrder {
   row: Partial<SalesOrder.AddWorkOrder>;
 }
 
+// 当前用户的id
+const geekerUser: any = window.sessionStorage.getItem("geeker-user") || "{}";
+const userId = JSON.parse(geekerUser)?.userInfo?.id;
+// 当前时间
+function getCurrentDate() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const currentDate = `${year}-${month}-${day}`;
+  return currentDate;
+}
+
+// 调用函数获取当前时间
+const currentDateString = getCurrentDate();
+console.log(currentDateString);
 const ruleForm = ref<IAddOrder>({
   // 编辑: 默认禁用
   isView: isView,
@@ -699,7 +715,14 @@ const ruleForm = ref<IAddOrder>({
   idEdit0: id ? true : false,
   idEdit2: id ? true : false,
   idEdit3: id ? true : false,
-  row: {}
+  row: {
+    afterCustomerServiceId: userId,
+    afterHandleTime: getCurrentDate(),
+    publishHandleCustomerServiceId: userId,
+    publishHandleTime: getCurrentDate(),
+    saleHandleCustomerService: userId,
+    saleHandleTime: getCurrentDate()
+  }
 });
 
 const baseObj = ref();

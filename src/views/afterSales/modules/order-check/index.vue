@@ -3,7 +3,7 @@
     <el-dialog v-model="dialogVisible" title="审核" top="50px" width="500px">
       <el-form :model="form" label-width="120px" :rules="rules" ref="ruleFormRef">
         <el-form-item label="审核人姓名：" prop="orderCheckerId">
-          <el-select v-model="form.orderCheckerId" placeholder="请选择" class="order-input" filterable>
+          <el-select v-model="form.orderCheckerId" placeholder="请选择" class="order-input" filterable disabled>
             <template v-for="item in userList" :key="item.id">
               <el-option :label="item.userName" :value="item.id" />
             </template>
