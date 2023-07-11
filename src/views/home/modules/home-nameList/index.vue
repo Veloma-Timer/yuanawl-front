@@ -3,16 +3,14 @@
     <div class="home-name-left">
       <div class="name-left-bottom">
         <div class="flex">
-          <div class="left-progress mt30">
-            <el-progress type="circle" :percentage="awaitWorkOrder?.untreatedAmount" :width="197">
+          <div class="left-progress mt30 flex">
+            <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.untreatedAmount" :width="160">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">总未处理</span>
               </template>
             </el-progress>
-          </div>
-          <div class="left-progress mt30">
-            <el-progress type="circle" :percentage="awaitWorkOrder?.finishedAmount" :width="197">
+            <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.finishedAmount" :width="160">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">今日完成</span>
@@ -22,7 +20,7 @@
           <div class="left-table">
             <div class="table-item flx-align-center" v-for="item in awaitWorkOrder?.pendingList" :key="item.id">
               <div class="operate">【待处理】</div>
-              <div class="content">订单[{{ item.orderCode }}]</div>
+              <div class="content sle">订单[{{ item.orderCode }}]</div>
               <div class="bottom" @click="setRouterLink(item)">立即处理&gt;</div>
             </div>
           </div>
@@ -82,7 +80,6 @@ getNameList();
   .home-name-left {
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 20px;
     .name-left-bottom {
       width: 100%;
       //width: 780px;
@@ -93,11 +90,8 @@ getNameList();
         color: #333333;
       }
       .left-progress {
-        //width: calc(100% - 465px);
-        margin-right: 50px;
       }
       .left-table {
-        width: calc(100% - 297px);
         .table-item {
           width: 412px;
           height: 41px;
@@ -131,7 +125,7 @@ getNameList();
             border-radius: 14px;
           }
           &:nth-child(1n) {
-            margin: 6px 20px;
+            margin: 6px 14px;
           }
         }
       }
@@ -146,6 +140,12 @@ getNameList();
     }
     .name-left-bottom {
       width: 100% !important;
+      .table-item {
+        width: 320px !important;
+        &:nth-child(1n) {
+          margin: 4px 8px;
+        }
+      }
     }
   }
 }
