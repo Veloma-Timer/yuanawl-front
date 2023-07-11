@@ -28,6 +28,7 @@
   }
 }
 .right {
+  min-width: 200px;
   position: relative;
   margin-left: 10px;
   background: #ffffff;
@@ -38,7 +39,7 @@
   padding: 20px;
   .city-radio {
     position: absolute;
-    right: 0;
+    right: 20px;
   }
   .sale-content {
     display: grid;

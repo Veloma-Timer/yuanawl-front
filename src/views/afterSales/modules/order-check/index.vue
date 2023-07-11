@@ -43,8 +43,13 @@ interface Form {
   checkerResult: string;
   reason: string;
 }
+
+// 当前用户的id
+const geekerUser: any = window.sessionStorage.getItem("geeker-user") || "{}";
+const id = JSON.parse(geekerUser)?.userInfo?.id;
+
 const form = reactive<Form>({
-  orderCheckerId: "",
+  orderCheckerId: id,
   checkerResult: "",
   reason: ""
 });
