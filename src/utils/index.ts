@@ -289,7 +289,7 @@ export function filterEnum(callValue: any, enumData?: any, fieldNames?: FieldNam
  * @description 递归查找 callValue 对应的 enum 值
  * */
 export function findItemNested(enumData: any, callValue: any, value: string, children: string) {
-  return enumData.reduce((accumulator: any, current: any) => {
+  return enumData?.reduce((accumulator: any, current: any) => {
     if (accumulator) return accumulator;
     if (current[value] === callValue) return current;
     if (current[children]) return findItemNested(current[children], callValue, value, children);
@@ -358,4 +358,11 @@ export const formatParams = (obj: any) => {
     params = params + key + "=" + obj[key] + "&";
   }
   return `?${params.slice(0, -1)}`;
+};
+export const setPhone = accountTel => {
+  return accountTel.replace(/^[0-9]*$/g, "***********");
+};
+export const getPhone = phone => {
+  if (!phone) return "--";
+  return phone;
 };

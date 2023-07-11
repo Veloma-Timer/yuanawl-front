@@ -68,3 +68,6 @@ export const editPublish = (params: any) => {
 export const getPublishList = (params: any) => {
   return http.get(`${baseUrl}/publish`, params);
 };
+export const pointBury = (params: any) => {
+  return http.post(`${PORT3}/sys_point_bury`, params);
+};

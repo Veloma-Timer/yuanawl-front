@@ -154,7 +154,7 @@ function legendObj() {
 watch(
   () => currentTimeValue.value,
   value => {
-    if (value) {
+    if (value || currentTimeValue.value === 0) {
       const { legend1, legend2 } = legendObj();
       getBoradData(tableProps.selectBranchId, currentTimeValue.value);
       getLineData(tableProps.selectBranchId, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });

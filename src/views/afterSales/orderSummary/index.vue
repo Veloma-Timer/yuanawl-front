@@ -30,7 +30,7 @@ import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 // import { getAllBranch } from "@/api/modules/set";
 import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
-import { INSURE_STATUS } from "@/public/constant"; // CHECK_RESULT, ORDER_STATUS,
+import { INSURE_STATUS, CHECK_RESULT } from "@/public/constant"; // CHECK_RESULT, ORDER_STATUS,
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
@@ -39,6 +39,7 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
 import { getProblemTypes } from "@/api/modules/order";
+import { getAllUser } from "@/api/modules/set";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -92,11 +93,19 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   {
     prop: "reportPersonId",
     label: "上报人姓名",
+    enum: async () => {
+      const { data } = await getAllUser({});
+      const arr = (data || []).map(item => {
+        return {
+          label: item.userName,
+          value: item.id
+        };
+      });
+      return { data: arr };
+    },
+    fieldNames: { label: "label", value: "value" },
     search: { el: "input" },
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.reportPersonId || "--"}</span>;
-    }
+    width: 180
   },
   {
     prop: "createdTime",
@@ -154,6 +163,33 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     label: "留言",
     render: scope => {
       return <span>{scope.row.remark || "-"}</span>;
+    }
+  },
+  {
+    prop: "orderChecker",
+    label: "审核人",
+    width: 180,
+    render: scope => {
+      return <span>{scope.row.orderChecker || "--"}</span>;
+    }
+  },
+  {
+    prop: "checkerResult",
+    label: "审核结果",
+    width: 180,
+    search: { el: "select", props: { filterable: true } },
+    enum: [
+      {
+        label: "未通过",
+        value: "0"
+      },
+      {
+        label: "通过",
+        value: "1"
+      }
+    ],
+    render: scope => {
+      return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
     }
   }
 ];

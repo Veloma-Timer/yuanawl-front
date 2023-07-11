@@ -15,7 +15,7 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="所属门店" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" :disabled="drawerProps.status" placeholder="请选择所属门店" filterable>
+        <el-select v-model="drawerProps.row!.branchId" disabled placeholder="请选择所属门店" filterable>
           <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -204,6 +204,7 @@ const drawerProps = ref<DrawerProps>({
 });
 const edit = () => {
   drawerProps.value.isView = false;
+  drawerProps.value.title = "编辑";
 };
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {

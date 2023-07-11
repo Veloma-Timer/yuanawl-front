@@ -10,9 +10,11 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">
-          导出
-        </el-button>
+        <div v-if="props?.isShowTableHeadeBtn">
+          <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)">
+            导出
+          </el-button>
+        </div>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -231,4 +233,14 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   };
   drawerRef.value?.acceptParams(params);
 };
+
+// 数据统计引用的本页面 需要隐藏部分
+const props = withDefaults(
+  defineProps<{
+    isShowTableHeadeBtn: boolean;
+  }>(),
+  {
+    isShowTableHeadeBtn: true
+  }
+);
 </script>

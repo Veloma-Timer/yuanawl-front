@@ -33,7 +33,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { getSalesListFinished, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
-import { INSURE_STATUS } from "@/public/constant";
+import { INSURE_STATUS, CHECK_RESULT } from "@/public/constant";
 import { getProblemTypes } from "@/api/modules/order";
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
@@ -157,6 +157,33 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     label: "留言",
     render: scope => {
       return <span>{scope.row.remark || "-"}</span>;
+    }
+  },
+  {
+    prop: "orderChecker",
+    label: "审核人",
+    width: 180,
+    render: scope => {
+      return <span>{scope.row.orderChecker || "--"}</span>;
+    }
+  },
+  {
+    prop: "checkerResult",
+    label: "审核结果",
+    width: 180,
+    search: { el: "select", props: { filterable: true } },
+    enum: [
+      {
+        label: "未通过",
+        value: "0"
+      },
+      {
+        label: "通过",
+        value: "1"
+      }
+    ],
+    render: scope => {
+      return <span>{CHECK_RESULT[scope.row.checkerResult as any] || "--"}</span>;
     }
   }
 ];

@@ -151,7 +151,14 @@
         <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable :maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="账号备注">
-        <el-input v-model="drawerProps.row!.accountRemark" placeholder="请输入备注" clearable></el-input>
+        <el-input
+          v-model="drawerProps.row!.accountRemark"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          type="textarea"
+          resize="none"
+          placeholder="请输入备注"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item label="有无二次" prop="haveSecondary">
         <el-select v-model="drawerProps.row!.haveSecondary" placeholder="请选择" filterable>
@@ -325,5 +332,8 @@ defineExpose({
   div {
     color: var(--el-color-white) !important;
   }
+}
+.order-input {
+  width: 220px !important;
 }
 </style>
