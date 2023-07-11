@@ -2,8 +2,8 @@
   <div class="home-name">
     <div class="home-name-left">
       <div class="name-left-bottom">
-        <div class="flex">
-          <div class="left-progress mt30 flex">
+        <div>
+          <div class="left-progress mb30 flex">
             <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.untreatedAmount" :width="160">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
@@ -20,7 +20,10 @@
           <div class="left-table">
             <div class="table-item flx-align-center" v-for="item in awaitWorkOrder?.pendingList" :key="item.id">
               <div class="operate">【待处理】</div>
-              <div class="content sle">订单[{{ item.orderCode }}]</div>
+              <div class="content">
+                <span class="sle">订单[{{ item.orderCode }}]</span>
+                {{ parseTime(item.createdTime, "{y}-{m}-{d} {h}:{i}:{s}") }}
+              </div>
               <div class="bottom" @click="setRouterLink(item)">立即处理&gt;</div>
             </div>
           </div>
@@ -32,6 +35,7 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import { useRouter } from "vue-router";
+import { parseTime } from "@/utils";
 const router = useRouter();
 const getNameList = async () => {};
 const setRouterLink = item => {
@@ -93,7 +97,7 @@ getNameList();
       }
       .left-table {
         .table-item {
-          width: 412px;
+          width: 36%;
           height: 41px;
           float: left;
           padding: 0 16px;
@@ -108,9 +112,16 @@ getNameList();
             color: #f85d5d;
           }
           .content {
-            flex: 1;
+            width: calc(100% - 170px);
+            padding: 0 10px;
+            display: flex;
+            justify-content: space-between;
             font-size: 16px;
             color: #333333;
+            span {
+              display: inline-block;
+              width: 50%;
+            }
           }
           .bottom {
             width: 90px;
@@ -140,12 +151,12 @@ getNameList();
     }
     .name-left-bottom {
       width: 100% !important;
-      .table-item {
-        width: 320px !important;
-        &:nth-child(1n) {
-          margin: 4px 8px;
-        }
-      }
+      //.table-item {
+      //  width: 320px !important;
+      //  &:nth-child(1n) {
+      //    margin: 4px 8px;
+      //  }
+      //}
     }
   }
 }
