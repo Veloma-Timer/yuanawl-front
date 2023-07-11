@@ -130,8 +130,8 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     search: { el: "select" },
     width: 160,
     enum: [
-      { label: "未发布", value: "0" },
-      { label: "已发布", value: "1" }
+      { label: "未销售", value: "0" },
+      { label: "已销售", value: "1" }
     ],
     render: ({ row }) => {
       const status = row.isSales === "0";
@@ -201,7 +201,8 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
       salePrice: Number(row.salePrice),
       accountCode: row.accountCode,
       saleTime: time,
-      salePeopleId: userObj.userInfo.id
+      salePeopleId: userObj.userInfo.id,
+      salePlatformId: title === "查看" ? userObj.userInfo.id : null
     },
     api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
     getTableList: proTable.value?.getTableList

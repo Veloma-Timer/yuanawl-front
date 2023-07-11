@@ -125,13 +125,33 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
     ],
+    search: { el: "select" }
+  },
+  {
+    prop: "isWorkOrder",
+    label: "是否有工单",
+    width: 160,
+    enum: [
+      { label: "有", value: "1" },
+      { label: "没有", value: "0" }
+    ],
+    search: { el: "select" }
+  },
+  {
+    prop: "isSales",
+    label: "账户发布状态",
     search: { el: "select" },
+    width: 160,
+    enum: [
+      { label: "未发布", value: "0" },
+      { label: "已发布", value: "1" }
+    ],
     render: ({ row }) => {
-      const status = row.accountStatus === 0;
+      const status = row.isSales === "0";
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "未售" : "已售"}</span>
+          <span>{status ? "未发布" : "已发布"}</span>
         </div>
       );
     }
@@ -203,7 +223,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   },
   {
     prop: "branchId",
-    label: "所属问店",
+    label: "所属门店",
     width: 160,
     enum: getAllBranch,
     search: { el: "select" },
@@ -324,7 +344,7 @@ const onSetPhone = row => {
     });
 };
 </script>
-<style scoped lang="scss">
+<style lang="scss">
 .circle {
   display: inline-block;
   width: 6px;

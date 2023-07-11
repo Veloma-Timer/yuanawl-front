@@ -41,6 +41,7 @@ export namespace Commodity {
     accountTel: string; // 手机号
 
     accountDesc: string; // 描述
+    isWorkOrder: string; // 是否有工单
 
     haveSecondary: string; // 有无二次
 

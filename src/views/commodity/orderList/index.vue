@@ -42,8 +42,8 @@ import {
   addSummary,
   deleteSummary,
   editSummary,
+  orderList,
   summaryExport,
-  summaryList,
   summaryTemplate,
   summaryUpload
 } from "@/api/modules/commodity";
@@ -77,7 +77,7 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return summaryList(newParams);
+  return orderList(newParams);
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）

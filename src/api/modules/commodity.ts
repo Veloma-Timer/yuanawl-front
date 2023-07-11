@@ -71,3 +71,7 @@ export const getPublishList = (params: any) => {
 export const pointBury = (params: any) => {
   return http.post(`${PORT3}/sys_point_bury`, params);
 };
+// 工单列表
+export const orderList = (params: any) => {
+  return http.get(`${PORT3}`, params);
+};

@@ -9,23 +9,25 @@
       :data-callback="dataCallback"
     >
       <!-- 表格 header 按钮 -->
-      <!--      <template #tableHeader>-->
-      <!--        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>-->
-      <!--      </template>-->
+      <template #tableHeader>
+        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
+      </template>
       <!-- 表格操作 -->
-      <!--      <template #operation="scope">-->
-      <!--        <el-button type="primary" :icon="View" link @click="openDrawer('编辑', scope.row)">编辑</el-button>-->
-      <!--      </template>-->
+      <template #operation="scope">
+        <el-button type="primary" v-if="BUTTONS.view" :icon="View" link @click="openDrawer('编辑', scope.row)">编辑</el-button>
+      </template>
     </ProTable>
     <Dialog ref="drawerRef" />
   </div>
 </template>
 <script setup lang="ts">
-// import { CirclePlus, View } from "@element-plus/icons-vue";
+import { CirclePlus, View } from "@element-plus/icons-vue";
 import { Message } from "@/api/interface";
 import Dialog from "@/views/message/template/modules/Dialog/index.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { addUser, editUser, getUserListMap } from "@/api/modules/user";
+import { useAuthButtons } from "@/hooks/useAuthButtons";
+const { BUTTONS } = useAuthButtons();
 // 表格配置项
 const columns: ColumnProps<Message.Template>[] = [
   { prop: "content", label: "模板内容", search: { el: "input" } },
