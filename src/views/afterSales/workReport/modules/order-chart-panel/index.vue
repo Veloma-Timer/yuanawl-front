@@ -59,10 +59,13 @@ const tableProps = withDefaults(defineProps<Props>(), {
 const currentCitySelect = ref("");
 
 // 门店切换
+const currentBranchId: Ref = ref("");
 async function changeCityDate(e: any) {
   currentCitySelect.value = e as string;
   let selectObj = tableProps.branchList.find((item: { branchName: any }) => item.branchName === e);
+  currentBranchId.value = selectObj.id;
   emit("change-id", selectObj.id);
+  initData();
 }
 
 // 获取门店统计数据
@@ -130,6 +133,7 @@ function changeSelectDate(e: any) {
   } else if (e === "本月") {
     currentTimeValue.value = 2;
   }
+  initData();
 }
 
 function legendObj() {
@@ -151,27 +155,13 @@ function legendObj() {
   };
 }
 
-watch(
-  () => currentTimeValue.value,
-  value => {
-    if (value || currentTimeValue.value === 0) {
-      const { legend1, legend2 } = legendObj();
-      getBoradData(tableProps.selectBranchId, currentTimeValue.value);
-      getLineData(tableProps.selectBranchId, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });
-    }
-  },
-  { deep: true, immediate: true }
-);
-watch(
-  () => currentCitySelect.value,
-  value => {
-    if (value) {
-      const { legend1, legend2 } = legendObj();
-      getBoradData(tableProps.selectBranchId, currentTimeValue.value);
-      getLineData(tableProps.selectBranchId, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });
-    }
+function initData() {
+  const { legend1, legend2 } = legendObj();
+  if (currentBranchId.value) {
+    getBoradData(currentBranchId.value, currentTimeValue.value);
+    getLineData(currentBranchId.value, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });
   }
-);
+}
 
 type BranchObj = { branchName: string; id: number };
 const newBranchList = ref<BranchObj[]>([]);
@@ -181,6 +171,8 @@ watch(
     if (value) {
       newBranchList.value = value;
       currentCitySelect.value = value[0]?.branchName;
+      currentBranchId.value = value[0]?.id;
+      initData();
     }
   },
   { deep: true, immediate: true }
