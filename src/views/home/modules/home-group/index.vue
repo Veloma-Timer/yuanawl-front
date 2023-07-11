@@ -38,7 +38,7 @@ const getFixed = (str: string) => {
   }
   return "--";
 };
-const groupGet = (data: number[], value: number[], name: string[]) => {
+const groupGet = (data: number[], name: string[], value: number[]) => {
   nextTick(() => {
     let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
     let option = {

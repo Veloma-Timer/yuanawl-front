@@ -3,7 +3,7 @@ import { decryption } from "@/utils/AESUtil";
 
 export const setValues = (obj: any, key: string) => {
   return Object.values(obj).map((item: any) => {
-    return item[key];
+    return item[key] || "--";
   });
 };
 export const userObj = () => {
