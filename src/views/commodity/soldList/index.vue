@@ -168,7 +168,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       return scope.row.branch.branchName;
     }
   },
-  { prop: "accountNumber", label: "账号", width: 160 },
+  // { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
   { prop: "accountTel", label: "手机号", width: 160 },
   { prop: "accountRemark", label: "备注", width: 160 },
