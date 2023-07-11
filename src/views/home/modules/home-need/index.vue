@@ -8,12 +8,14 @@
     </div>
     <homeNeed :list-arr="publishUnitTypesObj?.typeList" title="售后工单类型">
       <div>
+        <span>星级</span>
         <el-select v-model="publishUnitTypesObj.typeId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
           <el-option v-for="item in workOrderObj?.workOrderTypes" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
     </homeNeed>
     <homeNeed :list-arr="afterPublishUnitObj?.afterList" title="售后组数据对比">
+      <span>问题类型</span>
       <el-select v-model="afterPublishUnitObj.afterId" class="m-2" clearable placeholder="查看数据" @change="setAfter">
         <el-option v-for="item in workOrderObj?.afterSalesSetComparison" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
