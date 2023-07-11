@@ -115,8 +115,10 @@ export namespace SalesOrder {
   export interface AccountType {
     accountCode: string;
     accountNumber: number;
+    branchId: number;
   }
   export interface ResSalesList {
+    accountBranch: string;
     assets: any;
     detail: any[];
     id: string;

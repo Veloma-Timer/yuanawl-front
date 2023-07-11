@@ -63,6 +63,14 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     }
   },
   {
+    prop: "accountBranch",
+    label: "账号部门",
+    width: 180,
+    render: scope => {
+      return <span>{scope.row.accountBranch || "--"}</span>;
+    }
+  },
+  {
     prop: "accountCode",
     label: "账号编号",
     search: { el: "input" },
