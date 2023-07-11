@@ -4,13 +4,13 @@
       <div class="name-left-bottom">
         <div>
           <div class="left-progress mb30 flex">
-            <el-progress class="mr30 progress" type="circle" :percentage="awaitWorkOrder?.untreatedAmount">
+            <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.untreatedAmount" :width="160">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">总未处理</span>
               </template>
             </el-progress>
-            <el-progress class="mr30 progress" type="circle" :percentage="awaitWorkOrder?.finishedAmount">
+            <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.finishedAmount" :width="160">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">今日完成</span>
