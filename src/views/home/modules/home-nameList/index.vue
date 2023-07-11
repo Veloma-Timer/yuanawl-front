@@ -4,13 +4,13 @@
       <div class="name-left-bottom">
         <div>
           <div class="left-progress mb30 flex">
-            <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.untreatedAmount" :width="160">
+            <el-progress class="mr30 progress" type="circle" :percentage="awaitWorkOrder?.untreatedAmount">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">总未处理</span>
               </template>
             </el-progress>
-            <el-progress class="mr30" type="circle" :percentage="awaitWorkOrder?.finishedAmount" :width="160">
+            <el-progress class="mr30 progress" type="circle" :percentage="awaitWorkOrder?.finishedAmount">
               <template #default="{ percentage }">
                 <span class="percentage-value">{{ percentage }}个</span>
                 <span class="percentage-label">今日完成</span>
@@ -94,10 +94,12 @@ getNameList();
         color: #333333;
       }
       .left-progress {
+        width: 100%;
+        justify-content: space-around;
       }
       .left-table {
         .table-item {
-          width: 36%;
+          width: calc((100% - 28px) / 2);
           height: 41px;
           float: left;
           padding: 0 16px;
@@ -105,6 +107,7 @@ getNameList();
           background: #ffffff;
           border: 2px solid #f0f0f0;
           border-radius: 21px;
+          white-space: nowrap;
           .operate {
             width: 80px;
             font-size: 16px;
@@ -136,7 +139,7 @@ getNameList();
             border-radius: 14px;
           }
           &:nth-child(1n) {
-            margin: 6px 14px;
+            margin: 6px;
           }
         }
       }
@@ -151,12 +154,6 @@ getNameList();
     }
     .name-left-bottom {
       width: 100% !important;
-      //.table-item {
-      //  width: 320px !important;
-      //  &:nth-child(1n) {
-      //    margin: 4px 8px;
-      //  }
-      //}
     }
   }
 }
