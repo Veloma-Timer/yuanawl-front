@@ -624,43 +624,63 @@ const isAdmin = computed(() => {
   return id;
 });
 
+const basicRule = !id
+  ? {
+      basicOrderCode: [{ required: true, message: "必填项不能为空" }],
+      basicOrderStar: [{ required: true, message: "必填项不能为空" }],
+      basicAccountId: [{ required: true, message: "必填项不能为空" }],
+      basicQuestionType: [{ required: true, message: "必填项不能为空" }],
+      basicInsure: [{ required: true, message: "必填项不能为空" }],
+      basicHandleTime: [{ required: true, message: "必填项不能为空" }],
+      basicMessage: [{ required: true, message: "必填项不能为空" }],
+      baiscAnnex: [{ required: true, message: "必填项不能为空" }]
+    }
+  : {};
+
+const afterRule =
+  setId.value === 2 || isAdmin.value
+    ? {
+        afterSpecHandleResult: [{ required: true, message: "必填项不能为空" }],
+        afterSalesRemark: [{ required: true, message: "必填项不能为空" }],
+        afterCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
+        afterHandleTime: [{ required: true, message: "必填项不能为空" }],
+        afterHandleResult: [{ required: true, message: "必填项不能为空" }],
+        afterAnnex: [{ required: true, message: "必填项不能为空" }]
+      }
+    : {};
+
+const publishRule =
+  setId.value === 3 || isAdmin.value
+    ? {
+        publishHandleCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
+        publishHandleTime: [{ required: true, message: "必填项不能为空" }],
+        publishHandleResult: [{ required: true, message: "必填项不能为空" }],
+        publishAnnex: [{ required: true, message: "必填项不能为空" }],
+        publishResultRemark: [{ required: true, message: "必填项不能为空" }],
+        publishRemark: [{ required: true, message: "必填项不能为空" }]
+      }
+    : {};
+
+const saleRule =
+  setId.value === 0 || isAdmin.value
+    ? {
+        saleHandleCustomerService: [{ required: true, message: "必填项不能为空" }],
+        saleHandleTime: [{ required: true, message: "必填项不能为空" }],
+        saleHandleResult: [{ required: true, message: "必填项不能为空" }],
+        sallerName: [{ required: true, message: "必填项不能为空" }],
+        sallerTime: [{ required: true, message: "必填项不能为空" }],
+        sallerChannel: [{ required: true, message: "必填项不能为空" }],
+        saleannex: [{ required: true, message: "必填项不能为空" }],
+        salesResultRemark: [{ required: true, message: "必填项不能为空" }],
+        salesRemark: [{ required: true, message: "必填项不能为空" }]
+      }
+    : {};
+
 const rules = reactive({
-  basicOrderCode: [{ required: true, message: "必填项不能为空" }],
-  basicOrderStar: [{ required: true, message: "必填项不能为空" }],
-  basicAccountId: [{ required: true, message: "必填项不能为空" }],
-  basicQuestionType: [{ required: true, message: "必填项不能为空" }],
-  basicInsure: [{ required: true, message: "必填项不能为空" }],
-  basicHandleTime: [{ required: true, message: "必填项不能为空" }],
-  basicMessage: [{ required: true, message: "必填项不能为空" }],
-  baiscAnnex: [{ required: true, message: "必填项不能为空" }],
-  afterCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
-  afterHandleTime: [{ required: true, message: "必填项不能为空" }],
-  afterHandleResult: [{ required: true, message: "必填项不能为空" }],
-  // afterNotifyOtherDepartments: [{ required: true, message: "必填项不能为空" }],
-  // afterCompensationAmount: [{ required: true, message: "必填项不能为空" }],
-  // afterNewSecurityPhone: [{ required: true, message: "必填项不能为空" }],
-  // afterNewSecurityPassword: [{ required: true, message: "必填项不能为空" }],
-  afterAnnex: [{ required: true, message: "必填项不能为空" }],
-  publishHandleCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
-  publishHandleTime: [{ required: true, message: "必填项不能为空" }],
-  publishHandleResult: [{ required: true, message: "必填项不能为空" }],
-  publishAnnex: [{ required: true, message: "必填项不能为空" }],
-  saleHandleCustomerService: [{ required: true, message: "必填项不能为空" }],
-  saleHandleTime: [{ required: true, message: "必填项不能为空" }],
-  saleHandleResult: [{ required: true, message: "必填项不能为空" }],
-  // saleCompensationUserAmount: [{ required: true, message: "必填项不能为空" }],
-  // saleNotifyOtherDepartments: [{ required: true, message: "必填项不能为空" }],
-  // saleChangeUserNumber: [{ required: true, message: "必填项不能为空" }],
-  sallerName: [{ required: true, message: "必填项不能为空" }],
-  sallerTime: [{ required: true, message: "必填项不能为空" }],
-  sallerChannel: [{ required: true, message: "必填项不能为空" }],
-  saleannex: [{ required: true, message: "必填项不能为空" }],
-  afterSpecHandleResult: [{ required: true, message: "必填项不能为空" }],
-  afterSalesRemark: [{ required: true, message: "必填项不能为空" }],
-  publishResultRemark: [{ required: true, message: "必填项不能为空" }],
-  publishRemark: [{ required: true, message: "必填项不能为空" }],
-  salesResultRemark: [{ required: true, message: "必填项不能为空" }],
-  salesRemark: [{ required: true, message: "必填项不能为空" }]
+  ...basicRule,
+  ...afterRule,
+  ...publishRule,
+  ...saleRule
 });
 
 interface IAddOrder {
