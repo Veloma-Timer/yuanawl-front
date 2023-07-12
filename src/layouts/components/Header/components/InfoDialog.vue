@@ -3,23 +3,27 @@
     <div class="that-person">
       <p>
         <span>所在组: </span>
-        {{ setName(oldUserObj) }}
+        {{ obj.set.label }}
       </p>
       <p>
         <span>门店: </span>
-        {{ oldUserObj.branch!.branchName }}
+        {{ oldUserObj.userBranch!.branchName }}
       </p>
       <p>
         <span>账号: </span>
-        {{ oldUserObj.user!.userAccount }}
+        {{ oldUserObj.userAccount }}
       </p>
       <p>
         <span>姓名: </span>
-        {{ oldUserObj.user!.userName }}
+        {{ oldUserObj.userName }}
+      </p>
+      <p>
+        <span>手机号: </span>
+        {{ oldUserObj.userTel }}
       </p>
       <p>
         <span>角色: </span>
-        {{ oldUserObj.role!.roleName }}
+        {{ oldUserObj.userRole!.roleName }}
       </p>
     </div>
     <template #footer>
@@ -34,24 +38,14 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useUserStore } from "@/stores/modules/user";
-
 const userStore = useUserStore();
-import { decryption } from "@/utils/AESUtil";
 
 const dialogVisible = ref(false);
 let oldUserObj = ref({});
-const token = userStore.token;
-const obj = JSON.parse(decryption("token", token));
+const obj = userStore.userInfo;
 const openDialog = () => {
   oldUserObj.value = obj;
   dialogVisible.value = true;
-};
-// eslint-disable-next-line vue/return-in-computed-property
-const setName = obj => {
-  const setId = obj.user.setId;
-  const { value = [] } = obj.user.set || {};
-  const item = value.find(item => item.value === setId);
-  return item.label;
 };
 defineExpose({ openDialog });
 </script>

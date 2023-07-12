@@ -125,7 +125,16 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
     ],
-    search: { el: "select" }
+    search: { el: "select" },
+    render: ({ row }) => {
+      const status = row.accountStatus === 0;
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未售" : "已售"}</span>
+        </div>
+      );
+    }
   },
   {
     prop: "isWorkOrder",
@@ -135,7 +144,16 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "有", value: "1" },
       { label: "没有", value: "0" }
     ],
-    search: { el: "select" }
+    search: { el: "select" },
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "没有" : "有"}</span>
+        </div>
+      );
+    }
   },
   {
     prop: "isSales",
