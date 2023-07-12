@@ -46,6 +46,9 @@
       <el-form-item label="买家手机号" prop="buyerTel">
         <el-input v-model="drawerProps.row!.buyerTel" :maxlength="11" placeholder="请输入买家手机号" clearable />
       </el-form-item>
+      <el-form-item label="销售订单编号" prop="salesCode">
+        <el-input v-model="drawerProps.row!.salesCode" :maxlength="11" placeholder="请输入销售订单编号" clearable />
+      </el-form-item>
       <el-form-item label="销售备注" prop="salesRemark">
         <el-input
           :autosize="{ minRows: 3, maxRows: 5 }"
@@ -79,6 +82,7 @@ const rules = reactive({
   salePrice: [{ required: true, message: "必填项不能为空" }],
   salePlatform: [{ required: true, message: "必填项不能为空" }],
   saleTime: [{ required: true, message: "必填项不能为空" }],
+  salesCode: [{ required: true, message: "必填项不能为空" }],
   buyerTel: [{ required: true, message: "必填项不能为空" }]
 });
 const edit = () => {

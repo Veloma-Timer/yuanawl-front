@@ -10,7 +10,11 @@ export namespace Commodity {
     index?: number;
     openAccountName: string;
     openAccountNumber: string;
+    isBindingEmail: string;
+    isBindingWechat: string;
+    isBindingYuanshen: string;
     bindingTimes: number;
+    bindingQQTimes: number;
     VNO: string;
     openAccountTime: string;
   }
@@ -114,6 +118,7 @@ export namespace Commodity {
     saleTime: string; // 出售时间
     salePrice: string; // 出售金额
     salePlatformId: string; // 出售平台
+    salesCode: string; // 销售订单编号
     buyerTel: string; // 买家手机号
     salesRemark: string; // 销售备注
     accountTitle: string; // 账号标题
@@ -170,8 +175,10 @@ export namespace Commodity {
     accountRecyclerId: number; // 回收人ID
     // "accountPublisher"?: SysUserEntity; // 发布人
     accountPublisherTimer: string; // 发布时间
+    isPublish: string; // 状态
     publishPrice: string; // 商品首次定价
     publishPlatform: number[]; // 发布平台(可以是多个)
+    rollBackPlatform: number[]; // 发布平台(可以是多个)
     // "accountHandle": string; // 账号处理
     // "handleUserId": number; // 账号处理人ID
     // "handleUser"?: SysUserEntity; // 账号处理人

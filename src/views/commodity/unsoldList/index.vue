@@ -73,6 +73,7 @@ const getTableList = (params: any) => {
   return summaryList(newParams);
 };
 const getFixed = (str: string) => {
+  if (!str) return "--";
   return "￥" + parseFloat(str).toFixed(2);
 };
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
@@ -103,7 +104,16 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
     ],
-    search: { el: "select" }
+    search: { el: "select" },
+    render: ({ row }) => {
+      const status = row.accountStatus === 0;
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未售" : "已售"}</span>
+        </div>
+      );
+    }
   },
   {
     prop: "accountNumber",
@@ -216,3 +226,20 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   drawerRef.value?.acceptParams(params);
 };
 </script>
+<style scoped>
+.circle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.v-red {
+  @extend .circle;
+  background-color: var(--el-color-error);
+}
+.v-green {
+  @extend .circle;
+  background-color: var(--el-color-success);
+}
+</style>

@@ -19,9 +19,6 @@
           <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号标题" prop="accountTitle">
-        <el-input v-model="drawerProps.row!.accountTitle" :disabled="drawerProps.isView" placeholder="请输入账号标题" clearable />
-      </el-form-item>
       <el-form-item label="账号编号" prop="accountCode">
         <el-input v-model="drawerProps.row!.accountCode" :disabled="drawerProps.isView" placeholder="请输入账号编号" clearable />
       </el-form-item>

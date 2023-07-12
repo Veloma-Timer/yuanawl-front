@@ -100,7 +100,19 @@ const columns: ColumnProps<Commodity.Account>[] = [
     enum: [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
-    ]
+    ],
+    search: {
+      el: "select"
+    },
+    render: ({ row }) => {
+      const status = row.accountStatus === 0;
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未售" : "已售"}</span>
+        </div>
+      );
+    }
   },
   {
     prop: "accountNumber",
@@ -251,3 +263,20 @@ const props = withDefaults(
   }
 );
 </script>
+<style scoped>
+.circle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.v-red {
+  @extend .circle;
+  background-color: var(--el-color-error);
+}
+.v-green {
+  @extend .circle;
+  background-color: var(--el-color-success);
+}
+</style>

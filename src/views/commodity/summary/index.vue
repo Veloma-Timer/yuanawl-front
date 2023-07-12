@@ -69,6 +69,7 @@ import { getPhone, parseTime, setPhone } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
+import { getSetTypes } from "@/api/modules/order";
 const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -106,6 +107,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "accountCode",
     label: "账号编号",
+    sortable: true,
     width: 160,
     enum: getAllBaseAccount,
     search: {
@@ -121,6 +123,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountStatus",
     label: "账户状态",
     width: 160,
+    sortable: true,
     enum: [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
@@ -140,6 +143,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "isWorkOrder",
     label: "是否有工单",
     width: 160,
+    sortable: true,
     enum: [
       { label: "有", value: "1" },
       { label: "没有", value: "0" }
@@ -159,6 +163,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "isSales",
     label: "账户发布状态",
     search: { el: "select" },
+    sortable: true,
     width: 160,
     enum: [
       { label: "未发布", value: "0" },
@@ -176,6 +181,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   },
   {
     prop: "accountNumber",
+    sortable: true,
     label: "游戏编号",
     width: 160,
     enum: getAllBaseAccount,
@@ -189,17 +195,41 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   {
+    prop: "salesSetId",
+    sortable: true,
+    label: "所在租",
+    width: 160,
+    enum: async () => {
+      const {
+        data: { set = [] }
+      } = await getSetTypes();
+      return { data: set };
+    },
+    search: {
+      el: "select"
+    },
+    fieldNames: { label: "label", value: "value" }
+  },
+  {
     prop: "accountType",
     label: "游戏分类",
+    sortable: true,
     width: 160,
     enum: getAllList,
     search: { el: "select" },
     fieldNames: { label: "typeName", value: "id" }
   },
-  { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
+  {
+    prop: "accountTitle",
+    sortable: true,
+    label: "标题",
+    width: 160,
+    search: { el: "input" }
+  },
   {
     prop: "salePeopleId",
     label: "出售人姓名",
+    sortable: true,
     width: 160,
     enum: getUserAll,
     search: { el: "select" },
@@ -207,6 +237,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   },
   {
     prop: "saleTime",
+    sortable: true,
     label: "出售时间",
     width: 160,
     render: scope => {
@@ -216,6 +247,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "noSaleResidenceTime",
     label: "滞留时间",
+    sortable: true,
     width: 160,
     render: scope => {
       return parseTime(scope.row!.noSaleResidenceTime, "{y}-{m}-{d} {h}:{i}");
@@ -224,6 +256,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "salePrice",
     label: "出售金额",
+    sortable: true,
     width: 160,
     search: { el: "input" },
     render: scope => {
@@ -234,6 +267,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountRecyclerPrice",
     label: "实际回收金额",
     width: 160,
+    sortable: true,
     search: { el: "input" },
     render: scope => {
       return <span>{getFixed(scope.row.accountRecyclerPrice) || "--"}</span>;
@@ -242,18 +276,42 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "branchId",
     label: "所属门店",
+    sortable: true,
     width: 160,
     enum: getAllBranch,
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" }
   },
-  { prop: "accountNumber", label: "账号", width: 160 },
-  { prop: "accountPassword", label: "密码", width: 160 },
-  { prop: "accountTel", label: "手机号", width: 160, search: { el: "input" } },
-  { prop: "accountRemark", label: "备注", width: 160, search: { el: "input" } },
+  {
+    prop: "accountNumber",
+    sortable: true,
+    label: "账号",
+    width: 160
+  },
+  {
+    prop: "accountPassword",
+    sortable: true,
+    label: "密码",
+    width: 160
+  },
+  {
+    prop: "accountTel",
+    sortable: true,
+    label: "手机号",
+    width: 160,
+    search: { el: "input" }
+  },
+  {
+    prop: "accountRemark",
+    sortable: true,
+    label: "备注",
+    width: 160,
+    search: { el: "input" }
+  },
   {
     prop: "haveSecondary",
     label: "有无二次",
+    sortable: true,
     width: 160,
     enum: [
       { label: "有", value: "1" },
@@ -264,6 +322,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "isSave",
     label: "资料是否存档",
+    sortable: true,
     width: 160,
     enum: [
       { label: "有", value: "0" },
@@ -271,7 +330,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     ],
     search: { el: "select" }
   },
-  { prop: "accountDesc", label: "账号描述", width: 160, search: { el: "input" } },
+  { prop: "accountDesc", sortable: true, label: "账号描述", width: 160, search: { el: "input" } },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 // 账号列表
@@ -334,9 +393,6 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   };
   drawerRef.value?.acceptParams(params);
 };
-const getAllTypeList = async () => {
-  await getAllList();
-};
 onMounted(() => {
   setTimeout(() => {
     // 携带参数page跳转
@@ -348,7 +404,6 @@ onMounted(() => {
       proTable.value?.search();
     }
   }, 300);
-  getAllTypeList();
 });
 const onSetPhone = row => {
   const params = {
