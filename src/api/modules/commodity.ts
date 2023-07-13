@@ -29,7 +29,7 @@ export const summaryTemplate = () => {
 
 // 账号导入
 export const summaryUpload = (file: FormData) => {
-  return http.post(`${baseUrl}/upload`, file);
+  return http.post(`${baseUrl}/upload/recycle`, file);
 };
 
 // 账号导出

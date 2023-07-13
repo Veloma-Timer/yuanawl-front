@@ -19,7 +19,7 @@
           <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号编号" prop="accountCode">
+      <el-form-item label="账号编码" prop="accountCode">
         <el-input v-model="drawerProps.row!.accountCode" :disabled="drawerProps.isView" placeholder="请输入账号编号" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
@@ -160,6 +160,7 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
+
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],

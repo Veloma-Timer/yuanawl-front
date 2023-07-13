@@ -119,7 +119,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "发布人",
     enum: getUserAll,
     search: { el: "select" },
-    fieldNames: { label: "userName", value: "id" }
+    fieldNames: { label: "userName", value: "id" },
+    render: ({ row }) => row.accountPublisher?.userName
   },
   { prop: "accountTitle", label: "账户标题", search: { el: "input" } },
   {
@@ -165,7 +166,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
 ];
 // 删除用户信息
 const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountTitle}】的账户`);
+  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
   proTable.value?.getTableList();
 };
 
@@ -251,10 +252,12 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   border-radius: 50%;
   margin-right: 5px;
 }
+
 .v-red {
   @extend .circle;
   background-color: var(--el-color-error);
 }
+
 .v-green {
   @extend .circle;
   background-color: var(--el-color-success);

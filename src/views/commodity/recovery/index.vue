@@ -12,9 +12,9 @@
       <template #tableHeader>
         <div v-if="props?.isShowTableHeadeBtn">
           <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增回收列表</el-button>
-          <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载账号模板</el-button>
-          <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-          <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+          <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
+          <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入Excel</el-button>
+          <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出Excel</el-button>
         </div>
       </template>
       <template #accountRecyclerPrice="scope">
@@ -142,6 +142,11 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     }
   },
   {
+    prop: "accountCode",
+    label: "账号编码",
+    width: 160
+  },
+  {
     prop: "accountType",
     label: "游戏分类",
     width: 160,
@@ -149,7 +154,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     search: { el: "select" },
     fieldNames: { label: "typeName", value: "id" }
   },
-  { prop: "accountTitle", label: "账户标题", width: 160, search: { el: "input" } },
   {
     prop: "accountNumber",
     label: "账号",
@@ -181,7 +185,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
       { label: "苹果微信", value: 4 }
     ]
   },
-  { prop: "accountRemark", label: "账号描述", width: 160, search: { el: "input" } },
+  { prop: "accountDesc", label: "账号描述", width: 160, search: { el: "input" } },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
   {
     prop: "haveSecondary",
