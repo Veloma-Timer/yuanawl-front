@@ -10,8 +10,8 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载销售列表模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
+        <!--        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载销售列表模板</el-button>-->
+        <!--        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>-->
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->

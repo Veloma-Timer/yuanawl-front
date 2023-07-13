@@ -220,13 +220,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     fieldNames: { label: "typeName", value: "id" }
   },
   {
-    prop: "accountTitle",
-    sortable: true,
-    label: "标题",
-    width: 160,
-    search: { el: "input" }
-  },
-  {
     prop: "salePeopleId",
     label: "出售人姓名",
     sortable: true,

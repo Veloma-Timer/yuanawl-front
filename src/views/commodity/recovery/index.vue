@@ -240,7 +240,7 @@ const onExport = async () => {
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}账号`,
+    title: `${title}回收列表模板`,
     status: title === "下载",
     tempApi: summaryTemplate,
     updateApi: summaryUpload,

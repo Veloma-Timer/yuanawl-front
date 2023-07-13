@@ -20,7 +20,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载发布列表模板</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
@@ -130,7 +130,6 @@ const columns: ColumnProps<Commodity.Release>[] = [
     fieldNames: { label: "userName", value: "id" },
     render: ({ row }) => row.accountPublisher?.userName
   },
-  { prop: "accountTitle", label: "账户标题", search: { el: "input" } },
   {
     prop: "isWorkOrder",
     label: "是否有工单",
