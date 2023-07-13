@@ -153,43 +153,40 @@
         </el-row>
         <el-row class="basic-info" v-else>
           <el-col :span="6">
-            <el-form-item label="出售人姓名">
-              <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
+            <el-form-item label="回收人姓名">
+              <span>{{ baseObj?.accountRecycler?.userName || "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="出售时间">
-              <span>{{ baseObj?.saleTime ? dayjs(baseObj.saleTime).format("YYYY-MM-DD HH:mm:ss") : "-" }}</span>
+            <el-form-item label="回收时间">
+              <span>{{
+                baseObj?.accountRecyclerTime ? dayjs(baseObj.accountRecyclerTime).format("YYYY-MM-DD HH:mm:ss") : "-"
+              }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="出售渠道">
-              <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
+            <el-form-item label="回收店铺">
+              <span>{{ baseObj?.accountRecycler?.userBranch?.branchName || "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="订单编号">
-              <span>{{ baseObj?.accountCode || "-" }}</span>
+            <el-form-item label="回收组">
+              <span>{{ baseObj?.accountRecycler?.set?.label || "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="商品加价率">
-              <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate).toFixed(2) : "-" }}</span>
+            <el-form-item label="回收订单号">
+              <span>{{ baseObj?.recycleOrder || "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="商品周转周期">
-              <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle).toFixed(2) + "天" : "-" }}</span>
+            <el-form-item label="回收价格">
+              <span>{{ baseObj?.accountRecyclerPrice ? Number(baseObj?.accountRecyclerPrice).toFixed(2) : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="买家手机号">
-              <span>{{ baseObj?.buyerTel || "-" }}</span>
-            </el-form-item>
-          </el-col>
-          <el-col :span="6">
-            <el-form-item label="销售备注">
-              <span>{{ baseObj?.salesRemark || "-" }}</span>
+            <el-form-item label="回收备注">
+              <span>{{ baseObj?.recycleRemark || "-" }}</span>
             </el-form-item>
           </el-col>
         </el-row>
