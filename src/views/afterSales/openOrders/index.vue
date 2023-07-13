@@ -15,12 +15,12 @@
         <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
         <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
-      <!-- 表格操作 -->
+      表格操作
       <template #operation="{ row }">
         <el-button type="primary" link @click="operatorOrder('查看', row)" v-if="BUTTONS.view" :icon="View">查看</el-button>
         <el-button type="primary" link @click="changeOrder('处理工单', row)" v-if="row.isNeedHandle === '1'" :icon="Edit"
-          >处理工单</el-button
-        >
+          >处理工单
+        </el-button>
         <el-button type="primary" link @click="openCheck(row)" v-if="BUTTONS.check" :icon="EditPen">审核</el-button>
         <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
@@ -46,14 +46,14 @@ import { CirclePlus, Delete, EditPen, Download, Upload, View, Edit } from "@elem
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
+
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
 const route = useRoute();
 const router = useRouter();
-const getTableList = (params: any) => {
-  return getSalesListUnfinished(params);
-};
+
+const getTableList = async (params: any) => await getSalesListUnfinished(params);
 
 // 表格配置项
 const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
@@ -248,22 +248,23 @@ const batchExport = async () => {
   const data = await orderExport(obj);
   saveFile(data, "工单报表");
 };
-onMounted(() => {
-  setTimeout(() => {
-    // 携带参数page跳转
-    const orderCode = route.query.orderCode;
-    if (proTable.value) {
-      proTable.value.searchParam.orderCode = orderCode;
-      proTable.value?.search();
-    }
-  }, 300);
-});
+//onMounted(() => {
+//  setTimeout(() => {
+//    // 携带参数page跳转
+//    const orderCode = route.query.orderCode;
+//    if (proTable.value) {
+//      proTable.value.searchParam.orderCode = orderCode;
+//      proTable.value?.search();
+//    }
+//  }, 300);
+//});
 </script>
 
 <style scoped lang="scss">
 :deep(.el-upload) {
   display: inline-block;
 }
+
 .up-btn {
   display: inline-block;
   margin: 0 10px;

@@ -12,8 +12,8 @@
       <template #operation="{ row }">
         <el-button type="primary" link @click="operatorOrder('查看', row)" v-if="BUTTONS.view" :icon="View">查看</el-button>
         <el-button type="primary" link @click="changeOrder('处理工单', row)" v-if="row.isNeedHandle === '1'" :icon="Edit"
-          >处理工单</el-button
-        >
+          >处理工单
+        </el-button>
         <el-button type="primary" link @click="openCheck(row)" v-if="BUTTONS.check" :icon="EditPen">审核</el-button>
         <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
@@ -40,6 +40,7 @@ import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
 import { getProblemTypes } from "@/api/modules/order";
 import { getAllUser } from "@/api/modules/set";
+
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -274,6 +275,7 @@ onMounted(() => {
 :deep(.el-upload) {
   display: inline-block;
 }
+
 .up-btn {
   display: inline-block;
   margin: 0 10px;

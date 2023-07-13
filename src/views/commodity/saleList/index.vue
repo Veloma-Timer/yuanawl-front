@@ -120,9 +120,8 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     prop: "noSaleResidenceTime",
     label: "滞留时间",
     width: 160,
-    render: scope => {
-      return parseTime(scope.row!.noSaleResidenceTime, "{y}-{m}-{d} {h}:{i}");
-    }
+    render: scope =>
+      scope.row.isSales == "1" ? "--" : scope.row!.noSaleResidenceTime ? scope.row!.noSaleResidenceTime + "天" : "--"
   },
   {
     prop: "isSales",
@@ -218,10 +217,12 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   border-radius: 50%;
   margin-right: 5px;
 }
+
 .v-red {
   @extend .circle;
   background-color: var(--el-color-error);
 }
+
 .v-green {
   @extend .circle;
   background-color: var(--el-color-success);
