@@ -154,7 +154,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     search: { el: "input" },
     width: 180,
     render: scope => {
-      return <el-rate v-model={scope.row.orderStar} max={3} disabled />;
+      return <el-rate v-model={scope.row.orderStar} max={5} disabled />;
     }
   },
   {

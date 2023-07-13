@@ -95,12 +95,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
+            <!-- 不是管理员不可编辑工单星级 -->
             <el-form-item label="工单星级" prop="basicOrderStar">
               <el-input-number
-                :disabled="ruleForm.basicEdit"
+                :disabled="!isAdmin"
                 v-model="ruleForm.row!.basicOrderStar"
                 :min="1"
-                :max="3"
                 placeholder="请输入"
                 class="order-input"
               ></el-input-number>
@@ -108,7 +108,50 @@
           </el-col>
         </el-row>
         <div class="sub-title">账号信息:</div>
-        <el-row class="basic-info">
+        <!-- isSales == 1 展示销售 其他展示回收 -->
+        <el-row class="basic-info" v-if="baseObj?.isSales == 1">
+          <el-col :span="6">
+            <el-form-item label="出售人姓名">
+              <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="出售时间">
+              <span>{{ baseObj?.saleTime ? dayjs(baseObj.saleTime).format("YYYY-MM-DD HH:mm:ss") : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="出售渠道">
+              <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="订单编号">
+              <span>{{ baseObj?.accountCode || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="商品加价率">
+              <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate).toFixed(2) : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="商品周转周期">
+              <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle).toFixed(2) + "天" : "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="买家手机号">
+              <span>{{ baseObj?.buyerTel || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="销售备注">
+              <span>{{ baseObj?.salesRemark || "-" }}</span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row class="basic-info" v-else>
           <el-col :span="6">
             <el-form-item label="出售人姓名">
               <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
@@ -501,8 +544,8 @@
                     placeholder="请选择"
                     class="order-input"
                     filterable
-                    @change="onChangeAccount"
                   >
+                    <!-- @change="onChangeAccount" -->
                     <template v-for="item in accountList" :key="item.id">
                       <el-option :label="item.accountNumber" :value="item.id">
                         <span style="float: left">{{ item.accountCode }}</span>
@@ -1070,6 +1113,10 @@ const userList = ref<UserObj[]>([]);
 const initOrderData = async () => {
   // 默认时效5
   ruleForm.value.row.basicHandleTime = 5;
+  // 不是管理员不可编辑工单星级 就默认星级4 管理员可以无限加
+  if (!isAdmin.value) {
+    ruleForm.value.row.basicOrderStar = 4;
+  }
   const { data } = await getAllUser({});
   getDetailInfo(id);
   userList.value = data;
