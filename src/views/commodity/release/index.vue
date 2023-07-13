@@ -111,6 +111,7 @@ const getFixed = (str: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Release>[] = [
   { type: "selection", fixed: "left", width: 80 },
+  { prop: "accountCode", label: "账号编码", width: 160, search: { el: "input" } },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",

@@ -113,6 +113,7 @@ const batchAdd = (title: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", fixed: "left", width: 80 },
+  { prop: "accountCode", label: "账号编码", width: 160, search: { el: "input" } },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",
@@ -122,7 +123,14 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
-  { prop: "accountRecyclerTime", label: "回收日期", width: 180 },
+  {
+    prop: "accountRecyclerTime",
+    label: "回收日期",
+    width: 180,
+    render: scope => {
+      return parseTime(scope.row?.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}");
+    }
+  },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
   {
     prop: "salePeopleId",
@@ -218,7 +226,6 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     },
     search: { el: "select" }
   },
-  { prop: "accountCode", label: "订单编号", width: 160, search: { el: "input" } },
   { prop: "buyerTel", label: "买家手机号", width: 160, search: { el: "input" } },
   { prop: "salesRemark", label: "销售备注", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 260 }
