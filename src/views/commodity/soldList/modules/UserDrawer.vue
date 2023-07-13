@@ -23,9 +23,6 @@
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号标题" prop="accountTitle">
-        <el-input v-model="drawerProps.row!.accountTitle" placeholder="请输入标题" clearable />
-      </el-form-item>
       <el-row :gutter="10">
         <el-col :span="8">
           <el-form-item label="回收人姓名" prop="accountRecyclerId">

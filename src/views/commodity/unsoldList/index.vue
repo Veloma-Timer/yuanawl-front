@@ -86,7 +86,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "账号编号",
     width: 160,
     enum: getAllBaseAccount,
-    fieldNames: { label: "accountCode", value: "id" },
     fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
     render: scope => {
       return <span>{scope.row?.accountCode}</span>;
@@ -137,7 +136,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" },
     fieldNames: { label: "typeName", value: "id" }
   },
-  { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
   {
     prop: "salePrice",
     label: "出售金额",

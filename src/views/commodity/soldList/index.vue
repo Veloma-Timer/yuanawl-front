@@ -136,7 +136,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" },
     fieldNames: { label: "typeName", value: "id" }
   },
-  { prop: "accountTitle", label: "标题", width: 160, search: { el: "input" } },
   {
     prop: "salePeopleId",
     label: "出售人姓名",

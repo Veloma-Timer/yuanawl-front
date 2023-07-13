@@ -1,5 +1,6 @@
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
+import { Data } from "@/api/interface";
 
 const baseUrl: string = PORT3 + "/base_account";
 // 获取账户汇总列表
@@ -74,4 +75,8 @@ export const pointBury = (params: any) => {
 // 工单列表
 export const orderList = (params: any) => {
   return http.get(`${PORT3}`, params);
+};
+// 数据字典-系统数据列表
+export const getSetSystemList = () => {
+  return http.get<Data.SetList>(`${PORT3}/sys_map?key=system`);
 };
