@@ -47,7 +47,7 @@
         <el-input v-model="drawerProps.row!.buyerTel" :maxlength="11" placeholder="请输入买家手机号" clearable />
       </el-form-item>
       <el-form-item label="销售订单编号" prop="salesCode">
-        <el-input v-model="drawerProps.row!.salesCode" :maxlength="11" placeholder="请输入销售订单编号" clearable />
+        <el-input v-model="drawerProps.row!.salesCode" placeholder="请输入销售订单编号" clearable />
       </el-form-item>
       <el-form-item label="销售备注" prop="salesRemark">
         <el-input
