@@ -27,7 +27,13 @@ export const deleteSummary = (params: any) => {
 export const summaryTemplate = () => {
   return http.get(`/static/template/account.xlsx`, {}, { responseType: "blob" });
 };
-
+// 回收账户模块
+export const recycleTemplate = () => {
+  return http.get(`/static/template/recycle.xlsx`, {}, { responseType: "blob" });
+};
+export const recycleUpload = (file: FormData) => {
+  return http.post(`${baseUrl}/upload/recycle`, file);
+};
 // 账号导入
 export const summaryUpload = (file: FormData) => {
   return http.post(`${baseUrl}/upload/recycle`, file);
@@ -58,7 +64,12 @@ export const editSales = (params: any) => {
 export const getSalesList = (params: any) => {
   return http.get(`${baseUrl}/sales`, params);
 };
-
+export const salesTemplate = () => {
+  return http.get(`/static/template/sales.xlsx`, {}, { responseType: "blob" });
+};
+export const salesUpload = (file: FormData) => {
+  return http.post(`${baseUrl}/upload/sales`, file);
+};
 // 发布列表
 export const addPublish = (params: any) => {
   return http.post(`${baseUrl}/publish`, params);
@@ -71,6 +82,12 @@ export const getPublishList = (params: any) => {
 };
 export const pointBury = (params: any) => {
   return http.post(`${PORT3}/sys_point_bury`, params);
+};
+export const publishTemplate = () => {
+  return http.get(`/static/template/publish.xlsx`, {}, { responseType: "blob" });
+};
+export const publishUpload = (file: FormData) => {
+  return http.post(`${baseUrl}/upload/publish`, file);
 };
 // 工单列表
 export const orderList = (params: any) => {

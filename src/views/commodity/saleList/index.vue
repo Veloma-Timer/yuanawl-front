@@ -54,8 +54,8 @@ import {
   deleteSummary,
   editSales,
   summaryExport,
-  summaryTemplate,
-  summaryUpload
+  salesTemplate,
+  salesUpload
 } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
@@ -102,8 +102,8 @@ const batchAdd = (title: string) => {
   const params = {
     title: `${title}销售列表模板`,
     status: title === "下载",
-    tempApi: summaryTemplate,
-    updateApi: summaryUpload,
+    tempApi: salesTemplate,
+    updateApi: salesUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);

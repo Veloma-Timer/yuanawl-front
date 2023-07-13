@@ -56,9 +56,9 @@ import {
   deleteSummary,
   editPublish,
   getPublishList,
-  summaryExport,
-  summaryTemplate,
-  summaryUpload
+  publishTemplate,
+  publishUpload,
+  summaryExport
 } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
@@ -238,8 +238,8 @@ const batchAdd = (title: string) => {
   const params = {
     title: `${title}发布列表模板`,
     status: title === "下载",
-    tempApi: summaryTemplate,
-    updateApi: summaryUpload,
+    tempApi: publishTemplate,
+    updateApi: publishUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);

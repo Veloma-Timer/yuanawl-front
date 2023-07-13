@@ -56,9 +56,9 @@ import {
   editRecycle,
   getRecycleList,
   pointBury,
-  summaryExport,
-  summaryTemplate,
-  summaryUpload
+  recycleTemplate,
+  recycleUpload,
+  summaryExport
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
@@ -249,8 +249,8 @@ const batchAdd = (title: string) => {
   const params = {
     title: `${title}回收列表模板`,
     status: title === "下载",
-    tempApi: summaryTemplate,
-    updateApi: summaryUpload,
+    tempApi: recycleTemplate,
+    updateApi: recycleUpload,
     getTableList: proTable.value?.getTableList
   };
   dialogRef.value?.acceptParams(params);
