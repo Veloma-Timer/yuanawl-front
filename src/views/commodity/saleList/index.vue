@@ -10,6 +10,8 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载销售列表模板</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <!-- Expand -->
@@ -20,7 +22,13 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button v-if="BUTTONS.add" type="primary" link :icon="CirclePlus" @click="openDrawer('新增', scope.row)">
+        <el-button
+          v-if="BUTTONS.add && scope.row.isPublish === '1'"
+          type="primary"
+          link
+          :icon="CirclePlus"
+          @click="openDrawer('新增', scope.row)"
+        >
           销售
         </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
@@ -39,8 +47,16 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Upload, View } from "@element-plus/icons-vue";
-import { addSales, getSalesList, deleteSummary, editSales, summaryExport } from "@/api/modules/commodity";
+import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
+import {
+  addSales,
+  getSalesList,
+  deleteSummary,
+  editSales,
+  summaryExport,
+  summaryTemplate,
+  summaryUpload
+} from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { parseTime } from "@/utils";
@@ -82,7 +98,16 @@ const getTableList = (params: any) => {
   delete newParams.createTime;
   return getSalesList(newParams);
 };
-
+const batchAdd = (title: string) => {
+  const params = {
+    title: `${title}销售列表模板`,
+    status: title === "下载",
+    tempApi: summaryTemplate,
+    updateApi: summaryUpload,
+    getTableList: proTable.value?.getTableList
+  };
+  dialogRef.value?.acceptParams(params);
+};
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
@@ -122,6 +147,45 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     width: 160,
     render: scope =>
       scope.row.isSales == "1" ? "--" : scope.row!.noSaleResidenceTime ? scope.row!.noSaleResidenceTime + "天" : "--"
+  },
+  {
+    prop: "isWorkOrder",
+    label: "是否有工单",
+    width: 160,
+    sortable: true,
+    enum: [
+      { label: "有", value: "1" },
+      { label: "没有", value: "0" }
+    ],
+    search: { el: "select" },
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "没有" : "有"}</span>
+        </div>
+      );
+    }
+  },
+  {
+    prop: "isPublish",
+    label: "发布状态",
+    search: { el: "select" },
+    width: 160,
+    enum: [
+      { label: "未发布", value: "0" },
+      { label: "已发布", value: "1" }
+    ],
+    render: ({ row }) => {
+      const status = row.isPublish === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未发布" : "已发布"}</span>
+        </div>
+      );
+    }
   },
   {
     prop: "isSales",

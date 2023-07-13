@@ -161,6 +161,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
 
+import { getSetSystemList } from "@/api/modules/commodity";
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
@@ -230,12 +231,7 @@ const haveSecondaryMap = [
   { label: "有", value: "1" },
   { label: "无", value: "0" }
 ];
-const systemMap = [
-  { label: "安卓QQ", value: 1 },
-  { label: "苹果QQ", value: 2 },
-  { label: "安卓微信", value: 3 },
-  { label: "苹果微信", value: 4 }
-];
+const systemMap: Ref = ref([]);
 // 回收人
 let transCatUploadedMap: unknown = [];
 // 账号分类
@@ -254,7 +250,12 @@ const setAllList = async () => {
   accountTypeMap = res.data;
   branchMap = data;
 };
+const getSetTypeFun = async () => {
+  const { data } = await getSetSystemList();
+  systemMap.value = data?.system || [];
+};
 setAllList();
+getSetTypeFun();
 defineExpose({
   acceptParams
 });

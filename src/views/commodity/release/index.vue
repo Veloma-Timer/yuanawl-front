@@ -20,10 +20,18 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #tableHeader>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载发布列表模板</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
       </template>
       <template #operation="scope">
-        <el-button v-if="BUTTONS.add" link type="primary" :icon="CirclePlus" @click="openDrawer('新增', scope.row)">
+        <el-button
+          v-if="BUTTONS.add && scope.row.isSales === '0'"
+          link
+          type="primary"
+          :icon="CirclePlus"
+          @click="openDrawer('新增', scope.row)"
+        >
           发布
         </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
@@ -42,7 +50,7 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import releaseDrawer from "@/views/commodity/release/modules/releaseDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
 import {
   addPublish,
   deleteSummary,
@@ -124,6 +132,26 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   { prop: "accountTitle", label: "账户标题", search: { el: "input" } },
   {
+    prop: "isWorkOrder",
+    label: "是否有工单",
+    width: 160,
+    sortable: true,
+    enum: [
+      { label: "有", value: "1" },
+      { label: "没有", value: "0" }
+    ],
+    search: { el: "select" },
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "没有" : "有"}</span>
+        </div>
+      );
+    }
+  },
+  {
     prop: "isPublish",
     label: "发布状态",
     search: { el: "select" },
@@ -137,6 +165,25 @@ const columns: ColumnProps<Commodity.Release>[] = [
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
           <span>{status ? "未发布" : "已发布"}</span>
+        </div>
+      );
+    }
+  },
+  {
+    prop: "isSales",
+    label: "销售状态",
+    search: { el: "select" },
+    width: 160,
+    enum: [
+      { label: "未销售", value: "0" },
+      { label: "已销售", value: "1" }
+    ],
+    render: ({ row }) => {
+      const status = row.isSales === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未销售" : "已销售"}</span>
         </div>
       );
     }
@@ -182,7 +229,7 @@ const onExport = async () => {
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
-    title: `${title}账号`,
+    title: `${title}发布列表模板`,
     status: title === "下载",
     tempApi: summaryTemplate,
     updateApi: summaryUpload,

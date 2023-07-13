@@ -102,7 +102,7 @@
             "icon": "Menu",
             "title": "工单列表",
             "isLink": "",
-            "isHide": false,
+            "isHide": true,
             "isFull": false,
             "isAffix": false,
             "isKeepAlive": false
