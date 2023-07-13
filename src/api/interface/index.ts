@@ -373,6 +373,10 @@ export namespace HomeSet {
     recycleMoney: number; // 今日回收金额
     recycleAmount: number; // 今日回收数量
     recycleAveMoney: number; // 今日回收均价
+    salesAmount: number; // 出售数量
+    salesMoney: number; // 出售金额
+    unsoldAmount: number; // 未售数量
+    unsoldMoney: number; // 未售金额
     recycleRatio: INameAndAmountAndMonty[]; // 账号回收占比：游戏分类 数量 金额
     recycleRanking: INameAndAmountAndMonty[]; // 回收排名：用户 数量 金额
     recycleSetComparison: INameAndAmountAndMonty[]; // 回收组数据对比：用户 金额 数量

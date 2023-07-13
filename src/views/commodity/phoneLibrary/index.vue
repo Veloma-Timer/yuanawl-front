@@ -67,8 +67,8 @@ const dataCallback = (data: any) => {
   return {
     list: data.list,
     total: data.total,
-    pageNum: data.pageNum,
-    pageSize: data.pageSize
+    pageNum: Number(data.pageNum),
+    pageSize: Number(data.pageSize)
   };
 };
 
@@ -87,7 +87,6 @@ const getTableList = (params: any) => {
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<Commodity.phoneLibrary>[] = [
-  { type: "index", label: "序号", width: 80 },
   { prop: "openAccountName", label: "开户人姓名", search: { el: "input" } },
   {
     prop: "createTime",
@@ -113,9 +112,36 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
     search: { el: "input" }
   },
   {
-    prop: "bindingTimes",
-    label: "绑定次数",
+    prop: "bindingQQTimes",
+    label: "绑定QQ个数",
     search: { el: "input" }
+  },
+  {
+    prop: "isBindingYuanshen",
+    label: "是否绑定元神",
+    enum: [
+      { label: "是", value: "1" },
+      { label: "不是", value: "0" }
+    ],
+    search: { el: "select" }
+  },
+  {
+    prop: "isBindingEmail",
+    label: "是否绑定邮箱",
+    enum: [
+      { label: "是", value: "1" },
+      { label: "不是", value: "0" }
+    ],
+    search: { el: "select" }
+  },
+  {
+    prop: "isBindingWechat",
+    label: "是否绑定微信",
+    enum: [
+      { label: "是", value: "1" },
+      { label: "不是", value: "0" }
+    ],
+    search: { el: "select" }
   },
   { prop: "operation", label: "操作", width: 200 }
 ];

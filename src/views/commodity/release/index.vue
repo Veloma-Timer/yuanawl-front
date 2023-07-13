@@ -42,7 +42,7 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import releaseDrawer from "@/views/commodity/release/modules/releaseDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Upload, View } from "@element-plus/icons-vue";
 import {
   addPublish,
   deleteSummary,
@@ -220,8 +220,10 @@ const date = new Date();
 const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   let publishPlatform = [];
+  let rollBackPlatform = [];
   if (title === "查看") {
     publishPlatform = row.publishPlatform?.map(item => Number(item));
+    // rollBackPlatform = row.rollBackPlatform?.map(item => Number(item));
   }
   const params = {
     title,
@@ -229,6 +231,8 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
     row: {
       ...row,
       publishPlatform: publishPlatform,
+      rollBackPlatform: rollBackPlatform,
+      publishPrice: Number(row.publishPrice),
       accountPublisherTimer: time,
       accountPublisherId: obj.user.id,
       accountCode: row.accountCode

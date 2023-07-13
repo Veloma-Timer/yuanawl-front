@@ -43,6 +43,11 @@
           <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
+      <el-form-item v-if="drawerProps.row.isPublish === '1'" label="回滚平台" prop="rollBackPlatform">
+        <el-select v-model="drawerProps.row!.rollBackPlatform" placeholder="请选择回滚平台" filterable multiple>
+          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
@@ -64,6 +69,7 @@ const rules = reactive({
   id: [{ required: true, message: "必填项不能为空" }],
   accountPublisherTimer: [{ required: true, message: "必填项不能为空" }],
   publishPrice: [{ required: true, message: "必填项不能为空" }],
+  rollBackPlatform: [{ required: true, message: "必填项不能为空" }],
   publishPlatform: [{ required: true, message: "必填项不能为空" }]
 });
 

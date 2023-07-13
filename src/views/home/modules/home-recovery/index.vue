@@ -43,7 +43,7 @@ import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 const recoveryRef = ref<HTMLElement>();
-const namesList: string[] = ["回收金额", "回收数量", "回收均价"];
+const namesList: string[] = ["回收金额", "回收数量", "回收均价", "出售数量", "出售金额", "未售数量", "未售金额"];
 // 处理数据
 const props = withDefaults(
   defineProps<{
@@ -56,10 +56,11 @@ const props = withDefaults(
   }
 );
 const setNumber = () => {
+  const indexList: number[] = [1, 3, 5];
   nextTick(() => {
     let recoveryNumber = document.getElementsByClassName("recovery-number");
     for (let i = 0; i < crudListMap.length; i++) {
-      const valueName = i !== 1 ? "￥" : "";
+      const valueName = indexList.includes(i) ? "" : "￥";
       let option = {
         title: {
           text: `${valueName}${crudListMap[i]}`,
@@ -128,7 +129,15 @@ const setNumber = () => {
 let crudListMap = reactive([]);
 setNumber();
 const setCrud = obj => {
-  crudListMap = [obj.recycleMoney, obj.recycleAmount, obj.recycleAveMoney];
+  crudListMap = [
+    obj.recycleMoney,
+    obj.recycleAmount,
+    obj.recycleAveMoney,
+    obj.salesAmount,
+    obj.salesMoney,
+    obj.unsoldAmount,
+    obj.unsoldMoney
+  ];
   setNumber();
 };
 watch(
