@@ -112,7 +112,14 @@ const columns: ColumnProps<Commodity.Release>[] = [
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
-  { prop: "accountRecyclerTime", label: "回收日期", width: 180 },
+  {
+    prop: "accountRecyclerTime",
+    label: "回收日期",
+    width: 180,
+    render: scope => {
+      return parseTime(scope.row?.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}");
+    }
+  },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
   {
     prop: "accountPublisherId",
@@ -122,7 +129,6 @@ const columns: ColumnProps<Commodity.Release>[] = [
     fieldNames: { label: "userName", value: "id" },
     render: ({ row }) => row.accountPublisher?.userName
   },
-  { prop: "accountTitle", label: "账户标题", search: { el: "input" } },
   {
     prop: "isPublish",
     label: "发布状态",

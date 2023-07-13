@@ -212,7 +212,14 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
-  { prop: "accountRecyclerTime", label: "回收日期", width: 160 },
+  {
+    prop: "accountRecyclerTime",
+    label: "回收日期",
+    width: 160,
+    render: scope => {
+      return parseTime(scope.row?.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}");
+    }
+  },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
