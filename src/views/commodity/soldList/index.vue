@@ -263,7 +263,7 @@ const props = withDefaults(
   }
 );
 </script>
-<style scoped>
+<style lang="scss">
 .circle {
   display: inline-block;
   width: 6px;

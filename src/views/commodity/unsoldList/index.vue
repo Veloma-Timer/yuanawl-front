@@ -226,7 +226,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   drawerRef.value?.acceptParams(params);
 };
 </script>
-<style scoped>
+<style lang="scss">
 .circle {
   display: inline-block;
   width: 6px;
