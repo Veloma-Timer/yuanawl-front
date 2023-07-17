@@ -143,7 +143,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
   },
   {
     prop: "accountCode",
-    label: "账号编码",
+    label: "账号编号",
     width: 160
   },
   {
@@ -170,6 +170,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     width: 180,
     search: { el: "input" }
   },
+  { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
   { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },
   { prop: "email", label: "邮箱", width: 160, search: { el: "input" } },
   { prop: "emailSecret", label: "邮箱密保", width: 160, search: { el: "input" } },
@@ -186,7 +187,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     ]
   },
   { prop: "accountDesc", label: "账号描述", width: 160, search: { el: "input" } },
-  { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
   {
     prop: "haveSecondary",
     label: "实名情况",
@@ -226,7 +226,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
 
 // 删除用户信息
 const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
+  await useHandleData(deleteSummary, { id: [params.id] }, `确认是否删除该【${params.accountNumber}】账号吗`);
   proTable.value?.getTableList();
 };
 // 批量删除用户信息

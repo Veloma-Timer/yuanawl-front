@@ -377,10 +377,13 @@ const batchAdd = (title: string) => {
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+  let accountType = [];
+  if (title === "查看") {
+  }
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
+    row: { ...row, accountType: accountType },
     api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };

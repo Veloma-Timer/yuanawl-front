@@ -19,7 +19,7 @@
         <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编号" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
-        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable multiple clearable>
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -100,6 +100,11 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-form-item label="回收方式" prop="isSave">
+        <el-select v-model="drawerProps.row!.isSave" placeholder="请选择" filterable>
+          <el-option v-for="item in methodsMap" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="出售平台">
         <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
       </el-form-item>
@@ -182,16 +187,6 @@
           clearable
         ></el-input>
       </el-form-item>
-      <!--      <el-form-item label="账号状态" prop="accountStatus">-->
-      <!--        <el-select v-model="drawerProps.row!.accountStatus" placeholder="请选择" filterable>-->
-      <!--          <el-option v-for="item in accountStatusMap" :key="item.value" :label="item.label" :value="item.value" />-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="网站上传" prop="netUpload">-->
-      <!--        <el-select v-model="drawerProps.row!.netUpload" placeholder="请选择" filterable>-->
-      <!--          <el-option v-for="item in netUploadMap" :key="item.value" :label="item.label" :value="item.value" />-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
       <el-form-item label="交易猫上架" prop="transCatUploaded">
         <el-select v-model="drawerProps.row!.transCatUploaded" placeholder="请选择" filterable>
           <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
@@ -305,8 +300,13 @@ const transCatUploadedMap = [
 ];
 // 存档
 const isSaveMap = [
-  { label: "已存", value: "1" },
-  { label: "未存", value: "0" }
+  { label: "是", value: "1" },
+  { label: "否", value: "0" }
+];
+// 回收方式
+const methodsMap = [
+  { label: "自主压资料", value: "1" },
+  { label: "买家已投保", value: "0" }
 ];
 let accountTypeMap: unknown = [];
 let userMap: unknown = [];

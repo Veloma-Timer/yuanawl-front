@@ -49,7 +49,7 @@ import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 const releaseRef = ref<HTMLElement>();
-const namesList: string[] = ["发布金额", "发布数量", "发布均价"];
+const namesList: string[] = ["已发布数量", "待发布数量", "待发布金额"];
 const publishId = ref();
 // 处理数据
 const props = withDefaults(
@@ -66,7 +66,7 @@ const setNumber = () => {
   nextTick(() => {
     let releaseNumber = document.getElementsByClassName("release-number");
     for (let i = 0; i < crudListMap.length; i++) {
-      const valueName = i !== 1 ? "￥" : "";
+      const valueName = i === 2 ? "￥" : "";
       let option = {
         title: {
           text: `${valueName}${crudListMap[i]}`,

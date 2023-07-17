@@ -35,13 +35,23 @@
           placeholder="请选择发布时间"
         />
       </el-form-item>
-      <el-form-item label="商品首次定价" prop="publishPrice">
+      <el-form-item label="商品首次定价">
         <el-input-number v-model="drawerProps.row!.publishPrice" placeholder="请输入商品首次定价" clearable :controls="false" />
       </el-form-item>
       <el-form-item label="发布平台" prop="publishPlatform">
         <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple>
           <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="账号描述">
+        <el-input
+          v-model="drawerProps.row!.accountDesc"
+          :autosize="{ minRows: 3, maxRows: 5 }"
+          type="textarea"
+          resize="none"
+          placeholder="请输入账号描述"
+          clearable
+        ></el-input>
       </el-form-item>
       <el-form-item v-if="drawerProps.row.isPublish === '1'" label="回滚平台" prop="rollBackPlatform">
         <el-select v-model="drawerProps.row!.rollBackPlatform" placeholder="请选择回滚平台" filterable multiple>

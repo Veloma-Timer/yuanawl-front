@@ -35,7 +35,7 @@
           发布
         </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
+        <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
     <releaseDrawer ref="drawerRef" />
@@ -44,22 +44,13 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import releaseDrawer from "@/views/commodity/release/modules/releaseDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
-import {
-  addPublish,
-  deleteSummary,
-  editPublish,
-  getPublishList,
-  publishTemplate,
-  publishUpload,
-  summaryExport
-} from "@/api/modules/commodity";
+import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
+import { addPublish, editPublish, getPublishList, publishTemplate, publishUpload, summaryExport } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { getUserAll } from "@/api/modules/user";
@@ -111,7 +102,28 @@ const getFixed = (str: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Release>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编码", width: 160, search: { el: "input" } },
+  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountNumber",
+    sortable: true,
+    label: "账号",
+    width: 160
+  },
+  {
+    prop: "accountPassword",
+    sortable: true,
+    label: "密码",
+    width: 160
+  },
+  {
+    prop: "accountTel",
+    label: "密保手机",
+    width: 180,
+    search: { el: "input" }
+  },
+  { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
+  { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
+  { prop: "campId", label: "回收价格", width: 160, search: { el: "input" } },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",
@@ -218,12 +230,6 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   { prop: "operation", label: "操作", fixed: "right", width: 260 }
 ];
-// 删除用户信息
-const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
-  proTable.value?.getTableList();
-};
-
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
   delete obj.total;

@@ -112,8 +112,29 @@ const batchAdd = (title: string) => {
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
-  { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编码", width: 160, search: { el: "input" } },
+  { type: "selection", width: 55, fixed: true },
+  { prop: "accountCode", label: "账号编号", fixed: true, width: 160, search: { el: "input" } },
+  {
+    prop: "accountNumber",
+    sortable: true,
+    label: "账号",
+    width: 160
+  },
+  {
+    prop: "accountPassword",
+    sortable: true,
+    label: "密码",
+    width: 160
+  },
+  {
+    prop: "accountTel",
+    label: "密保手机",
+    width: 180,
+    search: { el: "input" }
+  },
+  { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
+  { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
+  { prop: "campId", label: "回收价格", width: 160, search: { el: "input" } },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",

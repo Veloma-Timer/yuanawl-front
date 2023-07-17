@@ -177,6 +177,7 @@ export namespace Commodity {
     accountPublisherTimer: string; // 发布时间
     isPublish: string; // 状态
     publishPrice: string; // 商品首次定价
+    accountDesc: string; // 账户描述
     publishPlatform: number[]; // 发布平台(可以是多个)
     rollBackPlatform: number[]; // 发布平台(可以是多个)
     // "accountHandle": string; // 账号处理
