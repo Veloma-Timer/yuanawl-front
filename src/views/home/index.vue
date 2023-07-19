@@ -39,7 +39,6 @@ interface Item {
 }
 const cityList = ref([{ branchName: "全部", id: null }]);
 const monthList: Item[] = [
-  { branchName: "全部", id: null },
   { branchName: "今日", id: 0 },
   { branchName: "本周", id: 1 },
   { branchName: "本月", id: 2 }

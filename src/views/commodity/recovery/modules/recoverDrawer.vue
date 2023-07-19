@@ -23,7 +23,14 @@
         <el-input v-model="drawerProps.row!.accountCode" :disabled="drawerProps.isView" placeholder="请输入账号编号" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
-        <el-select v-model="drawerProps.row!.accountType" :disabled="drawerProps.isView" placeholder="请选择账号分类" filterable>
+        <el-select
+          v-model="drawerProps.row!.accountType"
+          :disabled="drawerProps.isView"
+          placeholder="请选择账号分类"
+          filterable
+          multiple
+          clearable
+        >
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>

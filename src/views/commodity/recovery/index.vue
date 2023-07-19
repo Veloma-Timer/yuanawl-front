@@ -259,6 +259,10 @@ const batchAdd = (title: string) => {
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof recoverDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
+  let accountType: number[] | undefined = [];
+  if (title === "查看") {
+    accountType = row.accountType;
+  }
   // 当前时间
   const date = new Date();
   const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
@@ -271,6 +275,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
       accountRecyclerTime: time,
       accountRecyclerId: obj.user.id,
       storeId: obj.user.userBranchId,
+      accountType,
       branchId: obj.user.userBranchId
     },
     api: title === "新增" ? addRecycle : title === "查看" ? editRecycle : undefined,

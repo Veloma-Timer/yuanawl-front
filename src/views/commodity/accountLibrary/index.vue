@@ -51,7 +51,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Hide, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Hide, Upload, View } from "@element-plus/icons-vue";
 import { getUserAll } from "@/api/modules/user";
 import {
   addSummary,
@@ -378,9 +378,8 @@ const batchAdd = (title: string) => {
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
-  let accountType: [] | undefined = [];
+  let accountType = [];
   if (title === "查看") {
-    accountType = row.accountType;
   }
   const params = {
     title,

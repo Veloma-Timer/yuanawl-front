@@ -32,7 +32,7 @@
           销售
         </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
+        <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
     <saleDrawer ref="drawerRef" />
@@ -47,7 +47,7 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
 import {
   addSales,
   getSalesList,

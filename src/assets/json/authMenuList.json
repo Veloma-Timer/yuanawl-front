@@ -67,6 +67,20 @@
           }
         },
         {
+          "path": "/commodity/accountLibrary",
+          "name": "删除账号库",
+          "component": "/commodity/accountLibrary/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "删除账号库",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
+        },
+        {
           "path": "/commodity/release",
           "name": "发布列表",
           "component": "/commodity/release/index",

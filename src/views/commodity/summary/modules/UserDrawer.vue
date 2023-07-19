@@ -1,7 +1,7 @@
 <template>
   <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="800px" :show-close="false">
     <template #header>
-      <Header :title="`${drawerProps.title}用户`" class="header" style="transform: translateY(7px)"></Header>
+      <Header :title="`${drawerProps.title}账号`" class="header" style="transform: translateY(7px)"></Header>
       <el-button type="primary" @click="edit" class="edit-btn">
         <div>编辑</div>
       </el-button>
@@ -38,6 +38,7 @@
               format="YYYY-MM-DD hh:mm:ss"
               value-format="YYYY-MM-DD hh:mm:ss"
               type="date"
+              :disabled-date="options"
               placeholder="请选择"
             />
           </el-form-item>
@@ -65,6 +66,7 @@
               v-model="drawerProps.row!.accountPublisherTimer"
               format="YYYY-MM-DD hh:mm:ss"
               value-format="YYYY-MM-DD hh:mm:ss"
+              :disabled-date="options"
               type="date"
               placeholder="请选择"
             />
@@ -85,6 +87,7 @@
               type="date"
               format="YYYY-MM-DD hh:mm:ss"
               value-format="YYYY-MM-DD hh:mm:ss"
+              :disabled-date="options"
               placeholder="请选择"
             />
           </el-form-item>
@@ -255,7 +258,11 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => void;
 }
-
+const options = date => {
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
+  return date.getTime() > currentDate.getTime();
+};
 const drawerVisible = ref(false);
 const drawerProps = ref<DrawerProps>({
   isView: false,
