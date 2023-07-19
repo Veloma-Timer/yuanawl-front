@@ -70,6 +70,7 @@ import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
 import { getSetTypes } from "@/api/modules/order";
+
 const route = useRoute();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -179,21 +180,21 @@ const columns: ColumnProps<Commodity.Account>[] = [
       );
     }
   },
-  {
-    prop: "accountNumber",
-    sortable: true,
-    label: "游戏编号",
-    width: 160,
-    enum: getAllBaseAccount,
-    search: {
-      el: "select",
-      slotName: true
-    },
-    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-    render: scope => {
-      return <span>{scope.row?.accountNumber}</span>;
-    }
-  },
+  //  {
+  //    prop: "accountNumber",
+  //    sortable: true,
+  //    label: "游戏编号",
+  //    width: 160,
+  //    enum: getAllBaseAccount,
+  //    search: {
+  //      el: "select",
+  //      slotName: true
+  //    },
+  //    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
+  //    render: scope => {
+  //      return <span>{scope.row?.accountNumber}</span>;
+  //    }
+  //  },
   {
     prop: "salesSetId",
     sortable: true,
@@ -421,10 +422,12 @@ const onSetPhone = row => {
   border-radius: 50%;
   margin-right: 5px;
 }
+
 .v-red {
   @extend .circle;
   background-color: var(--el-color-error);
 }
+
 .v-green {
   @extend .circle;
   background-color: var(--el-color-success);

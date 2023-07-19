@@ -108,9 +108,9 @@
       <el-form-item label="出售平台">
         <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
       </el-form-item>
-      <el-form-item label="游戏账号" prop="accountNumber">
-        <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable></el-input>
-      </el-form-item>
+      <!--<el-form-item label="游戏账号" prop="accountNumber">-->
+      <!--  <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable></el-input>-->
+      <!--</el-form-item>-->
       <el-form-item label="营地号" prop="campId">
         <el-input v-model="drawerProps.row!.campId" placeholder="请输入账号" clearable></el-input>
       </el-form-item>
@@ -227,7 +227,7 @@ const rules = reactive({
   salePlatform: [{ required: true, message: "必填项不能为空" }],
   saleTime: [{ required: true, message: "必填项不能为空" }],
   salePrice: [{ required: true, message: "必填项不能为空" }],
-  accountNumber: [{ required: true, message: "必填项不能为空" }],
+  //  accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   accountTel: [{ required: true, message: "必填项不能为空" }],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
@@ -330,6 +330,7 @@ defineExpose({
     color: var(--el-color-white) !important;
   }
 }
+
 .order-input {
   width: 220px !important;
 }
