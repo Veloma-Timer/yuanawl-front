@@ -26,7 +26,7 @@
         </div>
         <el-row class="row-line" :gutter="10">
           <el-col :span="6">
-            <el-form-item label="工单编号" prop="basicOrderCode">
+            <el-form-item label="账号编号" prop="basicOrderCode">
               <el-input
                 v-model="ruleForm.row!.basicOrderCode"
                 placeholder="请选择"

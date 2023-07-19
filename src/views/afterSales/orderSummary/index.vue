@@ -56,7 +56,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { prop: "operation", label: "操作", fixed: "right", width: 340 },
   {
     prop: "orderCode",
-    label: "工单编号",
+    label: "账号编号",
     search: { el: "input" },
     width: 180,
     render: scope => {
@@ -235,7 +235,7 @@ const openCheck = (row: any) => {
 };
 
 const delOrder = async (id: number, orderCode: string) => {
-  await useHandleData(delSalesOrder, id, `删除工单编号【${orderCode}】这条数据`);
+  await useHandleData(delSalesOrder, id, `删除账号编号【${orderCode}】这条数据`);
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
 };
