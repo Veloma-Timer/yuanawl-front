@@ -110,7 +110,7 @@
         <div class="sub-title">账号信息:</div>
         <!-- isSales == 1 展示销售 其他展示回收 -->
         <el-row class="basic-info" v-if="baseObj?.isSales == 1">
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="出售人姓名">
               <span>{{ baseObj?.salePeople?.userName || "-" }}</span>
             </el-form-item>
@@ -120,17 +120,22 @@
               <span>{{ baseObj?.saleTime ? dayjs(baseObj.saleTime).format("YYYY-MM-DD HH:mm:ss") : "-" }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item label="出售渠道">
               <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item label="订单编号">
               <span>{{ baseObj?.accountCode || "-" }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
+            <el-form-item label="账号状态">
+              <span>{{ baseObj?.accountStatus == 1 ? "已售" : "未售" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="5">
             <el-form-item label="商品加价率">
               <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate).toFixed(2) : "-" }}</span>
             </el-form-item>
@@ -140,7 +145,7 @@
               <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle).toFixed(2) + "天" : "-" }}</span>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-form-item label="买家手机号">
               <span>{{ baseObj?.buyerTel || "-" }}</span>
             </el-form-item>
@@ -187,6 +192,11 @@
           <el-col :span="6">
             <el-form-item label="回收备注">
               <span>{{ baseObj?.recycleRemark || "-" }}</span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="账号状态">
+              <span>{{ baseObj?.accountStatus == 1 ? "已售" : "未售" }}</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -745,9 +755,8 @@ function getCurrentDate() {
   return currentDate;
 }
 
-// 调用函数获取当前时间
+// // 调用函数获取当前时间
 const currentDateString = getCurrentDate();
-console.log(currentDateString);
 const ruleForm = ref<IAddOrder>({
   // 编辑: 默认禁用
   isView: isView,
@@ -757,11 +766,11 @@ const ruleForm = ref<IAddOrder>({
   idEdit3: id ? true : false,
   row: {
     afterCustomerServiceId: userId,
-    afterHandleTime: getCurrentDate(),
+    afterHandleTime: currentDateString,
     publishHandleCustomerServiceId: userId,
-    publishHandleTime: getCurrentDate(),
+    publishHandleTime: currentDateString,
     saleHandleCustomerService: userId,
-    saleHandleTime: getCurrentDate()
+    saleHandleTime: currentDateString
   }
 });
 
@@ -804,7 +813,7 @@ const getDetailInfo = async (id: any) => {
     if (afterInfo) {
       afterObj = {
         afterCustomerServiceId: userId,
-        afterHandleTime: getCurrentDate(),
+        afterHandleTime: currentDateString,
         afterHandleResult: afterInfo?.afterSaleResultId,
         afterSpecHandleResult: afterInfo?.afterSalesResultRemark,
         afterCompensationAmount: afterInfo?.afterSalesCompensationAmount,
@@ -824,7 +833,7 @@ const getDetailInfo = async (id: any) => {
     } else {
       afterObj = {
         afterCustomerServiceId: userId,
-        afterHandleTime: getCurrentDate()
+        afterHandleTime: currentDateString
       };
     }
     // 发布
@@ -832,7 +841,7 @@ const getDetailInfo = async (id: any) => {
     if (publistInfo) {
       publishObj = {
         publishHandleCustomerServiceId: userId,
-        publishHandleTime: getCurrentDate(),
+        publishHandleTime: currentDateString,
         publishHandleResult: publistInfo?.publishResultId,
         publishResultRemark: publistInfo?.publishResultRemark,
         publishRemark: publistInfo?.publishRemark,
@@ -849,7 +858,7 @@ const getDetailInfo = async (id: any) => {
     } else {
       publishObj = {
         publishHandleCustomerServiceId: userId,
-        publishHandleTime: getCurrentDate()
+        publishHandleTime: currentDateString
       };
     }
     // 销售
@@ -857,7 +866,7 @@ const getDetailInfo = async (id: any) => {
     if (saleInfo) {
       saleObj = {
         saleHandleCustomerService: userId,
-        saleHandleTime: getCurrentDate(),
+        saleHandleTime: currentDateString,
         saleHandleResult: saleInfo?.salesResultId,
         saleCompensationUserAmount: saleInfo?.salesCompensationAmount,
         saleChangeUserNumber: saleInfo?.newAccountId,
@@ -876,7 +885,7 @@ const getDetailInfo = async (id: any) => {
     } else {
       saleObj = {
         saleHandleCustomerService: userId,
-        saleHandleTime: getCurrentDate()
+        saleHandleTime: currentDateString
       };
     }
     ruleForm.value.row = {
