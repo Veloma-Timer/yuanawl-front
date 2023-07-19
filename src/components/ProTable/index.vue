@@ -179,7 +179,7 @@ if (currentColoumIndex > -1) {
     return { ...item, isShow: obj.isShow, sortable: obj.sortable };
   });
   // 合并上面两个不同类型的列
-  cachecColumns = cachecColumns.concat(operationColumns);
+  cachecColumns = operationColumns.concat(cachecColumns);
 } else {
   // eslint-disable-next-line vue/no-setup-props-destructure
   cachecColumns = props.columns;
