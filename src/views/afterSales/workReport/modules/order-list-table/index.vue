@@ -51,7 +51,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   { prop: "operation", label: "操作", fixed: "right", width: 100 },
   {
     prop: "orderCode",
-    label: "账号编号",
+    label: "工单编号",
     search: { el: "input" },
     width: 180,
     render: scope => {
