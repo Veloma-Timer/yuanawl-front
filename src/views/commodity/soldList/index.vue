@@ -41,7 +41,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Delete, Download, View } from "@element-plus/icons-vue";
+import { Download, View } from "@element-plus/icons-vue";
 import { deleteUser, getUserAll } from "@/api/modules/user";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
@@ -83,14 +83,25 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountCode",
     label: "账号编号",
     width: 160,
+    fixed: "left",
     enum: getAllBaseAccount,
     search: {
       el: "select",
+      props: {
+        filterable: true
+      },
       slotName: true
     },
     fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
-    render: scope => {
-      return <span>{scope.row?.accountCode}</span>;
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="cursor-pointer">
+          <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+            <span class={status ? "red" : ""}>{row.accountCode}</span>
+          </router-link>
+        </div>
+      );
     }
   },
   {
@@ -223,12 +234,6 @@ const getAllAccountList = async () => {
 };
 getAllAccountList();
 
-// 删除用户信息
-const deleteAccount = async (params: User.ResUserList) => {
-  await useHandleData(deleteUser, { id: [params.id] }, `删除【${params.username}】用户`);
-  proTable.value?.getTableList();
-};
-
 // 批量删除用户信息
 const batchDelete = async (id: string[]) => {
   await useHandleData(deleteUser, { id }, "导出用户信息");
@@ -277,5 +282,12 @@ const props = withDefaults(
 .v-green {
   @extend .circle;
   background-color: var(--el-color-success);
+}
+.red {
+  color: var(--el-color-error);
+}
+
+.green {
+  color: var(--el-color-success);
 }
 </style>

@@ -36,7 +36,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
+        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -108,11 +108,15 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "accountCode",
     label: "账号编号",
+    fixed: "left",
     sortable: true,
     width: 160,
     enum: getAllBaseAccount,
     search: {
       el: "select",
+      props: {
+        filterable: true
+      },
       slotName: true
     },
     fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
@@ -129,7 +133,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
     ],
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     render: ({ row }) => {
       const status = row.accountStatus === 0;
       return (
@@ -149,7 +158,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "有", value: "1" },
       { label: "没有", value: "0" }
     ],
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     render: ({ row }) => {
       const status = row.isWorkOrder === "0";
       return (
@@ -163,7 +177,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "isSales",
     label: "账户发布状态",
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     sortable: true,
     width: 160,
     enum: [
@@ -207,7 +226,10 @@ const columns: ColumnProps<Commodity.Account>[] = [
       return { data: set };
     },
     search: {
-      el: "select"
+      el: "select",
+      props: {
+        filterable: true
+      }
     },
     fieldNames: { label: "label", value: "value" }
   },
@@ -217,7 +239,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: getAllList,
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     fieldNames: { label: "typeName", value: "id" }
   },
   {
@@ -226,7 +253,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: getUserAll,
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     fieldNames: { label: "userName", value: "id" }
   },
   {
@@ -273,7 +305,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: getAllBranch,
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     fieldNames: { label: "branchName", value: "id" }
   },
   {
@@ -311,7 +348,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "有", value: "1" },
       { label: "无", value: "0" }
     ],
-    search: { el: "select" }
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
   },
   {
     prop: "isSave",
@@ -322,7 +364,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "有", value: "0" },
       { label: "无", value: "1" }
     ],
-    search: { el: "select" }
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
   },
   { prop: "accountDesc", sortable: true, label: "账号描述", width: 160, search: { el: "input" } },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }

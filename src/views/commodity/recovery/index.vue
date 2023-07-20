@@ -120,6 +120,22 @@ const getFixed = (str: string) => {
 const columns: ColumnProps<Commodity.Recovery>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
+    prop: "accountCode",
+    label: "账号编号",
+    fixed: "left",
+    width: 160,
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="cursor-pointer">
+          <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+            <span class={status ? "red" : ""}>{row.accountCode}</span>
+          </router-link>
+        </div>
+      );
+    }
+  },
+  {
     prop: "branchId",
     label: "所属门店",
     width: 160,
@@ -140,11 +156,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     render: scope => {
       return <span>{scope.row?.accountNumber}</span>;
     }
-  },
-  {
-    prop: "accountCode",
-    label: "账号编号",
-    width: 160
   },
   {
     prop: "accountType",
@@ -307,3 +318,12 @@ const props = withDefaults(
   }
 );
 </script>
+<style lang="scss">
+.red {
+  color: var(--el-color-error);
+}
+
+.green {
+  color: var(--el-color-success);
+}
+</style>

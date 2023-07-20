@@ -28,7 +28,7 @@
         <homeGroup :list-arr="statisticsObj?.recycleRatio" class-name="maintain" title="账号回收占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
+        <nameRight title="数量榜" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
       </div>
     </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
