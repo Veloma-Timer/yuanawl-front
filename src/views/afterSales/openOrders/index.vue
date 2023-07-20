@@ -73,6 +73,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     label: "账号编号",
     width: 180,
     search: { el: "input" },
+    fixed: "left",
     render: scope => {
       return (
         <el-button type="primary" link>
@@ -95,6 +96,15 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     search: { el: "select", props: { filterable: true } },
     fieldNames: { label: "label", value: "value" },
     width: 180
+  },
+  {
+    prop: "orderCode",
+    label: "账号",
+    search: { el: "input" },
+    width: 180,
+    render: scope => {
+      return <span>{scope.row?.account?.accountNumber || "-"}</span>;
+    }
   },
   {
     prop: "reportPersonId",

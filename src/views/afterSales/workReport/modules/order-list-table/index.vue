@@ -63,6 +63,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     label: "账号编号",
     search: { el: "input" },
     width: 180,
+    fixed: "left",
     render: scope => {
       return (
         <el-button type="primary" link>
