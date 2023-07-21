@@ -6,3 +6,7 @@ const baseUrl: string = PORT3 + "/sys_map";
 export const sellKeyMap = () => {
   return http.get(`${baseUrl}?key=publishPlatform`);
 };
+// 所谓门店
+export const recycleShop = () => {
+  return http.get(`${baseUrl}?key=recycleShop`);
+};

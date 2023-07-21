@@ -41,22 +41,13 @@
 </template>
 
 <script setup lang="tsx" name="useProTable">
-import { useHandleData } from "@/hooks/useHandleData";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
-import {
-  addSales,
-  getSalesList,
-  deleteSummary,
-  editSales,
-  summaryExport,
-  salesTemplate,
-  salesUpload
-} from "@/api/modules/commodity";
+import { addSales, getSalesList, editSales, summaryExport, salesTemplate, salesUpload } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { parseTime } from "@/utils";
@@ -113,7 +104,51 @@ const batchAdd = (title: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", width: 55, fixed: true },
-  { prop: "accountCode", label: "账号编号", fixed: true, width: 160, search: { el: "input" } },
+  {
+    prop: "accountCode",
+    label: "账号编号",
+    fixed: true,
+    width: 160,
+    search: { el: "input" },
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="cursor-pointer">
+          <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+            <span class={status ? "red" : ""}>{row.accountCode}</span>
+          </router-link>
+        </div>
+      );
+    }
+  },
+  {
+    prop: "isSales",
+    label: "销售状态",
+    search: { el: "select" },
+    width: 160,
+    enum: [
+      { label: "未销售", value: "0" },
+      { label: "已销售", value: "1" }
+    ],
+    render: ({ row }) => {
+      const status = row.isSales === "0";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "未销售" : "已销售"}</span>
+        </div>
+      );
+    }
+  },
+  {
+    prop: "noSaleResidenceTime",
+    label: "滞留时间",
+    width: 160,
+    render: scope =>
+      scope.row.isSales == "1" ? "--" : scope.row!.noSaleResidenceTime ? scope.row!.noSaleResidenceTime + "天" : "--"
+  },
+  { prop: "campId", label: "回收金额", width: 160, search: { el: "input" } },
+  { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
   {
     prop: "accountNumber",
     sortable: true,
@@ -132,9 +167,25 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     width: 180,
     search: { el: "input" }
   },
+  {
+    prop: "haveSecondary",
+    label: "有无二次",
+    sortable: true,
+    width: 160,
+    enum: [
+      { label: "有", value: "1" },
+      { label: "无", value: "0" }
+    ],
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
+  },
+
+  { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
-  { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
-  { prop: "campId", label: "回收价格", width: 160, search: { el: "input" } },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",
@@ -168,14 +219,6 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     render: scope => {
       return parseTime(scope.row?.saleTime, "{y}-{m}-{d} {h}:{i}:{s}");
     }
-  },
-  { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
-  {
-    prop: "noSaleResidenceTime",
-    label: "滞留时间",
-    width: 160,
-    render: scope =>
-      scope.row.isSales == "1" ? "--" : scope.row!.noSaleResidenceTime ? scope.row!.noSaleResidenceTime + "天" : "--"
   },
   {
     prop: "isWorkOrder",
@@ -217,25 +260,6 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     }
   },
   {
-    prop: "isSales",
-    label: "销售状态",
-    search: { el: "select" },
-    width: 160,
-    enum: [
-      { label: "未销售", value: "0" },
-      { label: "已销售", value: "1" }
-    ],
-    render: ({ row }) => {
-      const status = row.isSales === "0";
-      return (
-        <div class="flex flex-row flx-center">
-          <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "未销售" : "已销售"}</span>
-        </div>
-      );
-    }
-  },
-  {
     prop: "salePlatformId",
     width: 160,
     label: "出售渠道",
@@ -251,12 +275,6 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   { prop: "salesRemark", label: "销售备注", width: 160 },
   { prop: "operation", label: "操作", fixed: "right", width: 260 }
 ];
-
-// 删除用户信息
-const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
-  proTable.value?.getTableList();
-};
 
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
@@ -318,5 +336,13 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
 .v-green {
   @extend .circle;
   background-color: var(--el-color-success);
+}
+
+.red {
+  color: var(--el-color-error);
+}
+
+.green {
+  color: var(--el-color-success);
 }
 </style>

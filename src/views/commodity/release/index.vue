@@ -102,7 +102,23 @@ const getFixed = (str: string) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.Release>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { prop: "accountCode", label: "账号编号", width: 160, search: { el: "input" } },
+  {
+    prop: "accountCode",
+    label: "账号编号",
+    width: 160,
+    fixed: "left",
+    search: { el: "input" },
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "0";
+      return (
+        <div class="cursor-pointer">
+          <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+            <span class={status ? "red" : ""}>{row.accountCode}</span>
+          </router-link>
+        </div>
+      );
+    }
+  },
   {
     prop: "accountNumber",
     sortable: true,
@@ -321,5 +337,12 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
 .v-green {
   @extend .circle;
   background-color: var(--el-color-success);
+}
+.red {
+  color: var(--el-color-error);
+}
+
+.green {
+  color: var(--el-color-success);
 }
 </style>

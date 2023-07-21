@@ -28,7 +28,7 @@
         <homeGroup :list-arr="salesObj?.salesRatio" class-name="maintain" title="账号销售占比" />
       </div>
       <div class="home-name-right">
-        <nameRight :salas-ranking-arr="salesObj?.salesRanking" :header="['姓名', '销售额', '销售数量']" />
+        <nameRight title="金额榜" :salas-ranking-arr="salesObj?.salesRanking" :header="['姓名', '销售额', '销售数量']" />
       </div>
     </div>
     <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售组数据对比" />

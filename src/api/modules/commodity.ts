@@ -97,3 +97,8 @@ export const orderList = (params: any) => {
 export const getSetSystemList = () => {
   return http.get<Data.SetList>(`${PORT3}/sys_map?key=system`);
 };
+
+/** 账户编号验证 **/
+export const typeCode = (params: any) => {
+  return http.get(`${baseUrl}/monitor`, params);
+};

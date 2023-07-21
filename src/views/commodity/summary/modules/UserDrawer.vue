@@ -38,7 +38,6 @@
               format="YYYY-MM-DD hh:mm:ss"
               value-format="YYYY-MM-DD hh:mm:ss"
               type="date"
-              :disabled-date="options"
               placeholder="请选择"
             />
           </el-form-item>
@@ -87,7 +86,7 @@
               type="date"
               format="YYYY-MM-DD hh:mm:ss"
               value-format="YYYY-MM-DD hh:mm:ss"
-              :disabled-date="options"
+              :disabled-date="saleOptions"
               placeholder="请选择"
             />
           </el-form-item>
@@ -152,7 +151,7 @@
           clearable
         ></el-input-number>
       </el-form-item>
-      <el-form-item label="手机号" prop="accountTel">
+      <el-form-item label="绑定手机号" prop="accountTel">
         <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable :maxlength="11"></el-input>
       </el-form-item>
       <el-form-item label="账号备注">
@@ -172,7 +171,7 @@
       </el-form-item>
       <el-form-item label="所属门店" prop="branchId">
         <el-select v-model="drawerProps.row!.branchId" placeholder="请选择" filterable>
-          <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
+          <el-option v-for="item in branchMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="资料是否存档" prop="isSave">
@@ -190,12 +189,12 @@
           clearable
         ></el-input>
       </el-form-item>
-      <el-form-item label="交易猫上架" prop="transCatUploaded">
+      <el-form-item label="网站上架">
         <el-select v-model="drawerProps.row!.transCatUploaded" placeholder="请选择" filterable>
           <el-option v-for="item in transCatUploadedMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="交易猫UID" prop="transCatUid">
+      <el-form-item label="交易猫UID">
         <el-input v-model="drawerProps.row!.transCatUid" placeholder="请输入交易猫UID" clearable></el-input>
       </el-form-item>
       <el-form-item label="账号等级" prop="accountLevel">
@@ -216,10 +215,30 @@ import Header from "@/components/Header/index.vue";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
-import { getAllBranch } from "@/api/modules/set";
+import { typeCode } from "@/api/modules/commodity";
+import { recycleShop } from "@/api/modules/dictionary";
 
+const validatePass = (rule: any, value: any, callback: any) => {
+  const params = {
+    type: rule.field,
+    value
+  };
+  if (value) {
+    typeCode(params)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+        callback(new Error("Two inputs don't match!"));
+      });
+  }
+};
 const rules = reactive({
-  accountCode: [{ required: true, message: "必填项不能为空" }],
+  accountCode: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   accountType: [{ required: true, message: "必填项不能为空" }],
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   accountRecycler: [{ required: true, message: "必填项不能为空" }],
@@ -259,11 +278,21 @@ interface DrawerProps {
   getTableList?: () => void;
 }
 const options = date => {
-  const currentDate = new Date();
+  const accountRecyclerTime = drawerProps.value.row.accountRecyclerTime;
+  const currentDate = new Date(accountRecyclerTime);
   currentDate.setHours(0, 0, 0, 0);
-  return date.getTime() > currentDate.getTime();
+  return date.getTime() < currentDate.getTime();
+};
+const saleOptions = date => {
+  const accountPublisherTimer = drawerProps.value.row.accountPublisherTimer;
+  const currentDate = new Date(accountPublisherTimer);
+  currentDate.setHours(0, 0, 0, 0);
+  return date.getTime() < currentDate.getTime();
 };
 const drawerVisible = ref(false);
+// const validateAge = (rule, value, callback) => {
+//   console.log(rule, value, callback);
+// };
 const drawerProps = ref<DrawerProps>({
   isView: false,
   title: "",
@@ -282,7 +311,6 @@ const acceptParams = (params: DrawerProps) => {
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
-    console.log(valid);
     if (!valid) return;
     try {
       await drawerProps.value.api!(drawerProps.value.row);
@@ -318,13 +346,20 @@ const methodsMap = [
 let accountTypeMap: unknown = [];
 let userMap: unknown = [];
 let branchMap: unknown = [];
+const publishMap = () => {
+  recycleShop().then(res => {
+    const {
+      data: { recycleShop = [] }
+    } = res;
+    branchMap = recycleShop;
+  });
+};
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
-  const { data } = await getAllBranch({});
   accountTypeMap = res.data;
   userMap = reloads.data;
-  branchMap = data;
+  await publishMap();
 };
 setAllList();
 defineExpose({
