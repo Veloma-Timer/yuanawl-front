@@ -34,7 +34,7 @@
         >
           发布
         </el-button>
-        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
@@ -298,7 +298,7 @@ const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   let publishPlatform = [];
   let rollBackPlatform = [];
-  if (title === "查看") {
+  if (title === "编辑") {
     publishPlatform = row.publishPlatform?.map(item => Number(item));
     // rollBackPlatform = row.rollBackPlatform?.map(item => Number(item));
   }
@@ -314,7 +314,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
       accountPublisherId: obj.user.id,
       accountCode: row.accountCode
     },
-    api: title === "新增" ? addPublish : title === "查看" ? editPublish : undefined,
+    api: title === "新增" ? addPublish : title === "编辑" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

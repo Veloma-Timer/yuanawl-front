@@ -24,7 +24,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
@@ -251,7 +251,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
+    api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

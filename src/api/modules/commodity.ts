@@ -100,5 +100,9 @@ export const getSetSystemList = () => {
 
 /** 账户编号验证 **/
 export const typeCode = (params: any) => {
-  return http.get(`${baseUrl}/monitor`, params);
+  return http.get(`${baseUrl}/monitor`, params, { noLoading: true });
+};
+//  生成回收编码
+export const generateCode = (code: string) => {
+  return http.get(`${baseUrl}/generate/code?grouping=${code}`, {}, { noLoading: true });
 };

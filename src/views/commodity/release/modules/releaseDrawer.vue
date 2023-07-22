@@ -1,11 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="660px" :show-close="false">
-    <template #header>
-      <Header :title="`${drawerProps.title}发布订单`" class="header" style="transform: translateY(7px)"></Header>
-      <el-button type="primary" @click="edit" class="edit-btn">
-        <div>编辑</div>
-      </el-button>
-    </template>
+  <el-dialog v-model="drawerVisible" :title="`${drawerProps.title}发布订单`" width="660px">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -28,6 +22,16 @@
       <el-form-item label="发布时间" prop="accountPublisherTimer">
         <el-date-picker
           v-model="drawerProps.row!.accountPublisherTimer"
+          format="YYYY-MM-DD hh:mm:ss"
+          disabled
+          value-format="YYYY-MM-DD hh:mm:ss"
+          type="datetime"
+          placeholder="请选择发布时间"
+        />
+      </el-form-item>
+      <el-form-item label="发布时间" prop="rollBackTimer">
+        <el-date-picker
+          v-model="drawerProps.row!.rollBackTimer"
           format="YYYY-MM-DD hh:mm:ss"
           disabled
           value-format="YYYY-MM-DD hh:mm:ss"
@@ -63,7 +67,7 @@
       <el-button @click="drawerVisible = false">取消</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts" name="UserDrawer">
@@ -101,9 +105,6 @@ const drawerProps = ref<DrawerProps>({
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
   drawerVisible.value = true;
-};
-const edit = () => {
-  drawerProps.value.isView = false;
 };
 // 发布人
 let transCatUploadedMap: object[] = reactive([]);

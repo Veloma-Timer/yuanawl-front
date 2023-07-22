@@ -31,7 +31,8 @@
         >
           销售
         </el-button>
-        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
@@ -54,8 +55,8 @@ import { parseTime } from "@/utils";
 import { getUserAll } from "@/api/modules/user";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
-// import { useRoute } from "vue-router";
-// const route = useRoute();
+import { useRouter } from "vue-router";
+const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -299,8 +300,13 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 // };
 const date = new Date();
 const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
-// 打开 drawer(新增、查看、编辑)
+// 打开 drawer(新增、编辑、编辑)
 const drawerRef = ref<InstanceType<typeof saleDrawer> | null>(null);
+// 创建工单
+const addOrder = (row: Partial<Commodity.Sales>) => {
+  const id = row.id;
+  router.push({ name: "工单新增", query: { id: id || "" } });
+};
 const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
   const params = {
     title,
@@ -311,9 +317,9 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
       accountCode: row.accountCode,
       saleTime: time,
       salePeopleId: userObj.userInfo.id,
-      salePlatformId: title === "查看" ? userObj.userInfo.id : null
+      salePlatformId: title === "编辑" ? userObj.userInfo.id : null
     },
-    api: title === "新增" ? addSales : title === "查看" ? editSales : undefined,
+    api: title === "新增" ? addSales : title === "编辑" ? editSales : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

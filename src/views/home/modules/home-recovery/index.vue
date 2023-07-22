@@ -31,6 +31,23 @@
         <nameRight title="数量榜" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
       </div>
     </div>
+    <div class="home-name">
+      <div class="home-name-left">
+        <nameRight
+          title="回收问题账号"
+          :salas-ranking-arr="statisticsObj?.recycleRankingByProblem"
+          :header="['工单类型', '金额', '数量']"
+        />
+      </div>
+    </div>
+    <div class="home-name">
+      <div class="home-name-left">
+        <homeChat :list-arr="statisticsObj?.recycleGameType" class-name="maintain" title="游戏类型" />
+      </div>
+      <div class="home-name-right">
+        <homeChat :list-arr="statisticsObj?.recycleService" class-name="maintain" title="区服" />
+      </div>
+    </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
   </div>
 </template>
@@ -42,6 +59,7 @@ import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
+import HomeChat from "@/views/home/modules/home-recovery/homeChat.vue";
 const recoveryRef = ref<HTMLElement>();
 const namesList: string[] = ["回收金额", "回收数量", "回收均价", "出售数量", "出售金额", "未售数量", "未售金额"];
 // 处理数据

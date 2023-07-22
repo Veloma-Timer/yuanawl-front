@@ -35,7 +35,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -339,6 +339,9 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     search: { el: "input" }
   },
+  { prop: "recycleRemark", label: "回收备注", width: 160 },
+  { prop: "recycleRemark", label: "发布备注", width: 160 },
+  { prop: "salesRemark", label: "销售备注", width: 160 },
   {
     prop: "haveSecondary",
     label: "有无二次",
@@ -433,7 +436,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row, accountType: accountType },
-    api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
+    api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);

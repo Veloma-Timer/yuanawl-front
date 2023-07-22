@@ -1,11 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="800px" :show-close="false">
-    <template #header>
-      <Header :title="`${drawerProps.title}账号`" class="header" style="transform: translateY(7px)"></Header>
-      <el-button type="primary" @click="edit" class="edit-btn">
-        <div>编辑</div>
-      </el-button>
-    </template>
+  <el-dialog v-model="drawerVisible" :title="`${drawerProps.title}账号`" width="800px">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -205,13 +199,12 @@
       <el-button @click="drawerVisible = false">取消</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts" name="UserDrawer">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
-import Header from "@/components/Header/index.vue";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
@@ -224,14 +217,12 @@ const validatePass = (rule: any, value: any, callback: any) => {
     value
   };
   if (value) {
-    typeCode(params)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-        callback(new Error("Two inputs don't match!"));
-      });
+    typeCode(params).then(res => {
+      const { data } = res;
+      if (data === "0") {
+        return callback(new Error("该编号以存在"));
+      }
+    });
   }
 };
 const rules = reactive({
@@ -298,10 +289,6 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
-const edit = () => {
-  drawerProps.value.isView = false;
-  console.log("编辑");
-};
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;

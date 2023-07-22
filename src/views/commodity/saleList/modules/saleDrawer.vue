@@ -1,11 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
-    <template #header>
-      <Header :title="`${drawerProps.title}销售订单`" class="header" style="transform: translateY(7px)"></Header>
-      <el-button type="primary" @click="edit" class="edit-btn">
-        <div>编辑</div>
-      </el-button>
-    </template>
+  <el-dialog :title="`${drawerProps.title}销售订单`" v-model="drawerVisible" width="600px">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -64,7 +58,7 @@
       <el-button @click="drawerVisible = false">取消</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts" name="saleDrawer">
@@ -85,9 +79,6 @@ const rules = reactive({
   salesCode: [{ required: true, message: "必填项不能为空" }],
   buyerTel: [{ required: true, message: "必填项不能为空" }]
 });
-const edit = () => {
-  drawerProps.value.isView = false;
-};
 interface DrawerProps {
   title: string;
   isView: boolean;

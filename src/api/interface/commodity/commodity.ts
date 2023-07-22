@@ -89,7 +89,7 @@ export namespace Commodity {
   export interface Recovery {
     accountTitle: string; // 账号标题
     branchId: number; // 所属门店ID
-    accountCode: string; // 账号编码
+    accountCode: unknown; // 账号编码
     accountType: number[]; // 账号分类
     accountNumber: string; // 账号
     accountPassword: string; // 密码
@@ -171,6 +171,7 @@ export namespace Commodity {
     // store?: SysMapEntity; // 回收店铺
     accountTel: string; // 密保手机
     accountRecyclerTime: string; // 回收时间
+    rollBackTimer: string; // 回滚时间
     // accountRecycler?: SysUserEntity; // 回收人
     accountRecyclerId: number; // 回收人ID
     // "accountPublisher"?: SysUserEntity; // 发布人

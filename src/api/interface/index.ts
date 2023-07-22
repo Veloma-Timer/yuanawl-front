@@ -385,6 +385,9 @@ export namespace HomeSet {
     salesMoney: number; // 出售金额
     unsoldAmount: number; // 未售数量
     unsoldMoney: number; // 未售金额
+    recycleService: INameAndAmountAndMonty[]; // 区服
+    recycleRankingByProblem: INameAndAmountAndMonty[]; // 区服
+    recycleGameType: INameAndAmountAndMonty[]; // 游戏类型
     recycleRatio: INameAndAmountAndMonty[]; // 账号回收占比：游戏分类 数量 金额
     recycleRanking: INameAndAmountAndMonty[]; // 回收排名：用户 数量 金额
     recycleSetComparison: INameAndAmountAndMonty[]; // 回收组数据对比：用户 金额 数量
