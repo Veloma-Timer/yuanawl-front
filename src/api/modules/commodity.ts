@@ -36,7 +36,7 @@ export const recycleUpload = (file: FormData) => {
 };
 // 账号导入
 export const summaryUpload = (file: FormData) => {
-  return http.post(`${baseUrl}/upload/recycle`, file);
+  return http.post(`${baseUrl}/upload`, file);
 };
 
 // 账号导出

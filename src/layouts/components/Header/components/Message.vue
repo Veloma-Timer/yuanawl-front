@@ -7,15 +7,6 @@
         </el-badge>
       </template>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="今日工单的通知" name="first">
-          <div class="message-list">
-            <div class="message-item">
-              <div class="message-content" v-for="item in messageTtem" :key="item.orderCode">
-                <span class="message-title">{{ item.accountTitle }}</span>
-              </div>
-            </div>
-          </div>
-        </el-tab-pane>
         <el-tab-pane label="消息(0)" name="second">
           <div class="message-empty">
             <img src="@/assets/images/notData.png" alt="notData" />
@@ -23,9 +14,12 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="代办(0)" name="third">
-          <div class="message-empty">
-            <img src="@/assets/images/notData.png" alt="notData" />
-            <div>暂无代办</div>
+          <div class="message-list">
+            <div class="message-item">
+              <div class="message-content" v-for="item in messageTtem" :key="item.orderCode">
+                <span class="message-title">{{ item.accountTitle }}</span>
+              </div>
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -76,6 +70,7 @@ workList();
     padding: 20px 0;
     border-bottom: 1px solid var(--el-border-color-light);
     width: 100%;
+
     &:last-child {
       border: none;
     }

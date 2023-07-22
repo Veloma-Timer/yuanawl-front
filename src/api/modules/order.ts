@@ -2,6 +2,7 @@ import { ResPage, ResultData, SalesOrder, Data } from "@/api/interface/index";
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 import { formatParams } from "@/utils/index";
+
 /**
  * @name 售后模块
  */
@@ -103,7 +104,7 @@ export const orderExport = (params: any) => {
   const newParams = formatParams(params);
   return http.post(`${PORT3}/base_work_order/export${newParams}`);
 };
-// 今日公单
+// 今日工单
 export const workOrder = (params: any) => {
   return http.get(`${PORT3}/base_work_order/today`, params);
 };

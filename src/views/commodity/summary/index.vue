@@ -217,7 +217,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "salesSetId",
     sortable: true,
-    label: "所在租",
+    label: "所在组",
     width: 160,
     enum: async () => {
       const {
@@ -245,7 +245,11 @@ const columns: ColumnProps<Commodity.Account>[] = [
         filterable: true
       }
     },
-    fieldNames: { label: "typeName", value: "id" }
+    fieldNames: { label: "typeName", value: "id" },
+    render: ({ row }) => {
+      console.log(row, "row");
+      return 123;
+    }
   },
   {
     prop: "salePeopleId",
