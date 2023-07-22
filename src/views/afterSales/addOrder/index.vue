@@ -370,6 +370,108 @@
               </el-col>
             </el-row>
           </template>
+          <template v-if="showDeptObj.recycle">
+            <div class="sub-title">回收部门:</div>
+            <el-row :gutter="10" style="margin-top: 24px">
+              <el-col :span="6">
+                <el-form-item label="处理客服" prop="recycleHandleCustomerServiceId" label-width="120px">
+                  <el-select
+                    disabled
+                    v-model="ruleForm.row!.recycleHandleCustomerServiceId"
+                    placeholder="请选择"
+                    class="small-input"
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理时间" prop="recycleHandleTime" label-width="120px">
+                  <el-date-picker
+                    disabled
+                    v-model="ruleForm.row!.recycleHandleTime"
+                    type="date"
+                    placeholder="请选择"
+                    style="width: 100%"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="处理结果" prop="recycleHandleResult" label-width="120px">
+                  <el-select
+                    v-model="ruleForm.row!.recycleHandleResult"
+                    placeholder="请选择"
+                    class="small-input"
+                    filterable
+                    :disabled="ruleForm.idEdit1"
+                  >
+                    <template v-for="item2 in handleTypeList" :key="item2.id">
+                      <el-option :label="item2.label" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知其他部门" prop="recycleInformDeptId" label-width="120px">
+                  <el-select
+                    v-model="ruleForm.row!.recycleInformDeptId"
+                    placeholder="请选择"
+                    class="order-input"
+                    filterable
+                    :disabled="ruleForm.idEdit1"
+                  >
+                    <template v-for="item in setTypeList" :key="item.value">
+                      <el-option :label="item.label" :value="item.value" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row :gutter="10" class="row-line">
+              <el-col :span="24" v-if="ruleForm.row!.recycleHandleResult === 7">
+                <el-form-item label="处理结果备注" prop="recycleResultRemark" label-width="120px">
+                  <el-input
+                    :disabled="ruleForm.idEdit1"
+                    v-model="ruleForm.row!.recycleResultRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="回收备注" prop="recycleRemark" label-width="120px">
+                  <el-input
+                    :disabled="ruleForm.idEdit1"
+                    v-model="ruleForm.row!.recycleRemark"
+                    placeholder="请输入"
+                    clearable
+                    class="small-input"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 6 }"
+                  ></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="附件" prop="recycleAnnex" :label-width="120">
+                  <div class="up-box">
+                    <UploadFiles
+                      v-model:file-list="ruleForm.row!.recycleAnnex"
+                      height="140px"
+                      width="140px"
+                      :disabled="ruleForm.idEdit1"
+                    ></UploadFiles>
+                    <div class="tip">可添加图片、视频、音频</div>
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </template>
           <template v-if="showDeptObj.publish">
             <div class="sub-title">发布部门:</div>
             <el-row :gutter="10" style="margin-top: 24px">
@@ -635,6 +737,8 @@ import {
   addPublishInfo,
   editfterInfo,
   editSalesInfo,
+  addRecycleInfo,
+  editRecycleInfo,
   editPublishInfo,
   getProcessingDept
 } from "@/api/modules/order";
@@ -652,6 +756,7 @@ const isView = route.query?.isView ? true : false;
 const baseApi = id ? editSalesList : addSalesList;
 const afterApi = id ? editfterInfo : addAfterInfo;
 const salesApi = id ? editSalesInfo : addSalesInfo;
+const recycleApi = id ? editRecycleInfo : addRecycleInfo;
 const publishApi = id ? editPublishInfo : addPublishInfo;
 const router = useRouter();
 
@@ -686,6 +791,18 @@ const basicRule = !id
       baiscAnnex: [{ required: true, message: "必填项不能为空" }]
     }
   : {};
+
+const recycleRule =
+  setId.value === 1 || isAdmin.value
+    ? {
+        recycleHandleCustomerServiceId: [{ required: true, message: "必填项不能为空" }],
+        recycleHandleTime: [{ required: true, message: "必填项不能为空" }],
+        recycleHandleResult: [{ required: true, message: "必填项不能为空" }],
+        recycleAnnex: [{ required: true, message: "必填项不能为空" }],
+        recycleResultRemark: [{ required: true, message: "必填项不能为空" }],
+        recycleRemark: [{ required: true, message: "必填项不能为空" }]
+      }
+    : {};
 
 const afterRule =
   setId.value === 2 || isAdmin.value
@@ -729,6 +846,7 @@ const saleRule =
 const rules = reactive({
   ...basicRule,
   ...afterRule,
+  ...recycleRule,
   ...publishRule,
   ...saleRule
 });
@@ -737,6 +855,7 @@ interface IAddOrder {
   isView: boolean; // 点击查看工单进来的, 没有编辑按钮
   basicEdit: boolean; // 基本信息只有新增能改
   idEdit0: boolean; // 销售组
+  idEdit1: boolean; // 回收组
   idEdit2: boolean; // 售后组
   idEdit3: boolean; // 发布组
   row: Partial<SalesOrder.AddWorkOrder>;
@@ -762,11 +881,14 @@ const ruleForm = ref<IAddOrder>({
   isView: isView,
   basicEdit: id ? true : false,
   idEdit0: id ? true : false,
+  idEdit1: id ? true : false,
   idEdit2: id ? true : false,
   idEdit3: id ? true : false,
   row: {
     afterCustomerServiceId: userId,
     afterHandleTime: currentDateString,
+    recycleHandleCustomerServiceId: userId,
+    recycleHandleTime: currentDateString,
     publishHandleCustomerServiceId: userId,
     publishHandleTime: currentDateString,
     saleHandleCustomerService: userId,
@@ -789,7 +911,8 @@ const getDetailInfo = async (id: any) => {
   if (data) {
     const afterInfo: any = data.detail.find(item => item.handleDept === 1);
     const saleInfo: any = data.detail.find(item => item.handleDept === 2);
-    const publistInfo: any = data.detail.find(item => item.handleDept === 3);
+    const publishInfo: any = data.detail.find(item => item.handleDept === 3);
+    const recycleInfo: any = data.detail.find(item => item.handleDept === 4);
     // 基本
     const basicObj = {
       basicOrderCode: data?.orderCode,
@@ -836,17 +959,42 @@ const getDetailInfo = async (id: any) => {
         afterHandleTime: currentDateString
       };
     }
+    // 回收
+    let recycleObj = {};
+    if (recycleInfo) {
+      recycleObj = {
+        recycleHandleCustomerServiceId: userId,
+        recycleHandleTime: currentDateString,
+        recycleHandleResult: recycleInfo?.recycleResultId,
+        recycleResultRemark: recycleInfo?.recycleResultRemark,
+        recycleRemark: recycleInfo?.recycleRemark,
+        recycleInformDeptId: recycleInfo?.recycleInformDeptId,
+        recycleAnnex: (recycleInfo?.recycleAssets || [])?.map((imgItem: any) => {
+          return {
+            path: imgItem.path,
+            url: imgItem.path,
+            id: imgItem.id,
+            type: findFileType(imgItem.path)
+          };
+        })
+      };
+    } else {
+      recycleObj = {
+        recycleHandleCustomerServiceId: userId,
+        recycleHandleTime: currentDateString
+      };
+    }
     // 发布
     let publishObj = {};
-    if (publistInfo) {
+    if (publishInfo) {
       publishObj = {
         publishHandleCustomerServiceId: userId,
         publishHandleTime: currentDateString,
-        publishHandleResult: publistInfo?.publishResultId,
-        publishResultRemark: publistInfo?.publishResultRemark,
-        publishRemark: publistInfo?.publishRemark,
-        publishInformDeptId: publistInfo?.publishInformDeptId,
-        publishAnnex: (publistInfo?.publishAssets || [])?.map((imgItem: any) => {
+        publishHandleResult: publishInfo?.publishResultId,
+        publishResultRemark: publishInfo?.publishResultRemark,
+        publishRemark: publishInfo?.publishRemark,
+        publishInformDeptId: publishInfo?.publishInformDeptId,
+        publishAnnex: (publishInfo?.publishAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
             url: imgItem.path,
@@ -892,6 +1040,7 @@ const getDetailInfo = async (id: any) => {
       ...basicObj,
       ...afterObj,
       ...publishObj,
+      ...recycleObj,
       ...saleObj
     } as unknown as SalesOrder.AddWorkOrder;
     // 账号销售数据信息默认
@@ -969,6 +1118,11 @@ const handleSubmit = () => {
         afterNewSecurityPassword,
         afterSalesRemark,
         afterAnnex,
+        recycleHandleResult,
+        recycleResultRemark,
+        recycleRemark,
+        recycleAnnex,
+        recycleInformDeptId,
         publishHandleResult,
         publishResultRemark,
         publishRemark,
@@ -1008,6 +1162,22 @@ const handleSubmit = () => {
       // 只能新增,不能修改 id为空才能调用
       const { data }: any = !id && (await baseApi!(baseData));
       // 以下只能改当前账号的
+      // 发布信息
+      (setId.value === 1 || isAdmin.value) &&
+        (await recycleApi({
+          ...idObj,
+          orderId: data?.id || id, // 工单id
+          recycleResultId: recycleHandleResult, // 发布处理结果
+          recycleResultRemark: recycleResultRemark, // 销售处理结果备注
+          recycleRemark: recycleRemark, // 发布备注
+          recycleInformDeptId: recycleInformDeptId,
+          recycleAssets: recycleAnnex?.map(item => {
+            return {
+              path: item?.response?.path || item.url || item.path,
+              id: item.id || item.uid
+            };
+          }) // 发布提交资源
+        }));
       // 售后信息
       (setId.value === 2 || isAdmin.value) &&
         (await afterApi({
@@ -1078,12 +1248,16 @@ const edit = () => {
     // 管理员能改全部
     ruleForm.value.basicEdit = false;
     ruleForm.value.idEdit0 = false;
+    ruleForm.value.idEdit1 = false;
     ruleForm.value.idEdit2 = false;
     ruleForm.value.idEdit3 = false;
   } else {
     // 普通用户自能改自己所在组
     if (setId.value === 0) {
       ruleForm.value.idEdit0 = false;
+    }
+    if (setId.value === 1) {
+      ruleForm.value.idEdit1 = false;
     }
     if (setId.value === 2) {
       ruleForm.value.idEdit2 = false;
@@ -1099,14 +1273,16 @@ const addProcess = () => {
   if (isAdmin.value) {
     showDeptObj.value = {
       afterSales: true,
+      recycle: true,
       sales: true,
       publish: true
     };
   } else {
     // 新增 按照 当前登录的人判断
     showDeptObj.value = {
-      afterSales: setId.value === 2,
       sales: setId.value === 0,
+      recycle: setId.value === 1,
+      afterSales: setId.value === 2,
       publish: setId.value === 3
     };
   }
@@ -1117,8 +1293,8 @@ const userList = ref<UserObj[]>([]);
 
 // 回显用户下拉和订单数据
 const initOrderData = async () => {
-  // 默认时效5
-  ruleForm.value.row.basicHandleTime = 5;
+  // 默认时效4
+  ruleForm.value.row.basicHandleTime = 4;
   // 不是管理员不可编辑工单星级 就默认星级4 管理员可以无限加
   if (!isAdmin.value) {
     ruleForm.value.row.basicOrderStar = 4;
@@ -1149,10 +1325,10 @@ const isShowAddProcess: Ref = ref(false);
 let showDeptObj: Ref = ref({ afterSales: true, sales: true, publish: true });
 async function getProcessingDeptFun() {
   if (id) {
-    const { afterSales, sales, publish }: any = await getProcessingDept(Number(id));
-    showDeptObj.value = { afterSales, sales, publish };
+    const { afterSales, sales, publish, recycle }: any = await getProcessingDept(Number(id));
+    showDeptObj.value = { afterSales, sales, publish, recycle };
     // 编辑 根据后台接口显示
-    if (afterSales || sales || publish) {
+    if (afterSales || sales || publish || recycle) {
       isShowAddProcess.value = true;
     }
   } else {

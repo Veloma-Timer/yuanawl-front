@@ -149,6 +149,16 @@ export const addPublishInfo = (params: any) => {
   return http.post(`${PORT3}/base_work_order/publish`, params);
 };
 
+// 新增工单发布信息
+export const addRecycleInfo = (params: any) => {
+  return http.post(`${PORT3}/base_work_order/recycle`, params);
+};
+
+// 修改工单回收信息
+export const editRecycleInfo = (params: any) => {
+  return http.put(`${PORT3}/base_work_order/recycle`, params);
+};
+
 // 修改工单发布信息
 export const editPublishInfo = (params: any) => {
   return http.put(`${PORT3}/base_work_order/publish`, params);
