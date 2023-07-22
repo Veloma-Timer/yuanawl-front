@@ -186,6 +186,14 @@ export namespace SalesOrder {
     afterSalesInformDeptId: number;
     afterSalesRemark: string; // 售后备注
     afterAnnex: any[]; // 附件
+    // 回收部门
+    recycleHandleCustomerServiceId: number; // 处理客服
+    recycleHandleTime: string; // 处理时间
+    recycleHandleResult: number; // 处理结果
+    recycleResultRemark: string; // 发布处理结果备注
+    recycleRemark: string; // 发布备注
+    recycleInformDeptId: number;
+    recycleAnnex: any[]; // 附件
     // 发布部门
     publishHandleCustomerServiceId: number; // 处理客服
     publishHandleTime: string; // 处理时间
