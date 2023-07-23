@@ -366,11 +366,19 @@ export namespace HomeSet {
     amount: number;
     money: number;
   }
+  export interface mapList {
+    id?: number;
+    label: string;
+    value: number;
+  }
   // 销售数据
   export interface ISalesStatistics {
     salesMoney: number; //   今日销售金额
     salesAmount: number; //   今日销售数量
     markupPercentage: string; //   今日销售加价率
+    sales: (ComparisonAmount & ComparisonMoney)[];
+    channelList: mapList[];
+    resChannel: (ComparisonAmount & ComparisonMoney)[];
     salesRatio: INameAndAmountAndMonty[]; //   账号销售占比：按照游戏分类，有数量和金额
     salesRanking: INameAndAmountAndMonty[]; //   平台销售额排名：姓名 销售额 销售数量
     salesSetComparison: INameAndAmountAndMonty[]; //   销售组数据对比：按照员工分类 有数量和金额
@@ -385,6 +393,8 @@ export namespace HomeSet {
     salesMoney: number; // 出售金额
     unsoldAmount: number; // 未售数量
     unsoldMoney: number; // 未售金额
+    channelList: mapList[];
+    resRecycle: (ComparisonAmount & ComparisonMoney)[];
     recycleService: INameAndAmountAndMonty[]; // 区服
     recycleRankingByProblem: INameAndAmountAndMonty[]; // 区服
     recycleGameType: INameAndAmountAndMonty[]; // 游戏类型
@@ -435,8 +445,28 @@ export namespace HomeSet {
       finishedAmount: number; // 今日已完成
       pendingList: BaseWorkOrderEntity[]; // 待处理工单列表
     }; // 待办工单
+    afterSales: ComparisonAmount[];
     workOrderTypes: INameAndAmountAndMonty[][]; // 售后工单类型：按照星级筛选 显示 工单类型 工单数量
     afterSalesSetComparison: INameAndAmountAndMonty[][]; // 售后组数据对比：按照星级筛选，显示人 和 数量
+  }
+  // 数量比较
+  export type ComparisonAmount = {
+    name: string;
+    amount: number; // 当前时间数量
+    ringAmount: number; // 环比数量
+    yoyAmount: number; // 同比数量
+  };
+  // 金额比较
+  export type ComparisonMoney = {
+    name: string;
+    money: number; // 当前时间金额
+    ringMoney: number; // 环比金额
+    yoyMoney: number; // 同比金额
+  };
+  // 首页销售组数据对比&售后组数据对比
+  export interface ISalesAndAfter {
+    sales: (ComparisonAmount & ComparisonMoney)[];
+    afterSales: ComparisonAmount[];
   }
 }
 

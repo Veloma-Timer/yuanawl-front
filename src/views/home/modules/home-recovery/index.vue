@@ -49,24 +49,36 @@
       </div>
     </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
+    <homeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="销售组渠道对比">
+      <div>
+        <el-select v-model="channelId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
+          <el-option v-for="item in statisticsObj?.channelList" :key="item.id" :label="item.label" :value="item.id" />
+        </el-select>
+      </div>
+    </homeChain>
   </div>
 </template>
 <script setup lang="ts">
 import { CaretTop } from "@element-plus/icons-vue";
-import { ref, reactive, nextTick, watch } from "vue";
+import { ref, reactive, nextTick, watch, defineEmits } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import HomeChat from "@/views/home/modules/home-recovery/homeChat.vue";
+import homeChain from "@/views/home/modules/home-chain/index.vue";
+// 2、定义发射给父组件的方法
+const emits = defineEmits(["getReuseList"]);
 const recoveryRef = ref<HTMLElement>();
+let channelId = ref();
 const namesList: string[] = ["回收金额", "回收数量", "回收均价", "出售数量", "出售金额", "未售数量", "未售金额"];
 // 处理数据
 const props = withDefaults(
   defineProps<{
     statisticsObj: HomeSet.IRecycleStatistics;
     branchName: string;
+    branchNames: string;
     title: string;
   }>(),
   {
@@ -146,6 +158,9 @@ const setNumber = () => {
 // 处理数据
 let crudListMap = reactive([]);
 setNumber();
+const setTypes = id => {
+  emits("getReuseList", id);
+};
 const setCrud = obj => {
   crudListMap = [
     obj.recycleMoney,
