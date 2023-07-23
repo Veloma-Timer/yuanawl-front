@@ -28,7 +28,7 @@
         <homeGroup :list-arr="statisticsObj?.recycleRatio" class-name="maintain" title="账号回收占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="数量榜" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
+        <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
       </div>
     </div>
     <div class="home-name">
@@ -49,7 +49,7 @@
       </div>
     </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
-    <homeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="销售组渠道对比">
+    <homeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="回收组渠道对比">
       <div>
         <el-select v-model="channelId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
           <el-option v-for="item in statisticsObj?.channelList" :key="item.id" :label="item.label" :value="item.id" />
@@ -171,6 +171,7 @@ const setCrud = obj => {
     obj.unsoldAmount,
     obj.unsoldMoney
   ];
+  channelId.value = obj?.channelList[0].id;
   setNumber();
 };
 watch(

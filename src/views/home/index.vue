@@ -2,15 +2,23 @@
   <div ref="scrollNum" class="home table-box">
     <div class="home-tab mb30 flex">
       <div v-show="userRoleId === 1">
-        <el-select class="mr-10" v-model="institution" placeholder="请选择" @change="setInstitution">
-          <el-option v-for="item in institutionList" :key="item.id" :label="item.branchName" :value="item.id" />
-        </el-select>
-        <el-select class="mr-10" v-model="cityName" placeholder="请选择门店" @change="setValue1">
-          <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id" />
-        </el-select>
-        <el-select v-model="monthName" placeholder="请选择时间端" @change="setValue">
-          <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
-        </el-select>
+        <el-form :inline="true">
+          <el-form-item label="选择分组">
+            <el-select class="mr-10" v-model="institution" placeholder="请选择" @change="setInstitution">
+              <el-option v-for="item in institutionList" :key="item.id" :label="item.branchName" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择门店">
+            <el-select class="mr-10" v-model="cityName" placeholder="请选择门店" @change="setValue1">
+              <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id" />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="选择时间端">
+            <el-select v-model="monthName" placeholder="请选择时间端" @change="setValue">
+              <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-form>
       </div>
     </div>
     <homeSale
@@ -61,7 +69,7 @@ interface Item {
   branchName: string;
   id: number | null;
 }
-const cityList = ref([{ branchName: "全部", id: null }]);
+const cityList = ref([]);
 const institution = ref(null);
 const scrollNum = ref<InstanceType<typeof scrollNum> | null>(null);
 const monthList: Item[] = [
@@ -70,13 +78,14 @@ const monthList: Item[] = [
   { branchName: "本月", id: 2 }
 ];
 const institutionList: Item[] = [
+  { branchName: "全部", id: null },
   { branchName: "销售", id: 0 },
   { branchName: "回收", id: 1 },
   { branchName: "发布", id: 2 },
   { branchName: "工单", id: 3 }
 ];
 const cityName = ref();
-const monthName = ref();
+const monthName = ref(0);
 const branchName = ref("全部");
 const branchNames = ref("今日");
 const params = ref<IStatistics>();
@@ -129,7 +138,6 @@ const salesObj = ref<HomeSet.ISalesStatistics>(); // 销售组
 const statisticsObj = ref<HomeSet.IRecycleStatistics>(); // 回收组
 const publishObj = ref<HomeSet.IPublishStatistics>(); // 发布组
 const workOrderObj = ref<HomeSet.IAfterSalesStatistics>(); // 售后
-// let behindObj = null; // 后面的数据
 const setHomeCardList = async () => {
   const {
     data: { publishPlatform = [] }
@@ -153,6 +161,11 @@ const setHomeCardList = async () => {
     ...recycle,
     resRecycle: resRecycle.data,
     channelList: grouping
+  };
+  paramsHome.value = {
+    ...paramsHome.value,
+    channelId: publishPlatform[0].value,
+    grouping: grouping[0].id
   };
   publishObj.value = publish as any;
   workOrderObj.value = {
@@ -178,7 +191,7 @@ const getReuseList = id => {
 const branchAllList = async () => {
   const { data } = await getAllBranch({});
   cityList.value = [...cityList.value, ...data];
-  // cityName.value = data[0].id;
+  cityName.value = data[0].id;
   params.value = {
     ...params.value,
     branchId: cityName.value,
@@ -186,7 +199,7 @@ const branchAllList = async () => {
   };
   paramsHome.value = {
     ...paramsHome.value,
-    branchId: cityList.value[1].id,
+    branchId: cityList.value[0].id,
     date: monthList[0].id
   };
   userRoleId.value = obj?.userRole.id;

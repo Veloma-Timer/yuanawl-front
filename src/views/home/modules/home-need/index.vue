@@ -20,7 +20,7 @@
         <el-option v-for="item in workOrderObj?.afterSalesSetComparison" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </homeNeed>
-    <Chan :list-arr="afterPublishUnitObj?.afterSales" :branch-name="branchNames" title="售后组数据对比" />
+    <Chan :list-arr="workOrderObj?.afterSales" :branch-name="branchNames" title="售后组数据对比" />
   </div>
 </template>
 <script setup lang="ts">
