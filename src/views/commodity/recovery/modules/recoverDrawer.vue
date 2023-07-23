@@ -1,11 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="600px" :show-close="false">
-    <template #header>
-      <Header :title="`${drawerProps.title}用户`" class="header" style="transform: translateY(7px)"></Header>
-      <el-button type="primary" @click="edit" class="edit-btn">
-        <div>编辑</div>
-      </el-button>
-    </template>
+  <el-dialog v-model="drawerVisible" :title="`${drawerProps.title}用户`" width="600px">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -20,7 +14,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="账号编码" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" :disabled="drawerProps.isView" placeholder="请输入账号编号" clearable />
+        <el-input v-model="drawerProps.row!.accountCode" disabled placeholder="请输入账号编号" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
         <el-select
@@ -126,7 +120,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="回收店铺" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable>
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable @change="setStoreId">
           <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -156,19 +150,18 @@
       <el-button @click="drawerVisible = false">取消</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts" name="UserDrawer">
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
-import Header from "@/components/Header/index.vue";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
 
-import { getSetSystemList } from "@/api/modules/commodity";
+import { generateCode, getSetSystemList } from "@/api/modules/commodity";
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
@@ -208,10 +201,6 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
-const edit = () => {
-  drawerProps.value.isView = false;
-  drawerProps.value.title = "编辑";
-};
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
@@ -239,6 +228,12 @@ const haveSecondaryMap = [
   { label: "无", value: "0" }
 ];
 const systemMap: Ref = ref([]);
+const setStoreId = (id: string) => {
+  generateCode(id).then(res => {
+    const { data } = res;
+    drawerProps.value.row.accountCode = data;
+  });
+};
 // 回收人
 let transCatUploadedMap: unknown = [];
 // 账号分类
@@ -249,10 +244,10 @@ let branchMap: unknown = [];
 let customerMap: Array<object> = [];
 const setAllList = async () => {
   const res = await getAllList();
-  const list = await getGroupListMap({ key: "recycleShop" });
+  const list = await getGroupListMap({ key: "grouping" });
   const reloads = await getUserAll();
   const { data } = await getAllBranch({});
-  customerMap = list.data.recycleShop;
+  customerMap = list.data.grouping;
   transCatUploadedMap = reloads.data;
   accountTypeMap = res.data;
   branchMap = data;

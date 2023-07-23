@@ -33,7 +33,7 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
+        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
       </template>
     </ProTable>
@@ -54,6 +54,7 @@ import {
   addRecycle,
   deleteSummary,
   editRecycle,
+  generateCode,
   getRecycleList,
   pointBury,
   recycleTemplate,
@@ -274,10 +275,15 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof recoverDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
+const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) => {
   let accountType: number[] | undefined = [];
-  if (title === "查看") {
+  let accountCode: unknown = "";
+  const userBranchId = obj.user.userBranchId;
+  if (title === "编辑") {
     accountType = row.accountType;
+  } else {
+    const { data } = await generateCode(userBranchId);
+    accountCode = data;
   }
   // 当前时间
   const date = new Date();
@@ -290,13 +296,15 @@ const openDrawer = (title: string, row: Partial<Commodity.Recovery> = {}) => {
       ...row,
       accountRecyclerTime: time,
       accountRecyclerId: obj.user.id,
-      storeId: obj.user.userBranchId,
+      accountCode,
+      storeId: userBranchId,
       accountType,
       branchId: obj.user.userBranchId
     },
-    api: title === "新增" ? addRecycle : title === "查看" ? editRecycle : undefined,
+    api: title === "新增" ? addRecycle : title === "编辑" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };
+  console.log(params);
   drawerRef.value?.acceptParams(params);
 };
 const onSetPhone = row => {

@@ -1,11 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="800px" :show-close="false">
-    <template #header>
-      <Header :title="`${drawerProps.title}用户`" class="header" style="transform: translateY(7px)"></Header>
-      <el-button type="primary" @click="edit" class="edit-btn">
-        <div>编辑</div>
-      </el-button>
-    </template>
+  <el-dialog v-model="drawerVisible" :title="`${drawerProps.title}用户`" width="800px">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -165,7 +159,7 @@
       <el-button @click="drawerVisible = false">取消</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts" name="UserDrawer">
