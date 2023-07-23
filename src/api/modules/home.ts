@@ -10,7 +10,7 @@ export const getHomeList = (params: any) => {
 
 export interface IStatistics {
   branchId?: number;
-  date: number;
+  date?: number;
   userId?: number;
 }
 
@@ -27,4 +27,16 @@ export const getUserProfile = (params: IStatistics) => {
 // 获取首页销售 平台销售额排名
 export const homeOrder = (params: any) => {
   return http.get(baseOrder, params, { noLoading: true });
+};
+// 获取首页销售组&售后组数据对比
+export const homeSalesAndAfter = (params: any) => {
+  return http.get<HomeSet.ISalesAndAfter>(`${baseUrl}/home/sales_and_after`, params, { noLoading: true });
+};
+// 获取销售渠道
+export const homeSalesChannel = (params: any) => {
+  return http.get<HomeSet.ISalesAndAfter>(`${baseUrl}/home/sales_channel`, params, { noLoading: true });
+};
+// 获取回收渠道
+export const homeSalesRecycle = (params: any) => {
+  return http.get<HomeSet.ISalesAndAfter>(`${baseUrl}/home/recycle`, params, { noLoading: true });
 };

@@ -27,6 +27,10 @@ const props = defineProps({
     type: String,
     default: ""
   },
+  branchName: {
+    type: String,
+    default: "今日"
+  },
   title: {
     type: String,
     default: ""
@@ -34,13 +38,22 @@ const props = defineProps({
 });
 const getFixed = (str: string) => {
   if (str) {
-    return parseFloat(str).toFixed(2);
+    return "￥" + parseFloat(str).toFixed(2);
   }
   return "--";
 };
-const groupGet = (data: number[], name: number[]) => {
+const groupGet = (
+  money: number[],
+  name: string[],
+  amount: number[],
+  ringMoney: number[],
+  yoyMoney: number[],
+  ringAmount: number[],
+  yoyAmount: number[]
+) => {
   nextTick(() => {
     let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
+    let nameValue = `${props.branchName}数量`;
     let option = {
       tooltip: {
         trigger: "axis",
@@ -50,7 +63,7 @@ const groupGet = (data: number[], name: number[]) => {
         }
       },
       legend: {
-        data: ["数量"],
+        data: ["数量", nameValue, "金额", `${props.branchName}金额`, "往年", "同期"],
         bottom: 0
       },
       grid: {
@@ -72,6 +85,9 @@ const groupGet = (data: number[], name: number[]) => {
         {
           type: "value",
           name: "",
+          min: 0,
+          max: 250,
+          interval: 50,
           axisLabel: {
             formatter: "{value}"
           }
@@ -79,6 +95,9 @@ const groupGet = (data: number[], name: number[]) => {
         {
           type: "value",
           name: "",
+          min: 0,
+          max: 25,
+          interval: 5,
           axisLabel: {
             formatter: "{value}"
           }
@@ -90,10 +109,60 @@ const groupGet = (data: number[], name: number[]) => {
           type: "bar",
           tooltip: {
             valueFormatter: function (value) {
+              return value;
+            }
+          },
+          data: ringAmount
+        },
+        {
+          name: nameValue,
+          type: "line",
+          tooltip: {
+            valueFormatter: function (value) {
+              return value;
+            }
+          },
+          data: amount
+        },
+        {
+          name: "金额",
+          type: "bar",
+          tooltip: {
+            valueFormatter: function (value) {
               return getFixed(value);
             }
           },
-          data
+          data: ringMoney
+        },
+        {
+          name: `${props.branchName}金额`,
+          type: "line",
+          tooltip: {
+            valueFormatter: function (value) {
+              return getFixed(value);
+            }
+          },
+          data: money
+        },
+        {
+          name: "往年",
+          type: "bar",
+          tooltip: {
+            valueFormatter: function (value) {
+              return getFixed(value);
+            }
+          },
+          data: yoyMoney
+        },
+        {
+          name: "同期",
+          type: "line",
+          tooltip: {
+            valueFormatter: function (value) {
+              return value;
+            }
+          },
+          data: yoyAmount
         }
       ]
     };
@@ -107,11 +176,21 @@ const groupGet = (data: number[], name: number[]) => {
 watch(
   myArrayRef,
   newValue => {
-    let data,
-      name = [];
-    data = setValues(newValue, "amount");
-    name = setValues(newValue, "name");
-    groupGet(data, name);
+    let amount,
+      name,
+      ringAmount,
+      ringMoney,
+      yoyMoney,
+      yoyAmount,
+      money = [];
+    name = setValues(newValue, "name"); // x轴
+    amount = setValues(newValue, "amount"); // 当前数量
+    money = setValues(newValue, "money"); // 当前时间金额
+    ringAmount = setValues(newValue, "ringAmount"); // 环比数量
+    ringMoney = setValues(newValue, "ringMoney"); // 环比数量
+    yoyMoney = setValues(newValue, "yoyMoney"); // 同比金额
+    yoyAmount = setValues(newValue, "yoyAmount"); // 同比金额
+    groupGet(money, name, amount, ringAmount, yoyMoney, ringMoney, yoyAmount);
   },
   { deep: true, immediate: true }
 );

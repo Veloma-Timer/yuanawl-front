@@ -32,6 +32,14 @@
       </div>
     </div>
     <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售组数据对比" />
+    <homeChain :list-arr="salesObj?.resChannel" :branch-name="branchNames" title="销售组渠道对比">
+      <div>
+        <el-select v-model="channelId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
+          <el-option v-for="item in salesObj?.channelList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </div>
+    </homeChain>
+    <homeChain :list-arr="salesObj?.sales" :branch-name="branchNames" title="销售组对比" />
     <homeGroup :list-arr="salesObj?.salesChannelStatistics" title="渠道销售订单统计" />
   </div>
 </template>
@@ -43,18 +51,23 @@ import { useEcharts } from "@/hooks/useEcharts";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
-
+import homeChain from "@/views/home/modules/home-chain/index.vue";
 const crudNumberRef = ref<HTMLElement>();
 const namesList: string[] = ["销售金额", "销售数量", "销售加价率"];
+// 2、定义发射给父组件的方法
+const emits = defineEmits(["getSalesList"]);
+
 // 处理数据
 const props = withDefaults(
   defineProps<{
     salesObj: HomeSet.ISalesStatistics;
     branchName: string;
+    branchNames: string;
     title: string;
   }>(),
   {
-    branchName: "今日"
+    branchName: "今日",
+    branchNames: "今日"
   }
 );
 const setNumber = () => {
@@ -126,8 +139,12 @@ const setNumber = () => {
     }
   });
 };
+const setTypes = id => {
+  emits("getSalesList", id);
+};
 // 处理数据
 let crudListMap = reactive([]);
+let channelId = ref();
 setNumber();
 const setCrud = obj => {
   crudListMap = [obj.salesMoney, obj.salesAmount, obj.markupPercentage];

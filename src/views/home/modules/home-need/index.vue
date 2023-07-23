@@ -20,10 +20,12 @@
         <el-option v-for="item in workOrderObj?.afterSalesSetComparison" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </homeNeed>
+    <Chan :list-arr="afterPublishUnitObj?.afterSales" :branch-name="branchNames" title="售后组数据对比" />
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import Chan from "@/views/home/modules/home-need/chan.vue";
 import homeNameList from "@/views/home/modules/home-nameList/index.vue";
 import homeNeed from "@/views/home/modules/home-group/need.vue";
 import { HomeSet } from "@/api/interface";
@@ -32,10 +34,12 @@ const props = withDefaults(
   defineProps<{
     workOrderObj: HomeSet.IAfterSalesStatistics;
     branchName: string;
+    branchNames: string;
     title: string;
   }>(),
   {
-    branchName: "今日"
+    branchName: "今日",
+    branchNames: "今日"
   }
 );
 
@@ -51,7 +55,7 @@ const setTypes = (status: string) => {
   const publishSetComparison = props.workOrderObj.workOrderTypes;
   const values = publishSetComparison.find(item => item.id === status);
   const obj = {
-    ...publishUnitTypesObj,
+    ...publishUnitTypesObj.value,
     typeList: values.data,
     typeId: values.id
   };
@@ -61,7 +65,7 @@ const setAfter = (status: string) => {
   const publishSetComparison = props.workOrderObj.afterSalesSetComparison;
   const values = publishSetComparison.find(item => item.id === status);
   const obj = {
-    ...publishUnitTypesObj,
+    ...afterPublishUnitObj.value,
     afterList: values.data,
     afterId: values.id
   };
@@ -77,7 +81,7 @@ const setCrud = obj => {
       typeId: obj.workOrderTypes[0].id
     };
   }
-  if (obj.afterSalesSetComparison > 0) {
+  if (obj.afterSalesSetComparison.length > 0) {
     afterPublishUnitObj.value = {
       ...afterPublishUnitObj.value,
       afterList: obj.afterSalesSetComparison[0].data,
