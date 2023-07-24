@@ -36,13 +36,12 @@ const props = defineProps({
     default: ""
   }
 });
-const getFixed = (str: string) => {
-  console.log(str);
-  if (str) {
-    return "￥" + parseFloat(str).toFixed(2);
-  }
-  return "--";
-};
+// const getFixed = (str: string) => {
+//   if (str) {
+//     return "￥" + parseFloat(str).toFixed(2);
+//   }
+//   return "--";
+// };
 const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmount: number[]) => {
   nextTick(() => {
     let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
@@ -56,7 +55,7 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
         }
       },
       legend: {
-        data: ["完成数量", nameValue, "往年"],
+        data: ["完成数量", nameValue, "往年同期"],
         bottom: 0
       },
       grid: {
@@ -102,7 +101,7 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           type: "line",
           tooltip: {
             valueFormatter: function (value) {
-              return getFixed(value);
+              return value;
             }
           },
           data: ringAmount
@@ -118,11 +117,11 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           data: amount
         },
         {
-          name: "往年",
+          name: "往年同期",
           type: "line",
           tooltip: {
             valueFormatter: function (value) {
-              return getFixed(value);
+              return value;
             }
           },
           data: yoyAmount
@@ -142,17 +141,11 @@ watch(
     let amount,
       name,
       ringAmount,
-      ringMoney,
-      yoyMoney,
-      yoyAmount,
-      money = [];
+      yoyAmount = [];
     name = setValues(newValue, "name"); // x轴
     amount = setValues(newValue, "amount"); // 当前数量
-    money = setValues(newValue, "money"); // 当前时间金额
     ringAmount = setValues(newValue, "ringAmount"); // 环比数量
-    ringMoney = setValues(newValue, "ringMoney"); // 环比数量
-    yoyMoney = setValues(newValue, "yoyMoney"); // 同比金额
-    yoyAmount = setValues(newValue, "yoyAmount"); // 同比金额
+    yoyAmount = setValues(newValue, "yoyAmount"); // 环比数量
     groupGet(amount, name, ringAmount, yoyAmount);
   },
   { deep: true, immediate: true }

@@ -31,6 +31,11 @@
         <nameRight title="金额榜" :salas-ranking-arr="salesObj?.salesRanking" :header="['姓名', '销售额', '销售数量']" />
       </div>
     </div>
+    <div class="home-name">
+      <div class="home-name-left">
+        <nameRight title="数量榜" :salas-ranking-arr="salesObj?.salesRankingByAmount" :header="['姓名', '销售额', '销售数量']" />
+      </div>
+    </div>
     <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售组数据对比" />
     <homeChain :list-arr="salesObj?.resChannel" :branch-name="branchNames" title="销售组渠道对比">
       <div>
@@ -147,6 +152,7 @@ let crudListMap = reactive([]);
 let channelId = ref();
 setNumber();
 const setCrud = obj => {
+  channelId.value = obj?.channelList[0].value;
   crudListMap = [obj.salesMoney, obj.salesAmount, obj.markupPercentage];
   setNumber();
 };
