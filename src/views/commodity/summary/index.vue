@@ -50,7 +50,7 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
-import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
+import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Hide, Upload, View } from "@element-plus/icons-vue";
 import { getUserAll } from "@/api/modules/user";
 import {
@@ -79,6 +79,7 @@ const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
+let typeList: unknown = ref([]);
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -120,8 +121,19 @@ const columns: ColumnProps<Commodity.Account>[] = [
       slotName: true
     },
     fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
-    render: scope => {
-      return <span>{scope.row?.accountCode}</span>;
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "1";
+      return (
+        <div class="cursor-pointer">
+          {status ? (
+            <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+              <span class="red">{row.accountCode}</span>
+            </router-link>
+          ) : (
+            <span>{row.accountCode}</span>
+          )}
+        </div>
+      );
     }
   },
   {
@@ -199,21 +211,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
       );
     }
   },
-  //  {
-  //    prop: "accountNumber",
-  //    sortable: true,
-  //    label: "游戏编号",
-  //    width: 160,
-  //    enum: getAllBaseAccount,
-  //    search: {
-  //      el: "select",
-  //      slotName: true
-  //    },
-  //    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-  //    render: scope => {
-  //      return <span>{scope.row?.accountNumber}</span>;
-  //    }
-  //  },
   {
     prop: "salesSetId",
     sortable: true,
@@ -247,8 +244,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     },
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => {
-      console.log(row, "row");
-      return 123;
+      return getTypeListName(row.accountType);
     }
   },
   {
@@ -414,9 +410,6 @@ const onExport = async () => {
   saveFile(data, "账号汇总导出");
 };
 
-// 重置用户密码
-// 切换用户状态
-// 批量添加用户
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 const batchAdd = (title: string) => {
   const params = {
@@ -468,6 +461,21 @@ const onSetPhone = row => {
       row.status = !row.status;
     });
 };
+// 游戏类型
+const getTypeList = async () => {
+  const { data } = await getAllList();
+  typeList.value = data;
+};
+getTypeList();
+const getTypeListName = (ids: []) => {
+  const idsNum = ids.map(item => Number(item));
+  const list = typeList.value;
+  const names = idsNum.map(item => {
+    const obj = list.find(items => items.id === item);
+    return obj.typeName;
+  });
+  return names.join();
+};
 </script>
 <style lang="scss">
 .circle {
@@ -477,7 +485,9 @@ const onSetPhone = row => {
   border-radius: 50%;
   margin-right: 5px;
 }
-
+.red {
+  color: var(--el-color-error);
+}
 .v-red {
   @extend .circle;
   background-color: var(--el-color-error);

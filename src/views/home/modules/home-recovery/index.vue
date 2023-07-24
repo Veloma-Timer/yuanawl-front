@@ -17,7 +17,6 @@
                   <CaretTop />
                 </el-icon>
               </div>
-              <img src="@/assets/images/data.png" alt="" class="w-28" />
             </div>
           </div>
         </div>
@@ -171,7 +170,7 @@ const setCrud = obj => {
     obj.unsoldAmount,
     obj.unsoldMoney
   ];
-  channelId.value = obj?.channelList[0].id;
+  channelId.value = obj?.channelId;
   setNumber();
 };
 watch(

@@ -151,41 +151,59 @@ const setHomeCardList = async () => {
   const { data } = await homeSalesAndAfter(paramsHome.value);
   const resChannel = await homeSalesChannel(paramsHome.value);
   const resRecycle = await homeSalesRecycle(paramsHome.value);
-  salesObj.value = {
-    ...sales,
-    sales: data.sales,
-    resChannel: resChannel.data,
-    channelList: publishPlatform
-  };
-  statisticsObj.value = {
-    ...recycle,
-    resRecycle: resRecycle.data,
-    channelList: grouping
-  };
+  if (sales) {
+    salesObj.value = {
+      ...sales,
+      sales: data.sales,
+      resChannel: resChannel.data,
+      channelList: publishPlatform,
+      channelId: publishPlatform[0].value
+    };
+  }
+  if (recycle) {
+    statisticsObj.value = {
+      ...recycle,
+      resRecycle: resRecycle.data,
+      channelList: grouping,
+      channelId: grouping[0].id
+    };
+  }
+  if (workOrder) {
+    workOrderObj.value = {
+      ...workOrder,
+      afterSales: data.afterSales
+    };
+  }
   paramsHome.value = {
     ...paramsHome.value,
     channelId: publishPlatform[0].value,
     grouping: grouping[0].id
   };
   publishObj.value = publish as any;
-  workOrderObj.value = {
-    ...workOrder,
-    afterSales: data.afterSales
-  };
 };
-const getSalesList = id => {
+const getSalesList = async id => {
   paramsHome.value = {
     ...paramsHome.value,
     channelId: id
   };
-  setHomeCardList();
+  const resChannel = await homeSalesChannel(paramsHome.value);
+  salesObj.value = {
+    ...salesObj.value,
+    resChannel: resChannel.data,
+    channelId: id
+  };
 };
-const getReuseList = id => {
+const getReuseList = async id => {
   paramsHome.value = {
     ...paramsHome.value,
     grouping: id
   };
-  setHomeCardList();
+  const resRecycle = await homeSalesRecycle(paramsHome.value);
+  statisticsObj.value = {
+    ...statisticsObj.value,
+    resRecycle: resRecycle.data,
+    channelId: id
+  };
 };
 // 获取门店
 const branchAllList = async () => {

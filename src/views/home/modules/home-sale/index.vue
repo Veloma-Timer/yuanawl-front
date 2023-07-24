@@ -17,7 +17,6 @@
                   <CaretTop />
                 </el-icon>
               </div>
-              <img src="@/assets/images/data.png" alt="" class="w-28" />
             </div>
           </div>
         </div>
@@ -78,6 +77,7 @@ const props = withDefaults(
 const setNumber = () => {
   nextTick(() => {
     let crudNumber = document.getElementsByClassName("crud-number");
+    console.log(crudListMap.length);
     for (let i = 0; i < crudListMap.length; i++) {
       const valueName = i === 0 ? "￥" : "";
       let option = {
@@ -152,8 +152,8 @@ let crudListMap = reactive([]);
 let channelId = ref();
 setNumber();
 const setCrud = obj => {
-  channelId.value = obj?.channelList[0].value;
   crudListMap = [obj.salesMoney, obj.salesAmount, obj.markupPercentage];
+  channelId.value = obj?.channelId;
   setNumber();
 };
 watch(

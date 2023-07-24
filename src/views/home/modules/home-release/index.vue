@@ -17,7 +17,6 @@
                   <CaretTop />
                 </el-icon>
               </div>
-              <img src="@/assets/images/data.png" alt="" class="w-28" />
             </div>
           </div>
         </div>

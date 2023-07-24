@@ -86,7 +86,6 @@ const groupGet = (
           type: "value",
           name: "",
           min: 0,
-          max: 250,
           interval: 50,
           axisLabel: {
             formatter: "{value}"
@@ -96,7 +95,6 @@ const groupGet = (
           type: "value",
           name: "",
           min: 0,
-          max: 25,
           interval: 5,
           axisLabel: {
             formatter: "{value}"
