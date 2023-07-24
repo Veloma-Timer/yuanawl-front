@@ -130,12 +130,18 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     fixed: "left",
     width: 160,
     render: ({ row }) => {
-      const status = row.isWorkOrder === "0";
+      const status = row.isWorkOrder === "1";
       return (
         <div class="cursor-pointer">
-          <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
-            <span class={status ? "red" : ""}>{row.accountCode}</span>
-          </router-link>
+          <div class="cursor-pointer">
+            {status ? (
+              <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+                <span class="red">{row.accountCode}</span>
+              </router-link>
+            ) : (
+              <span>{row.accountCode}</span>
+            )}
+          </div>
         </div>
       );
     }

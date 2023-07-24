@@ -116,8 +116,19 @@ const columns: ColumnProps<Commodity.Account>[] = [
       slotName: true
     },
     fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
-    render: scope => {
-      return <span>{scope.row?.accountCode}</span>;
+    render: ({ row }) => {
+      const status = row.isWorkOrder === "1";
+      return (
+        <div class="cursor-pointer">
+          {status ? (
+            <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+              <span class="red">{row.accountCode}</span>
+            </router-link>
+          ) : (
+            <span>{row.accountCode}</span>
+          )}
+        </div>
+      );
     }
   },
   {
@@ -180,21 +191,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
       );
     }
   },
-  //  {
-  //    prop: "accountNumber",
-  //    sortable: true,
-  //    label: "游戏编号",
-  //    width: 160,
-  //    enum: getAllBaseAccount,
-  //    search: {
-  //      el: "select",
-  //      slotName: true
-  //    },
-  //    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-  //    render: scope => {
-  //      return <span>{scope.row?.accountNumber}</span>;
-  //    }
-  //  },
   {
     prop: "salesSetId",
     sortable: true,
@@ -422,7 +418,9 @@ const onSetPhone = row => {
   border-radius: 50%;
   margin-right: 5px;
 }
-
+.red {
+  color: var(--el-color-error);
+}
 .v-red {
   @extend .circle;
   background-color: var(--el-color-error);
