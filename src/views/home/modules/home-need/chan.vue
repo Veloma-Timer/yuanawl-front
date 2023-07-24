@@ -78,7 +78,6 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           type: "value",
           name: "",
           min: 0,
-          max: 250,
           interval: 50,
           axisLabel: {
             formatter: "{value}"
@@ -88,7 +87,6 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           type: "value",
           name: "",
           min: 0,
-          max: 25,
           interval: 5,
           axisLabel: {
             formatter: "{value}"

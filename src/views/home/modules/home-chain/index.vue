@@ -63,7 +63,7 @@ const groupGet = (
         }
       },
       legend: {
-        data: ["数量", nameValue, "金额", `${props.branchName}金额`, "往年", "同期"],
+        data: ["数量", nameValue, "金额", `${props.branchName}金额`, "往年同期数量", "往年同期金额"],
         bottom: 0
       },
       grid: {
@@ -86,7 +86,7 @@ const groupGet = (
           type: "value",
           name: "",
           min: 0,
-          interval: 50,
+          interval: 2000,
           axisLabel: {
             formatter: "{value}"
           }
@@ -95,7 +95,7 @@ const groupGet = (
           type: "value",
           name: "",
           min: 0,
-          interval: 5,
+          interval: 20,
           axisLabel: {
             formatter: "{value}"
           }
@@ -104,7 +104,7 @@ const groupGet = (
       series: [
         {
           name: "数量",
-          type: "bar",
+          type: "line",
           tooltip: {
             valueFormatter: function (value) {
               return value;
@@ -134,7 +134,7 @@ const groupGet = (
         },
         {
           name: `${props.branchName}金额`,
-          type: "line",
+          type: "bar",
           tooltip: {
             valueFormatter: function (value) {
               return getFixed(value);
@@ -143,7 +143,17 @@ const groupGet = (
           data: money
         },
         {
-          name: "往年",
+          name: "往年同期数量",
+          type: "line",
+          tooltip: {
+            valueFormatter: function (value) {
+              return getFixed(value);
+            }
+          },
+          data: yoyAmount
+        },
+        {
+          name: "往年同期金额",
           type: "bar",
           tooltip: {
             valueFormatter: function (value) {
@@ -151,16 +161,6 @@ const groupGet = (
             }
           },
           data: yoyMoney
-        },
-        {
-          name: "同期",
-          type: "line",
-          tooltip: {
-            valueFormatter: function (value) {
-              return value;
-            }
-          },
-          data: yoyAmount
         }
       ]
     };
