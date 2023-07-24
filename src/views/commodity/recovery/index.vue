@@ -319,7 +319,7 @@ const onSetPhone = row => {
 // 数据统计引用的本页面 需要隐藏部分
 const props = withDefaults(
   defineProps<{
-    isShowTableHeadeBtn: boolean;
+    isShowTableHeadeBtn?: boolean;
   }>(),
   {
     isShowTableHeadeBtn: true
@@ -330,7 +330,6 @@ const props = withDefaults(
 .red {
   color: var(--el-color-error);
 }
-
 .green {
   color: var(--el-color-success);
 }
