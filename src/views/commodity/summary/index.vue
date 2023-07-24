@@ -468,13 +468,13 @@ const getTypeList = async () => {
 };
 getTypeList();
 const getTypeListName = (ids: []) => {
-  const idsNum = ids.map(item => Number(item));
+  const idsNum = ids?.map(item => Number(item));
   const list = typeList.value;
-  const names = idsNum.map(item => {
+  const names = idsNum?.map(item => {
     const obj = list.find(items => items.id === item);
-    return obj.typeName;
+    return obj?.typeName;
   });
-  return names.join();
+  return names?.join();
 };
 </script>
 <style lang="scss">

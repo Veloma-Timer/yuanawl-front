@@ -46,5 +46,6 @@ const buttonConfig = reactive({ autoInsertSpace: false });
 <style>
 .table-box {
   padding: 10px;
+  background-color: var(--el-bg-color-page);
 }
 </style>

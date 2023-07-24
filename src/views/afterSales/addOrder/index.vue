@@ -1421,18 +1421,23 @@ getProcessingDeptFun();
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
+  padding: 20px;
+  background-color: white;
+  border-radius: 6px;
   .hide-scroll::-webkit-scrollbar {
     width: 0;
     height: 0;
   }
 }
 .card {
+  background-color: var(--el-bg-color-page);
   padding-bottom: 0;
   padding-right: 0;
+  padding: 10px;
 }
 .rule-form {
   width: 100%;
-  padding-right: 20px;
+  // padding-right: 20px;
 }
 .foot-btn {
   z-index: 999;
@@ -1440,6 +1445,7 @@ getProcessingDeptFun();
   justify-content: flex-end;
   width: 100%;
   border-top: 1px solid #ebebeb;
+  background-color: white;
   padding: 10px 20px 10px 0;
   overflow: hidden;
   .cancel {
