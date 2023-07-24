@@ -69,6 +69,6 @@ const openDrawer = (title: string, row: Partial<Message.Template> = {}) => {
 </script>
 <style scoped lang="scss">
 .table-box {
-  padding: 20px;
+  padding: 10px;
 }
 </style>

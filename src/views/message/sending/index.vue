@@ -63,7 +63,7 @@ const onSubmit = () => {
 </script>
 <style scoped lang="scss">
 .table-box {
-  padding: 20px;
+  padding: 10px;
   .demo-ruleForm {
     width: 40%;
   }

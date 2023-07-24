@@ -42,3 +42,9 @@ const assemblySize = computed(() => globalStore.assemblySize);
 // element button config
 const buttonConfig = reactive({ autoInsertSpace: false });
 </script>
+
+<style>
+.table-box {
+  padding: 10px;
+}
+</style>

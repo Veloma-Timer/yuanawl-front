@@ -45,6 +45,6 @@ const getTableList = (params: any) => {
 </script>
 <style scoped lang="scss">
 .table-box {
-  padding: 20px;
+  padding: 10px;
 }
 </style>
