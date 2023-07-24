@@ -3,18 +3,18 @@
     <div class="home-tab mb30 flex">
       <div v-show="userRoleId === 1">
         <el-form :inline="true">
-          <el-form-item label="选择分组">
-            <el-select class="mr-10" v-model="institution" placeholder="请选择" @change="setInstitution">
+          <el-form-item label="部门">
+            <el-select class="mr-10" v-model="institution" placeholder="请选择部门" @change="setInstitution">
               <el-option v-for="item in institutionList" :key="item.id" :label="item.branchName" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="选择门店">
+          <el-form-item label="门店">
             <el-select class="mr-10" v-model="cityName" placeholder="请选择门店" @change="setValue1">
               <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id" />
             </el-select>
           </el-form-item>
-          <el-form-item label="选择时间端">
-            <el-select v-model="monthName" placeholder="请选择时间端" @change="setValue">
+          <el-form-item label="时间段">
+            <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
               <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
             </el-select>
           </el-form-item>
