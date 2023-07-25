@@ -276,7 +276,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     render: scope => {
-      return scope.row?.noSaleResidenceTime + '天';
+      return scope.row?.noSaleResidenceTime + "天";
     }
   },
   {

@@ -178,9 +178,14 @@ const columns: ColumnProps<Commodity.Account>[] = [
   { prop: "accountPassword", label: "密码", width: 160 },
   { prop: "accountTel", label: "手机号", width: 160 },
   { prop: "accountRemark", label: "备注", width: 160 },
-  { prop: "noSaleResidenceTime", label: "滞留时间", width: 160, render: ({ row }) => {
-    return row?.noSaleResidenceTime + '天';
-  } },
+  {
+    prop: "noSaleResidenceTime",
+    label: "滞留时间",
+    width: 160,
+    render: ({ row }) => {
+      return row?.noSaleResidenceTime + "天";
+    }
+  },
   {
     prop: "haveSecondary",
     label: "有无二次",

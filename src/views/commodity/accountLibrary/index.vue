@@ -239,8 +239,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "滞留时间",
     sortable: true,
     width: 160,
-    render: scope => {
-      return scope.row?.noSaleResidenceTime + '天';
+    render: ({ row }) => {
+      return row?.noSaleResidenceTime + "天";
     }
   },
   {
