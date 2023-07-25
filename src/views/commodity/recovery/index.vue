@@ -13,8 +13,8 @@
         <div v-if="props?.isShowTableHeadeBtn">
           <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增回收列表</el-button>
           <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
-          <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-          <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+          <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
+          <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
         </div>
       </template>
       <template #accountRecyclerPrice="scope">
@@ -49,7 +49,7 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import recoverDrawer from "@/views/commodity/recovery/modules/recoverDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Download, Hide, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, Download, Hide, Upload, View, Document } from "@element-plus/icons-vue";
 import {
   addRecycle,
   deleteSummary,
@@ -154,20 +154,20 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" }
   },
-  {
-    prop: "accountNumber",
-    label: "游戏编号",
-    width: 160,
-    enum: getAllBaseAccount,
-    search: {
-      el: "select",
-      slotName: true
-    },
-    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-    render: scope => {
-      return <span>{scope.row?.accountNumber}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "游戏编号",
+  //   width: 160,
+  //   enum: getAllBaseAccount,
+  //   search: {
+  //     el: "select",
+  //     slotName: true
+  //   },
+  //   fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
+  //   render: scope => {
+  //     return <span>{scope.row?.accountNumber}</span>;
+  //   }
+  // },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -177,15 +177,15 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => row.accountTypeNames
   },
-  {
-    prop: "accountNumber",
-    label: "账号",
-    width: 160,
-    search: { el: "input" },
-    render: scope => {
-      return <span>{scope.row?.accountNumber}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "账号",
+  //   width: 160,
+  //   search: { el: "input" },
+  //   render: scope => {
+  //     return <span>{scope.row?.accountNumber}</span>;
+  //   }
+  // },
   { prop: "accountPassword", label: "密码", width: 160 },
   {
     prop: "accountTel",

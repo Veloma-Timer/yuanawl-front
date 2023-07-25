@@ -80,7 +80,7 @@ const columns: ColumnProps<Commodity.accountClass>[] = [
   },
   { prop: "typeName", label: "分类名称", search: { el: "input" } },
   // { prop: "email", label: "排序" },
-  { prop: "operation", label: "操作", width: 200 }
+  { prop: "operation", label: "操作", width: 200, fixed: "right" }
 ];
 
 // 删除用户信息

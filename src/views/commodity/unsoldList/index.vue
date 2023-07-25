@@ -10,8 +10,8 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" v-if="BUTTONS.export" :icon="Download" plain @click="batchDelete(scope.selectedListIds)"
-          >导出</el-button
+        <el-button type="primary" v-if="BUTTONS.export" :icon="Document" plain @click="batchDelete(scope.selectedListIds)"
+          >导出Excel</el-button
         >
       </template>
       <!-- Expand -->
@@ -37,7 +37,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Delete, Download, View } from "@element-plus/icons-vue";
+import { Document, Download, View } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
@@ -50,7 +50,7 @@ const { BUTTONS } = useAuthButtons();
 const proTable = ref<ProTableInstance>();
 
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
-const initParam = reactive({ accountStatus: 0 });
+const initParam = reactive({ isSales: "0" });
 
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
@@ -86,7 +86,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "账号编码",
     width: 160,
     enum: getAllBaseAccount,
-    fieldNames: { label: "accountCode", value: "id", name: "accountNumber" },
+    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -125,27 +125,28 @@ const columns: ColumnProps<Commodity.Account>[] = [
       );
     }
   },
-  {
-    prop: "accountNumber",
-    label: "游戏编号",
-    width: 160,
-    enum: getAllBaseAccount,
-    search: {
-      el: "select",
-      slotName: true
-    },
-    fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-    render: scope => {
-      return <span>{scope.row?.accountNumber}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "游戏编号",
+  //   width: 160,
+  //   enum: getAllBaseAccount,
+  //   search: {
+  //     el: "select",
+  //     slotName: true
+  //   },
+  //   fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
+  //   render: scope => {
+  //     return <span>{scope.row?.accountNumber}</span>;
+  //   }
+  // },
   {
     prop: "accountType",
     label: "游戏分类",
     width: 160,
     enum: getAllList,
     search: { el: "select" },
-    fieldNames: { label: "typeName", value: "id" }
+    fieldNames: { label: "typeName", value: "id" },
+    render: ({ row }) => row.accountTypeNames
   },
   {
     prop: "salePrice",
@@ -174,7 +175,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       return scope.row.branch.branchName;
     }
   },
-  { prop: "accountNumber", label: "账号", width: 160 },
+  // { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
   { prop: "accountTel", label: "手机号", width: 160 },
   { prop: "accountRemark", label: "备注", width: 160 },

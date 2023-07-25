@@ -9,7 +9,7 @@
               <el-radio-button :label="item.title" />
             </template>
           </el-radio-group>
-          <el-button type="primary" @click="exportData">导出</el-button>
+          <el-button type="primary" :icon="Document" @click="exportData">导出Excel</el-button>
         </div>
       </template>
       <!-- 表格操作 -->
@@ -30,7 +30,7 @@ import { getSalesList, getSalesListToday, orderExport } from "@/api/modules/orde
 import { CHECK_RESULT, ORDER_STATUS } from "@/public/constant";
 import dayjs from "dayjs";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { View } from "@element-plus/icons-vue";
+import { View, Document } from "@element-plus/icons-vue";
 import { saveFile } from "@/utils/file";
 import { useRouter } from "vue-router";
 const proTable = ref<ProTableInstance>();
@@ -67,21 +67,21 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     render: scope => {
       return (
         <el-button type="primary" link>
-          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.account?.accountCode || "" } }}>
-            {scope.row?.account?.accountCode || "--"}
+          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.accountCode || "" } }}>
+            {scope.row?.accountCode || "--"}
           </router-link>
         </el-button>
       );
     }
   },
-  {
-    prop: "accountNumber",
-    label: "账号",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row?.account?.accountNumber || "--"}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "账号",
+  //   width: 180,
+  //   render: scope => {
+  //     return <span>{scope.row?.account?.accountNumber || "--"}</span>;
+  //   }
+  // },
   {
     prop: "accountPrice",
     label: "实付金额",
@@ -90,22 +90,22 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       return <span>{scope.row.accountPrice || "--"}</span>;
     }
   },
-  {
-    prop: "newHandle",
-    label: "最新处理客服姓名",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.newHandle || "--"}</span>;
-    }
-  },
-  {
-    prop: "newHandleResult",
-    label: "最新处理结果",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row.newHandleResult || "--"}</span>;
-    }
-  },
+  // {
+  //   prop: "newHandle",
+  //   label: "最新处理客服姓名",
+  //   width: 180,
+  //   render: scope => {
+  //     return <span>{scope.row.newHandle || "--"}</span>;
+  //   }
+  // },
+  // {
+  //   prop: "newHandleResult",
+  //   label: "最新处理结果",
+  //   width: 180,
+  //   render: scope => {
+  //     return <span>{scope.row.newHandleResult || "--"}</span>;
+  //   }
+  // },
   {
     prop: "submitOrderTime",
     label: "提交工单时间",

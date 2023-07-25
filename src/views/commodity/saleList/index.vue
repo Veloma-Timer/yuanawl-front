@@ -11,8 +11,8 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载销售模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
       </template>
       <!-- Expand -->
       <template #salePrice="scope">
@@ -47,7 +47,7 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import ProTable from "@/components/ProTable/index.vue";
 import saleDrawer from "@/views/commodity/saleList/modules/saleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icons-vue";
 import { addSales, getSalesList, editSales, summaryExport, salesTemplate, salesUpload } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
@@ -155,12 +155,12 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   },
   { prop: "campId", label: "回收金额", width: 160, search: { el: "input" } },
   { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
-  {
-    prop: "accountNumber",
-    sortable: true,
-    label: "账号",
-    width: 160
-  },
+  // {
+  //   prop: "accountNumber",
+  //   sortable: true,
+  //   label: "账号",
+  //   width: 160
+  // },
   {
     prop: "accountPassword",
     sortable: true,

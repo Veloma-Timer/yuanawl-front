@@ -5,7 +5,7 @@
       <template #tableHeader>
         <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
         <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
-        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
+        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入Excel</el-button>
         <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
       <!-- 表格操作 -->
@@ -75,14 +75,14 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       );
     }
   },
-  {
-    prop: "accountNumber",
-    label: "账号",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row?.account?.accountNumber || "--"}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "账号",
+  //   width: 180,
+  //   render: scope => {
+  //     return <span>{scope.row?.account?.accountNumber || "--"}</span>;
+  //   }
+  // },
   {
     prop: "accountPrice",
     label: "实付金额",

@@ -5,7 +5,7 @@
       <template #tableHeader>
         <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
         <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
-        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
+        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入Excel</el-button>
         <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
       </template>
       <!-- 表格操作 -->
@@ -34,7 +34,7 @@ import { INSURE_STATUS, CHECK_RESULT } from "@/public/constant"; // CHECK_RESULT
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import { CirclePlus, Delete, EditPen, Edit, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Edit, Download, Upload, View, Document } from "@element-plus/icons-vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
@@ -80,7 +80,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     render: scope => {
       return (
         <el-button type="primary" link>
-          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.accountId || "" } }}>
+          <router-link to={{ name: "账号汇总", query: { accountCode: scope.row?.accountCode || "" } }}>
             {scope.row?.account?.accountCode || "--"}
           </router-link>
         </el-button>
@@ -100,15 +100,15 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     fieldNames: { label: "label", value: "value" },
     width: 180
   },
-  {
-    prop: "accountNumber",
-    label: "账号",
-    search: { el: "input" },
-    width: 180,
-    render: scope => {
-      return <span>{scope.row?.account?.accountNumber || "-"}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "账号",
+  //   search: { el: "input" },
+  //   width: 180,
+  //   render: scope => {
+  //     return <span>{scope.row?.account?.accountNumber || "-"}</span>;
+  //   }
+  // },
   {
     prop: "reportPersonId",
     label: "上报人姓名",

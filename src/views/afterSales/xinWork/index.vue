@@ -5,8 +5,8 @@
       <template #tableHeader>
         <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
         <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
-        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入模板</el-button>
-        <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button>
+        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入Excel</el-button>
+        <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Document" plain>导出Excel</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
@@ -30,7 +30,7 @@ import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } 
 import { CHECK_RESULT, ORDER_STATUS, INSURE_STATUS } from "@/public/constant";
 import { useHandleData } from "@/hooks/useHandleData";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { CirclePlus, Delete, EditPen, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Download, Upload, View, Document } from "@element-plus/icons-vue";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import { saveFile } from "@/utils/file";
@@ -75,14 +75,14 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       );
     }
   },
-  {
-    prop: "accountNumber",
-    label: "账号",
-    width: 180,
-    render: scope => {
-      return <span>{scope.row?.account?.accountNumber || "--"}</span>;
-    }
-  },
+  // {
+  //   prop: "accountNumber",
+  //   label: "账号",
+  //   width: 180,
+  //   render: scope => {
+  //     return <span>{scope.row?.account?.accountNumber || "--"}</span>;
+  //   }
+  // },
   {
     prop: "accountPrice",
     label: "实付金额",

@@ -40,7 +40,13 @@
         />
       </el-form-item>
       <el-form-item label="商品首次定价">
-        <el-input-number v-model="drawerProps.row!.publishPrice" placeholder="请输入商品首次定价" clearable :controls="false" />
+        <el-input-number
+          v-model="drawerProps.row!.publishPrice"
+          :min="0"
+          placeholder="请输入商品首次定价"
+          clearable
+          :controls="false"
+        />
       </el-form-item>
       <el-form-item label="发布平台" prop="publishPlatform">
         <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple>

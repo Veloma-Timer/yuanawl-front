@@ -11,9 +11,9 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增手机号码库</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载模板</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
         <el-button type="primary" v-if="BUTTONS.import" :icon="Upload" plain @click="batchAdd('导入')">导入</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -38,7 +38,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/phoneLibrary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Delete, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Upload, View, Document, Download } from "@element-plus/icons-vue";
 import {
   addPhone,
   deletePhone,
@@ -121,7 +121,7 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
     label: "是否绑定元神",
     enum: [
       { label: "是", value: "1" },
-      { label: "不是", value: "0" }
+      { label: "否", value: "0" }
     ],
     search: { el: "select" }
   },
@@ -130,7 +130,7 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
     label: "是否绑定邮箱",
     enum: [
       { label: "是", value: "1" },
-      { label: "不是", value: "0" }
+      { label: "否", value: "0" }
     ],
     search: { el: "select" }
   },
@@ -139,11 +139,11 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
     label: "是否绑定微信",
     enum: [
       { label: "是", value: "1" },
-      { label: "不是", value: "0" }
+      { label: "否", value: "0" }
     ],
     search: { el: "select" }
   },
-  { prop: "operation", label: "操作", width: 200 }
+  { prop: "operation", label: "操作", width: 200, fixed: "right" }
 ];
 
 // 删除用户信息

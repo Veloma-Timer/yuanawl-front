@@ -21,8 +21,8 @@
       <!-- 表格操作 -->
       <template #tableHeader>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Download" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Upload" plain @click="onExport">导出</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
       </template>
       <template #operation="scope">
         <el-button
@@ -49,7 +49,7 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import ProTable from "@/components/ProTable/index.vue";
 import releaseDrawer from "@/views/commodity/release/modules/releaseDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icons-vue";
 import { addPublish, editPublish, getPublishList, publishTemplate, publishUpload, summaryExport } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
@@ -125,12 +125,12 @@ const columns: ColumnProps<Commodity.Release>[] = [
       );
     }
   },
-  {
-    prop: "accountNumber",
-    sortable: true,
-    label: "账号",
-    width: 160
-  },
+  // {
+  //   prop: "accountNumber",
+  //   sortable: true,
+  //   label: "账号",
+  //   width: 160
+  // },
   {
     prop: "accountPassword",
     sortable: true,
@@ -196,6 +196,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     prop: "isPublish",
     label: "发布状态",
     search: { el: "select" },
+    minWidth: 150,
     enum: [
       { label: "未发布", value: "0" },
       { label: "已发布", value: "1" }
@@ -232,14 +233,16 @@ const columns: ColumnProps<Commodity.Release>[] = [
   {
     prop: "accountPublisherTimer",
     label: "发布时间",
+    minWidth: 150,
     render: ({ row }) => {
       return parseTime(row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
-  { prop: "publishPrice", label: "商品首次定价", search: { el: "input" } },
+  { prop: "publishPrice", label: "商品首次定价", minWidth: 150, search: { el: "input" } },
   {
     prop: "publishPlatform",
     label: "发布渠道",
+    minWidth: 150,
     enum: async () => {
       const {
         data: { publishPlatform = [] }

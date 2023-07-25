@@ -11,9 +11,9 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" v-if="BUTTONS.add" :icon="CirclePlus" @click="openDrawer('新增')">新增用户</el-button>
-        <el-button type="primary" :icon="Upload" plain @click="batchAdd('下载')">下载用户模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入模板</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Download" plain @click="onExport">导出</el-button>
+        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载用户模板</el-button>
+        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
+        <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
       </template>
       <template #userAccount="scope">
         <div class="cursor-pointer" @click="setRouter(scope.row)">{{ scope.row?.userAccount }}</div>
@@ -37,7 +37,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Download, Upload, View } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icons-vue";
 import { editUser, addUser, getUserListMap, getUserTemptable, getUserUpload, getUserExport } from "@/api/modules/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
@@ -102,7 +102,7 @@ const columns: ColumnProps<User.ResUserList>[] = [
   { prop: "userName", label: "姓名" },
   { prop: "userRoleId", label: "角色" },
   // { prop: "email", label: "状态" },
-  { prop: "operation", label: "操作", width: 200 }
+  { prop: "operation", label: "操作", width: 200, fixed: "right" }
 ];
 
 // 删除用户信息
