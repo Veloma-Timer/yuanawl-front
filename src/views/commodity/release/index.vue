@@ -20,9 +20,11 @@
       <!-- createTime -->
       <!-- 表格操作 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
-        <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
+        <div v-if="props?.isShowTableHeadeBtn">
+          <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
+          <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
+          <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
+        </div>
       </template>
       <template #operation="scope">
         <el-button
@@ -337,6 +339,16 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   };
   drawerRef.value?.acceptParams(params);
 };
+
+// 数据统计引用的本页面 需要隐藏部分
+const props = withDefaults(
+  defineProps<{
+    isShowTableHeadeBtn?: boolean;
+  }>(),
+  {
+    isShowTableHeadeBtn: true
+  }
+);
 </script>
 <style lang="scss">
 .circle {

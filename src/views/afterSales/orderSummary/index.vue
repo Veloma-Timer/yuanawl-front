@@ -34,7 +34,7 @@ import { INSURE_STATUS, CHECK_RESULT } from "@/public/constant"; // CHECK_RESULT
 import { useHandleData } from "@/hooks/useHandleData";
 import dayjs from "dayjs";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import { CirclePlus, Delete, EditPen, Edit, Download, Upload, View, Document } from "@element-plus/icons-vue";
+import { CirclePlus, Delete, EditPen, Edit, Download, Upload, View } from "@element-plus/icons-vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRoute, useRouter } from "vue-router";
