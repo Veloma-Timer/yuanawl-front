@@ -164,6 +164,7 @@ watch(() => props.initParam, getTableList, { deep: true });
 // 接收 columns 并设置为响应式
 const currentColoumIndex = proTableStore.list.findIndex((item: any) => item.key === authStore.routeName);
 let cachecColumns = [];
+// 当前路由key已存在localStorage
 if (currentColoumIndex > -1) {
   // 无操作项的普通列
   let fileteColumns = props.columns.filter((item: any) => {
@@ -177,11 +178,20 @@ if (currentColoumIndex > -1) {
   // 合并列设置的isShow和sortable字段
   cachecColumns = fileteColumns.map((item: any, index: number) => {
     let obj = proTableStore.list[currentColoumIndex].value[index] || {};
-
-    return { ...item, isShow: item.isShow ?? obj.isShow, sortable: obj.sortable };
+    return { ...item, isShow: obj.isShow, sortable: obj.sortable };
   });
-  // 合并上面两个不同类型的列
-  cachecColumns = operationColumns.concat(cachecColumns);
+  // 合并上面两个不同类型的列(注意要排序,不然固定列和操作列是乱的)
+  cachecColumns = cachecColumns.concat(operationColumns);
+  let index = cachecColumns.findIndex((item: any) => item.type === "selection");
+  let last = cachecColumns.findIndex((item: any) => item.prop === "operation");
+  if (index > -1) {
+    let firstObj = cachecColumns.splice(index, 1)[0];
+    cachecColumns.unshift(firstObj);
+  }
+  if (last > -1) {
+    let lastObj = cachecColumns.splice(last, 1)[0];
+    cachecColumns.push(lastObj);
+  }
 } else {
   // eslint-disable-next-line vue/no-setup-props-destructure
   cachecColumns = props.columns;
@@ -237,9 +247,14 @@ searchColumns.sort((a, b) => a.search!.order! - b.search!.order!);
 const colRef = ref();
 const colSetting = tableColumns.value!.filter(
   // (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
-  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
+  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation"
 );
-proTableStore.setProTableState(authStore.routeName, colSetting as ProTableColoum[]);
+
+// 等合并列设置再执行
+setTimeout(() => {
+  proTableStore.setProTableState(authStore.routeName, colSetting as ProTableColoum[]);
+}, 500);
+
 const openColSetting = () => colRef.value.openColSetting();
 
 // 🙅‍♀️ 不需要打印可以把以下方法删除，打印功能目前存在很多 bug

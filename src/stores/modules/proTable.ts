@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
 import { ProTableState, ProTableColoum } from "@/stores/interface";
-import piniaPersistConfig from "@/config/piniaPersist";
 
 export const userProTableStore = defineStore({
-  id: "pro-table",
+  id: "new-pro-table",
   state: (): ProTableState => ({
     list: []
   }),
@@ -26,5 +25,8 @@ export const userProTableStore = defineStore({
       }
     }
   },
-  persist: piniaPersistConfig("pro-table")
+  persist: {
+    key: "new-pro-table", //设置存储的key
+    storage: localStorage //表示存储在localStorage
+  }
 });
