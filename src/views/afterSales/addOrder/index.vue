@@ -753,11 +753,6 @@ import dayjs from "dayjs";
 const route = useRoute();
 const id = route.query?.id;
 const isView = route.query?.isView ? true : false;
-const baseApi = id ? editSalesList : addSalesList;
-const afterApi = id ? editfterInfo : addAfterInfo;
-const salesApi = id ? editSalesInfo : addSalesInfo;
-const recycleApi = id ? editRecycleInfo : addRecycleInfo;
-const publishApi = id ? editPublishInfo : addPublishInfo;
 const router = useRouter();
 
 // [
@@ -1162,6 +1157,11 @@ const handleSubmit = () => {
           };
         })
       };
+      const baseApi = id ? editSalesList : addSalesList;
+      const afterApi = afterInfo?.id ? editfterInfo : addAfterInfo;
+      const salesApi = saleInfo?.id ? editSalesInfo : addSalesInfo;
+      const recycleApi = recycleInfo?.id ? editRecycleInfo : addRecycleInfo;
+      const publishApi = publishInfo?.id ? editPublishInfo : addPublishInfo;
       // 基本信息
       // 只能新增,不能修改 id为空才能调用
       const { data }: any = !id && (await baseApi!(baseData));
