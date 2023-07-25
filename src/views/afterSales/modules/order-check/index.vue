@@ -81,7 +81,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 };
 
 const cancel = () => {
-  Object.keys(form).forEach(key => {
+  Object.keys(form)?.forEach(key => {
     form[key as keyof typeof form] = "";
   });
   resetForm(ruleFormRef.value);

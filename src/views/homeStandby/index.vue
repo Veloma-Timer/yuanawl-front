@@ -1,7 +1,7 @@
 <template>
   <div class="home table-box">
-    <div class="home-tab mb30 flex">
-      <div class="tab-list flex ml34">
+    <div class="home-tab flex ml-5">
+      <div class="tab-list flex">
         <el-form :inline="true">
           <el-form-item label="时间段">
             <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
@@ -11,7 +11,7 @@
         </el-form>
       </div>
     </div>
-    <div class="mb-10 title-box" v-if="userInfoObj">
+    <div class="mb-2 mt-3 title-box" v-if="userInfoObj">
       <div class="mb-3 title relative">基本信息</div>
       <div class="flex">
         <div class="w-1/3">

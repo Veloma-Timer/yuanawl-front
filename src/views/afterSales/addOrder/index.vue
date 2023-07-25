@@ -46,7 +46,7 @@
                 @change="onChangeAccount"
               >
                 <template v-for="item in accountList" :key="item.id">
-                  <el-option :label="item.accountNumber" :value="item.id">
+                  <el-option :label="item.accountCode" :value="item.id">
                     <span style="float: left">{{ item.accountCode }}</span>
                     <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{
                       item.accountNumber

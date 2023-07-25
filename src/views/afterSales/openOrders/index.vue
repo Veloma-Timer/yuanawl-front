@@ -50,7 +50,6 @@ import { useRoute, useRouter } from "vue-router";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
-const route = useRoute();
 const router = useRouter();
 
 const getTableList = async (params: any) => await getSalesListUnfinished(params);
