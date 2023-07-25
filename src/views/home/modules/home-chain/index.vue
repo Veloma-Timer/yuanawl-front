@@ -63,7 +63,7 @@ const groupGet = (
         }
       },
       legend: {
-        data: ["数量", nameValue, "金额", `${props.branchName}金额`, "往年同期数量", "往年同期金额"],
+        data: ["数量", nameValue, "往年同期数量", "金额", `${props.branchName}金额`, "往年同期金额"],
         bottom: 0
       },
       grid: {
@@ -123,6 +123,16 @@ const groupGet = (
           data: amount
         },
         {
+          name: "往年同期数量",
+          type: "line",
+          tooltip: {
+            valueFormatter: function (value) {
+              return value;
+            }
+          },
+          data: yoyAmount
+        },
+        {
           name: "金额",
           type: "bar",
           tooltip: {
@@ -141,16 +151,6 @@ const groupGet = (
             }
           },
           data: money
-        },
-        {
-          name: "往年同期数量",
-          type: "line",
-          tooltip: {
-            valueFormatter: function (value) {
-              return getFixed(value);
-            }
-          },
-          data: yoyAmount
         },
         {
           name: "往年同期金额",

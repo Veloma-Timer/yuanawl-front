@@ -464,6 +464,7 @@ onMounted(() => {
 const onSetPhone = row => {
   const params = {
     accountId: row.id,
+    accountCode: row.accountCode,
     tel: row.accountTel
   };
   pointBury(params)

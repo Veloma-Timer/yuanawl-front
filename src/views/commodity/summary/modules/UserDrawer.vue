@@ -210,6 +210,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
 import { typeCode } from "@/api/modules/commodity";
 import { recycleShop } from "@/api/modules/dictionary";
+import { checkPhoneNumber } from "@/utils/eleValidate";
 
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
@@ -242,7 +243,10 @@ const rules = reactive({
   salePrice: [{ required: true, message: "必填项不能为空" }],
   //  accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
-  accountTel: [{ required: true, message: "必填项不能为空" }],
+  accountTel: [
+    { required: true, message: "必填项不能为空" },
+    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+  ],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
   campId: [{ required: true, message: "必填项不能为空" }],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],

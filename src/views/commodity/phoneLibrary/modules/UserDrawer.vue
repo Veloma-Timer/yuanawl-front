@@ -38,10 +38,14 @@
 import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
+import { checkPhoneNumber } from "@/utils/eleValidate";
 
 const rules = reactive({
   openAccountName: [{ required: true, message: "请输入开户人姓名" }],
-  openAccountNumber: [{ required: true, message: "请输入开户号码" }],
+  openAccountNumber: [
+    { required: true, message: "请输入开户号码" },
+    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+  ],
   VNO: [{ required: true, message: "请选择运营商" }]
 });
 

@@ -11,18 +11,34 @@
         </el-form>
       </div>
     </div>
-    <div class="mb-10" v-if="userInfoObj">
-      <h4 class="mb-3">员工基本信息</h4>
+    <div class="mb-10 title-box" v-if="userInfoObj">
+      <div class="mb-3 title relative">基本信息</div>
       <div class="flex">
         <div class="w-1/3">
-          <p class="mb-3">所属门店: {{ userInfoObj.branch }}</p>
-          <p class="mb-3">所属角色: {{ userInfoObj.role }}</p>
-          <p>所在组: {{ userInfoObj.role }}</p>
+          <p class="mb-3">
+            <span class="title-label mr-3">员工姓名:</span>
+            <span class="title-name">{{ userInfoObj.name }}</span>
+          </p>
+          <p class="mb-3">
+            <span class="title-label mr-3">所属门店:</span>
+            <span class="title-name">{{ userInfoObj.branch }}</span>
+          </p>
         </div>
         <div class="w-1/3">
-          <p class="mb-3">员工姓名: {{ userInfoObj.name }}</p>
-          <p class="mb-3">员工工号: {{ userInfoObj.code }}</p>
-          <p>手机号: {{ userInfoObj.name }}</p>
+          <p class="mb-3">
+            <span class="title-label mr-3">员工工号:</span>
+            <span class="title-name">{{ userInfoObj.code }}</span>
+          </p>
+          <p class="mb-3">
+            <span class="title-label mr-3">所属组:</span>
+            <span class="title-name">{{ userInfoObj.role }}</span>
+          </p>
+        </div>
+        <div class="w-1/3">
+          <p>
+            <span class="title-label mr-3">手机号:</span>
+            <span class="title-name">{{ userInfoObj.tel }}</span>
+          </p>
         </div>
       </div>
     </div>
@@ -52,7 +68,6 @@
     />
   </div>
 </template>
-
 <script setup lang="ts" name="home">
 import { ref, onMounted } from "vue";
 import homeSale from "@/views/home/modules/home-sale/index.vue";
@@ -94,7 +109,6 @@ const setValue = function (id: number) {
   branchNames.value = value.branchName;
   params.value = {
     ...params.value,
-    userId: id,
     date: monthName.value
   };
   setHomeCardList();
@@ -196,5 +210,35 @@ onMounted(() => {
 @import "@/views/home/index";
 .group {
   margin-bottom: 0;
+}
+.title-box {
+  width: 100%;
+  padding: 20px;
+  background: #ffffff;
+  border: 2px solid #f0f0f0;
+  border-radius: 25px;
+  .title {
+    font-size: 16px;
+    color: #303133;
+    font-weight: bold;
+    padding: 0 16px;
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background-color: #409eff;
+    }
+    .title-label {
+      color: #303133;
+      font-size: 14px;
+      min-width: 68px;
+    }
+    .title-name {
+      color: #606266;
+      font-size: 14px;
+    }
+  }
 }
 </style>
