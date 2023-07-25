@@ -43,4 +43,3 @@ const getTableList = (params: any) => {
   return getUserListMap(newParams);
 };
 </script>
-
