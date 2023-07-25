@@ -44,6 +44,8 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
+import { parseTime, shortcuts } from "@/utils";
+
 const { BUTTONS } = useAuthButtons();
 
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -208,6 +210,15 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" }
   },
   { prop: "accountDesc", label: "账号描述", width: 160 },
+  {
+    prop: "timeSection",
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
+    }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 

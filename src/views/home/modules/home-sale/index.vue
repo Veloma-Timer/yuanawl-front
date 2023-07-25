@@ -35,8 +35,8 @@
         <nameRight title="数量榜" :salas-ranking-arr="salesObj?.salesRankingByAmount" :header="['姓名', '销售额', '销售数量']" />
       </div>
     </div>
-    <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售组数据对比" />
-    <homeChain :list-arr="salesObj?.resChannel" :branch-name="branchNames" title="销售组渠道对比">
+    <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售数据对比" />
+    <homeChain :list-arr="salesObj?.resChannel" :branch-name="branchNames" title="销售渠道对比">
       <div>
         <el-select v-model="channelId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
           <el-option v-for="item in salesObj?.channelList" :key="item.value" :label="item.label" :value="item.value" />

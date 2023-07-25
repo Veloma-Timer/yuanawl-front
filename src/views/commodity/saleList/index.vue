@@ -51,7 +51,7 @@ import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icon
 import { addSales, getSalesList, editSales, summaryExport, salesTemplate, salesUpload } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
-import { parseTime } from "@/utils";
+import { parseTime, shortcuts } from "@/utils";
 import { getUserAll } from "@/api/modules/user";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
@@ -153,6 +153,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     width: 160,
     render: scope => (scope.row!.noSaleResidenceTime || 0) + "天"
   },
+
   { prop: "campId", label: "回收金额", width: 160, search: { el: "input" } },
   { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
   // {
@@ -279,6 +280,16 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   },
   { prop: "buyerTel", label: "买家手机号", width: 160, search: { el: "input" } },
   { prop: "salesRemark", label: "销售备注", width: 160 },
+  {
+    prop: "timeSection",
+    sortable: true,
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
+    }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 260 }
 ];
 

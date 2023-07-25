@@ -173,10 +173,12 @@ if (currentColoumIndex > -1) {
   let operationColumns = props.columns.filter((item: any) => {
     return ["selection", "index", "expand"].includes(item.type) || item.prop === "operation";
   });
+
   // 合并列设置的isShow和sortable字段
   cachecColumns = fileteColumns.map((item: any, index: number) => {
     let obj = proTableStore.list[currentColoumIndex].value[index] || {};
-    return { ...item, isShow: obj.isShow, sortable: obj.sortable };
+
+    return { ...item, isShow: item.isShow ?? obj.isShow, sortable: obj.sortable };
   });
   // 合并上面两个不同类型的列
   cachecColumns = operationColumns.concat(cachecColumns);
@@ -202,7 +204,6 @@ const flatColumnsFunc = (columns: ColumnProps[], flatArr: ColumnProps[] = []) =>
   columns.forEach(async col => {
     if (col._children?.length) flatArr.push(...flatColumnsFunc(col._children));
     flatArr.push(col);
-
     // 给每一项 column 添加 isShow && isFilterEnum 默认属性
     col.isShow = col.isShow ?? true;
     col.isFilterEnum = col.isFilterEnum ?? true;
@@ -236,7 +237,7 @@ searchColumns.sort((a, b) => a.search!.order! - b.search!.order!);
 const colRef = ref();
 const colSetting = tableColumns.value!.filter(
   // (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
-  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation"
+  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
 );
 proTableStore.setProTableState(authStore.routeName, colSetting as ProTableColoum[]);
 const openColSetting = () => colRef.value.openColSetting();

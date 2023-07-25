@@ -69,7 +69,7 @@ import { getUserAll } from "@/api/modules/user";
 import { parseTime } from "@/utils/is";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
-import { getPhone, setPhone } from "@/utils";
+import { getPhone, setPhone, shortcuts } from "@/utils";
 // import { useRoute } from "vue-router";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
@@ -244,6 +244,16 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     }
   },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
+  {
+    prop: "timeSection",
+    sortable: true,
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
+    }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 

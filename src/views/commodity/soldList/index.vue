@@ -45,7 +45,7 @@ import { View, Document } from "@element-plus/icons-vue";
 import { deleteUser, getUserAll } from "@/api/modules/user";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
-import { parseTime } from "@/utils";
+import { parseTime, shortcuts } from "@/utils";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { Commodity } from "@/api/interface/commodity/commodity";
 
@@ -230,6 +230,16 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "select" }
   },
   { prop: "accountDesc", label: "账号描述", width: 160 },
+  {
+    prop: "timeSection",
+    sortable: true,
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
+    }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 // 账号列表

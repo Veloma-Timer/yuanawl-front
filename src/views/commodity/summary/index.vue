@@ -65,7 +65,7 @@ import {
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-import { getPhone, parseTime, setPhone } from "@/utils";
+import { getPhone, parseTime, setPhone, shortcuts } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
@@ -376,6 +376,16 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   { prop: "accountDesc", sortable: true, label: "账号描述", width: 160, search: { el: "input" } },
+  {
+    prop: "timeSection",
+    sortable: true,
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
+    }
+  },
   { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 // 账号列表

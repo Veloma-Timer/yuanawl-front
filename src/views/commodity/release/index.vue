@@ -54,11 +54,10 @@ import { addPublish, editPublish, getPublishList, publishTemplate, publishUpload
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { getUserAll } from "@/api/modules/user";
-import { parseTime } from "@/utils";
+import { parseTime, shortcuts } from "@/utils";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
-// import { useRoute } from "vue-router";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
 const obj = JSON.parse(decryption("token", token));
@@ -251,6 +250,16 @@ const columns: ColumnProps<Commodity.Release>[] = [
     },
     search: {
       el: "select"
+    }
+  },
+  {
+    prop: "timeSection",
+    sortable: true,
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
   },
   { prop: "operation", label: "操作", fixed: "right", width: 260 }
