@@ -19,6 +19,11 @@ export const getHomeStatistics = (params: IStatistics) => {
   return http.get(`${baseUrl}/statistics`, params);
 };
 
+// 获取首页工单消息数据
+export const getHomeWorkOrders = (params: { date: number; branchId: number; userId: number }): any => {
+  return http.get(`${baseUrl}/after_sale`, params);
+};
+
 // 个人首页数据
 export const getUserProfile = (params: IStatistics) => {
   return http.get(`${baseUrl}/statistics/profile`, params);

@@ -7,17 +7,22 @@
         </el-badge>
       </template>
       <el-tabs v-model="activeName">
-        <el-tab-pane label="消息(0)" name="second">
+        <!-- <el-tab-pane label="消息(0)" name="second">
           <div class="message-empty">
             <img src="@/assets/images/notData.png" alt="notData" />
             <div>暂无消息</div>
           </div>
-        </el-tab-pane>
-        <el-tab-pane label="代办(0)" name="third">
+        </el-tab-pane> -->
+        <el-tab-pane :label="`待办工单(${messageTtem.length})`" name="first">
           <div class="message-list">
             <div class="message-item">
-              <div class="message-content" v-for="item in messageTtem" :key="item.orderCode">
-                <span class="message-title">{{ item.accountTitle }}</span>
+              <div class="message-content bg-[#f5f5f5] mb-2" v-for="item in messageTtem" :key="item.id">
+                <div class="flex flex-row justify-between p-2">
+                  <p><span class="text-[#ef4444]">【待处理】</span>工单[{{ item.orderCode }}]</p>
+                  <el-button type="danger" link @click="setRouterLink(item)">
+                    立即处理<el-icon class="el-icon--right"><Promotion /></el-icon>
+                  </el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -28,13 +33,25 @@
 </template>
 
 <script setup lang="ts">
-import { workOrder } from "@/api/modules/order";
+import { getHomeWorkOrders } from "@/api/modules/home";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
+import { Promotion } from "@element-plus/icons-vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const activeName = ref("first");
 const messageTtem = ref([]);
 const userStore = useUserStore();
+
+const setRouterLink = (item: any) => {
+  router.push({
+    path: "/afterSales/orderSummary",
+    query: {
+      orderCode: item.orderCode
+    }
+  });
+};
 
 const obj = JSON.parse(decryption("token", userStore.token));
 const workList = async () => {
@@ -43,10 +60,21 @@ const workList = async () => {
     pageSize: 10,
     branchId: obj.user.branchId
   };
+
   const {
-    data: { list = [] }
-  } = await workOrder(params);
-  messageTtem.value = list;
+    awaitWorkOrder: { pendingList }
+  } = await getHomeWorkOrders({
+    date: 2,
+    branchId: obj.user.branchId,
+    userId: obj.user.id
+  });
+
+  messageTtem.value = pendingList;
+
+  // const {
+  //   data: { list = [] }
+  // } = await workOrder(params);
+  // messageTtem.value = list;
 };
 workList();
 </script>
@@ -67,7 +95,6 @@ workList();
   flex-direction: column;
 
   .message-item {
-    padding: 20px 0;
     border-bottom: 1px solid var(--el-border-color-light);
     width: 100%;
 
@@ -84,10 +111,7 @@ workList();
     .message-content {
       display: flex;
       flex-direction: column;
-
-      .message-title {
-        margin-bottom: 5px;
-      }
+      border-radius: 4px;
 
       .message-date {
         font-size: 12px;

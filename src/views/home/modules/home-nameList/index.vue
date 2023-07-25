@@ -24,7 +24,10 @@
                 <span class="sle">订单[{{ item.orderCode }}]</span>
                 {{ parseTime(item.createdTime, "{y}-{m}-{d} {h}:{i}:{s}") }}
               </div>
-              <div class="bottom" @click="setRouterLink(item)">立即处理&gt;</div>
+              <div class="bottom" @click="setRouterLink(item)">
+                立即处理
+                <el-icon class="el-icon--right"><Promotion /></el-icon>
+              </div>
             </div>
           </div>
         </div>
@@ -36,6 +39,8 @@
 import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { parseTime } from "@/utils";
+import { Promotion } from "@element-plus/icons-vue";
+
 const router = useRouter();
 const getNameList = async () => {};
 const setRouterLink = item => {
