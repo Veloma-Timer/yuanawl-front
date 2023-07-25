@@ -68,6 +68,7 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getUserAll } from "@/api/modules/user";
 import { getPublishList } from "@/api/modules/commodity";
 import { sellKeyMap } from "@/api/modules/dictionary";
+import { checkPhoneNumber } from "@/utils/eleValidate";
 
 const rules = reactive({
   salePeopleId: [{ required: true, message: "必填项不能为空" }],
@@ -77,7 +78,10 @@ const rules = reactive({
   salePlatform: [{ required: true, message: "必填项不能为空" }],
   saleTime: [{ required: true, message: "必填项不能为空" }],
   salesCode: [{ required: true, message: "必填项不能为空" }],
-  buyerTel: [{ required: true, message: "必填项不能为空" }]
+  buyerTel: [
+    { required: true, message: "必填项不能为空" },
+    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+  ]
 });
 interface DrawerProps {
   title: string;

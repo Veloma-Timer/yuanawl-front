@@ -162,6 +162,7 @@ import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
 
 import { generateCode, getSetSystemList } from "@/api/modules/commodity";
+import { checkPhoneNumber, checkEmail } from "@/utils/eleValidate";
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
@@ -170,7 +171,10 @@ const rules = reactive({
   accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   phoneRemark: [{ required: true, message: "必填项不能为空" }],
-  email: [{ required: true, message: "必填项不能为空" }],
+  email: [
+    { required: true, message: "必填项不能为空" },
+    { required: true, validator: checkEmail, trigger: "blur" }
+  ],
   emailSecret: [{ required: true, message: "必填项不能为空" }],
   systemId: [{ required: true, message: "必填项不能为空" }],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
@@ -180,7 +184,10 @@ const rules = reactive({
   recycleOrder: [{ required: true, message: "必填项不能为空" }],
   recycleRemark: [{ required: true, message: "必填项不能为空" }],
   storeId: [{ required: true, message: "必填项不能为空" }],
-  accountTel: [{ required: true, message: "必填项不能为空" }],
+  accountTel: [
+    { required: true, message: "必填项不能为空" },
+    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+  ],
   accountRecyclerTime: [{ required: true, message: "必填项不能为空" }],
   accountRecyclerId: [{ required: true, message: "必填项不能为空" }]
 });

@@ -903,16 +903,20 @@ function onChangeAccount(e: any) {
 }
 
 // 返显数据处理
+let afterInfo: any = {};
+let saleInfo: any = {};
+let publishInfo: any = {};
+let recycleInfo: any = {};
 const getDetailInfo = async (id: any) => {
   if (!id) {
     return false;
   }
   const { data } = await detailSalesList(id);
   if (data) {
-    const afterInfo: any = data.detail.find(item => item.handleDept === 1);
-    const saleInfo: any = data.detail.find(item => item.handleDept === 2);
-    const publishInfo: any = data.detail.find(item => item.handleDept === 3);
-    const recycleInfo: any = data.detail.find(item => item.handleDept === 4);
+    afterInfo = data.detail.find(item => item.handleDept === 1);
+    saleInfo = data.detail.find(item => item.handleDept === 2);
+    publishInfo = data.detail.find(item => item.handleDept === 3);
+    recycleInfo = data.detail.find(item => item.handleDept === 4);
     // 基本
     const basicObj = {
       basicOrderCode: data?.orderCode,
@@ -1162,11 +1166,11 @@ const handleSubmit = () => {
       // 只能新增,不能修改 id为空才能调用
       const { data }: any = !id && (await baseApi!(baseData));
       // 以下只能改当前账号的
-      // 发布信息
+      // 回收信息
       (setId.value === 1 || isAdmin.value) &&
         (await recycleApi({
           ...idObj,
-          orderId: data?.id || id, // 工单id
+          orderId: recycleInfo?.id || data?.id || id, // 工单id
           recycleResultId: recycleHandleResult, // 发布处理结果
           recycleResultRemark: recycleResultRemark, // 销售处理结果备注
           recycleRemark: recycleRemark, // 发布备注
@@ -1182,7 +1186,7 @@ const handleSubmit = () => {
       (setId.value === 2 || isAdmin.value) &&
         (await afterApi({
           ...idObj,
-          orderId: data?.id || id,
+          orderId: afterInfo?.id || data?.id || id,
           afterSaleResultId: afterHandleResult, // 售后处理结果
           afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
           afterSalesCompensationAmount: afterCompensationAmount, // 售后赔付金额
@@ -1201,7 +1205,7 @@ const handleSubmit = () => {
       (setId.value === 3 || isAdmin.value) &&
         (await publishApi({
           ...idObj,
-          orderId: data?.id || id, // 工单id
+          orderId: publishInfo?.id || data?.id || id, // 工单id
           publishResultId: publishHandleResult, // 发布处理结果
           publishResultRemark: publishResultRemark, // 销售处理结果备注
           publishRemark: publishRemark, // 发布备注
@@ -1217,7 +1221,7 @@ const handleSubmit = () => {
       (setId.value === 0 || isAdmin.value) &&
         (await salesApi({
           ...idObj,
-          orderId: data?.id || id, // 工单id
+          orderId: saleInfo?.id || data?.id || id, // 工单id
           salesResultId: saleHandleResult, // 销售处理结果
           salesCompensationAmount: saleCompensationUserAmount, // 赔付用户金额
           newAccountId: saleChangeUserNumber, // 给用户换号: 新账号id

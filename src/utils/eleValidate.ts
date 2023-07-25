@@ -12,3 +12,11 @@ export function checkPhoneNumber(rule: any, value: any, callback: any) {
     return callback();
   }
 }
+export function checkEmail(rule: any, value: any, callback: any) {
+  const regEmail = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  if (regEmail.test(value)) {
+    // 合法的邮箱
+    return callback();
+  }
+  callback(new Error("请输入合法的邮箱"));
+}

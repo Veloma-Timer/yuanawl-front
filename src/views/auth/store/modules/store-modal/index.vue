@@ -36,7 +36,13 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="分店联系方式" prop="branchTel">
-            <el-input v-model="drawerProps.row!.branchTel" placeholder="请输入" clearable class="order-input"></el-input>
+            <el-input
+              v-model="drawerProps.row!.branchTel"
+              :maxlength="11"
+              placeholder="请输入"
+              clearable
+              class="order-input"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -53,13 +59,17 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Set } from "@/api/interface";
 import { getAllUser } from "@/api/modules/set";
+import { checkPhoneNumber } from "@/utils/eleValidate";
 
 const rules = reactive({
   branchName: [{ required: true, message: "必填项不能为空" }],
   branchCode: [{ required: true, message: "必填项不能为空" }],
   branchContactId: [{ required: true, message: "必填项不能为空" }],
   branchAddress: [{ required: true, message: "必填项不能为空" }],
-  branchTel: [{ required: true, message: "必填项不能为空" }]
+  branchTel: [
+    { required: true, message: "必填项不能为空" },
+    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+  ]
 });
 
 interface DrawerProps {

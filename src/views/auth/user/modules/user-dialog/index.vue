@@ -45,7 +45,13 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="手机号" prop="userTel">
-            <el-input v-model="drawerProps.row!.userTel" placeholder="请输入" clearable class="order-input"></el-input>
+            <el-input
+              v-model="drawerProps.row!.userTel"
+              :maxlength="11"
+              placeholder="请输入"
+              clearable
+              class="order-input"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -82,10 +88,14 @@ import { User } from "@/api/interface";
 import { getAllBranch, getAllRole } from "@/api/modules/set";
 import { getGroupListMap } from "@/api/modules/user";
 import md5 from "js-md5";
+import { checkPhoneNumber } from "@/utils/eleValidate";
 const rules = reactive({
   userCode: [{ required: true, message: "必填项不能为空" }],
   userName: [{ required: true, message: "必填项不能为空" }],
-  userTel: [{ required: true, message: "必填项不能为空" }],
+  userTel: [
+    { required: true, message: "必填项不能为空" },
+    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+  ],
   userAccount: [{ required: true, message: "必填项不能为空" }],
   userPassword: [{ required: true, message: "必填项不能为空" }],
   userRoleId: [{ required: true, message: "必填项不能为空" }],
