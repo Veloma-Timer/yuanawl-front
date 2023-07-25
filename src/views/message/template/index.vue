@@ -67,4 +67,3 @@ const openDrawer = (title: string, row: Partial<Message.Template> = {}) => {
   drawerRef.value?.acceptParams(params);
 };
 </script>
-
