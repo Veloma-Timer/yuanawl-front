@@ -753,11 +753,6 @@ import dayjs from "dayjs";
 const route = useRoute();
 const id = route.query?.id;
 const isView = route.query?.isView ? true : false;
-const baseApi = id ? editSalesList : addSalesList;
-const afterApi = id ? editfterInfo : addAfterInfo;
-const salesApi = id ? editSalesInfo : addSalesInfo;
-const recycleApi = id ? editRecycleInfo : addRecycleInfo;
-const publishApi = id ? editPublishInfo : addPublishInfo;
 const router = useRouter();
 
 // [
@@ -1162,6 +1157,11 @@ const handleSubmit = () => {
           };
         })
       };
+      const baseApi = id ? editSalesList : addSalesList;
+      const afterApi = afterInfo?.id ? editfterInfo : addAfterInfo;
+      const salesApi = saleInfo?.id ? editSalesInfo : addSalesInfo;
+      const recycleApi = recycleInfo?.id ? editRecycleInfo : addRecycleInfo;
+      const publishApi = publishInfo?.id ? editPublishInfo : addPublishInfo;
       // 基本信息
       // 只能新增,不能修改 id为空才能调用
       const { data }: any = !id && (await baseApi!(baseData));
@@ -1169,7 +1169,7 @@ const handleSubmit = () => {
       // 回收信息
       (setId.value === 1 || isAdmin.value) &&
         (await recycleApi({
-          ...idObj,
+          id: recycleInfo?.id || data?.id || id,
           orderId: recycleInfo?.id || data?.id || id, // 工单id
           recycleResultId: recycleHandleResult, // 发布处理结果
           recycleResultRemark: recycleResultRemark, // 销售处理结果备注
@@ -1185,7 +1185,7 @@ const handleSubmit = () => {
       // 售后信息
       (setId.value === 2 || isAdmin.value) &&
         (await afterApi({
-          ...idObj,
+          id: afterInfo?.id || data?.id || id,
           orderId: afterInfo?.id || data?.id || id,
           afterSaleResultId: afterHandleResult, // 售后处理结果
           afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
@@ -1204,7 +1204,7 @@ const handleSubmit = () => {
       // 发布信息
       (setId.value === 3 || isAdmin.value) &&
         (await publishApi({
-          ...idObj,
+          id: publishInfo?.id || data?.id || id,
           orderId: publishInfo?.id || data?.id || id, // 工单id
           publishResultId: publishHandleResult, // 发布处理结果
           publishResultRemark: publishResultRemark, // 销售处理结果备注
@@ -1220,7 +1220,7 @@ const handleSubmit = () => {
       // 销售信息
       (setId.value === 0 || isAdmin.value) &&
         (await salesApi({
-          ...idObj,
+          id: saleInfo?.id || data?.id || id,
           orderId: saleInfo?.id || data?.id || id, // 工单id
           salesResultId: saleHandleResult, // 销售处理结果
           salesCompensationAmount: saleCompensationUserAmount, // 赔付用户金额
