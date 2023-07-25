@@ -247,7 +247,7 @@ searchColumns.sort((a, b) => a.search!.order! - b.search!.order!);
 const colRef = ref();
 const colSetting = tableColumns.value!.filter(
   // (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
-  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation"
+  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
 );
 
 // 等合并列设置再执行
