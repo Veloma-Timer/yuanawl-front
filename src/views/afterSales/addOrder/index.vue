@@ -934,8 +934,8 @@ const getDetailInfo = async (id: any) => {
     let afterObj = {};
     if (afterInfo) {
       afterObj = {
-        afterCustomerServiceId: userId,
-        afterHandleTime: currentDateString,
+        afterCustomerServiceId: afterInfo?.afterSaleServiceId || userId,
+        afterHandleTime: afterInfo?.afterSaleHandleTime || currentDateString,
         afterHandleResult: afterInfo?.afterSaleResultId,
         afterSpecHandleResult: afterInfo?.afterSalesResultRemark,
         afterCompensationAmount: afterInfo?.afterSalesCompensationAmount,
@@ -962,8 +962,8 @@ const getDetailInfo = async (id: any) => {
     let recycleObj = {};
     if (recycleInfo) {
       recycleObj = {
-        recycleHandleCustomerServiceId: userId,
-        recycleHandleTime: currentDateString,
+        recycleHandleCustomerServiceId: recycleInfo?.recycleServiceId || userId,
+        recycleHandleTime: recycleInfo?.recycleHandleTime || currentDateString,
         recycleHandleResult: recycleInfo?.recycleResultId,
         recycleResultRemark: recycleInfo?.recycleResultRemark,
         recycleRemark: recycleInfo?.recycleRemark,
@@ -987,8 +987,8 @@ const getDetailInfo = async (id: any) => {
     let publishObj = {};
     if (publishInfo) {
       publishObj = {
-        publishHandleCustomerServiceId: userId,
-        publishHandleTime: currentDateString,
+        publishHandleCustomerServiceId: publishInfo.publishServiceId || userId,
+        publishHandleTime: publishInfo.publishHandleTime || currentDateString,
         publishHandleResult: publishInfo?.publishResultId,
         publishResultRemark: publishInfo?.publishResultRemark,
         publishRemark: publishInfo?.publishRemark,
@@ -1012,8 +1012,8 @@ const getDetailInfo = async (id: any) => {
     let saleObj = {};
     if (saleInfo) {
       saleObj = {
-        saleHandleCustomerService: userId,
-        saleHandleTime: currentDateString,
+        saleHandleCustomerService: saleInfo?.salesServiceId || userId,
+        saleHandleTime: saleInfo?.salesHandleTime || currentDateString,
         saleHandleResult: saleInfo?.salesResultId,
         saleCompensationUserAmount: saleInfo?.salesCompensationAmount,
         saleChangeUserNumber: saleInfo?.newAccountId,
