@@ -205,7 +205,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "滞留时间",
     width: 160,
     render: scope => {
-      return parseTime(scope.row!.noSaleResidenceTime, "{y}-{m}-{d} {h}:{i}");
+      return scope.row?.noSaleResidenceTime + '天';
     }
   },
   {

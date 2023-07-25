@@ -67,8 +67,4 @@ const openDrawer = (title: string, row: Partial<Message.Template> = {}) => {
   drawerRef.value?.acceptParams(params);
 };
 </script>
-<style scoped lang="scss">
-.table-box {
-  padding: 10px;
-}
-</style>
+

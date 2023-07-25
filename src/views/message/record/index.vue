@@ -43,8 +43,4 @@ const getTableList = (params: any) => {
   return getUserListMap(newParams);
 };
 </script>
-<style scoped lang="scss">
-.table-box {
-  padding: 10px;
-}
-</style>
+
