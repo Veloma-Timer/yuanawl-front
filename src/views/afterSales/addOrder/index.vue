@@ -1169,7 +1169,7 @@ const handleSubmit = () => {
       // 回收信息
       (setId.value === 1 || isAdmin.value) &&
         (await recycleApi({
-          id: recycleInfo?.id || data?.id || id,
+          id: recycleInfo?.id || -1,
           orderId: recycleInfo?.id || data?.id || id, // 工单id
           recycleResultId: recycleHandleResult, // 发布处理结果
           recycleResultRemark: recycleResultRemark, // 销售处理结果备注
@@ -1185,7 +1185,7 @@ const handleSubmit = () => {
       // 售后信息
       (setId.value === 2 || isAdmin.value) &&
         (await afterApi({
-          id: afterInfo?.id || data?.id || id,
+          id: afterInfo?.id || -1,
           orderId: afterInfo?.id || data?.id || id,
           afterSaleResultId: afterHandleResult, // 售后处理结果
           afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
@@ -1204,7 +1204,7 @@ const handleSubmit = () => {
       // 发布信息
       (setId.value === 3 || isAdmin.value) &&
         (await publishApi({
-          id: publishInfo?.id || data?.id || id,
+          id: publishInfo?.id || -1,
           orderId: publishInfo?.id || data?.id || id, // 工单id
           publishResultId: publishHandleResult, // 发布处理结果
           publishResultRemark: publishResultRemark, // 销售处理结果备注
@@ -1220,7 +1220,7 @@ const handleSubmit = () => {
       // 销售信息
       (setId.value === 0 || isAdmin.value) &&
         (await salesApi({
-          id: saleInfo?.id || data?.id || id,
+          id: saleInfo?.id || -1,
           orderId: saleInfo?.id || data?.id || id, // 工单id
           salesResultId: saleHandleResult, // 销售处理结果
           salesCompensationAmount: saleCompensationUserAmount, // 赔付用户金额
