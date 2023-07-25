@@ -122,7 +122,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     search: {
       el: "date-picker",
       span: 1,
-      props: { type: "datetime", valueFormat: "YYYY-MM-DD HH:mm:ss" }
+      props: { type: "datetime", valueFormat: "YYYY-MM-DD", format: "YYYY-MM-DD" }
     },
     render: scope => {
       const time = scope.row?.createdTime;
