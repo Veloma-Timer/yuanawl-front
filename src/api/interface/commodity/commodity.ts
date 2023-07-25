@@ -21,7 +21,7 @@ export namespace Commodity {
 
   export interface Account {
     id: number;
-
+    orderId: number; // 工单id
     accountCode: string; // 账号编码(用户输入，唯一)
 
     accountType: []; // 账号分类(游戏分类)

@@ -9,7 +9,7 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="账号编号" prop="accountCode">
+      <el-form-item label="账号编码" prop="accountCode">
         <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入订单编号" clearable />
       </el-form-item>
       <el-form-item label="游戏分类" prop="accountType">

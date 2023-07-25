@@ -107,7 +107,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
     prop: "accountCode",
-    label: "账号编号",
+    label: "账号编码",
     sortable: true,
     width: 160,
     enum: getAllBaseAccount,
@@ -121,7 +121,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       return (
         <div class="cursor-pointer">
           {status ? (
-            <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+            <router-link to={{ name: "工单新增", query: { id: row?.orderId || "" } }}>
               <span class="red">{row.accountCode}</span>
             </router-link>
           ) : (
@@ -240,7 +240,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     render: ({ row }) => {
-      return row?.noSaleResidenceTime + "天";
+      return (row?.noSaleResidenceTime || 0) + "天";
     }
   },
   {

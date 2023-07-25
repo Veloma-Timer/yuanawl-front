@@ -9,8 +9,8 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="账号编号" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编号" clearable />
+      <el-form-item label="账号编码" prop="accountCode">
+        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编码" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
         <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable multiple clearable>

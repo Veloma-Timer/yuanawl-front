@@ -60,7 +60,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
   },
   {
     prop: "accountCode",
-    label: "账号编号",
+    label: "账号编码",
     search: { el: "input" },
     width: 180,
     fixed: "left",

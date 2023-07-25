@@ -107,7 +107,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", width: 55, fixed: true },
   {
     prop: "accountCode",
-    label: "账号编号",
+    label: "账号编码",
     fixed: true,
     width: 160,
     search: { el: "input" },
@@ -117,7 +117,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
         <div class="cursor-pointer">
           <div class="cursor-pointer">
             {status ? (
-              <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+              <router-link to={{ name: "工单新增", query: { id: row?.orderId || "" } }}>
                 <span class="red">{row.accountCode}</span>
               </router-link>
             ) : (
@@ -151,8 +151,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     prop: "noSaleResidenceTime",
     label: "滞留时间",
     width: 160,
-    render: scope =>
-      scope.row.isSales == "1" ? "--" : scope.row!.noSaleResidenceTime ? scope.row!.noSaleResidenceTime + "天" : "--"
+    render: scope => (scope.row!.noSaleResidenceTime || 0) + "天"
   },
   { prop: "campId", label: "回收金额", width: 160, search: { el: "input" } },
   { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },

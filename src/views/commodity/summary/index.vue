@@ -69,7 +69,7 @@ import { getPhone, parseTime, setPhone } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
-import { getSetTypes } from "@/api/modules/order";
+import { sellKeyGrouping } from "@/api/modules/dictionary";
 
 const route = useRoute();
 // 跳转详情页
@@ -108,7 +108,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
     prop: "accountCode",
-    label: "账号编号",
+    label: "账号编码",
     fixed: "left",
     sortable: true,
     width: 160,
@@ -126,7 +126,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       return (
         <div class="cursor-pointer">
           {status ? (
-            <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+            <router-link to={{ name: "工单新增", query: { id: row?.orderId || "" } }}>
               <span class="red">{row.accountCode}</span>
             </router-link>
           ) : (
@@ -212,23 +212,24 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   {
-    prop: "salesSetId",
+    prop: "groupingId",
     sortable: true,
     label: "所在组",
     width: 160,
     enum: async () => {
       const {
-        data: { set = [] }
-      } = await getSetTypes();
-      return { data: set };
+        data: { grouping = [] }
+      } = await sellKeyGrouping();
+      console.log(grouping);
+      return { data: grouping };
     },
+    fieldNames: { label: "label", value: "id" },
     search: {
       el: "select",
       props: {
         filterable: true
       }
-    },
-    fieldNames: { label: "label", value: "value" }
+    }
   },
   {
     prop: "accountType",
@@ -276,7 +277,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     render: scope => {
-      return scope.row?.noSaleResidenceTime + "天";
+      return (scope.row?.noSaleResidenceTime || 0) + "天";
     }
   },
   {

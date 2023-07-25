@@ -104,7 +104,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
   { type: "selection", fixed: "left", width: 80 },
   {
     prop: "accountCode",
-    label: "账号编号",
+    label: "账号编码",
     width: 160,
     fixed: "left",
     search: { el: "input" },
@@ -114,7 +114,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
         <div class="cursor-pointer">
           <div class="cursor-pointer">
             {status ? (
-              <router-link to={{ name: "工单新增", query: { id: row?.id || "" } }}>
+              <router-link to={{ name: "工单新增", query: { id: row?.orderId || "" } }}>
                 <span class="red">{row.accountCode}</span>
               </router-link>
             ) : (
