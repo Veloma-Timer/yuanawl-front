@@ -53,7 +53,7 @@ const groupGet = (data: any, name: string[]) => {
           orient: "vertical",
           align: "left",
           top: "40%",
-          right: "15%",
+          right: "10%",
           itemGap: 18,
           textStyle: {
             fontSize: 12
