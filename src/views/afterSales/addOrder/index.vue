@@ -36,7 +36,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="游戏账号" prop="basicAccountId">
+            <el-form-item label="账号编码" prop="basicAccountId">
               <el-select
                 :disabled="ruleForm.basicEdit"
                 v-model="ruleForm.row!.basicAccountId"
@@ -137,12 +137,12 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="商品加价率">
-              <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate).toFixed(2) : "-" }}</span>
+              <span>{{ baseObj?.addPriceRate ? Number(baseObj?.addPriceRate) + "%" : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="商品周转周期">
-              <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle).toFixed(2) + "天" : "-" }}</span>
+              <span>{{ baseObj?.conversionCycle ? Number(baseObj?.conversionCycle) + "天" : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -1183,6 +1183,7 @@ const handleSubmit = () => {
           }) // 发布提交资源
         }));
       // 售后信息
+
       (setId.value === 2 || isAdmin.value) &&
         (await afterApi({
           id: afterInfo?.id || data?.id || id,
