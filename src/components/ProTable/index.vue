@@ -178,7 +178,7 @@ if (currentColoumIndex > -1) {
   // 合并列设置的isShow和sortable字段
   cachecColumns = fileteColumns.map((item: any, index: number) => {
     let obj = proTableStore.list[currentColoumIndex].value[index] || {};
-    return { ...item, isShow: obj.isShow, sortable: obj.sortable };
+    return { ...item, isShow: item.isShow ?? obj.isShow, sortable: obj.sortable };
   });
   // 合并上面两个不同类型的列(注意要排序,不然固定列和操作列是乱的)
   cachecColumns = cachecColumns.concat(operationColumns);
@@ -247,13 +247,11 @@ searchColumns.sort((a, b) => a.search!.order! - b.search!.order!);
 const colRef = ref();
 const colSetting = tableColumns.value!.filter(
   // (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
-  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation" && item.isShow
+  // 对比上一行去掉这个isShow 是为了在列设置可以显示关闭的列
+  (item: any) => !["selection", "index", "expand"].includes(item.type!) && item.prop !== "operation"
 );
 
-// 等合并列设置再执行
-setTimeout(() => {
-  proTableStore.setProTableState(authStore.routeName, colSetting as ProTableColoum[]);
-}, 500);
+proTableStore.setProTableState(authStore.routeName, colSetting as ProTableColoum[]);
 
 const openColSetting = () => colRef.value.openColSetting();
 
