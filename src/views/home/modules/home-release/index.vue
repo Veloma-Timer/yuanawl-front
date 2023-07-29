@@ -40,7 +40,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { CaretTop } from "@element-plus/icons-vue";
 import { ref, reactive, nextTick, watch } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";

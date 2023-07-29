@@ -107,7 +107,9 @@
         </el-select>
       </el-form-item>
       <el-form-item label="出售平台">
-        <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
+        <el-select v-model="drawerProps.row!.salePlatform" placeholder="请选择" filterable>
+          <el-option v-for="item in platformList" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item label="营地号" prop="campId">
         <el-input v-model="drawerProps.row!.campId" placeholder="请输入账号" clearable></el-input>
@@ -211,7 +213,7 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { generateCode, typeCode } from "@/api/modules/commodity";
-import { recycleShop } from "@/api/modules/dictionary";
+import { recycleShop, sellKeyMap } from "@/api/modules/dictionary";
 import { checkPhoneNumber } from "@/utils/eleValidate";
 
 const validatePass = (rule: any, value: any, callback: any) => {
@@ -361,6 +363,7 @@ const methodsMap = [
 let accountTypeMap: unknown = [];
 let userMap: unknown = [];
 let branchMap: unknown = [];
+let platformList: unknown = [];
 const publishMap = () => {
   recycleShop().then(res => {
     const {
@@ -372,8 +375,12 @@ const publishMap = () => {
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
+  let {
+    data: { publishPlatform = [] }
+  } = await sellKeyMap();
   const { data } = await getGroupListMap({ key: "grouping" });
   customerMap = data.grouping;
+  platformList = publishPlatform;
   drawerProps.value.row.groupingId = data.grouping[0].id;
   setGroupingId(data.grouping[0].id);
   accountTypeMap = res.data;
