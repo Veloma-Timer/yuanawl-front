@@ -186,7 +186,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
     label: "工单星级",
     width: 180,
     render: scope => {
-      return <el-rate v-model={scope.row.orderStar} max={5} disabled />;
+      return <el-rate v-model={scope.row.orderStar} max={3} disabled />;
     }
   },
   {

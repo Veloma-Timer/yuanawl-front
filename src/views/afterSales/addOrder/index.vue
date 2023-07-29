@@ -101,6 +101,7 @@
                 :disabled="!isAdmin"
                 v-model="ruleForm.row!.basicOrderStar"
                 :min="1"
+                :max="3"
                 placeholder="请输入"
                 class="order-input"
               ></el-input-number>
