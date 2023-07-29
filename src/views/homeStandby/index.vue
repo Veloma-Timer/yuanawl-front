@@ -216,7 +216,7 @@ onMounted(() => {
   padding: 20px;
   background: #ffffff;
   border: 2px solid #f0f0f0;
-  border-radius: 25px;
+  border-radius: 6px;
   .title {
     font-size: 16px;
     color: #303133;

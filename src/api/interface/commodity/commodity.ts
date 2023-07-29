@@ -23,9 +23,9 @@ export namespace Commodity {
     id: number;
     orderId: number; // 工单id
     accountCode: string; // 账号编码(用户输入，唯一)
-
+    storeId: number; // 回收店铺
     accountType: []; // 账号分类(游戏分类)
-
+    groupingId: number; // 回收组
     accountTitle: string; // 账号标题
 
     accountRecyclerId: string; // 回收人

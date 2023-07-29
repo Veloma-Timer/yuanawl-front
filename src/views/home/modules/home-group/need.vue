@@ -123,8 +123,8 @@ watch(
   padding: 20px;
   margin: 32px 0 36px;
   background: #ffffff;
-  border-radius: 25px;
-  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
+  border-radius: 6px;
+  //box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
 }
 
 .home-head {

@@ -119,8 +119,8 @@
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="回收店铺" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable @change="setStoreId">
+      <el-form-item label="回收组" prop="storeId">
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收组" filterable @change="setStoreId">
           <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>

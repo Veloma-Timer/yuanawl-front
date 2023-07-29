@@ -1,24 +1,26 @@
 <template>
   <div>
+    <div class="title mb-2">{{ props.title }}</div>
     <div class="home-crud">
-      <div class="title">{{ props.title }}</div>
       <div class="crud-list flex">
         <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
-          <div class="crud-number" ref="crudNumberRef"></div>
-          <div class="crud-total">
-            <div class="total-name">
-              <span>{{ props.branchName }}{{ namesList[index] }}</span>
-            </div>
-            <div class="total-compare mb22">昨日同比</div>
-            <div class="total-proportion flex flx-align-center flx-justify-between">
-              <div>
-                <span class="mr-2">{{ item }}</span>
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
-              </div>
-            </div>
-          </div>
+          <!--<div class="crud-number" ref="crudNumberRef"></div>-->
+          <DigitBoard :title="namesList[index]" :value="item" :date="branchName" />
+
+          <!--<div class="crud-total">-->
+          <!--<div class="total-name" style="border: 1px solid red">-->
+          <!--  <span>{{ props.branchName }}{{ namesList[index] }}</span>-->
+          <!--</div>-->
+          <!--<div class="total-compare mb22">昨日同比</div>-->
+          <!--<div class="total-proportion flex flx-align-center flx-justify-between">-->
+          <!--  <div>-->
+          <!--    <span class="mr-2">{{ item }}</span>-->
+          <!--    <el-icon>-->
+          <!--      <CaretTop />-->
+          <!--    </el-icon>-->
+          <!--  </div>-->
+          <!--</div>-->
+          <!--</div>-->
         </div>
       </div>
     </div>
@@ -49,6 +51,7 @@
 </template>
 <script setup lang="ts">
 import { CaretTop } from "@element-plus/icons-vue";
+import DigitBoard from "@/views/home/components/DigitBoard.vue";
 import { ref, reactive, nextTick, watch } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
@@ -167,12 +170,13 @@ watch(
 );
 </script>
 <style scoped lang="scss">
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #475669;
+}
 .home-crud {
   width: 100%;
-  padding: 20px;
-  background: #ffffff;
-  border: 2px solid #f0f0f0;
-  border-radius: 25px;
 
   .title {
     font-size: 24px;
@@ -186,9 +190,8 @@ watch(
     width: 100%;
 
     .crud-list-item {
-      width: 33.33%;
-      height: 181px;
-      padding: 18px 22px;
+      width: 32.5%;
+      max-height: 180px;
       margin-bottom: 10px;
 
       .crud-number {
@@ -244,7 +247,7 @@ watch(
       padding: 10px 20px;
       margin: 0 40px 0 0;
       background: #ffffff;
-      border-radius: 25px;
+      border-radius: 6px;
       box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
 
       &:last-child {
@@ -259,14 +262,14 @@ watch(
     padding: 10px 20px;
     margin-bottom: 40px;
     background: #ffffff;
-    border-radius: 25px;
+    border-radius: 6px;
     box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
   }
 }
 .home-name {
   display: flex;
   justify-content: space-between;
-  margin: 32px 0;
+  margin: 15px 0;
   .home-name-left {
     width: 49%;
     height: 465px;

@@ -9,8 +9,13 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
+      <el-form-item label="回收组" prop="storeId">
+        <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable @change="setGroupingId">
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="账号编码" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入账号编码" clearable />
+        <el-input v-model="drawerProps.row!.accountCode" disabled placeholder="请输入账号编码" clearable />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
         <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable multiple clearable>
@@ -207,8 +212,8 @@ import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
-import { getUserAll } from "@/api/modules/user";
-import { typeCode } from "@/api/modules/commodity";
+import { getGroupListMap, getUserAll } from "@/api/modules/user";
+import { generateCode, typeCode } from "@/api/modules/commodity";
 import { recycleShop } from "@/api/modules/dictionary";
 import { checkPhoneNumber } from "@/utils/eleValidate";
 
@@ -272,6 +277,9 @@ interface DrawerProps {
   api?: (params: any) => Promise<any>;
   getTableList?: () => void;
 }
+
+let customerMap: Array<any> = [];
+
 const options = date => {
   const accountRecyclerTime = drawerProps.value.row.accountRecyclerTime;
   const currentDate = new Date(accountRecyclerTime);
@@ -293,11 +301,20 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
+
+const setGroupingId = (id: string) => {
+  generateCode(id).then(res => {
+    const { data } = res;
+    drawerProps.value.row.accountCode = data;
+  });
+};
+
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {
   drawerProps.value = params;
   drawerVisible.value = true;
 };
+
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -348,11 +365,19 @@ const publishMap = () => {
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
+  const { data } = await getGroupListMap({ key: "grouping" });
+  customerMap = data.grouping;
+  drawerProps.value.row.groupingId = data.grouping[0].id;
+  setGroupingId(data.grouping[0].id);
   accountTypeMap = res.data;
   userMap = reloads.data;
   await publishMap();
 };
+
+watch(drawerVisible, dv => dv && setAllList());
+
 setAllList();
+
 defineExpose({
   acceptParams
 });

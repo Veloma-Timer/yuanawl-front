@@ -9,15 +9,6 @@
             <div class="total-name">
               <span>{{ props.branchName }}{{ namesList[index] }}</span>
             </div>
-            <div class="total-compare mb22">昨日同比</div>
-            <div class="total-proportion flex flx-align-center flx-justify-between">
-              <div>
-                <span class="mr-2">{{ item }}</span>
-                <el-icon>
-                  <CaretTop />
-                </el-icon>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -189,7 +180,7 @@ watch(
   padding: 20px;
   background: #ffffff;
   border: 2px solid #f0f0f0;
-  border-radius: 25px;
+  border-radius: 6px;
 
   .title {
     font-size: 24px;
@@ -261,7 +252,7 @@ watch(
       padding: 10px 20px;
       margin: 0 40px 0 0;
       background: #ffffff;
-      border-radius: 25px;
+      border-radius: 6px;
       box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
 
       &:last-child {
@@ -276,7 +267,7 @@ watch(
     padding: 10px 20px;
     margin-bottom: 40px;
     background: #ffffff;
-    border-radius: 25px;
+    border-radius: 6px;
     box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
   }
 }

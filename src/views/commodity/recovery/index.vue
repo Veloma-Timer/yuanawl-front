@@ -320,7 +320,6 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
     api: title === "新增" ? addRecycle : title === "编辑" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };
-  console.log(params);
   drawerRef.value?.acceptParams(params);
 };
 const onSetPhone = row => {

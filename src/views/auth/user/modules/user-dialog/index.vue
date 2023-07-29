@@ -63,8 +63,8 @@
           </el-form-item>
         </el-col>
         <el-col :span="12" v-if="drawerProps.row!.isAdmin === '0'">
-          <el-form-item label="所在组" prop="setId">
-            <el-select v-model="drawerProps.row!.setId" placeholder="请选择" class="check-select" filterable>
+          <el-form-item label="所在部门" prop="setId">
+            <el-select v-model="drawerProps.row!.setId" placeholder="请选择所在部门" class="check-select" filterable>
               <template v-for="item in setIdList" :key="item.value">
                 <el-option :label="item.label" :value="item.value" />
               </template>

@@ -46,8 +46,8 @@ const props = withDefaults(
   padding: 20px;
   background: #ffffff;
   border: 2px solid #f0f0f0;
-  border-radius: 25px;
-  box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
+  border-radius: 6px;
+  //box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
 
   .cell {
     font-size: 16px;
