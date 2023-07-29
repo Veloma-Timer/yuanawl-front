@@ -146,7 +146,13 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
   { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
-  { prop: "campId", label: "回收价格", width: 160, search: { el: "input" } },
+  {
+    prop: "accountRecyclerPrice",
+    label: "回收价格",
+    width: 160,
+    search: { el: "input" },
+    render: ({ row }) => "¥" + row.accountRecyclerPrice.toFixed(2)
+  },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",
