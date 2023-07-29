@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="title mb-2">{{ props.title }}</div>
+    <div class="title mb-2 relative">{{ props.title }}</div>
     <div class="home-crud">
       <div class="crud-list flex">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
@@ -202,6 +202,18 @@ watch(
   font-size: 20px;
   font-weight: 600;
   color: #475669;
+  padding: 0 16px;
+
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+    background-color: var(--el-color-primary);
+  }
 }
 .home-crud {
   width: 100%;

@@ -228,7 +228,7 @@ onMounted(() => {
       left: 0;
       width: 4px;
       height: 100%;
-      background-color: #409eff;
+      background-color: var(--el-color-primary);
     }
     .title-label {
       color: #303133;
