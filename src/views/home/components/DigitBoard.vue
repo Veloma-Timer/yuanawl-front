@@ -13,19 +13,19 @@
           <el-icon v-else color="#2dca93">
             <CaretBottom />
           </el-icon>
-          <span class="value" :style="{ color: isTop('0%') ? '#fc6772' : '#2dca93' }"> {{ chainValue }} </span>
+          <span class="value" :style="{ color: isTop(chainValue) ? '#fc6772' : '#2dca93' }"> {{ chainValue }} </span>
         </p>
       </div>
       <div class="flex flex-row">
         <span class="label">同比上期同期:</span>
         <p class="flex items-center ml-2">
-          <el-icon v-if="isTop('10%')" color="#fc6772">
+          <el-icon v-if="isTop(yearValue)" color="#fc6772">
             <CaretTop />
           </el-icon>
           <el-icon v-else color="#2dca93">
             <CaretBottom />
           </el-icon>
-          <span class="value" :style="{ color: isTop('10%') ? '#fc6772' : '#2dca93' }"> 10% </span>
+          <span class="value" :style="{ color: isTop(yearValue) ? '#fc6772' : '#2dca93' }"> {{ yearValue }} </span>
         </p>
       </div>
     </div>
@@ -35,13 +35,20 @@
 <script setup lang="ts">
 import { CaretTop, CaretBottom } from "@element-plus/icons-vue";
 
-defineProps<{
-  title: string;
-  date: string;
-  value: string | number;
-  chainValue: string | number; // 环比
-  yearValue: string | number; // 同比
-}>();
+withDefaults(
+  defineProps<{
+    title: string;
+    date: string;
+    value: string | number;
+    chainValue: string | number; // 环比
+    yearValue: string | number; // 同比
+  }>(),
+  {
+    value: 0,
+    chainValue: 0 + "%",
+    yearValue: 0 + "%"
+  }
+);
 
 const isTop = (number: number | string) => {
   const pureValue = parseFloat(number as string);

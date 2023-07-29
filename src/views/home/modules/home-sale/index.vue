@@ -5,7 +5,13 @@
       <div class="crud-list flex">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
           <!--<div class="crud-number" ref="crudNumberRef"></div>-->
-          <DigitBoard :title="namesList[index]" :value="item.current" :chain-value="item.yesterday" :date="branchName" />
+          <DigitBoard
+            :title="namesList[index]"
+            :value="item.current"
+            :year-value="item.year"
+            :chain-value="item.yesterday"
+            :date="branchName"
+          />
 
           <!--<div class="crud-total">-->
           <!--<div class="total-name" style="border: 1px solid red">-->
@@ -155,6 +161,7 @@ let crudListMap = reactive<
   {
     current: number | string;
     yesterday: number | string;
+    year: number | string;
   }[]
 >([]);
 let channelId = ref();
@@ -163,15 +170,18 @@ const setCrud = (obj: HomeSet.ISalesStatistics) => {
   crudListMap = [
     {
       current: obj.salesMoney,
-      yesterday: obj.salesYesterdayMoney
+      yesterday: obj.salesYesterdayMoney,
+      year: obj.salesYearMoney
     },
     {
       current: obj.salesAmount,
-      yesterday: obj.salesYesterdayAmount
+      yesterday: obj.salesYesterdayAmount,
+      year: obj.salesYearAmount
     },
     {
       current: obj.markupPercentage,
-      yesterday: obj.markupPercentageYesterday
+      yesterday: obj.markupPercentageYesterday,
+      year: obj.markupPercentageYear // 同比加价率
     }
   ];
   channelId.value = obj?.channelId;

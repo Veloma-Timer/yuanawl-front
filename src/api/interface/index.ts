@@ -376,9 +376,15 @@ export namespace HomeSet {
     salesMoney: number; //   今日销售金额
     salesAmount: number; //   今日销售数量
     markupPercentage: string; //   今日销售加价率
-    salesYesterdayAmount: number; // 销售数量
-    salesYesterdayMoney: number; // 销售今日
+
+    salesYesterdayAmount: number; // 昨日销售数量
+    salesYesterdayMoney: number; // 昨日销售额
     markupPercentageYesterday: string; // 昨日加价率
+
+    salesYearAmount: number; // 同比销售数量
+    salesYearMoney: number; // 同比销售额
+    markupPercentageYear: string; // 同比加价率
+
     salesRatio: INameAndAmountAndMonty[]; //   账号销售占比：按照游戏分类，有数量和金额
     salesRanking: INameAndAmountAndMonty[]; //   平台销售额排名：姓名 销售额 销售数量
     salesRankingByAmount: INameAndAmountAndMonty[]; // 平台销售数量排名: 姓名 销售额 销售数量

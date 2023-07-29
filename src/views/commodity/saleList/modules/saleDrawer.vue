@@ -73,7 +73,7 @@ import { checkPhoneNumber } from "@/utils/eleValidate";
 const rules = reactive({
   salePeopleId: [{ required: true, message: "必填项不能为空" }],
   id: [{ required: true, message: "必填项不能为空" }],
-  salesRemark: [{ required: true, message: "必填项不能为空" }],
+  // salesRemark: [{ required: true, message: "必填项不能为空" }],
   salePrice: [{ required: true, message: "必填项不能为空" }],
   salePlatform: [{ required: true, message: "必填项不能为空" }],
   saleTime: [{ required: true, message: "必填项不能为空" }],

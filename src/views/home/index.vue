@@ -71,7 +71,7 @@ interface Item {
 }
 const cityList = ref([]);
 const institution = ref(null);
-const scrollNum = ref<InstanceType<typeof scrollNum> | null>(null);
+const scrollNum = ref<number>();
 const monthList: Item[] = [
   { branchName: "今日", id: 0 },
   { branchName: "本周", id: 1 },
@@ -86,7 +86,7 @@ const institutionList: Item[] = [
 ];
 const cityName = ref();
 const monthName = ref(0);
-const branchName = ref("全部");
+const branchName = ref("今日");
 const branchNames = ref("今日");
 const params = ref<IStatistics>();
 const paramsHome = ref();
@@ -232,7 +232,7 @@ onMounted(() => {
 // 跳转路由守卫
 onBeforeRouteLeave((to, from, next) => {
   // 将当前位置进行一个保存
-  scroll.value = scrollNum.value.scrollTop;
+  scroll.value = scrollNum.value?.scrollTop;
   sessionStorage.setItem("scrollTop", scroll.value);
   next();
 });
@@ -240,9 +240,9 @@ const getScroll = () => {
   const scrollValue = sessionStorage.getItem("scrollTop");
   nextTick(() => {
     if (scrollValue) {
-      scrollNum.value.scrollTop = Number(scrollValue);
+      scrollNum.value!.scrollTop = Number(scrollValue);
     } else {
-      scrollNum.value.scrollTop = 0;
+      scrollNum.value!.scrollTop = 0;
     }
   });
 };
