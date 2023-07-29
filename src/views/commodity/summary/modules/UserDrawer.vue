@@ -252,14 +252,20 @@ const rules = reactive({
     { validator: checkPhoneNumber, trigger: "blur" }
   ],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
-  campId: [{ required: true, message: "必填项不能为空" }],
+  campId: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
   isSave: [{ required: true, message: "必填项不能为空" }],
   accountDesc: [{ required: true, message: "必填项不能为空" }],
   accountStatus: [{ required: true, message: "必填项不能为空" }],
   netUpload: [{ required: true, message: "必填项不能为空" }],
   transCatUploaded: [{ required: true, message: "必填项不能为空" }],
-  transCatUid: [{ required: true, message: "必填项不能为空" }],
+  transCatUid: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   accountLevel: [{ required: true, message: "必填项不能为空" }],
   accountPrice: [{ required: true, message: "必填项不能为空" }],
   userCompensationPrice: [{ required: true, message: "必填项不能为空" }],
