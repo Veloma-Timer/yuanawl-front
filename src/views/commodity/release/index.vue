@@ -151,7 +151,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "回收价格",
     width: 160,
     search: { el: "input" },
-    render: ({ row }) => "¥" + row.accountRecyclerPrice.toFixed(2)
+    render: ({ row }) => "¥" + row.accountRecyclerPrice || row.accountRecyclerPrice?.toFixed(2)
   },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
