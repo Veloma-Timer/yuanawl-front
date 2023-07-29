@@ -175,7 +175,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   {
     prop: "isWorkOrder",
-    label: "是否有工单",
+    label: "是否存在工单",
     width: 160,
     sortable: true,
     enum: [
@@ -187,8 +187,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
       const status = row.isWorkOrder === "0";
       return (
         <div class="flex flex-row flx-center">
-          <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "没有" : "有"}</span>
+          <span class={status ? "v-green" : "v-red"}></span>
+          <span>{status ? "无" : "有"}</span>
         </div>
       );
     }

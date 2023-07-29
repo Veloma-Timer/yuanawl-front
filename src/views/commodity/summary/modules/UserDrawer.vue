@@ -9,6 +9,11 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
+      <el-form-item label="所属门店" prop="branchId">
+        <el-select v-model="drawerProps.row!.branchId" disabled placeholder="请选择所属门店" filterable>
+          <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="回收组" prop="groupingId">
         <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable @change="setGroupingId">
           <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
@@ -169,7 +174,7 @@
       </el-form-item>
       <el-form-item label="回收门店" prop="storeId">
         <el-select v-model="drawerProps.row!.storeId" placeholder="请选择" filterable>
-          <el-option v-for="item in branchMap" :key="item.id" :label="item.label" :value="item.id" />
+          <el-option v-for="item in stores" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="资料是否存档" prop="isSave">
@@ -215,17 +220,20 @@ import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { generateCode, typeCode } from "@/api/modules/commodity";
 import { recycleShop, sellKeyMap } from "@/api/modules/dictionary";
 import { checkPhoneNumber } from "@/utils/eleValidate";
+import { decryption } from "@/utils/AESUtil";
+import { useUserStore } from "@/stores/modules/user";
+import { getAllBranch } from "@/api/modules/set";
 
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
-    type: rule.field,
+    type: "accountCode",
     value
   };
   if (value) {
     typeCode(params).then(res => {
       const { data } = res;
       if (data === "0") {
-        return callback(new Error("该编号以存在"));
+        return callback(new Error("该编号已存在"));
       } else {
         return callback();
       }
@@ -261,7 +269,7 @@ const rules = reactive({
   ],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
   isSave: [{ required: true, message: "必填项不能为空" }],
-  accountDesc: [{ required: true, message: "必填项不能为空" }],
+  // accountDesc: [{ required: true, message: "必填项不能为空" }],
   accountStatus: [{ required: true, message: "必填项不能为空" }],
   netUpload: [{ required: true, message: "必填项不能为空" }],
   transCatUploaded: [{ required: true, message: "必填项不能为空" }],
@@ -269,7 +277,7 @@ const rules = reactive({
     { required: true, message: "必填项不能为空" },
     { validator: validatePass, trigger: "blur" }
   ],
-  accountLevel: [{ required: true, message: "必填项不能为空" }],
+  // accountLevel: [{ required: true, message: "必填项不能为空" }],
   accountPrice: [{ required: true, message: "必填项不能为空" }],
   userCompensationPrice: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
@@ -363,16 +371,22 @@ const methodsMap = [
 ];
 let accountTypeMap: unknown = [];
 let userMap: unknown = [];
-let branchMap: unknown = [];
+let stores: unknown = [];
+
+const branchMap = ref([]);
 let platformList: unknown = [];
 const publishMap = () => {
   recycleShop().then(res => {
     const {
       data: { recycleShop = [] }
     } = res;
-    branchMap = recycleShop;
+    stores = recycleShop;
   });
 };
+
+const userStore = useUserStore();
+const token = userStore.token; // 获取token
+
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
@@ -387,6 +401,10 @@ const setAllList = async () => {
   accountTypeMap = res.data;
   userMap = reloads.data;
   await publishMap();
+  const { data: branchList } = await getAllBranch({});
+  branchMap.value = branchList;
+  const obj = JSON.parse(decryption("token", token));
+  drawerProps.value.row.branchId = obj.user.userBranchId;
 };
 
 watch(drawerVisible, dv => dv && setAllList());

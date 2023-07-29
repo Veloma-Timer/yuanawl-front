@@ -171,14 +171,14 @@ const rules = reactive({
   accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   phoneRemark: [{ required: true, message: "必填项不能为空" }],
-  email: [
-    { required: true, message: "必填项不能为空" },
-    { required: true, validator: checkEmail, trigger: "blur" }
-  ],
-  emailSecret: [{ required: true, message: "必填项不能为空" }],
+  // email: [
+  //   { required: true, message: "必填项不能为空" },
+  //   { required: true, validator: checkEmail, trigger: "blur" }
+  // ],
+  // emailSecret: [{ required: true, message: "必填项不能为空" }],
   systemId: [{ required: true, message: "必填项不能为空" }],
-  accountRemark: [{ required: true, message: "必填项不能为空" }],
-  campId: [{ required: true, message: "必填项不能为空" }],
+  // accountRemark: [{ required: true, message: "必填项不能为空" }],
+  // campId: [{ required: true, message: "必填项不能为空" }],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
   accountRecyclerPrice: [{ required: true, message: "必填项不能为空" }],
   recycleOrder: [{ required: true, message: "必填项不能为空" }],

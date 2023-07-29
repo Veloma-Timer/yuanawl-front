@@ -76,10 +76,10 @@ const dataCallback = (data: any) => {
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
   let newParams = JSON.parse(JSON.stringify(params));
-  if (newParams.createTime[0] && newParams.createTime[1]) {
-    newParams.openAccountTime = newParams.createTime.join(",");
-  }
-  delete newParams.createTime;
+  // if (newParams.createTime[0] && newParams.createTime[1]) {
+  //   newParams.openAccountTime = newParams.createTime.join(",");
+  // }
+  // delete newParams.createTime;
   return getPhoneList(newParams);
 };
 
@@ -88,19 +88,19 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.phoneLibrary>[] = [
   { prop: "openAccountName", label: "开户人姓名", search: { el: "input" } },
-  {
-    prop: "createTime",
-    label: "开户日期",
-    render: scope => {
-      return parseTime(scope.row.openAccountTime, "{y}-{m}-{d} {h}:{i}:{s}");
-    },
-    search: {
-      el: "date-picker",
-      span: 2,
-      props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
-      defaultValue: ["", ""]
-    }
-  },
+  // {
+  //   prop: "createTime",
+  //   label: "开户日期",
+  //   render: scope => {
+  //     return parseTime(scope.row.openAccountTime, "{y}-{m}-{d} {h}:{i}:{s}");
+  //   },
+  //   search: {
+  //     el: "date-picker",
+  //     span: 2,
+  //     props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
+  //     defaultValue: ["", ""]
+  //   }
+  // },
   {
     prop: "openAccountNumber",
     label: "开户主号码",

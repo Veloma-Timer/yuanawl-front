@@ -10,7 +10,7 @@ export function checkPhoneNumber(rule: any, value: any, callback: any) {
   if (value === "") return callback("请输入手机号码");
   if (!regexp.test(value)) return callback(new Error("请输入正确的手机号码"));
   const params = {
-    type: rule.field,
+    type: "accountTel",
     value
   };
   if (value) {
