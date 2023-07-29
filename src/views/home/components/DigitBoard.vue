@@ -7,13 +7,13 @@
       <div class="mr-5 flex flex-row">
         <span class="label">环比上期: </span>
         <p class="flex items-center ml-2">
-          <el-icon v-if="isTop('0%')" color="#fc6772">
+          <el-icon v-if="isTop(chainValue)" color="#fc6772">
             <CaretTop />
           </el-icon>
           <el-icon v-else color="#2dca93">
             <CaretBottom />
           </el-icon>
-          <span class="value" :style="{ color: isTop('0%') ? '#fc6772' : '#2dca93' }"> 10% </span>
+          <span class="value" :style="{ color: isTop('0%') ? '#fc6772' : '#2dca93' }"> {{ chainValue }} </span>
         </p>
       </div>
       <div class="flex flex-row">

@@ -148,6 +148,7 @@ const setHomeCardList = async () => {
   const {
     data: { sales, recycle, publish, workOrder }
   } = (await getHomeStatistics(params.value!)) as any;
+
   const { data } = await homeSalesAndAfter(paramsHome.value);
   const resChannel = await homeSalesChannel(paramsHome.value);
   const resRecycle = await homeSalesRecycle(paramsHome.value);

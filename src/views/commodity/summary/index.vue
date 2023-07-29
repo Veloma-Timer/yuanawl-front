@@ -245,6 +245,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     },
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => {
+      console.log(row, "row");
       return getTypeListName(row.accountType);
     }
   },
@@ -314,12 +315,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     },
     fieldNames: { label: "branchName", value: "id" }
   },
-  {
-    prop: "accountNumber",
-    sortable: true,
-    label: "账号",
-    width: 160
-  },
+  // {
+  //   prop: "accountNumber",
+  //   sortable: true,
+  //   label: "账号",
+  //   width: 160
+  // },
   {
     prop: "accountPassword",
     sortable: true,

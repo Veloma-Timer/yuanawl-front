@@ -376,12 +376,12 @@ export namespace HomeSet {
     salesMoney: number; //   今日销售金额
     salesAmount: number; //   今日销售数量
     markupPercentage: string; //   今日销售加价率
-    sales: (ComparisonAmount & ComparisonMoney)[];
-    channelList: mapList[];
-    resChannel: (ComparisonAmount & ComparisonMoney)[];
+    salesYesterdayAmount: number; // 销售数量
+    salesYesterdayMoney: number; // 销售今日
+    markupPercentageYesterday: string; // 昨日加价率
     salesRatio: INameAndAmountAndMonty[]; //   账号销售占比：按照游戏分类，有数量和金额
-    salesRankingByAmount: INameAndAmountAndMonty[]; //   账号销售占比：按照游戏分类，有数量和金额
     salesRanking: INameAndAmountAndMonty[]; //   平台销售额排名：姓名 销售额 销售数量
+    salesRankingByAmount: INameAndAmountAndMonty[]; // 平台销售数量排名: 姓名 销售额 销售数量
     salesSetComparison: INameAndAmountAndMonty[]; //   销售组数据对比：按照员工分类 有数量和金额
     salesChannelStatistics: INameAndAmountAndMonty[]; //   渠道销售统计：按照渠道分类(publishPlatform) 有数量和金额
   }

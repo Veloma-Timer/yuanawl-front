@@ -3,9 +3,9 @@
     <div class="title mb-2">{{ props.title }}</div>
     <div class="home-crud">
       <div class="crud-list flex">
-        <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
+        <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
           <!--<div class="crud-number" ref="crudNumberRef"></div>-->
-          <DigitBoard :title="namesList[index]" :value="item" :date="branchName" />
+          <DigitBoard :title="namesList[index]" :value="item.current" :chain-value="item.yesterday" :date="branchName" />
 
           <!--<div class="crud-total">-->
           <!--<div class="total-name" style="border: 1px solid red">-->
@@ -151,20 +151,38 @@ const setTypes = id => {
   emits("getSalesList", id);
 };
 // 处理数据
-let crudListMap = reactive([]);
+let crudListMap = reactive<
+  {
+    current: number | string;
+    yesterday: number | string;
+  }[]
+>([]);
 let channelId = ref();
 setNumber();
-const setCrud = obj => {
-  crudListMap = [obj.salesMoney, obj.salesAmount, obj.markupPercentage];
+const setCrud = (obj: HomeSet.ISalesStatistics) => {
+  crudListMap = [
+    {
+      current: obj.salesMoney,
+      yesterday: obj.salesYesterdayMoney
+    },
+    {
+      current: obj.salesAmount,
+      yesterday: obj.salesYesterdayAmount
+    },
+    {
+      current: obj.markupPercentage,
+      yesterday: obj.markupPercentageYesterday
+    }
+  ];
   channelId.value = obj?.channelId;
   setNumber();
 };
 watch(
   () => props.salesObj,
-  count => {
+  sales => {
     crudListMap = [];
     /* ... */
-    setCrud(count);
+    setCrud(sales);
   },
   { deep: true, immediate: true }
 );
