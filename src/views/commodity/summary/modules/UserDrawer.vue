@@ -9,7 +9,7 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="回收组" prop="storeId">
+      <el-form-item label="回收组" prop="groupingId">
         <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable @change="setGroupingId">
           <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
@@ -167,8 +167,8 @@
           <el-option v-for="item in haveSecondaryMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="所属门店" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" placeholder="请选择" filterable>
+      <el-form-item label="回收门店" prop="storeId">
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择" filterable>
           <el-option v-for="item in branchMap" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -238,6 +238,7 @@ const rules = reactive({
     { validator: validatePass, trigger: "blur" }
   ],
   accountType: [{ required: true, message: "必填项不能为空" }],
+  storeId: [{ required: true, message: "必填项不能为空" }],
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   accountRecycler: [{ required: true, message: "必填项不能为空" }],
   accountRecyclerTime: [{ required: true, message: "必填项不能为空" }],
