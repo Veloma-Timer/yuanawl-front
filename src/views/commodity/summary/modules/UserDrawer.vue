@@ -109,9 +109,6 @@
       <el-form-item label="出售平台">
         <el-input v-model="drawerProps.row!.salePlatform" placeholder="请输入" clearable></el-input>
       </el-form-item>
-      <!--<el-form-item label="游戏账号" prop="accountNumber">-->
-      <!--  <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable></el-input>-->
-      <!--</el-form-item>-->
       <el-form-item label="营地号" prop="campId">
         <el-input v-model="drawerProps.row!.campId" placeholder="请输入账号" clearable></el-input>
       </el-form-item>
@@ -151,7 +148,7 @@
         ></el-input-number>
       </el-form-item>
       <el-form-item label="绑定手机号" prop="accountTel">
-        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable :maxlength="11"></el-input>
+        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable></el-input>
       </el-form-item>
       <el-form-item label="账号备注">
         <el-input
@@ -227,6 +224,8 @@ const validatePass = (rule: any, value: any, callback: any) => {
       const { data } = res;
       if (data === "0") {
         return callback(new Error("该编号以存在"));
+      } else {
+        return callback();
       }
     });
   }
@@ -250,7 +249,7 @@ const rules = reactive({
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   accountTel: [
     { required: true, message: "必填项不能为空" },
-    { required: true, validator: checkPhoneNumber, trigger: "blur" }
+    { validator: checkPhoneNumber, trigger: "blur" }
   ],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
   campId: [{ required: true, message: "必填项不能为空" }],
@@ -321,10 +320,12 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      await drawerProps.value.api!(drawerProps.value.row);
-      ElMessage.success({ message: `${drawerProps.value.title}用户成功！` });
-      drawerProps.value.getTableList!();
-      drawerVisible.value = false;
+      const res = await drawerProps.value.api!(drawerProps.value.row);
+      if (res.success) {
+        ElMessage.success({ message: `${drawerProps.value.title}用户成功！` });
+        drawerProps.value.getTableList!();
+        drawerVisible.value = false;
+      }
     } catch (error) {
       console.log(error);
     }
