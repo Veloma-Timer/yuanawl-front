@@ -227,7 +227,9 @@
           </el-col>
         </el-row>
         <!-- (setId === 2 || isAdmin) 普通用户 售后才显示 -->
-        <div class="add-process" v-if="!isShowAddProcess && (setId === 2 || isAdmin)">
+        <!-- <div class="add-process" v-if="!isShowAddProcess && (setId === 2 || isAdmin)"> -->
+        <!-- 现在: setId === 2 售后才显示,管理员只能新增基础信息 -->
+        <div class="add-process" v-if="!isShowAddProcess && setId === 2">
           <el-button type="primary" @click="addProcess" class="btn">添加处理</el-button>
         </div>
         <template v-if="isShowAddProcess">
@@ -1282,12 +1284,13 @@ const edit = () => {
 const addProcess = () => {
   isShowAddProcess.value = true;
   if (isAdmin.value) {
-    showDeptObj.value = {
-      afterSales: true,
-      recycle: true,
-      sales: true,
-      publish: true
-    };
+    // 管理员只能新增基础信息
+    // showDeptObj.value = {
+    //   afterSales: true,
+    //   recycle: true,
+    //   sales: true,
+    //   publish: true
+    // };
   } else {
     // 新增 按照 当前登录的人判断
     showDeptObj.value = {
