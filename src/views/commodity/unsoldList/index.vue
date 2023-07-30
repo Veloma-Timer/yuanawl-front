@@ -37,8 +37,6 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 // import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import SalesDrawer from "./modules/SalesDrawer.vue";
-import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Document, View } from "@element-plus/icons-vue";
 import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { Document, View } from "@element-plus/icons-vue";
