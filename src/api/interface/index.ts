@@ -160,7 +160,7 @@ export namespace SalesOrder {
     // 基本信息
     basicOrderCode: string; // 工单编号
     basicOrderStar: number; // 工单星级
-    basicAccountId: string; // 游戏账号
+    basicAccountId: number | string; // 游戏账号
     basicQuestionType: string; // 问题类型
     basicInsure: number | string; // 是否在保
     basicHandleTime: any; // 处理失效

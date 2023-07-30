@@ -87,7 +87,7 @@ let typeList: unknown = ref([]);
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
   const id = row.id;
-  router.push({ name: "工单新增", query: { id: id || "" } });
+  router.push({ name: "工单新增", query: { accId: id || "" } });
 };
 
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段

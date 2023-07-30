@@ -93,7 +93,7 @@ const getAllAccountList = async () => {
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
   const id = row.id;
-  router.push({ name: "工单新增", query: { id: id || "" } });
+  router.push({ name: "工单新增", query: { accId: id || "" } });
 };
 
 getAllAccountList();

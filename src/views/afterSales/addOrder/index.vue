@@ -38,7 +38,7 @@
           <el-col :span="6">
             <el-form-item label="账号编码" prop="basicAccountId">
               <el-select
-                :disabled="ruleForm.basicEdit"
+                :disabled="ruleForm.basicEdit || !!accId"
                 v-model="ruleForm.row!.basicAccountId"
                 placeholder="请选择"
                 class="order-input"
@@ -755,6 +755,7 @@ import dayjs from "dayjs";
 // const { BUTTONS } = useAuthButtons();
 const route = useRoute();
 const id = route.query?.id;
+const accId = route.query?.accId;
 const isView = route.query?.isView ? true : false;
 const router = useRouter();
 
@@ -899,10 +900,12 @@ const baseObj = ref();
 const isZZ = ref(false);
 function onChangeAccount(e: any) {
   baseObj.value = accountList.value.find(item => item.id === e);
-  const _isZZ = baseObj.value.salePlatformId >= 16 || baseObj.value.salePlatformId <= 22;
-  // 是转转
-  isZZ.value = _isZZ;
-  ruleForm.value.row.basicHandleTime = _isZZ ? 4 : 7;
+  if (baseObj.value?.salePlatformId) {
+    const _isZZ = baseObj.value.salePlatformId >= 16 || baseObj.value.salePlatformId <= 22;
+    // 是转转
+    isZZ.value = _isZZ;
+    ruleForm.value.row.basicHandleTime = _isZZ ? 4 : 7;
+  }
 }
 
 // 返显数据处理
@@ -1053,6 +1056,15 @@ const getDetailInfo = async (id: any) => {
     // 账号销售数据信息默认
     onChangeAccount(data.accountId);
   }
+};
+
+// 账号管理-创建工单点过来
+const getAccountInfo = () => {
+  if (!accId) {
+    return;
+  }
+  ruleForm.value.row!.basicAccountId = Number(accId);
+  onChangeAccount(Number(accId));
 };
 
 // 账号状态
@@ -1313,6 +1325,7 @@ const initOrderData = async () => {
   ruleForm.value.row.basicOrderStar = 1;
   const { data } = await getAllUser({});
   getDetailInfo(id);
+  getAccountInfo();
   userList.value = data;
 };
 
