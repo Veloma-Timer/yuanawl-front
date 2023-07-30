@@ -89,7 +89,7 @@ const getTableList = (params: any) => {
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
-const columns: ColumnProps<User.ResUserList>[] = [
+const columns: ColumnProps<User.ResUser>[] = [
   { prop: "userAccount", label: "登录名", search: { el: "input" } },
   { prop: "userTel", label: "手机号码", search: { el: "input" } },
   { prop: "userCode", label: "员工工号" },
@@ -126,11 +126,15 @@ const batchAdd = (title: string) => {
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
-const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
+const openDrawer = (title: string, row: Partial<User.ResUser> = {}) => {
+  let jobName: string | undefined = "在职";
+  if (title === "编辑") {
+    jobName = row.jobStatus;
+  }
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row },
+    row: { ...row, jobStatus: jobName },
     api: title === "新增" ? addUser : title === "编辑" ? editUser : undefined,
     getTableList: proTable.value?.getTableList
   };

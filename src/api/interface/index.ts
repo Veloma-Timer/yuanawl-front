@@ -95,6 +95,7 @@ export namespace User {
     userName: string; // 用户名称
     userTel: string; // 手机号码
     userAccount: string; // 登录账号
+    jobStatus: string; // 在职状态
     userPassword: string; // 用户密码
     userRoleId: number; // 用户角色ID
     userBranchId: number; // 用户所属门店ID
