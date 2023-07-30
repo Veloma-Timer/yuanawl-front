@@ -37,6 +37,7 @@
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -65,13 +66,14 @@ import {
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-import { getPhone, parseTime, setPhone, shortcuts } from "@/utils";
+import { getPhone, parseTime, setPhone, shortcuts, getFixed } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { sellKeyGrouping } from "@/api/modules/dictionary";
 
 const route = useRoute();
+const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
@@ -80,6 +82,13 @@ const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
 let typeList: unknown = ref([]);
+
+// 创建工单
+const addOrder = (row: Partial<Commodity.Sales>) => {
+  const id = row.id;
+  router.push({ name: "工单新增", query: { id: id || "" } });
+};
+
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -254,7 +263,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     },
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => {
-      console.log(row, "row");
       return getTypeListName(row.accountType);
     }
   },
@@ -396,7 +404,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
   },
-  { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  { prop: "operation", label: "操作", fixed: "right", width: 300 }
 ];
 // 账号列表
 type AccountObj = { accountNumber: string; accountCode: string; id: number };
@@ -411,12 +419,7 @@ const deleteAccount = async (params: Commodity.Account) => {
   await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
   proTable.value?.getTableList();
 };
-const getFixed = (str: string) => {
-  if (str) {
-    return "￥" + parseFloat(str).toFixed(2);
-  }
-  return "--";
-};
+
 // 批量删除用户信息
 // const batchDelete = async (id: string[]) => {
 //   await useHandleData(deleteSummary, { id }, "导出用户信息");

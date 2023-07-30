@@ -35,6 +35,7 @@
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
+        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
       </template>
     </ProTable>
     <recoverDrawer ref="drawerRef" />
@@ -70,7 +71,9 @@ import { parseTime } from "@/utils/is";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
 import { getPhone, setPhone, shortcuts } from "@/utils";
-// import { useRoute } from "vue-router";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
 const obj = JSON.parse(decryption("token", token));
@@ -85,6 +88,13 @@ const getAllAccountList = async () => {
   const { data } = await getAllBaseAccount({});
   accountList.value = data;
 };
+
+// 创建工单
+const addOrder = (row: Partial<Commodity.Sales>) => {
+  const id = row.id;
+  router.push({ name: "工单新增", query: { id: id || "" } });
+};
+
 getAllAccountList();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
@@ -263,7 +273,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
   },
-  { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  { prop: "operation", label: "操作", fixed: "right", width: 300 }
 ];
 
 // 删除用户信息

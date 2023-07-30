@@ -26,7 +26,18 @@ export interface GlobalState {
 /* UserState */
 export interface UserState {
   token: string;
-  userInfo: {};
+  userInfo: {
+    id: number;
+    userCode: string;
+    isAdmin: string;
+    userName: string;
+    userTel: string;
+    userAccount: string;
+    userPassword: string;
+    userRoleId: number;
+    userBranchId: number;
+    setId: number;
+  };
 }
 
 /* ProTableState */

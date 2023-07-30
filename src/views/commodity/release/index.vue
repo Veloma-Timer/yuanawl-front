@@ -37,6 +37,7 @@
           发布
         </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
         <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
@@ -81,6 +82,12 @@ const dataCallback = (data: any) => {
     pageNum: Number(data.pageNum),
     pageSize: Number(data.pageSize)
   };
+};
+
+// 创建工单
+const addOrder = (row: Partial<Commodity.Sales>) => {
+  const id = row.id;
+  router.push({ name: "工单新增", query: { id: id || "" } });
 };
 
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
@@ -279,7 +286,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
   },
-  { prop: "operation", label: "操作", fixed: "right", width: 260 }
+  { prop: "operation", label: "操作", fixed: "right", width: 300 }
 ];
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };

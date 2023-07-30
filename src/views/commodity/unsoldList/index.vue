@@ -21,12 +21,12 @@
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
-      <!--<template #operation="scope">-->
-      <!--  <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>-->
-      <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
-      <!--</template>-->
+      <template #operation="scope">
+        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
+      </template>
     </ProTable>
-    <UnsoldDrawer ref="drawerRef" />
+    <SalesDrawer ref="drawerRef" />
     <ImportExcel ref="dialogRef" />
   </div>
 </template>
@@ -35,16 +35,17 @@
 import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
-import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
+// import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
+import SalesDrawer from "./modules/SalesDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Document, Download, View } from "@element-plus/icons-vue";
+import { Document, View } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
-import { parseTime, shortcuts } from "@/utils";
+import { shortcuts } from "@/utils";
 
 const { BUTTONS } = useAuthButtons();
 
@@ -227,8 +228,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
       el: "date-picker",
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
-  }
-  // { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  },
+  { prop: "operation", label: "操作", fixed: "right", width: 150 }
 ];
 
 // 删除用户信息

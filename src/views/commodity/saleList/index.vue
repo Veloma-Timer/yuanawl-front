@@ -32,11 +32,12 @@
           销售
         </el-button>
         <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
+        <!-- 只有已售出并且是管理员的用户才可以修改 -->
         <el-button
           type="primary"
           link
           :icon="View"
-          v-if="BUTTONS.view && scope.row.isSales == '0'"
+          v-if="scope.row.isSales == '1' && userObj.userInfo.isAdmin == '1'"
           @click="openDrawer('编辑', scope.row)"
           >编辑
         </el-button>
@@ -58,11 +59,12 @@ import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icon
 import { addSales, getSalesList, editSales, summaryExport, salesTemplate, salesUpload } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
-import { parseTime, shortcuts } from "@/utils";
+import { parseTime, shortcuts, getFixed } from "@/utils";
 import { getUserAll } from "@/api/modules/user";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { useRouter } from "vue-router";
+import { getAllList } from "@/api/modules/accountClass";
 const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -72,6 +74,7 @@ const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
 const userObj = useUserStore();
+
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -82,12 +85,7 @@ const dataCallback = (data: any) => {
     pageSize: Number(data.pageSize)
   };
 };
-const getFixed = (str: string) => {
-  if (str) {
-    return "￥" + parseFloat(str).toFixed(2);
-  }
-  return "--";
-};
+
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
@@ -107,11 +105,31 @@ const batchAdd = (title: string) => {
   };
   dialogRef.value?.acceptParams(params);
 };
+
+let typeList = ref([]);
+
+const getTypeList = async () => {
+  const { data } = await getAllList();
+  typeList.value = data;
+};
+getTypeList();
+
+const getTypeListName = (ids: []) => {
+  const idsNum = ids?.map(item => Number(item));
+  const list = typeList.value;
+  const names = idsNum?.map(item => {
+    const obj = list.find(items => items.id === item);
+    return obj?.typeName;
+  });
+  return names?.join();
+};
+
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", width: 55, fixed: true },
+  { prop: "salesCode", label: "销售订单号", width: 190, search: { el: "input" }, fixed: "left" },
   {
     prop: "accountCode",
     label: "账号编码",
@@ -150,15 +168,15 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     search: { el: "select" },
     width: 160,
     enum: [
-      { label: "未销售", value: "0" },
-      { label: "已销售", value: "1" }
+      { label: "未售", value: "0" },
+      { label: "已售", value: "1" }
     ],
     render: ({ row }) => {
       const status = row.isSales === "0";
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "未销售" : "已销售"}</span>
+          <span>{status ? "未售" : "已售"}</span>
         </div>
       );
     }
@@ -170,8 +188,30 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     render: scope => (scope.row!.noSaleResidenceTime || 0) + "天"
   },
 
-  { prop: "campId", label: "回收金额", width: 160, search: { el: "input" } },
-  { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
+  {
+    prop: "accountRecyclerPrice",
+    label: "回收金额",
+    width: 160,
+    search: { el: "input" },
+    render: ({ row }) => <span>{getFixed(row.accountRecyclerPrice) || "--"}</span>
+  },
+  {
+    prop: "accountType",
+    label: "游戏分类",
+    sortable: true,
+    width: 160,
+    enum: getAllList,
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
+    fieldNames: { label: "typeName", value: "id" },
+    render: ({ row }) => {
+      return getTypeListName(row.accountType);
+    }
+  },
   // {
   //   prop: "accountNumber",
   //   sortable: true,
@@ -209,7 +249,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
 
   { prop: "salePrice", label: "出售金额", width: 160, search: { el: "input" } },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
-  { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
+  { prop: "recycleOrder", label: "回收订单号", width: 190, search: { el: "input" } },
   {
     prop: "accountRecyclerId",
     label: "回收人",
@@ -230,7 +270,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
   {
     prop: "salePeopleId",
     width: 160,
-    label: "出售人姓名",
+    label: "出售人",
     enum: getUserAll,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }

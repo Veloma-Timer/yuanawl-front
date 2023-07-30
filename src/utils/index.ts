@@ -359,10 +359,10 @@ export const formatParams = (obj: any) => {
   }
   return `?${params.slice(0, -1)}`;
 };
-export const setPhone = accountTel => {
+export const setPhone = (accountTel: string) => {
   return accountTel.replace(/^[0-9]*$/g, "***********");
 };
-export const getPhone = phone => {
+export const getPhone = (phone: string) => {
   if (!phone) return "--";
   return phone;
 };
@@ -396,3 +396,10 @@ export const shortcuts = [
     }
   }
 ];
+
+export const getFixed = (str: string | number) => {
+  if (str) {
+    return "￥" + parseFloat(str as string).toFixed(2);
+  }
+  return "--";
+};
