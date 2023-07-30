@@ -194,8 +194,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "发布人",
     enum: getUserAll,
     search: { el: "select" },
-    fieldNames: { label: "userName", value: "id" },
-    render: ({ row }) => row.accountPublisher?.userName
+    fieldNames: { label: "userName", value: "id" }
   },
   {
     prop: "isWorkOrder",

@@ -1307,9 +1307,7 @@ const initOrderData = async () => {
   // 默认时效4
   // ruleForm.value.row.basicHandleTime = 4;
   // 不是管理员不可编辑工单星级 就默认星级4 管理员可以无限加
-  // if (!isAdmin.value) {
-  //   ruleForm.value.row.basicOrderStar = 4;
-  // }
+  ruleForm.value.row.basicOrderStar = 1;
   const { data } = await getAllUser({});
   getDetailInfo(id);
   userList.value = data;

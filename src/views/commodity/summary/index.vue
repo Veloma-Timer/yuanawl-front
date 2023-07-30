@@ -359,6 +359,21 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: { el: "input" }
   },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
+  {
+    prop: "accountPublisherId",
+    label: "发布人",
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "accountPublisherTimer",
+    label: "发布时间",
+    minWidth: 150,
+    render: ({ row }) => {
+      return parseTime(row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
+    }
+  },
   { prop: "recycleRemark", label: "发布备注", width: 160 },
   { prop: "salesRemark", label: "销售备注", width: 160 },
   {
