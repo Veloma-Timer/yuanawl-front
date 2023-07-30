@@ -27,12 +27,8 @@
         <el-row class="row-line" :gutter="10">
           <el-col :span="6">
             <el-form-item label="工单编号" prop="basicOrderCode">
-              <el-input
-                v-model="ruleForm.row!.basicOrderCode"
-                placeholder="请选择"
-                class="order-input"
-                :disabled="ruleForm.basicEdit"
-              ></el-input>
+              <!-- :disabled="ruleForm.basicEdit" -->
+              <el-input v-model="ruleForm.row!.basicOrderCode" placeholder="请选择" class="order-input" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -743,7 +739,8 @@ import {
   addRecycleInfo,
   editRecycleInfo,
   editPublishInfo,
-  getProcessingDept
+  getProcessingDept,
+  generateCode
 } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount, getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
@@ -1067,6 +1064,14 @@ const getAccountInfo = () => {
   onChangeAccount(Number(accId));
 };
 
+const getBasicOrderCode = async () => {
+  // 新增-没id
+  if (!id) {
+    const code = await generateCode();
+    ruleForm.value.row!.basicOrderCode = code as unknown as string;
+  }
+};
+
 // 账号状态
 const insureList = [
   { label: "否", value: "0" },
@@ -1326,6 +1331,7 @@ const initOrderData = async () => {
   const { data } = await getAllUser({});
   getDetailInfo(id);
   getAccountInfo();
+  getBasicOrderCode();
   userList.value = data;
 };
 

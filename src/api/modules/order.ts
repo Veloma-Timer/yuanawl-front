@@ -168,3 +168,8 @@ export const editPublishInfo = (params: any) => {
 export const getProcessingDept = (id: number) => {
   return http.get<{ afterSales: boolean; sales: false; publish: boolean }>(`${PORT3}/base_work_order/processing/dept/${id}`);
 };
+
+// 自动生成工单编码
+export const generateCode = () => {
+  return http.get<string>(`${PORT3}/base_work_order/generate/code`);
+};
