@@ -49,6 +49,7 @@ import {
 } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
+import deepcopy from "deepcopy";
 // import { useRoute } from "vue-router";
 
 // const route = useRoute();
@@ -73,7 +74,7 @@ const dataCallback = (data: any) => {
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;

@@ -36,6 +36,7 @@
     "axios": "^1.4.0",
     "crypto-js": "^4.0.0",
     "dayjs": "^1.11.7",
+    "deepcopy": "^2.1.0",
     "default-passive-events": "^2.0.0",
     "driver.js": "^0.9.8",
     "echarts": "^5.4.2",

@@ -33,6 +33,7 @@ import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { View, Document } from "@element-plus/icons-vue";
 import { saveFile } from "@/utils/file";
 import { useRouter } from "vue-router";
+import deepcopy from "deepcopy";
 const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
@@ -212,7 +213,7 @@ const operatorOrder = (title: string, row: Partial<SalesOrder.ResSalesList> = {}
 
 // 获取表格数据
 const getTableList = async (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.branchId = tableProps.selectBranchId;
   if (!newParams.branchId) {
     return false;

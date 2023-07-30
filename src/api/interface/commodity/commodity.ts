@@ -70,7 +70,7 @@ export namespace Commodity {
 
     salePrice: number; // 出售金额
 
-    salePlatform: string; // 出售平台
+    salePlatformId: string; // 出售平台
 
     diffPrice: number; // 差值(出售金额-实际回收金额)
 

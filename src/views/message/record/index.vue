@@ -17,6 +17,7 @@
 import { Message } from "@/api/interface";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { getUserListMap } from "@/api/modules/user";
+import deepcopy from "deepcopy";
 // 表格配置项
 const columns: ColumnProps<Message.Template>[] = [
   { prop: "phone", label: "手机号码", search: { el: "input" } },
@@ -36,7 +37,7 @@ const dataCallback = (data: any) => {
   };
 };
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;

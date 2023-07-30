@@ -164,21 +164,35 @@ import { getAllList } from "@/api/modules/accountClass";
 import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
 
-import { generateCode, getSetSystemList } from "@/api/modules/commodity";
+import { generateCode, getSetSystemList, typeCode } from "@/api/modules/commodity";
 import { checkPhoneNumber, checkEmail } from "@/utils/eleValidate";
+const validatePass = (rule: any, value: any, callback: any) => {
+  const params = {
+    type: "accountCode",
+    value
+  };
+  if (value) {
+    typeCode(params).then(res => {
+      const { data } = res;
+      if (data === "0") {
+        return callback(new Error("该编号已存在"));
+      } else {
+        return callback();
+      }
+    });
+  }
+};
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
-  accountCode: [{ required: true, message: "必填项不能为空" }],
+  accountCode: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   accountType: [{ required: true, message: "必填项不能为空" }],
   // accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   phoneRemark: [{ required: true, message: "必填项不能为空" }],
-  // email: [
-  //   { required: true, message: "必填项不能为空" },
-  //   { required: true, validator: checkEmail, trigger: "blur" }
-  // ],
-  // emailSecret: [{ required: true, message: "必填项不能为空" }],
   systemId: [{ required: true, message: "必填项不能为空" }],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
   // campId: [{ required: true, message: "必填项不能为空" }],

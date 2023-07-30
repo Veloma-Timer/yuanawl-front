@@ -71,6 +71,7 @@ import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute, useRouter } from "vue-router";
 import { sellKeyGrouping } from "@/api/modules/dictionary";
+import deepcopy from "deepcopy";
 
 const route = useRoute();
 const router = useRouter();
@@ -103,7 +104,7 @@ const dataCallback = (data: any) => {
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
@@ -238,7 +239,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
       const {
         data: { grouping = [] }
       } = await sellKeyGrouping();
-      console.log(grouping);
       return { data: grouping };
     },
     fieldNames: { label: "label", value: "id" },
@@ -419,6 +419,12 @@ const deleteAccount = async (params: Commodity.Account) => {
   await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
   proTable.value?.getTableList();
 };
+const getFixed = (str: string) => {
+  if (str) {
+    return "￥" + parseFloat(str).toFixed(2);
+  }
+  return "--";
+};
 
 // 批量删除用户信息
 // const batchDelete = async (id: string[]) => {
@@ -450,8 +456,10 @@ const batchAdd = (title: string) => {
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   let accountType: [] | undefined = [];
-  if (title === "查看") {
-    accountType = row.accountType;
+  if (title === "编辑") {
+    accountType = row.accountType.map(item => {
+      return parseFloat(item);
+    });
   }
   const params = {
     title,

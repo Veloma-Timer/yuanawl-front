@@ -72,6 +72,7 @@ import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
 import { getPhone, setPhone, shortcuts } from "@/utils";
 import { useRouter } from "vue-router";
+import deepcopy from "deepcopy";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -113,7 +114,7 @@ const dataCallback = (data: any) => {
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = async (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
@@ -173,20 +174,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     search: { el: "select" },
     fieldNames: { label: "branchName", value: "id" }
   },
-  // {
-  //   prop: "accountNumber",
-  //   label: "游戏编号",
-  //   width: 160,
-  //   enum: getAllBaseAccount,
-  //   search: {
-  //     el: "select",
-  //     slotName: true
-  //   },
-  //   fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-  //   render: scope => {
-  //     return <span>{scope.row?.accountNumber}</span>;
-  //   }
-  // },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -196,15 +183,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => row.accountTypeNames
   },
-  // {
-  //   prop: "accountNumber",
-  //   label: "账号",
-  //   width: 160,
-  //   search: { el: "input" },
-  //   render: scope => {
-  //     return <span>{scope.row?.accountNumber}</span>;
-  //   }
-  // },
   { prop: "accountPassword", label: "密码", width: 160 },
   {
     prop: "accountTel",
@@ -259,7 +237,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     label: "回收日期",
     width: 160,
     render: scope => {
-      return parseTime(scope.row?.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}");
+      return parseTime(scope.row?.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
@@ -313,16 +291,20 @@ const drawerRef = ref<InstanceType<typeof recoverDrawer> | null>(null);
 const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) => {
   let accountType: number[] | undefined = [];
   let accountCode: unknown = "";
+  // 当前时间
+  const date = new Date();
+  let time = "";
   const userBranchId = obj.user.userBranchId;
   if (title === "编辑") {
     accountType = row.accountType;
+    accountCode = row.accountCode;
+    time = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
   } else {
     const { data } = await generateCode(userBranchId);
     accountCode = data;
+    time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
   }
-  // 当前时间
-  const date = new Date();
-  const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
+
   const params = {
     title,
     isView: title === "查看",

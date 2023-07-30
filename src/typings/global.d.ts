@@ -94,3 +94,9 @@ type ObjToKeyValUnion<T> = {
 type ObjToKeyValArray<T> = {
   [K in keyof T]: [K, T[K]];
 }[keyof T];
+
+declare interface IFormatRes<T> {
+  success: boolean;
+  data: T | null;
+  message: string;
+}

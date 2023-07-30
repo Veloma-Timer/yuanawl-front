@@ -27,6 +27,7 @@ import Dialog from "@/views/message/template/modules/Dialog/index.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
 import { addUser, editUser, getUserListMap } from "@/api/modules/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
+import deepcopy from "deepcopy";
 const { BUTTONS } = useAuthButtons();
 // 表格配置项
 const columns: ColumnProps<Message.Template>[] = [
@@ -50,7 +51,7 @@ const dataCallback = (data: any) => {
   };
 };
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;

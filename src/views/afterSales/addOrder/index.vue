@@ -88,7 +88,7 @@
                 :disabled="ruleForm.basicEdit"
                 v-model="ruleForm.row!.basicHandleTime"
                 :min="1"
-                :max="5"
+                :max="isZZ ? 4 : 7"
                 placeholder="请输入"
                 class="order-input"
               ></el-input-number>
@@ -893,9 +893,14 @@ const ruleForm = ref<IAddOrder>({
 });
 
 const baseObj = ref();
+// 是否转转
+const isZZ = ref(false);
 function onChangeAccount(e: any) {
-  const obj = accountList.value.find(item => item.id === e);
-  baseObj.value = obj;
+  baseObj.value = accountList.value.find(item => item.id === e);
+  const _isZZ = baseObj.value.salePlatformId >= 16 || baseObj.value.salePlatformId <= 22;
+  // 是转转
+  isZZ.value = _isZZ;
+  ruleForm.value.row.basicHandleTime = _isZZ ? 4 : 7;
 }
 
 // 返显数据处理
@@ -1300,11 +1305,11 @@ const userList = ref<UserObj[]>([]);
 // 回显用户下拉和订单数据
 const initOrderData = async () => {
   // 默认时效4
-  ruleForm.value.row.basicHandleTime = 4;
+  // ruleForm.value.row.basicHandleTime = 4;
   // 不是管理员不可编辑工单星级 就默认星级4 管理员可以无限加
-  if (!isAdmin.value) {
-    ruleForm.value.row.basicOrderStar = 4;
-  }
+  // if (!isAdmin.value) {
+  //   ruleForm.value.row.basicOrderStar = 4;
+  // }
   const { data } = await getAllUser({});
   getDetailInfo(id);
   userList.value = data;

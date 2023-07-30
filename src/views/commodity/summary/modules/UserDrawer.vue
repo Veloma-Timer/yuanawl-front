@@ -115,7 +115,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="出售平台">
-        <el-select v-model="drawerProps.row!.salePlatform" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.salePlatformId" placeholder="请选择" filterable>
           <el-option v-for="item in platformList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -256,7 +256,7 @@ const rules = reactive({
   accountRecyclerPrice: [{ required: true, message: "必填项不能为空" }],
   accountPublisherId: [{ required: true, message: "必填项不能为空" }],
   accountPublisherTimer: [{ required: true, message: "必填项不能为空" }],
-  salePlatform: [{ required: true, message: "必填项不能为空" }],
+  salePlatformId: [{ required: true, message: "必填项不能为空" }],
   saleTime: [{ required: true, message: "必填项不能为空" }],
   salePrice: [{ required: true, message: "必填项不能为空" }],
   //  accountNumber: [{ required: true, message: "必填项不能为空" }],

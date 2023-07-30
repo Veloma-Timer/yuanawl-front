@@ -1,14 +1,23 @@
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 
+export interface IBranch {
+  id: number;
+  branchName: string;
+  branchCode: string;
+  branchContactId: number;
+  branchAddress: string;
+  branchTel: string;
+}
+
 // 操作日志列表
 export const getOptLog = (params: any) => {
   return http.get(PORT3 + `/sys_logs`, params);
 };
 
 // 获取所有门店
-export const getAllBranch = (params: any) => {
-  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`, params, { noLoading: true });
+export const getAllBranch = (): Promise<IFormatRes<IBranch[]>> => {
+  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`);
 };
 
 // 获取所有角色
@@ -23,7 +32,9 @@ export const getAllUser = (params: any) => {
 
 // 获取所有账号
 export const getAllBaseAccount = (params: any) => {
-  return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/all`, params);
+  return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/all`, params, {
+    noLoading: true
+  });
 };
 
 // 分页查询门店

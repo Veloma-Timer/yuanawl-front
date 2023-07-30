@@ -39,6 +39,9 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import SalesDrawer from "./modules/SalesDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Document, View } from "@element-plus/icons-vue";
+import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
+import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
+import { Document, View } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
@@ -46,6 +49,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { shortcuts } from "@/utils";
+import deepcopy from "deepcopy";
 
 const { BUTTONS } = useAuthButtons();
 
@@ -69,7 +73,7 @@ const dataCallback = (data: any) => {
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
@@ -254,10 +258,16 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UnsoldDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+  let accountType: [] | undefined = [];
+  if (title === "编辑") {
+    accountType = row.accountType.map(item => {
+      return parseFloat(item);
+    });
+  }
   const params = {
     title,
-    isView: title === "查看",
-    row: { ...row },
+    isView: title === "编辑",
+    row: { ...row, accountType: accountType },
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };

@@ -48,6 +48,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { parseTime, shortcuts } from "@/utils";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { Commodity } from "@/api/interface/commodity/commodity";
+import deepcopy from "deepcopy";
 
 const { BUTTONS } = useAuthButtons();
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -70,7 +71,7 @@ const dataCallback = (data: any) => {
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
 const getTableList = (params: any) => {
-  let newParams = JSON.parse(JSON.stringify(params));
+  let newParams = deepcopy(params);
   return summaryList(newParams);
 };
 
@@ -275,7 +276,7 @@ const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
   const params = {
     title,
-    isView: title === "查看",
+    isView: title === "编辑",
     row: { ...row },
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
