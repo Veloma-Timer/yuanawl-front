@@ -46,6 +46,7 @@
               value-format="YYYY-MM-DD hh:mm:ss"
               type="date"
               placeholder="请选择"
+              @change="setRecyclerTime"
             />
           </el-form-item>
         </el-col>
@@ -75,6 +76,7 @@
               :disabled-date="options"
               type="date"
               placeholder="请选择"
+              @change="setPublisherTime"
             />
           </el-form-item>
         </el-col>
@@ -229,9 +231,10 @@ import { getAllBranch } from "@/api/modules/set";
 
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
-    type: "accountCode",
+    type: rule.field,
     value
   };
+  if (drawerProps.value.title === "编辑") return callback();
   if (value) {
     typeCode(params).then(res => {
       const { data } = res;
@@ -245,8 +248,8 @@ const validatePass = (rule: any, value: any, callback: any) => {
 };
 const rules = reactive({
   accountCode: [
-    { required: true, message: "必填项不能为空" },
-    { validator: validatePass, trigger: "blur" }
+    { required: true, message: "必填项不能为空" }
+    // { validator: validatePass, trigger: "blur" }
   ],
   accountType: [{ required: true, message: "必填项不能为空" }],
   storeId: [{ required: true, message: "必填项不能为空" }],
@@ -320,8 +323,15 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
+const setRecyclerTime = () => {
+  return (drawerProps.value.row!.accountPublisherTimer = undefined);
+};
 
+const setPublisherTime = () => {
+  return (drawerProps.value.row!.saleTime = undefined);
+};
 const setGroupingId = (id: string) => {
+  if (drawerProps.value.title === "编辑") return;
   generateCode(id).then(res => {
     const { data } = res;
     drawerProps.value.row.accountCode = data;

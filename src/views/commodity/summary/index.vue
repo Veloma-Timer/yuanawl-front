@@ -479,7 +479,15 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, accountType: accountType },
+    row: {
+      ...row,
+      accountType: accountType,
+      salePrice: Number(row.salePrice),
+      accountPrice: Number(row.accountPrice),
+      userCompensationPrice: Number(row.userCompensationPrice),
+      platformCompensationPrice: Number(row.platformCompensationPrice),
+      accountRecyclerPrice: Number(row.accountRecyclerPrice)
+    },
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };

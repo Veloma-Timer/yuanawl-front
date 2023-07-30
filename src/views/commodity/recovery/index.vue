@@ -296,7 +296,9 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
   let time = "";
   const userBranchId = obj.user.userBranchId;
   if (title === "编辑") {
-    accountType = row.accountType;
+    accountType = row.accountType.map(item => {
+      return parseFloat(item);
+    });
     accountCode = row.accountCode;
     time = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
   } else {

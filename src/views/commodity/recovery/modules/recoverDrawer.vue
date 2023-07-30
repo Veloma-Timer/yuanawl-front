@@ -168,9 +168,10 @@ import { generateCode, getSetSystemList, typeCode } from "@/api/modules/commodit
 import { checkPhoneNumber, checkEmail } from "@/utils/eleValidate";
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
-    type: "accountCode",
+    type: rule.field,
     value
   };
+  if (drawerProps.value.title === "编辑") return callback();
   if (value) {
     typeCode(params).then(res => {
       const { data } = res;
