@@ -180,6 +180,7 @@ export namespace SalesOrder {
     afterHandleTime: string; // 处理时间
     afterHandleResult: number; // 处理结果
     afterNotifyOtherDepartments?: number; // 通知其他部门
+    afterSalesAssignUsers?: any[]; // 通知他人
     afterCompensationAmount?: number; // 赔付金额
     afterNewSecurityPhone?: number; // 新密保手机
     afterNewSecurityPassword?: number; // 新密码
@@ -194,6 +195,7 @@ export namespace SalesOrder {
     recycleResultRemark: string; // 发布处理结果备注
     recycleRemark: string; // 发布备注
     recycleInformDeptId: number;
+    recycleAssignUsers?: any[]; // 通知他人
     recycleAnnex: any[]; // 附件
     // 发布部门
     publishHandleCustomerServiceId: number; // 处理客服
@@ -202,6 +204,7 @@ export namespace SalesOrder {
     publishResultRemark: string; // 发布处理结果备注
     publishRemark: string; // 发布备注
     publishInformDeptId: number;
+    publishAssignUsers?: any[]; // 通知他人
     publishAnnex: any[]; // 附件
     // 销售部门
     saleHandleCustomerService: number; // 处理客服
@@ -209,6 +212,7 @@ export namespace SalesOrder {
     saleHandleResult: number; // 处理结果
     saleCompensationUserAmount?: number; // 赔付用户金额
     saleNotifyOtherDepartments?: string; // 通知其他部门
+    salesAssignUsers?: any[]; // 通知他人
     saleChangeUserNumber: string; // 给用户换号
     sallerName: string; // 出售人姓名
     sallerTime: string; // 出售时间
