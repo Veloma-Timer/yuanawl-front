@@ -137,8 +137,17 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   {
+    prop: "qq",
+    label: "QQ号",
+    sortable: true,
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
+  {
     prop: "accountStatus",
-    label: "账户状态",
+    label: "账号状态",
     width: 160,
     sortable: true,
     enum: [
@@ -214,7 +223,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "groupingId",
     sortable: true,
-    label: "所在组",
+    label: "回收组",
     width: 160,
     enum: async () => {
       const {

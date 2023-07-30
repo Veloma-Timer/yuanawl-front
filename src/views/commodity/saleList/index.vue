@@ -23,7 +23,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button
-          v-if="BUTTONS.add && scope.row.isPublish === '0'"
+          v-if="BUTTONS.add && scope.row.isSales === '0'"
           type="primary"
           link
           :icon="CirclePlus"
@@ -32,7 +32,14 @@
           销售
         </el-button>
         <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
-        <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button
+          type="primary"
+          link
+          :icon="View"
+          v-if="BUTTONS.view && scope.row.isSales == '0'"
+          @click="openDrawer('编辑', scope.row)"
+          >编辑
+        </el-button>
         <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>
@@ -126,6 +133,15 @@ const columns: ColumnProps<Commodity.Sales>[] = [
           </div>
         </div>
       );
+    }
+  },
+  {
+    prop: "qq",
+    label: "QQ号",
+    sortable: true,
+    width: 160,
+    search: {
+      el: "input"
     }
   },
   {

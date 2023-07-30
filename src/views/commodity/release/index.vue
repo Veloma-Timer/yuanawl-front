@@ -126,6 +126,16 @@ const columns: ColumnProps<Commodity.Release>[] = [
       );
     }
   },
+  {
+    prop: "qq",
+    label: "QQ号",
+    sortable: true,
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
+  { prop: "publishPrice", label: "商品首次定价", minWidth: 150, search: { el: "input" } },
   // {
   //   prop: "accountNumber",
   //   sortable: true,
@@ -245,7 +255,6 @@ const columns: ColumnProps<Commodity.Release>[] = [
       return parseTime(row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
-  { prop: "publishPrice", label: "商品首次定价", minWidth: 150, search: { el: "input" } },
   {
     prop: "publishPlatform",
     label: "发布渠道",

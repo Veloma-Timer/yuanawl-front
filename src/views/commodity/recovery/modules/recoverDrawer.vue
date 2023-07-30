@@ -28,9 +28,12 @@
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号" prop="accountNumber">
-        <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable :disabled="drawerProps.isView" />
+      <el-form-item label="QQ号" prop="qq">
+        <el-input v-model="drawerProps.row!.qq" placeholder="请输入QQ号" clearable />
       </el-form-item>
+      <!--<el-form-item label="账号" prop="accountNumber">-->
+      <!--  <el-input v-model="drawerProps.row!.accountNumber" placeholder="请输入账号" clearable :disabled="drawerProps.isView" />-->
+      <!--</el-form-item>-->
       <el-form-item label="密码" prop="accountPassword">
         <el-input
           type="password"
@@ -168,7 +171,7 @@ const rules = reactive({
   branchId: [{ required: true, message: "必填项不能为空" }],
   accountCode: [{ required: true, message: "必填项不能为空" }],
   accountType: [{ required: true, message: "必填项不能为空" }],
-  accountNumber: [{ required: true, message: "必填项不能为空" }],
+  // accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   phoneRemark: [{ required: true, message: "必填项不能为空" }],
   // email: [
@@ -177,12 +180,12 @@ const rules = reactive({
   // ],
   // emailSecret: [{ required: true, message: "必填项不能为空" }],
   systemId: [{ required: true, message: "必填项不能为空" }],
-  // accountRemark: [{ required: true, message: "必填项不能为空" }],
+  accountRemark: [{ required: true, message: "必填项不能为空" }],
   // campId: [{ required: true, message: "必填项不能为空" }],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
   accountRecyclerPrice: [{ required: true, message: "必填项不能为空" }],
   recycleOrder: [{ required: true, message: "必填项不能为空" }],
-  recycleRemark: [{ required: true, message: "必填项不能为空" }],
+  // recycleRemark: [{ required: true, message: "必填项不能为空" }],
   storeId: [{ required: true, message: "必填项不能为空" }],
   accountTel: [
     { required: true, message: "必填项不能为空" },

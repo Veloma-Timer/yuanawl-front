@@ -147,6 +147,15 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     }
   },
   {
+    prop: "qq",
+    label: "QQ号",
+    sortable: true,
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
+  {
     prop: "branchId",
     label: "所属门店",
     width: 160,

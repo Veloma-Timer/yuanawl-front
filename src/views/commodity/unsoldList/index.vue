@@ -21,10 +21,10 @@
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
-      <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
-      </template>
+      <!--<template #operation="scope">-->
+      <!--  <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>-->
+      <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
+      <!--</template>-->
     </ProTable>
     <UnsoldDrawer ref="drawerRef" />
     <ImportExcel ref="dialogRef" />
@@ -106,6 +106,15 @@ const columns: ColumnProps<Commodity.Account>[] = [
     search: {
       el: "select",
       slotName: true
+    }
+  },
+  {
+    prop: "qq",
+    label: "QQ号",
+    sortable: true,
+    width: 160,
+    search: {
+      el: "input"
     }
   },
   {
@@ -218,8 +227,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
       el: "date-picker",
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
-  },
-  { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  }
+  // { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
 
 // 删除用户信息
