@@ -36,15 +36,15 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
-import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { Document, Download, View } from "@element-plus/icons-vue";
+import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
+import { Document, View } from "@element-plus/icons-vue";
 import { deleteUser } from "@/api/modules/user";
 import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
-import { parseTime, shortcuts } from "@/utils";
+import { shortcuts } from "@/utils";
 
 const { BUTTONS } = useAuthButtons();
 
@@ -253,10 +253,16 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UnsoldDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
+  let accountType: [] | undefined = [];
+  if (title === "编辑") {
+    accountType = row.accountType.map(item => {
+      return parseFloat(item);
+    });
+  }
   const params = {
     title,
-    isView: title === "查看",
-    row: { ...row },
+    isView: title === "编辑",
+    row: { ...row, accountType: accountType },
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };

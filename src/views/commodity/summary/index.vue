@@ -229,7 +229,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
       const {
         data: { grouping = [] }
       } = await sellKeyGrouping();
-      console.log(grouping);
       return { data: grouping };
     },
     fieldNames: { label: "label", value: "id" },
@@ -254,7 +253,6 @@ const columns: ColumnProps<Commodity.Account>[] = [
     },
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => {
-      console.log(row, "row");
       return getTypeListName(row.accountType);
     }
   },
@@ -417,13 +415,6 @@ const getFixed = (str: string) => {
   }
   return "--";
 };
-// 批量删除用户信息
-// const batchDelete = async (id: string[]) => {
-//   await useHandleData(deleteSummary, { id }, "导出用户信息");
-//   proTable.value?.clearSelection();
-//   proTable.value?.getTableList();
-// };
-
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
   delete obj.total;
@@ -447,8 +438,10 @@ const batchAdd = (title: string) => {
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   let accountType: [] | undefined = [];
-  if (title === "查看") {
-    accountType = row.accountType;
+  if (title === "编辑") {
+    accountType = row.accountType.map(item => {
+      return parseFloat(item);
+    });
   }
   const params = {
     title,

@@ -63,6 +63,7 @@ import { getUserAll } from "@/api/modules/user";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { useRouter } from "vue-router";
+import { getAllBranch } from "@/api/modules/set";
 const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -143,6 +144,20 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     search: {
       el: "input"
     }
+  },
+  {
+    prop: "branchId",
+    label: "所属门店",
+    sortable: true,
+    width: 160,
+    enum: getAllBranch,
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
+    fieldNames: { label: "branchName", value: "id" }
   },
   {
     prop: "isSales",

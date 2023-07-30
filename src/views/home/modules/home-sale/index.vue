@@ -86,7 +86,6 @@ const props = withDefaults(
 const setNumber = () => {
   nextTick(() => {
     let crudNumber = document.getElementsByClassName("crud-number");
-    console.log(crudListMap.length);
     for (let i = 0; i < crudListMap.length; i++) {
       const valueName = i === 0 ? "￥" : "";
       let option = {

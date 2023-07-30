@@ -23,7 +23,9 @@ export const getAllUser = (params: any) => {
 
 // 获取所有账号
 export const getAllBaseAccount = (params: any) => {
-  return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/all`, params);
+  return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/all`, params, {
+    noLoading: true
+  });
 };
 
 // 分页查询门店

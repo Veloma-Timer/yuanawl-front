@@ -10,10 +10,10 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="账号编码" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" placeholder="请输入订单编号" clearable />
+        <el-input v-model="drawerProps.row!.accountCode" :disabled="drawerProps.isView" placeholder="请输入订单编号" clearable />
       </el-form-item>
       <el-form-item label="游戏分类" prop="accountType">
-        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable multiple clearable>
           <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -169,10 +169,29 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
-import { Close } from "@element-plus/icons-vue";
-
+import { typeCode } from "@/api/modules/commodity";
+import { checkPhoneNumber } from "@/utils/eleValidate";
+const validatePass = (rule: any, value: any, callback: any) => {
+  const params = {
+    type: "accountCode",
+    value
+  };
+  if (value) {
+    typeCode(params).then(res => {
+      const { data } = res;
+      if (data === "0") {
+        return callback(new Error("该编号已存在"));
+      } else {
+        return callback();
+      }
+    });
+  }
+};
 const rules = reactive({
-  accountCode: [{ required: true, message: "必填项不能为空" }],
+  accountCode: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   accountType: [{ required: true, message: "必填项不能为空" }],
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   accountRecycler: [{ required: true, message: "必填项不能为空" }],
@@ -185,16 +204,25 @@ const rules = reactive({
   salePrice: [{ required: true, message: "必填项不能为空" }],
   accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
-  accountTel: [{ required: true, message: "必填项不能为空" }],
+  accountTel: [
+    { required: true, message: "必填项不能为空" },
+    { validator: checkPhoneNumber, trigger: "blur" }
+  ],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
-  campId: [{ required: true, message: "必填项不能为空" }],
+  campId: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
   isSave: [{ required: true, message: "必填项不能为空" }],
   accountDesc: [{ required: true, message: "必填项不能为空" }],
   accountStatus: [{ required: true, message: "必填项不能为空" }],
   netUpload: [{ required: true, message: "必填项不能为空" }],
   transCatUploaded: [{ required: true, message: "必填项不能为空" }],
-  transCatUid: [{ required: true, message: "必填项不能为空" }],
+  transCatUid: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   accountLevel: [{ required: true, message: "必填项不能为空" }],
   accountPrice: [{ required: true, message: "必填项不能为空" }],
   userCompensationPrice: [{ required: true, message: "必填项不能为空" }],
