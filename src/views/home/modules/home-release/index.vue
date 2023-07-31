@@ -27,7 +27,7 @@
         <homeGroup :list-arr="publishObj?.publishRatio" class-name="maintain" title="账号发布占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台发布额排名" :salas-ranking-arr="publishObj?.publishRanking" :header="['用户', '金额', '数量']" />
+        <nameRight title="平台发布数量排名" :salas-ranking-arr="publishObj?.publishRanking" :header="['用户', '金额', '数量']" />
       </div>
     </div>
     <homeGroup :list-arr="publishUnit" title="发布组数据对比">

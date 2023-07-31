@@ -5,7 +5,7 @@ const path = require("path");
 const scopes = fs
   .readdirSync(path.resolve(__dirname, "src"), { withFileTypes: true })
   .filter(dirent => dirent.isDirectory())
-  .map(dirent => dirent.name.replace(/s$/, ""));
+  .map(dirent => dirent.name?.replace(/s$/, ""));
 
 /** @type {import('cz-git').UserConfig} */
 module.exports = {
