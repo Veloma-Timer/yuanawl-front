@@ -55,11 +55,11 @@ const setRouterLink = (item: any) => {
 
 const obj = JSON.parse(decryption("token", userStore.token));
 const workList = async () => {
-  const params = {
-    pageNum: 1,
-    pageSize: 10,
-    branchId: obj.user.branchId
-  };
+  // const params = {
+  //   pageNum: 1,
+  //   pageSize: 10,
+  //   branchId: obj.user.branchId
+  // };
 
   const {
     awaitWorkOrder: { pendingList }

@@ -17,6 +17,7 @@ export namespace Commodity {
     bindingQQTimes: number;
     VNO: string;
     openAccountTime: string;
+    remark: string;
   }
 
   export interface Account {

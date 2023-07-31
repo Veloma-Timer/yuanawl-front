@@ -119,7 +119,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="出售渠道">
-              <span>{{ baseObj?.salePlatformId ? chanelMap[baseObj?.salePlatformId] || "-" : "-" }}</span>
+              <span>{{ baseObj?.salePlatformId ? chanelMap?.[baseObj?.salePlatformId] || "-" : "-" }}</span>
             </el-form-item>
           </el-col>
           <el-col :span="4">

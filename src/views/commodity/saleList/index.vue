@@ -144,7 +144,7 @@ const branchList = ref<IBranch[]>([]);
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", width: 55, fixed: true },
-  { prop: "salesCode", label: "销售订单号", width: 190, search: { el: "input" }, fixed: "left" },
+  { prop: "salesCode", label: "销售订单号", width: 190, search: { el: "input" } },
   {
     prop: "accountCode",
     label: "账号编码",

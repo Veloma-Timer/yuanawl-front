@@ -8,7 +8,7 @@
     <!--    </template>-->
     <el-form
       ref="ruleFormRef"
-      label-width="200px"
+      label-width="120px"
       label-suffix=" :"
       :rules="rules"
       :disabled="drawerProps.isView"
@@ -25,6 +25,9 @@
         <el-select v-model="drawerProps.row!.VNO" placeholder="请选择运营商" filterable>
           <el-option v-for="item in operateList" :key="item.value" :label="item.label" :value="item.label" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="备注" prop="remark">
+        <el-input v-model="drawerProps.row!.remark" type="textarea" placeholder="请输入备注" clearable />
       </el-form-item>
     </el-form>
     <template #footer>
