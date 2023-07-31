@@ -24,7 +24,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" v-if="BUTTONS.del" link :icon="View" @click="_deleteUser(scope.row)">删除</el-button>
+        <el-button type="danger" v-if="BUTTONS.del" link :icon="Delete" @click="_deleteUser(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -38,7 +38,7 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icons-vue";
+import { CirclePlus, Download, Upload, View, Document, Delete } from "@element-plus/icons-vue";
 import {
   editUser,
   addUser,

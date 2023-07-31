@@ -9,6 +9,7 @@
       <template #operation="scope">
         <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
         <el-button type="primary" v-if="BUTTONS.edit" link @click="setRoleList(scope.row.powerId, scope.row.id)">权限</el-button>
+        <el-button type="danger" v-if="BUTTONS.del" link :icon="Delete" @click="deleteRole(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <AuthorityDialog ref="dialogRef" />
@@ -21,14 +22,15 @@ import { Author } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import RoleDrawer from "@/views/auth/authority/modules/RoleDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, View } from "@element-plus/icons-vue";
-import { getRoleLog, addRole, editRole, changeRole } from "@/api/modules/role";
+import { CirclePlus, View, Delete } from "@element-plus/icons-vue";
+import { getRoleLog, addRole, editRole, delRole, changeRole } from "@/api/modules/role";
 import AuthorityDialog from "@/views/auth/authority/modules/AuthorityDialog.vue";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import deepcopy from "deepcopy";
+import { useHandleData } from "@/hooks/useHandleData";
+
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
-console.log(BUTTONS);
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
@@ -38,6 +40,13 @@ const getTableList = (params: any) => {
   let newParams = deepcopy(params);
   return getRoleLog(newParams);
 };
+
+// 删除用户信息
+const deleteRole = async (params: Author.RoleList) => {
+  await useHandleData(delRole, params.id, `确认删除用户【${params.roleName}】吗`);
+  proTable.value?.getTableList();
+};
+
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<Author.RoleList>[] = [

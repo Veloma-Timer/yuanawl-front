@@ -17,3 +17,7 @@ export const editRole = (params: { id: string }) => {
 export const changeRole = (id: string) => {
   return http.put(`${baseUrl}/change/${id}`);
 };
+// 删除角色
+export const delRole = (id: number) => {
+  return http.delete(`${baseUrl}/${id}`);
+};
