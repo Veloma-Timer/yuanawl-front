@@ -53,6 +53,7 @@ import { saveFile } from "@/utils/file";
 import { useRouter } from "vue-router";
 import deepcopy from "deepcopy";
 import { useHandleData } from "@/hooks/useHandleData";
+import { getAllBranch } from "@/api/modules/set";
 const { BUTTONS } = useAuthButtons();
 
 // 跳转详情页
@@ -105,11 +106,18 @@ const columns: ColumnProps<User.ResUser>[] = [
   { prop: "userTel", label: "手机号码", search: { el: "input" } },
   { prop: "userCode", label: "工号" },
   {
-    prop: "userBranch",
-    label: "门店",
-    render: scope => {
-      return <span>{scope.row!.userBranch!.branchName || "--"}</span>;
-    }
+    prop: "userBranchId",
+    label: "所属门店",
+    sortable: true,
+    width: 160,
+    enum: getAllBranch,
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
+    fieldNames: { label: "branchName", value: "id" }
   },
   { prop: "userName", label: "姓名" },
   { prop: "userRoleId", label: "角色" },
