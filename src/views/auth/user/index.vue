@@ -103,7 +103,7 @@ const getTableList = (params: any) => {
 const columns: ColumnProps<User.ResUser>[] = [
   { prop: "userAccount", label: "登录名", search: { el: "input" } },
   { prop: "userTel", label: "手机号码", search: { el: "input" } },
-  { prop: "userCode", label: "员工工号" },
+  { prop: "userCode", label: "工号" },
   {
     prop: "userBranch",
     label: "门店",
@@ -113,6 +113,29 @@ const columns: ColumnProps<User.ResUser>[] = [
   },
   { prop: "userName", label: "姓名" },
   { prop: "userRoleId", label: "角色" },
+  {
+    prop: "jobStatus",
+    label: "在职状态",
+    enum: [
+      { label: "在职", value: "在职" },
+      { label: "离职", value: "离职" }
+    ],
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
+    render: ({ row }) => {
+      const status = row.jobStatus === "离职";
+      return (
+        <div class="flex flex-row flx-center">
+          <span class={status ? "v-red" : "v-green"}></span>
+          <span>{status ? "离职" : "在职"}</span>
+        </div>
+      );
+    }
+  },
   // { prop: "email", label: "状态" },
   { prop: "operation", label: "操作", width: 200, fixed: "right" }
 ];
@@ -154,3 +177,25 @@ const openDrawer = (title: string, row: Partial<User.ResUser> = {}) => {
   drawerRef.value?.acceptParams(params);
 };
 </script>
+
+<style lang="scss">
+.circle {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.red {
+  color: var(--el-color-error);
+}
+.v-red {
+  @extend .circle;
+  background-color: var(--el-color-error);
+}
+
+.v-green {
+  @extend .circle;
+  background-color: var(--el-color-success);
+}
+</style>
