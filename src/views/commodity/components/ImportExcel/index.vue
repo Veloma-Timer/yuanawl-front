@@ -59,7 +59,7 @@ const dialogVisible = ref(false);
 // 父组件传过来的参数
 const parameter = ref<ExcelParameterProps>({
   title: "",
-  fileSize: 5,
+  fileSize: 40,
   fileType: ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"]
 });
 

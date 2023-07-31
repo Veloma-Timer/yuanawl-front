@@ -75,7 +75,8 @@ const scrollNum = ref<number>();
 const monthList: Item[] = [
   { branchName: "今日", id: 0 },
   { branchName: "本周", id: 1 },
-  { branchName: "本月", id: 2 }
+  { branchName: "本月", id: 2 },
+  { branchName: "全部", id: undefined }
 ];
 const institutionList: Item[] = [
   { branchName: "全部", id: null },
@@ -85,7 +86,7 @@ const institutionList: Item[] = [
   { branchName: "工单", id: 3 }
 ];
 const cityName = ref();
-const monthName = ref(0);
+const monthName = ref();
 const branchName = ref("今日");
 const branchNames = ref("今日");
 const params = ref<IStatistics>();
