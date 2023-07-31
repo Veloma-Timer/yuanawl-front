@@ -31,8 +31,8 @@ export const editUser = (params: { id: string }) => {
 };
 
 // 删除用户
-export const deleteUser = (params: { id: string[] }) => {
-  return http.post(PORT1 + `/user/delete`, params);
+export const deleteUser = (id: number) => {
+  return http.delete(baseUrl + `/${id}`);
 };
 
 // 切换用户状态

@@ -1,25 +1,28 @@
-const { app, BrowserWindow } = require('electron')
-// 需在当前文件内开头引入 Node.js 的 'path' 模块
-const path = require('path')
+const { app, BrowserWindow } = require("electron");
+
+require("update-electron-app")();
 
 // modify your existing createWindow() function
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-  })
+    width: 1400,
+    height: 1400,
+    icon: "/path/to/icon.png"
+  });
 
-  win.loadFile('./dist/index.html')
-}
+  win.loadFile("./dist/index.html");
+};
+
+if (require("electron-squirrel-startup")) app.quit();
 
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
 
-  app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit()
-})
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});

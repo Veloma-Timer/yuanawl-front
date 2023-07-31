@@ -1,30 +1,46 @@
 module.exports = {
-  packagerConfig: {},
-  rebuildConfig: {},
   packagerConfig: {
-    appVersion: "0.0.1",
-    name: "元阿网络后台管理系统",
-    win32metadata: {
-      ProductName: "元阿网络后台管理系统",
-      CompanyName: "浙江元阿网络科技有限公司",
-      FileDescription: "元阿网络后台管理系统"
-    }
+    asar: true,
+    icon: "/path/to/icon"
   },
+  rebuildConfig: {},
   makers: [
     {
       name: "@electron-forge/maker-squirrel",
-      config: {}
+      config: {
+        setupIcon: "/path/to.icon.ico"
+      }
+    },
+    {
+      name: "@electron-forge/maker-dmg",
+      platforms: ["darwin"],
+      config: {
+        icon: "/path/to.icon.icns"
+      }
     },
     {
       name: "@electron-forge/maker-zip",
-      platforms: ["darwin"]
+      platforms: ["darwin"],
+      config: {
+        icon: "/path/to.icon.icns"
+      }
     },
     {
       name: "@electron-forge/maker-deb",
-      config: {}
+      config: {
+        icon: "/path/to.icon.icns"
+      }
     },
     {
       name: "@electron-forge/maker-rpm",
+      config: {
+        icon: "/path/to.icon.icns"
+      }
+    }
+  ],
+  plugins: [
+    {
+      name: "@electron-forge/plugin-auto-unpack-natives",
       config: {}
     }
   ]

@@ -91,6 +91,7 @@ export namespace User {
     children?: ResDepartment[];
   }
   export interface ResUser {
+    id: number;
     userCode: string; // 用户编码（工号）
     userName: string; // 用户名称
     userTel: string; // 手机号码

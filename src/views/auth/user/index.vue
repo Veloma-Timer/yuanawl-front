@@ -24,6 +24,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
+        <el-button type="primary" v-if="BUTTONS.del" link :icon="View" @click="_deleteUser(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -38,12 +39,22 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/auth/user/modules/user-dialog/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icons-vue";
-import { editUser, addUser, getUserListMap, getUserTemptable, getUserUpload, getUserExport } from "@/api/modules/user";
+import {
+  editUser,
+  addUser,
+  deleteUser,
+  getUserListMap,
+  getUserTemptable,
+  getUserUpload,
+  getUserExport
+} from "@/api/modules/user";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 import { useRouter } from "vue-router";
 import deepcopy from "deepcopy";
+import { useHandleData } from "@/hooks/useHandleData";
 const { BUTTONS } = useAuthButtons();
+
 // 跳转详情页
 const router = useRouter();
 const setRouter = data => {
@@ -107,8 +118,10 @@ const columns: ColumnProps<User.ResUser>[] = [
 ];
 
 // 删除用户信息
-
-// 批量删除用户信息
+const _deleteUser = async (params: User.ResUser) => {
+  await useHandleData(deleteUser, params.id, `确认删除用户【${params.userName}】吗`);
+  proTable.value?.getTableList();
+};
 // 重置用户密码
 // 切换用户状态
 // 批量添加用户
