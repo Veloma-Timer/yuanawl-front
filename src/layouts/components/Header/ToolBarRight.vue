@@ -1,6 +1,10 @@
 <template>
   <div class="tool-bar-ri">
     <div class="header-icon">
+      <el-tooltip class="box-item" content="选号网后台" placement="top">
+        <img src="/small-logo.jpg" alt="元阿选号网后台" class="cursor-pointer" width="20" height="20" @click="onToXuanhao" />
+      </el-tooltip>
+
       <AssemblySize id="assemblySize" />
       <ThemeSetting id="themeSetting" />
       <Message id="message" />
@@ -22,7 +26,9 @@ import Avatar from "./components/Avatar.vue";
 import { decryption } from "@/utils/AESUtil";
 
 const userStore = useUserStore();
-
+const onToXuanhao = () => {
+  window.open("http://yuanawl.com/admin", "_blank");
+};
 const obj = JSON.parse(decryption("token", userStore.token));
 const username = computed(() => obj.user.userAccount);
 </script>

@@ -268,7 +268,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
   },
   {
     prop: "salePeopleId",
-    label: "出售人姓名",
+    label: "出售人",
     sortable: true,
     width: 160,
     enum: getUserAll,
