@@ -1,6 +1,6 @@
 <template>
   <div class="tree-box">
-    <el-tree :data="dataList" :props="defaultProps" class="w-1/2" default-expand-all>
+    <el-tree :data="dataList" :props="defaultProps" class="h-full overflow-y-auto" default-expand-all>
       <template #default="{ node, data }">
         <span class="custom-tree-node">
           <span v-if="!data.leaf">
@@ -41,8 +41,8 @@ getTableList();
 </script>
 <style scoped lang="scss">
 .tree-box {
-  height: 100%;
   padding: 20px;
+  height: calc(100% - 130px);
   .custom-tree-node {
     display: flex;
     flex: 1;
