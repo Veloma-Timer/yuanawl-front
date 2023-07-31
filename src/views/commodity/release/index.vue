@@ -62,9 +62,12 @@ import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
 import deepcopy from "deepcopy";
+import { useRouter } from "vue-router";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
 const obj = JSON.parse(decryption("token", token));
+
+const router = useRouter();
 
 // const route = useRoute();
 // 跳转详情页
@@ -88,7 +91,7 @@ const dataCallback = (data: any) => {
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
   const id = row.id;
-  router.push({ name: "工单新增", query: { id: id || "" } });
+  router.push({ name: "工单新增", query: { accId: id || "" } });
 };
 
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口

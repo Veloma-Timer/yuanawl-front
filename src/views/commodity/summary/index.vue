@@ -87,7 +87,7 @@ let typeList: unknown = ref([]);
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
   const id = row.id;
-  router.push({ name: "工单新增", query: { id: id || "" } });
+  router.push({ name: "工单新增", query: { accId: id || "" } });
 };
 
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
@@ -479,7 +479,15 @@ const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, accountType: accountType },
+    row: {
+      ...row,
+      accountType: accountType,
+      salePrice: Number(row.salePrice),
+      accountPrice: Number(row.accountPrice),
+      userCompensationPrice: Number(row.userCompensationPrice),
+      platformCompensationPrice: Number(row.platformCompensationPrice),
+      accountRecyclerPrice: Number(row.accountRecyclerPrice)
+    },
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };

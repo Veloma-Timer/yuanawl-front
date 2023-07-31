@@ -1,5 +1,6 @@
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
+import { ResultData } from "@/api/interface";
 
 export interface IBranch {
   id: number;
@@ -16,8 +17,8 @@ export const getOptLog = (params: any) => {
 };
 
 // 获取所有门店
-export const getAllBranch = (): Promise<IFormatRes<IBranch[]>> => {
-  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`);
+export const getAllBranch = (): Promise<ResultData<{ branchName: string; id: number }[]>> => {
+  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`, {}, { noLoading: true });
 };
 
 // 获取所有角色

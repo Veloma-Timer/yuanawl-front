@@ -27,18 +27,14 @@
         <el-row class="row-line" :gutter="10">
           <el-col :span="6">
             <el-form-item label="工单编号" prop="basicOrderCode">
-              <el-input
-                v-model="ruleForm.row!.basicOrderCode"
-                placeholder="请选择"
-                class="order-input"
-                :disabled="ruleForm.basicEdit"
-              ></el-input>
+              <!-- :disabled="ruleForm.basicEdit" -->
+              <el-input v-model="ruleForm.row!.basicOrderCode" placeholder="请选择" class="order-input" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="账号编码" prop="basicAccountId">
               <el-select
-                :disabled="ruleForm.basicEdit"
+                :disabled="ruleForm.basicEdit || !!accId"
                 v-model="ruleForm.row!.basicAccountId"
                 placeholder="请选择"
                 class="order-input"
@@ -328,6 +324,21 @@
                   ></el-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知他人" prop="afterSalesAssignUsers" label-width="120px">
+                  <el-select
+                    v-model="ruleForm!.row!.afterSalesAssignUsers"
+                    placeholder="请选择"
+                    class="small-input"
+                    multiple
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row class="basic-info">
               <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === 7">
@@ -432,6 +443,21 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知他人" prop="recycleAssignUsers" label-width="120px">
+                  <el-select
+                    v-model="ruleForm!.row!.recycleAssignUsers"
+                    placeholder="请选择"
+                    class="small-input"
+                    multiple
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row :gutter="10" class="row-line">
               <el-col :span="24" v-if="ruleForm.row!.recycleHandleResult === 7">
@@ -530,6 +556,21 @@
                   >
                     <template v-for="item in setTypeList" :key="item.value">
                       <el-option :label="item.label" :value="item.value" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知他人" prop="publishAssignUsers" label-width="120px">
+                  <el-select
+                    v-model="ruleForm!.row!.publishAssignUsers"
+                    placeholder="请选择"
+                    class="small-input"
+                    multiple
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
                     </template>
                   </el-select>
                 </el-form-item>
@@ -669,6 +710,21 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col :span="6">
+                <el-form-item label="通知他人" prop="salesAssignUsers" label-width="120px">
+                  <el-select
+                    v-model="ruleForm!.row!.salesAssignUsers"
+                    placeholder="请选择"
+                    class="small-input"
+                    multiple
+                    filterable
+                  >
+                    <template v-for="item2 in userList" :key="item2.id">
+                      <el-option :label="item2.userName" :value="item2.id" />
+                    </template>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row :gutter="10">
               <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === 7">
@@ -743,7 +799,8 @@ import {
   addRecycleInfo,
   editRecycleInfo,
   editPublishInfo,
-  getProcessingDept
+  getProcessingDept,
+  generateCode
 } from "@/api/modules/order";
 import { getAllBranch, getAllBaseAccount, getAllUser } from "@/api/modules/set";
 import { findFileType } from "@/utils";
@@ -755,6 +812,7 @@ import dayjs from "dayjs";
 // const { BUTTONS } = useAuthButtons();
 const route = useRoute();
 const id = route.query?.id;
+const accId = route.query?.accId;
 const isView = route.query?.isView ? true : false;
 const router = useRouter();
 
@@ -899,10 +957,12 @@ const baseObj = ref();
 const isZZ = ref(false);
 function onChangeAccount(e: any) {
   baseObj.value = accountList.value.find(item => item.id === e);
-  const _isZZ = baseObj.value.salePlatformId >= 16 || baseObj.value.salePlatformId <= 22;
-  // 是转转
-  isZZ.value = _isZZ;
-  ruleForm.value.row.basicHandleTime = _isZZ ? 4 : 7;
+  if (baseObj.value?.salePlatformId) {
+    const _isZZ = baseObj.value.salePlatformId >= 16 || baseObj.value.salePlatformId <= 22;
+    // 是转转
+    isZZ.value = _isZZ;
+    ruleForm.value.row.basicHandleTime = _isZZ ? 4 : 7;
+  }
 }
 
 // 返显数据处理
@@ -949,6 +1009,7 @@ const getDetailInfo = async (id: any) => {
         afterCompensationAmount: afterInfo?.afterSalesCompensationAmount,
         afterNewSecurityPhone: afterInfo?.newSecretCellPhone,
         afterNewSecurityPassword: afterInfo?.newPassword,
+        afterSalesAssignUsers: afterInfo?.afterSalesAssignUsers,
         afterSalesRemark: afterInfo?.afterSalesRemark,
         afterSalesInformDeptId: afterInfo?.afterSalesInformDeptId,
         afterAnnex: (afterInfo?.afterSaleAssets || [])?.map((imgItem: any) => {
@@ -976,6 +1037,7 @@ const getDetailInfo = async (id: any) => {
         recycleResultRemark: recycleInfo?.recycleResultRemark,
         recycleRemark: recycleInfo?.recycleRemark,
         recycleInformDeptId: recycleInfo?.recycleInformDeptId,
+        recycleAssignUsers: recycleInfo?.recycleAssignUsers,
         recycleAnnex: (recycleInfo?.recycleAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
@@ -1001,6 +1063,7 @@ const getDetailInfo = async (id: any) => {
         publishResultRemark: publishInfo?.publishResultRemark,
         publishRemark: publishInfo?.publishRemark,
         publishInformDeptId: publishInfo?.publishInformDeptId,
+        publishAssignUsers: publishInfo?.publishAssignUsers,
         publishAnnex: (publishInfo?.publishAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
@@ -1027,7 +1090,8 @@ const getDetailInfo = async (id: any) => {
         saleChangeUserNumber: saleInfo?.newAccountId,
         salesResultRemark: saleInfo?.salesResultRemark,
         salesRemark: saleInfo?.salesRemark,
-        salesInformDeptId: afterInfo?.salesInformDeptId,
+        salesInformDeptId: saleInfo?.salesInformDeptId,
+        salesAssignUsers: saleInfo?.salesAssignUsers,
         saleannex: (saleInfo?.salesAssets || [])?.map((imgItem: any) => {
           return {
             path: imgItem.path,
@@ -1052,6 +1116,23 @@ const getDetailInfo = async (id: any) => {
     } as unknown as SalesOrder.AddWorkOrder;
     // 账号销售数据信息默认
     onChangeAccount(data.accountId);
+  }
+};
+
+// 账号管理-创建工单点过来
+const getAccountInfo = () => {
+  if (!accId) {
+    return;
+  }
+  ruleForm.value.row!.basicAccountId = Number(accId);
+  onChangeAccount(Number(accId));
+};
+
+const getBasicOrderCode = async () => {
+  // 新增-没id
+  if (!id) {
+    const code = await generateCode();
+    ruleForm.value.row!.basicOrderCode = code as unknown as string;
   }
 };
 
@@ -1123,6 +1204,7 @@ const handleSubmit = () => {
         afterCompensationAmount,
         afterNewSecurityPhone,
         afterNewSecurityPassword,
+        afterSalesAssignUsers,
         afterSalesRemark,
         afterAnnex,
         recycleHandleResult,
@@ -1130,6 +1212,7 @@ const handleSubmit = () => {
         recycleRemark,
         recycleAnnex,
         recycleInformDeptId,
+        recycleAssignUsers,
         publishHandleResult,
         publishResultRemark,
         publishRemark,
@@ -1142,7 +1225,9 @@ const handleSubmit = () => {
         salesRemark,
         afterSalesInformDeptId,
         salesInformDeptId,
-        publishInformDeptId
+        salesAssignUsers,
+        publishInformDeptId,
+        publishAssignUsers
       } = ruleForm.value.row;
       // 工单的记录id
       let idObj = {};
@@ -1183,6 +1268,7 @@ const handleSubmit = () => {
           recycleResultRemark: recycleResultRemark, // 销售处理结果备注
           recycleRemark: recycleRemark, // 发布备注
           recycleInformDeptId: recycleInformDeptId,
+          recycleAssignUsers: recycleAssignUsers,
           recycleAssets: recycleAnnex?.map(item => {
             return {
               path: item?.response?.path || item.url || item.path,
@@ -1201,6 +1287,7 @@ const handleSubmit = () => {
           afterSalesCompensationAmount: afterCompensationAmount, // 售后赔付金额
           newSecretCellPhone: afterNewSecurityPhone, // 新密保手机
           newPassword: afterNewSecurityPassword, // 新密码
+          afterSalesAssignUsers: afterSalesAssignUsers,
           afterSalesRemark: afterSalesRemark, // 售后备注
           afterSalesInformDeptId: afterSalesInformDeptId,
           afterSaleAssets: afterAnnex?.map(item => {
@@ -1219,6 +1306,7 @@ const handleSubmit = () => {
           publishResultRemark: publishResultRemark, // 销售处理结果备注
           publishRemark: publishRemark, // 发布备注
           publishInformDeptId: publishInformDeptId,
+          publishAssignUsers: publishAssignUsers,
           publishAssets: publishAnnex?.map(item => {
             return {
               path: item?.response?.path || item.url || item.path,
@@ -1237,6 +1325,7 @@ const handleSubmit = () => {
           salesResultRemark: salesResultRemark, // 销售处理结果备注
           salesRemark: salesRemark, // 销售备注
           salesInformDeptId: salesInformDeptId,
+          salesAssignUsers: salesAssignUsers,
           salesAssets: saleannex?.map(item => {
             return {
               path: item?.response?.path || item.url || item.path,
@@ -1313,6 +1402,8 @@ const initOrderData = async () => {
   ruleForm.value.row.basicOrderStar = 1;
   const { data } = await getAllUser({});
   getDetailInfo(id);
+  getAccountInfo();
+  getBasicOrderCode();
   userList.value = data;
 };
 

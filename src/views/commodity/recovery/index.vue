@@ -93,7 +93,7 @@ const getAllAccountList = async () => {
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
   const id = row.id;
-  router.push({ name: "工单新增", query: { id: id || "" } });
+  router.push({ name: "工单新增", query: { accId: id || "" } });
 };
 
 getAllAccountList();
@@ -296,7 +296,9 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
   let time = "";
   const userBranchId = obj.user.userBranchId;
   if (title === "编辑") {
-    accountType = row.accountType;
+    accountType = row.accountType.map(item => {
+      return parseFloat(item);
+    });
     accountCode = row.accountCode;
     time = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
   } else {

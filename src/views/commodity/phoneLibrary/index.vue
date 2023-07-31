@@ -48,11 +48,11 @@ import {
   phoneUpload,
   setPhone
 } from "@/api/modules/phoneLibrary";
-import { parseTime } from "@/utils/is";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
 import { saveFile } from "@/utils/file";
 const { BUTTONS } = useAuthButtons();
+import deepcopy from "deepcopy";
 // const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
@@ -88,19 +88,6 @@ const getTableList = (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Commodity.phoneLibrary>[] = [
   { prop: "openAccountName", label: "开户人姓名", search: { el: "input" } },
-  // {
-  //   prop: "createTime",
-  //   label: "开户日期",
-  //   render: scope => {
-  //     return parseTime(scope.row.openAccountTime, "{y}-{m}-{d} {h}:{i}:{s}");
-  //   },
-  //   search: {
-  //     el: "date-picker",
-  //     span: 2,
-  //     props: { type: "datetimerange", valueFormat: "YYYY-MM-DD HH:mm:ss" },
-  //     defaultValue: ["", ""]
-  //   }
-  // },
   {
     prop: "openAccountNumber",
     label: "开户主号码",
@@ -142,6 +129,10 @@ const columns: ColumnProps<Commodity.phoneLibrary>[] = [
       { label: "否", value: "0" }
     ],
     search: { el: "select" }
+  },
+  {
+    prop: "remark",
+    label: "备注"
   },
   { prop: "operation", label: "操作", width: 200, fixed: "right" }
 ];
