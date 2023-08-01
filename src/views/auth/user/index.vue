@@ -53,7 +53,8 @@ import { saveFile } from "@/utils/file";
 import { useRouter } from "vue-router";
 import deepcopy from "deepcopy";
 import { useHandleData } from "@/hooks/useHandleData";
-import { getAllBranch } from "@/api/modules/set";
+import { getAllBranch, getAllRole } from "@/api/modules/set";
+
 const { BUTTONS } = useAuthButtons();
 
 // 跳转详情页
@@ -104,7 +105,7 @@ const getTableList = (params: any) => {
 const columns: ColumnProps<User.ResUser>[] = [
   { prop: "userAccount", label: "登录名", search: { el: "input" } },
   { prop: "userTel", label: "手机号码", search: { el: "input" } },
-  { prop: "userCode", label: "工号" },
+  { prop: "userCode", label: "工号", search: { el: "input" } },
   {
     prop: "userBranchId",
     label: "所属门店",
@@ -119,8 +120,14 @@ const columns: ColumnProps<User.ResUser>[] = [
     },
     fieldNames: { label: "branchName", value: "id" }
   },
-  { prop: "userName", label: "姓名" },
-  { prop: "userRoleId", label: "角色" },
+  { prop: "userName", label: "姓名", search: { el: "input" } },
+  {
+    prop: "userRoleId",
+    label: "角色",
+    enum: getAllRole,
+    search: { el: "select", props: { filterable: true } },
+    fieldNames: { label: "roleName", value: "id" }
+  },
   {
     prop: "jobStatus",
     label: "在职状态",

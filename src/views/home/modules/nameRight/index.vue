@@ -1,12 +1,12 @@
 <template>
-  <div class="home-right">
+  <div class="home-right overflow-y-auto">
     <span class="cell">{{ props.title }}</span>
     <div class="home-table mt30">
       <div class="home-table-header flex">
         <div class="header-item">名次</div>
         <div class="header-item" v-for="(item, index) in props.header" :key="item + index">{{ item }}</div>
       </div>
-      <div class="home-table-row mt26">
+      <div class="home-table-row mt26 overflow-y-auto">
         <div class="table-row-cell flex" v-for="(item, index) in props.salasRankingArr" :key="item.amount + index">
           <div class="cell-item">
             <span :class="nameClassObj.get(index + 1)">{{ index + 1 }}</span>
@@ -46,8 +46,6 @@ const props = withDefaults(
   padding: 20px;
   background: #ffffff;
   border: 2px solid #f0f0f0;
-  border-radius: 6px;
-  //box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
 
   .cell {
     font-size: 16px;
@@ -73,6 +71,7 @@ const props = withDefaults(
 
     .home-table-row {
       width: 100%;
+      height: 310px;
 
       .table-row-cell {
         width: 100%;

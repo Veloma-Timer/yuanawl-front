@@ -55,6 +55,15 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="所在部门" prop="setId">
+            <el-select v-model="drawerProps.row!.setId" placeholder="请选择所在部门" class="check-select" filterable>
+              <template v-for="item in setIdList" :key="item.value">
+                <el-option :label="item.label" :value="item.value" />
+              </template>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="管理员" prop="isAdmin">
             <el-radio-group v-model="drawerProps.row!.isAdmin" class="ml-4">
               <el-radio label="1" size="large">是</el-radio>
@@ -68,15 +77,6 @@
               <el-radio label="在职" size="large">在职</el-radio>
               <el-radio label="离职" size="large">离职</el-radio>
             </el-radio-group>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12" v-if="drawerProps.row!.isAdmin === '0'">
-          <el-form-item label="所在部门" prop="setId">
-            <el-select v-model="drawerProps.row!.setId" placeholder="请选择所在部门" class="check-select" filterable>
-              <template v-for="item in setIdList" :key="item.value">
-                <el-option :label="item.label" :value="item.value" />
-              </template>
-            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
