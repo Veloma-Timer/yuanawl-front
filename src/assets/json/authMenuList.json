@@ -479,6 +479,20 @@
             "isAffix": false,
             "isKeepAlive": false
           }
+        },
+        {
+          "path": "/auth/dict",
+          "name": "数据字典",
+          "component": "/auth/dict/index",
+          "meta": {
+            "icon": "Menu",
+            "title": "数据字典",
+            "isLink": "",
+            "isHide": false,
+            "isFull": false,
+            "isAffix": false,
+            "isKeepAlive": false
+          }
         }
       ]
     }

@@ -594,3 +594,61 @@ export namespace Message {
     sendingTime: number;
   }
 }
+
+// 字典
+export namespace Dict {
+  export interface DictParams {
+    id: string;
+    name: string; //名称
+    displayName: string; //展示名称
+    description: string; //描述
+  }
+
+  export interface Dict {
+    name: string; //名称
+    code: string; //编码
+    displayName: string; //展示名称
+    description: string; //描述
+    parentId: null | string; //父Id
+    isStatic: boolean; //是否静态
+    items: any[]; //结果集合
+    lastModificationTime: null | string; //最后
+    lastModifierId: null | string; //最后修改人id
+    creationTime: string; //创建时间
+    creatorId: null | string; //创建人Id
+    id: string; //id
+    extraProperties: any;
+  }
+
+  export interface DictItem {
+    name: string;
+    code: string;
+    displayName: string;
+    description: null | string;
+    parentId: null | string;
+    isStatic: boolean;
+    items: {
+      name: string;
+      displayName: string;
+      defaultValue: string;
+      description: string;
+      allowBeNull: boolean;
+      valueType: number;
+      id: string;
+    }[];
+    lastModificationTime: string;
+    lastModifierId: null | string;
+    creationTime: string;
+    creatorId: null | string;
+    id: string;
+    extraProperties: any;
+  }
+
+  export interface DictItemParams {
+    key: string;
+    value: {
+      label: string;
+      id: number;
+    }[];
+  }
+}

@@ -1,6 +1,6 @@
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
-import { ResultData } from "@/api/interface";
+import { Dict, ResultData } from "@/api/interface";
 
 export interface IBranch {
   id: number;
@@ -56,4 +56,26 @@ export const editBranch = (params: any) => {
 // 删除门店
 export const delBranch = (params: any) => {
   return http.delete(PORT3 + `/sys_branch/${params.id}`);
+};
+
+// 获取字典列表
+export const getDictList = () => {
+  return http.get(PORT3 + `/sys_map/all`);
+};
+
+// 删除字典项
+export const delDictItem = (key: string) => {
+  return http.delete(PORT3 + `/sys_map?key=${key}`);
+};
+// 添加字典项
+export const addDictItem = (params: Dict.DictItemParams) => {
+  return http.post(PORT3 + `/sys_map/all`, params);
+};
+// 修改字典项
+export const editDictItem = (params: Dict.DictParams) => {
+  return http.put(PORT3 + `/sys_map`, params);
+};
+// 根据id查询字典
+export const getDictItemByCode = (key: string) => {
+  return http.get(PORT3 + `/sys_map?key=${key}`);
 };
