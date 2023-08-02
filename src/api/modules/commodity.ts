@@ -3,6 +3,7 @@ import http from "@/api";
 import { Data } from "@/api/interface";
 
 const baseUrl: string = PORT3 + "/base_account";
+
 // 获取账户汇总列表
 export const summaryList = (params: any) => {
   return http.get(`${baseUrl}`, params);
@@ -103,6 +104,6 @@ export const typeCode = (params: any) => {
   return http.get(`${baseUrl}/monitor`, params, { noLoading: true });
 };
 //  生成回收编码
-export const generateCode = (code: string) => {
-  return http.get(`${baseUrl}/generate/code?grouping=${code}`, {}, { noLoading: true });
+export const generateCode = () => {
+  return http.get(PORT3 + `/sys_code/generate/code`, {}, { noLoading: true });
 };

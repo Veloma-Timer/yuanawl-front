@@ -302,7 +302,7 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
     accountCode = row.accountCode;
     time = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
   } else {
-    const { data } = await generateCode(userBranchId);
+    const { data } = await generateCode();
     accountCode = data;
     time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
   }
