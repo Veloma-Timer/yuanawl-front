@@ -70,7 +70,7 @@ import { getPhone, parseTime, setPhone, shortcuts, getFixed } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
 import { useRoute, useRouter } from "vue-router";
-import { sellKeyGrouping } from "@/api/modules/dictionary";
+import { sellKeyGrouping, sellKeyMap } from "@/api/modules/dictionary";
 import deepcopy from "deepcopy";
 
 const route = useRoute();
@@ -110,6 +110,8 @@ const getTableList = (params: any) => {
   delete newParams.createTime;
   return summaryList(newParams);
 };
+
+const _publishPlatform = ref<{ label: string; value: number; id: number }[]>([]);
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
@@ -281,6 +283,18 @@ const columns: ColumnProps<Commodity.Account>[] = [
     fieldNames: { label: "userName", value: "id" }
   },
   {
+    prop: "salePlatformId",
+    width: 160,
+    label: "出售渠道",
+    enum: async () => {
+      const {
+        data: { publishPlatform = [] }
+      } = await sellKeyMap();
+      return { data: publishPlatform };
+    },
+    search: { el: "select" }
+  },
+  {
     prop: "saleTime",
     sortable: true,
     label: "出售时间",
@@ -365,6 +379,36 @@ const columns: ColumnProps<Commodity.Account>[] = [
     enum: getUserAll,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "publishPlatform",
+    label: "发布渠道",
+    minWidth: 150,
+    enum: async () => {
+      const {
+        data: { publishPlatform = [] }
+      } = await sellKeyMap();
+      _publishPlatform.value = publishPlatform;
+      return { data: publishPlatform };
+    },
+    search: {
+      el: "select",
+      props: {
+        filterable: true,
+        multiple: true
+      }
+    },
+    render: ({ row }) => {
+      return row.publishPlatform
+        .map(id => {
+          const platform = _publishPlatform.value.find(item => {
+            const value = item.value || item.id;
+            return value == id;
+          }) as any;
+          return platform?.label || "--";
+        })
+        .join(" ");
+    }
   },
   {
     prop: "accountPublisherTimer",

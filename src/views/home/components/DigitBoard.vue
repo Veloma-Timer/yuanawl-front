@@ -19,13 +19,13 @@
       <div class="flex flex-row">
         <span class="label">同比上期同期:</span>
         <p class="flex items-center ml-2">
-          <el-icon v-if="isTop(yearValue)" color="#fc6772">
+          <el-icon v-if="!isTop(yearValue)" color="#fc6772">
             <CaretTop />
           </el-icon>
           <el-icon v-else color="#2dca93">
             <CaretBottom />
           </el-icon>
-          <span class="value" :style="{ color: isTop(yearValue) ? '#fc6772' : '#2dca93' }"> {{ yearValue }} </span>
+          <span class="value" :style="{ color: !isTop(yearValue) ? '#fc6772' : '#2dca93' }"> {{ yearValue }} </span>
         </p>
       </div>
     </div>

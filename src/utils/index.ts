@@ -403,3 +403,100 @@ export const getFixed = (str: string | number) => {
   }
   return "--";
 };
+
+export const isFun = (v: any) => typeof v === "function";
+
+export const isStr = (v: any) => typeof v === "string";
+
+export const isNum = (v: any) => typeof v === "number";
+
+export const isBool = (v: any) => typeof v === "boolean";
+
+export const isObj = (v: any) => typeof v === "object" && v !== null;
+
+export const isArr = <T = any[]>(v: any): v is T => Array.isArray(v);
+
+// 鸭子类型
+export const isPromise = (v: any) => v && v.then && typeof v.then === "function";
+
+export const toN = (v: any): number => (isNaN(Number(v)) ? 0 : Number(v));
+
+export const toB = (v: any) => Boolean(v);
+export const toS = (v: any) => String(v);
+
+export const keys = (o: any): string[] => (isObj(o) ? Object.keys(o) : []);
+
+export const isBaseType = (v: any) => !(isObj(v) || typeof v === "function" || isArr(v) || typeof v === "symbol");
+// 取默认值
+export const def = <T = any>(v: any, d: T): T => {
+  if (isArr<any>(v) && v.length > 0) return v;
+
+  if (typeof v === "object" && v !== null) {
+    return keys(v).length > 0 ? v : (d as T);
+  }
+  return v ?? (d as T);
+};
+
+/* 补0 */
+export const patchZero = (num: any) => {
+  if (isNum(num)) {
+    const number = toN(num) as number;
+    if (number < 10) return `0${number}`;
+    return num;
+  }
+  return num;
+};
+
+export const isEmpty = (v: any): boolean => v === undefined || v === null;
+
+// 不严格的判空
+export const isEmptyNotStrict = (val: unknown) => {
+  return val === "" || val === undefined || val == null || (typeof val === "number" && val == -1);
+};
+
+// 判断对象是否是一个"空"对象
+export const isEmptyObj = (obj: any = {}, deep?: boolean): boolean => {
+  if (isObj(obj)) {
+    return Object.keys(obj).every(key => {
+      const val = obj[key];
+      // 如果不是深度判空, 则直接返回
+      if (!deep) {
+        return isEmptyNotStrict(val);
+      } else {
+        // 如果是深度判空, 并且obj[key]是对象, 则递归调用
+        if (isObj(val)) {
+          return isEmptyObj(val, true);
+        } else {
+          // 如果不是对象则直接返回
+          return isEmptyNotStrict(val);
+        }
+      }
+    });
+  }
+  return true;
+};
+
+export const firstChartUpperCase = (str: string) => {
+  return str.slice(0, 1).toUpperCase() + str.slice(1);
+};
+
+export const getBrowser = (): "IE" | "Firefox" | "Chrome" | "Opera" | "Safari" | undefined => {
+  // @ts-ignore
+  if (window.ActiveXObject) return "IE";
+  // @ts-ignore
+  else if (document.getBoxObjectFor) return "Firefox";
+  // @ts-ignore
+  else if (window.chrome) return "Chrome";
+  // @ts-ignore
+  else if (window.opera) return "Opera";
+  // @ts-ignore
+  else if (window.safari) return "Safari";
+};
+
+export const isSafari = (): boolean => {
+  return getBrowser() === "Safari";
+};
+
+export const isFirefox = (): boolean => {
+  return getBrowser() === "Firefox";
+};

@@ -109,6 +109,9 @@ const getFixed = (str: string) => {
   }
   return "--";
 };
+
+const _publishPlatform = ref<{ label: string; value: number; id: number }[]>([]);
+
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
@@ -273,10 +276,26 @@ const columns: ColumnProps<Commodity.Release>[] = [
       const {
         data: { publishPlatform = [] }
       } = await sellKeyMap();
+      _publishPlatform.value = publishPlatform;
       return { data: publishPlatform };
     },
     search: {
-      el: "select"
+      el: "select",
+      props: {
+        filterable: true,
+        multiple: true
+      }
+    },
+    render: ({ row }) => {
+      return row.publishPlatform
+        .map(id => {
+          const platform = _publishPlatform.value.find(item => {
+            const value = item.value || item.id;
+            return value == id;
+          }) as any;
+          return platform?.label || "--";
+        })
+        .join(" ");
     }
   },
   {

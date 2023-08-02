@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="drawerVisible" append-to-body :destroy-on-close="true" :title="drawerProps.title">
+  <el-dialog v-model="drawerVisible" append-to-body :destroy-on-close="true" :title="drawerProps.title">
     <el-form
       ref="dictItemFormRef"
       label-width="100px"
@@ -10,41 +10,32 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="名称" prop="name">
+        <el-input v-model="drawerProps.rowData!.label" placeholder="名称" clearable></el-input>
+      </el-form-item>
+
+      <el-form-item label="值" prop="id">
         <el-input
-          v-model="drawerProps.rowData!.name"
+          v-model="drawerProps.rowData!.id"
           :disabled="drawerProps.title === '编辑'"
-          placeholder="名称"
+          placeholder="默认值"
           clearable
         ></el-input>
-      </el-form-item>
-
-      <el-form-item label="显示名称" prop="displayName">
-        <el-input v-model="drawerProps.rowData!.displayName" placeholder="显示名称" clearable></el-input>
-      </el-form-item>
-
-      <el-form-item label="默认值" prop="defaultValue">
-        <el-input v-model="drawerProps.rowData!.defaultValue" placeholder="默认值" clearable></el-input>
-      </el-form-item>
-
-      <el-form-item label="说明" prop="description">
-        <el-input v-model="drawerProps.rowData!.description" type="textarea" :rows="4" placeholder="说明" clearable></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
       <el-button @click="drawerVisible = false">取消</el-button>
       <el-button type="primary" v-show="!drawerProps.isView" @click="handleSubmit">确定</el-button>
     </template>
-  </el-drawer>
+  </el-dialog>
 </template>
 
 <script setup lang="ts" name="UserDrawer">
 import { ElMessage, FormInstance } from "element-plus";
-import { isEmptyObj } from "@/utils/base";
 import { ref, reactive } from "vue";
 
 const rules = reactive({
-  name: [{ required: true, message: "请输入名称" }],
-  displayName: [{ required: true, message: "请输入展示名称" }]
+  label: [{ required: true, message: "请输入名称" }],
+  id: [{ required: true, message: "请输入值" }]
 });
 
 interface DrawerProps {
@@ -62,14 +53,10 @@ const drawerProps = ref<DrawerProps>({
   title: ""
 });
 
-const singleDisabled = ref(false);
-
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps): void => {
-  console.log(params);
   drawerProps.value = params;
   drawerVisible.value = true;
-  singleDisabled.value = !isEmptyObj(params.rowData);
 };
 
 // 提交数据（新增/编辑）
