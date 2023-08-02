@@ -288,7 +288,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     },
     render: ({ row }) => {
       return row.publishPlatform
-        .map(id => {
+        ?.map(id => {
           const platform = _publishPlatform.value.find(item => {
             const value = item.value || item.id;
             return value == id;
@@ -346,12 +346,12 @@ const drawerRef = ref<InstanceType<typeof releaseDrawer> | null>(null);
 // 回显数据
 const setEcho = (arr: string[]) => {
   if (arr) {
-    const list = arr.map(item => Number(item));
+    const list = arr?.map(item => Number(item));
     let names = [];
     const values = handleMap.filter(item => {
       return list.includes(item.value);
     });
-    names = values.map(item => item.label);
+    names = values?.map(item => item.label);
     return names.join(",");
   } else {
     return "--";

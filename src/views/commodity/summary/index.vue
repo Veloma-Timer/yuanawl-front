@@ -400,7 +400,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     },
     render: ({ row }) => {
       return row.publishPlatform
-        .map(id => {
+        ?.map(id => {
           const platform = _publishPlatform.value.find(item => {
             const value = item.value || item.id;
             return value == id;
@@ -516,7 +516,7 @@ const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
   let accountType: [] | undefined = [];
   if (title === "编辑") {
-    accountType = row.accountType.map(item => {
+    accountType = row.accountType?.map(item => {
       return parseFloat(item);
     });
   }
