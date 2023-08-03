@@ -14,7 +14,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="账号编码" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" disabled placeholder="请输入账号编码" clearable />
+        <el-input
+          v-model="drawerProps.row!.accountCode"
+          :disabled="drawerProps.title != '编辑'"
+          placeholder="请输入账号编码"
+          clearable
+        />
       </el-form-item>
       <el-form-item label="账号分类" prop="accountType">
         <el-select

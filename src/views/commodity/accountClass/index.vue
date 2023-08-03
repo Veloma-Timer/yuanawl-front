@@ -97,7 +97,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     title,
     isView: title === "查看",
     row: { ...row },
-    api: title === "新增" ? addAccout : title === "查看" ? setAccout : undefined,
+    api: title === "新增" ? addAccout : setAccout,
     getTableList: proTable.value?.getTableList
   };
   drawerRef.value?.acceptParams(params);
