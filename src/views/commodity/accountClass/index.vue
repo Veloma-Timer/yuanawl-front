@@ -21,7 +21,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" v-if="BUTTONS.edit" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <!--        <el-button type="primary" v-if="BUTTONS.del" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
+        <el-button type="danger" v-if="BUTTONS.del" link :icon="Delete" @click="deleteAccount(scope.row)">删除 </el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -34,7 +34,7 @@ import { useHandleData } from "@/hooks/useHandleData";
 import ProTable from "@/components/ProTable/index.vue";
 import UserDrawer from "@/views/commodity/accountClass/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, View } from "@element-plus/icons-vue";
+import { CirclePlus, View, Delete } from "@element-plus/icons-vue";
 import { addAccout, deleteAccout, getAccoutList, setAccout } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
@@ -73,12 +73,7 @@ const getTableList = (params: any) => {
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
 const columns: ColumnProps<Commodity.accountClass>[] = [
-  {
-    prop: "typeCode",
-    label: "分类编号",
-    search: { el: "input" }
-    // hasChildren: true
-  },
+  { prop: "id", label: "排序编号" },
   { prop: "typeName", label: "分类名称", search: { el: "input" } },
   // { prop: "email", label: "排序" },
   { prop: "operation", label: "操作", width: 200, fixed: "right" }
@@ -86,7 +81,7 @@ const columns: ColumnProps<Commodity.accountClass>[] = [
 
 // 删除用户信息
 const deleteAccount = async (params: Commodity.accountClass) => {
-  await useHandleData(deleteAccout, { id: [params.id] }, `删除该【${params.typeName}】分类`);
+  await useHandleData(deleteAccout, params.id, `删除该【${params.typeName}】分类`);
   proTable.value?.getTableList();
 };
 

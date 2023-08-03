@@ -223,7 +223,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "已发布", value: "1" }
     ],
     render: ({ row }) => {
-      const status = row.isSales === "0";
+      const status = row.isPublish === "0";
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
@@ -442,8 +442,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: [
-      { label: "有", value: "1" },
-      { label: "无", value: "0" }
+      { label: "是", value: "1" },
+      { label: "否", value: "0" }
     ],
     search: {
       el: "select",

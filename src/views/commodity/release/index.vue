@@ -247,15 +247,15 @@ const columns: ColumnProps<Commodity.Release>[] = [
     search: { el: "select" },
     width: 160,
     enum: [
-      { label: "未销售", value: "0" },
-      { label: "已销售", value: "1" }
+      { label: "未售", value: "0" },
+      { label: "已售", value: "1" }
     ],
     render: ({ row }) => {
       const status = row.isSales === "0";
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
-          <span>{status ? "未销售" : "已销售"}</span>
+          <span>{status ? "未售" : "已售"}</span>
         </div>
       );
     }

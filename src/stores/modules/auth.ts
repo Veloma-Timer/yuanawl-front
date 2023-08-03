@@ -35,6 +35,7 @@ export const useAuthStore = defineStore({
     // Get AuthMenuList
     async getAuthMenuList() {
       const { data } = await getAuthMenuListApi();
+      // @ts-ignore
       this.authMenuList = data;
     },
     // Set RouteName

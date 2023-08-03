@@ -8,9 +8,6 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="分类编号" prop="typeCode">
-        <el-input v-model="drawerProps.row!.typeCode" placeholder="请输入分类编号" clearable />
-      </el-form-item>
       <el-form-item label="分类名称" prop="typeName">
         <el-input v-model="drawerProps.row!.typeName" placeholder="请输入分类名称" clearable />
       </el-form-item>
@@ -28,7 +25,6 @@ import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
 
 const rules = reactive({
-  typeCode: [{ required: true, message: "请输入分类编号" }],
   typeName: [{ required: true, message: "请输入分类名称" }]
 });
 

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="drawerVisible" :title="`${drawerProps.title}账号`" width="800px">
+  <el-dialog v-model="drawerVisible" :title="`${drawerProps.title}账号`" width="1200px">
     <el-form
       ref="ruleFormRef"
       label-width="120px"
@@ -9,36 +9,44 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="所属门店" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" disabled placeholder="请选择所属门店" filterable>
-          <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="回收组" prop="groupingId">
-        <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable @change="setGroupingId">
-          <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="账号编码" prop="accountCode">
-        <el-input v-model="drawerProps.row!.accountCode" disabled placeholder="请输入账号编码" clearable />
-      </el-form-item>
-      <el-form-item label="QQ号" prop="qq">
-        <el-input v-model="drawerProps.row!.qq" placeholder="请输入QQ号" clearable />
-      </el-form-item>
-      <el-form-item label="账号分类" prop="accountType">
-        <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable multiple clearable>
-          <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
-        </el-select>
-      </el-form-item>
       <el-row :gutter="10">
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="所属门店" prop="branchId">
+            <el-select v-model="drawerProps.row!.branchId" disabled placeholder="请选择所属门店" filterable>
+              <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="账号编码" prop="accountCode">
+            <el-input v-model="drawerProps.row!.accountCode" disabled placeholder="请输入账号编码" clearable />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="账号分类" prop="accountType">
+            <el-select v-model="drawerProps.row!.accountType" placeholder="请选择" filterable multiple clearable>
+              <el-option v-for="item in accountTypeMap" :key="item.id" :label="item.typeName" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="回收组" prop="groupingId">
+            <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable @change="setGroupingId">
+              <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="10">
+        <el-col :span="6">
           <el-form-item label="回收人姓名" prop="accountRecyclerId">
             <el-select v-model="drawerProps.row!.accountRecyclerId" placeholder="请选择" filterable>
               <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="回收时间" prop="accountRecyclerTime">
             <el-date-picker
               v-model="drawerProps.row!.accountRecyclerTime"
@@ -50,7 +58,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="回收价格" prop="accountRecyclerPrice">
             <el-input-number
               class="order-input"
@@ -60,14 +68,24 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="回收方式" prop="isSave">
+            <el-select v-model="drawerProps.row!.recycleMethod" placeholder="请选择" filterable>
+              <el-option v-for="item in methodsMap" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="10">
+        <el-col :span="6">
           <el-form-item label="发布人姓名">
             <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择" filterable>
               <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="发布时间">
             <el-date-picker
               v-model="drawerProps.row!.accountPublisherTimer"
@@ -80,15 +98,34 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8"></el-col>
-        <el-col :span="8">
+        <el-col :span="6">
+          <el-form-item label="发布平台" prop="publishPlatform">
+            <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple>
+              <el-option v-for="item in publishPlatforms" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="回收订单号" prop="recycleOrder">
+            <el-input
+              v-model="drawerProps.row!.recycleOrder"
+              placeholder="请输入回收订单号"
+              clearable
+              :disabled="drawerProps.isView"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="10">
+        <el-col :span="6">
           <el-form-item label="出售人姓名">
             <el-select v-model="drawerProps.row!.salePeopleId" placeholder="请选择" filterable>
               <el-option v-for="item in userMap" :key="item.id" :label="item.userName" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="出售时间">
             <el-date-picker
               v-model="drawerProps.row!.saleTime"
@@ -100,7 +137,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
           <el-form-item label="出售价格">
             <el-input-number
               class="order-input"
@@ -110,58 +147,84 @@
             ></el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="6">
+          <el-form-item label="出售平台">
+            <el-select v-model="drawerProps.row!.salePlatformId" placeholder="请选择" filterable>
+              <el-option v-for="item in platformList" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
-      <el-form-item label="回收方式" prop="isSave">
-        <el-select v-model="drawerProps.row!.isSave" placeholder="请选择" filterable>
-          <el-option v-for="item in methodsMap" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="出售平台">
-        <el-select v-model="drawerProps.row!.salePlatformId" placeholder="请选择" filterable>
-          <el-option v-for="item in platformList" :key="item.value" :label="item.label" :value="item.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="营地号" prop="campId">
-        <el-input v-model="drawerProps.row!.campId" placeholder="请输入账号" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="accountPassword">
-        <el-input
-          type="password"
-          v-model="drawerProps.row!.accountPassword"
-          placeholder="请输入密码"
-          show-password
-          clearable
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="账号实付金额" prop="accountPrice">
-        <el-input-number
-          class="order-input"
-          v-model="drawerProps.row!.accountPrice"
-          placeholder="请输入账号实付金额"
-          clearable
-          :maxlength="11"
-        ></el-input-number>
-      </el-form-item>
-      <el-form-item label="用户赔付金额">
-        <el-input-number
-          class="order-input"
-          v-model="drawerProps.row!.userCompensationPrice"
-          placeholder="请输入用户赔付金额"
-          clearable
-          :maxlength="11"
-        ></el-input-number>
-      </el-form-item>
-      <el-form-item label="平台赔付金额">
-        <el-input-number
-          class="order-input"
-          v-model="drawerProps.row!.platformCompensationPrice"
-          placeholder="请输入平台赔付金额"
-          clearable
-        ></el-input-number>
-      </el-form-item>
-      <el-form-item label="绑定手机号" prop="accountTel">
-        <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable></el-input>
-      </el-form-item>
+
+      <el-row :gutter="10">
+        <el-col :span="6">
+          <el-form-item label="销售订单编号" prop="salesCode">
+            <el-input v-model="drawerProps.row!.salesCode" placeholder="请输入销售订单编号" clearable />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="账号实付金额" prop="accountPrice">
+            <el-input-number
+              class="order-input"
+              v-model="drawerProps.row!.accountPrice"
+              placeholder="请输入账号实付金额"
+              clearable
+              :maxlength="11"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="用户赔付金额">
+            <el-input-number
+              class="order-input"
+              v-model="drawerProps.row!.userCompensationPrice"
+              placeholder="请输入用户赔付金额"
+              clearable
+              :maxlength="11"
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="平台赔付金额">
+            <el-input-number
+              class="order-input"
+              v-model="drawerProps.row!.platformCompensationPrice"
+              placeholder="请输入平台赔付金额"
+              clearable
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="10">
+        <el-col :span="6">
+          <el-form-item label="QQ号" prop="qq">
+            <el-input v-model="drawerProps.row!.qq" placeholder="请输入QQ号" clearable />
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="营地号" prop="campId">
+            <el-input v-model="drawerProps.row!.campId" placeholder="请输入账号" clearable></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="密码" prop="accountPassword">
+            <el-input
+              type="password"
+              v-model="drawerProps.row!.accountPassword"
+              placeholder="请输入密码"
+              show-password
+              clearable
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="绑定手机号" prop="accountTel">
+            <el-input v-model="drawerProps.row!.accountTel" placeholder="请输入手机号" clearable></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+
       <el-form-item label="账号备注">
         <el-input
           v-model="drawerProps.row!.accountRemark"
@@ -330,6 +393,10 @@ const setRecyclerTime = () => {
 const setPublisherTime = () => {
   return (drawerProps.value.row!.saleTime = undefined);
 };
+
+// 发布平台
+const publishPlatforms = ref([]);
+
 const setGroupingId = (id: string) => {
   if (drawerProps.value.title === "编辑") return;
   generateCode(id).then(res => {
@@ -379,8 +446,8 @@ const isSaveMap = [
 ];
 // 回收方式
 const methodsMap = [
-  { label: "自主压资料", value: "1" },
-  { label: "买家已投保", value: "0" }
+  { label: "自主压资料", value: "自主压资料" },
+  { label: "买家已投保", value: "买家已投保" }
 ];
 let accountTypeMap: unknown = [];
 let userMap: unknown = [];
@@ -389,6 +456,12 @@ let stores: unknown = [];
 const branchMap = ref([]);
 let platformList: unknown = [];
 const publishMap = () => {
+  sellKeyMap().then(res => {
+    const {
+      data: { publishPlatform = [] }
+    } = res;
+    publishPlatforms.value = publishPlatform;
+  });
   recycleShop().then(res => {
     const {
       data: { recycleShop = [] }

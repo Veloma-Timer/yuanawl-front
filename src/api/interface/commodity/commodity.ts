@@ -29,7 +29,7 @@ export namespace Commodity {
     accountType: []; // 账号分类(游戏分类)
     groupingId: number; // 回收组
     accountTitle: string; // 账号标题
-
+    recycleMethod: string; // 回收方式
     accountRecyclerId: string; // 回收人
 
     accountRecyclerTime: string; // 回收时间
@@ -97,6 +97,8 @@ export namespace Commodity {
     accountPassword: string; // 密码
     phoneRemark: string; // 手机卡备注
     email: string; // 邮箱
+    recycleMethod: string; // 回收方式
+    isSave: string; // 是否保存
     emailSecret: string; // 邮箱密保
     // system?: SysMapEntity; // 系统
     systemId: number; // 系统ID

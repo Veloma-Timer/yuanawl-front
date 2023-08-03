@@ -101,6 +101,16 @@
           <el-option v-for="item in haveSecondaryMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
+      <el-form-item label="回收方式" prop="isSave">
+        <el-select v-model="drawerProps.row!.recycleMethod" placeholder="请选择" filterable>
+          <el-option v-for="item in methodsMap" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="资料是否存档" prop="isSave">
+        <el-select v-model="drawerProps.row!.isSave" placeholder="请选择" filterable>
+          <el-option v-for="item in isSaveMap" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
       <el-form-item label="回收订单号" prop="recycleOrder">
         <el-input
           v-model="drawerProps.row!.recycleOrder"
@@ -251,6 +261,17 @@ const handleSubmit = () => {
 const haveSecondaryMap = [
   { label: "有", value: "1" },
   { label: "无", value: "0" }
+];
+
+// 回收方式
+const methodsMap = [
+  { label: "自主压资料", value: "自主压资料" },
+  { label: "买家已投保", value: "买家已投保" }
+];
+// 存档
+const isSaveMap = [
+  { label: "是", value: "1" },
+  { label: "否", value: "0" }
 ];
 const systemMap: Ref = ref([]);
 const setStoreId = (id: string) => {

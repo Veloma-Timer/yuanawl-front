@@ -190,6 +190,27 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     width: 180,
     search: { el: "input" }
   },
+  {
+    prop: "isSave",
+    label: "是否存档",
+    sortable: true,
+    width: 160,
+    enum: [
+      { label: "是", value: "1" },
+      { label: "否", value: "0" }
+    ],
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
+  },
+  {
+    prop: "recycleMethod",
+    label: "回收方式",
+    width: 160
+  },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
   { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },
   { prop: "email", label: "邮箱", width: 160, search: { el: "input" } },
