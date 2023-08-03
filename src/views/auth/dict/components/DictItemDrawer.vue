@@ -9,7 +9,7 @@
       :model="drawerProps.rowData"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="名称" prop="label">
         <el-input v-model="drawerProps.rowData!.label" placeholder="名称" clearable></el-input>
       </el-form-item>
 

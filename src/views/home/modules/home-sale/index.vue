@@ -1,10 +1,9 @@
 <template>
   <div>
-    <div class="title mb-2 relative">{{ props.title }}</div>
+    <div class="title mb-2 relative">{{ title }}</div>
     <div class="home-crud">
       <div class="crud-list flex">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
-          <!--<div class="crud-number" ref="crudNumberRef"></div>-->
           <DigitBoard
             :title="namesList[index]"
             :value="item.current"
@@ -12,21 +11,6 @@
             :chain-value="item.yesterday"
             :date="branchName"
           />
-
-          <!--<div class="crud-total">-->
-          <!--<div class="total-name" style="border: 1px solid red">-->
-          <!--  <span>{{ props.branchName }}{{ namesList[index] }}</span>-->
-          <!--</div>-->
-          <!--<div class="total-compare mb22">昨日同比</div>-->
-          <!--<div class="total-proportion flex flx-align-center flx-justify-between">-->
-          <!--  <div>-->
-          <!--    <span class="mr-2">{{ item }}</span>-->
-          <!--    <el-icon>-->
-          <!--      <CaretTop />-->
-          <!--    </el-icon>-->
-          <!--  </div>-->
-          <!--</div>-->
-          <!--</div>-->
         </div>
       </div>
     </div>
@@ -83,75 +67,75 @@ const props = withDefaults(
     branchNames: "今日"
   }
 );
-const setNumber = () => {
-  nextTick(() => {
-    let crudNumber = document.getElementsByClassName("crud-number");
-    for (let i = 0; i < crudListMap.length; i++) {
-      const valueName = i === 0 ? "￥" : "";
-      let option = {
-        title: {
-          text: `${valueName}${crudListMap[i]}`,
-          x: "center",
-          y: "center",
-          textStyle: {
-            fontWeight: "normal",
-            color: "#0580f2",
-            fontSize: "12"
-          }
-        },
-        color: ["rgba(176, 212, 251, 1)"],
-        series: [
-          {
-            name: "Line 1",
-            type: "pie",
-            clockwise: true,
-            radius: ["50%", "70%"],
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            },
-            emphasis: {
-              scale: true // 使用emphasis.scale替代hoverAnimation
-            },
-            data: [
-              {
-                value: 20,
-                itemStyle: {
-                  color: {
-                    // 完成的圆环的颜色
-                    colorStops: [
-                      {
-                        offset: 0,
-                        color: "#00cefc" // 0% 处的颜色
-                      },
-                      {
-                        offset: 1,
-                        color: "#367bec" // 100% 处的颜色
-                      }
-                    ]
-                  }
-                },
-                label: {
-                  show: false
-                },
-                labelLine: {
-                  show: false
-                }
-              },
-              {
-                value: 20
-              }
-            ]
-          }
-        ]
-      };
-      let myChart: echarts.ECharts = echarts.init(crudNumber[i] as HTMLElement);
-      useEcharts(myChart, option);
-    }
-  });
-};
+// const setNumber = () => {
+//   nextTick(() => {
+//     let crudNumber = document.getElementsByClassName("crud-number");
+//     for (let i = 0; i < crudListMap.length; i++) {
+//       const valueName = i === 0 ? "￥" : "";
+//       let option = {
+//         title: {
+//           text: `${valueName}${crudListMap[i]}`,
+//           x: "center",
+//           y: "center",
+//           textStyle: {
+//             fontWeight: "normal",
+//             color: "#0580f2",
+//             fontSize: "12"
+//           }
+//         },
+//         color: ["rgba(176, 212, 251, 1)"],
+//         series: [
+//           {
+//             name: "Line 1",
+//             type: "pie",
+//             clockwise: true,
+//             radius: ["50%", "70%"],
+//             label: {
+//               show: false
+//             },
+//             labelLine: {
+//               show: false
+//             },
+//             emphasis: {
+//               scale: true // 使用emphasis.scale替代hoverAnimation
+//             },
+//             data: [
+//               {
+//                 value: 20,
+//                 itemStyle: {
+//                   color: {
+//                     // 完成的圆环的颜色
+//                     colorStops: [
+//                       {
+//                         offset: 0,
+//                         color: "#00cefc" // 0% 处的颜色
+//                       },
+//                       {
+//                         offset: 1,
+//                         color: "#367bec" // 100% 处的颜色
+//                       }
+//                     ]
+//                   }
+//                 },
+//                 label: {
+//                   show: false
+//                 },
+//                 labelLine: {
+//                   show: false
+//                 }
+//               },
+//               {
+//                 value: 20
+//               }
+//             ]
+//           }
+//         ]
+//       };
+//       let myChart: echarts.ECharts = echarts.init(crudNumber[i] as HTMLElement);
+//       useEcharts(myChart, option);
+//     }
+//   });
+// };
 const setTypes = id => {
   emits("getSalesList", id);
 };
@@ -164,7 +148,7 @@ let crudListMap = reactive<
   }[]
 >([]);
 let channelId = ref();
-setNumber();
+// setNumber();
 const setCrud = (obj: HomeSet.ISalesStatistics) => {
   crudListMap = [
     {
@@ -184,7 +168,7 @@ const setCrud = (obj: HomeSet.ISalesStatistics) => {
     }
   ];
   channelId.value = obj?.channelId;
-  setNumber();
+  // setNumber();
 };
 watch(
   () => props.salesObj,

@@ -1,15 +1,24 @@
 <template>
   <div>
     <div class="home-crud">
-      <div class="title">{{ props.title }}</div>
+      <div class="title mb-2 relative">{{ title }}</div>
       <div class="crud-list flex">
-        <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
-          <div class="recovery-number" ref="recoveryRef"></div>
-          <div class="crud-total">
-            <div class="total-name">
-              <span>{{ props.branchName }}{{ namesList[index] }}</span>
-            </div>
-          </div>
+        <!--<div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">-->
+        <!--  <div class="recovery-number" ref="recoveryRef"></div>-->
+        <!--  <div class="crud-total">-->
+        <!--    <div class="total-name">-->
+        <!--      <span>{{ props.branchName }}{{ namesList[index] }}</span>-->
+        <!--    </div>-->
+        <!--  </div>-->
+        <!--</div>-->
+        <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
+          <DigitBoard
+            :title="namesList[index]"
+            :value="item.current"
+            :year-value="item.year"
+            :chain-value="item.yesterday"
+            :date="branchName"
+          />
         </div>
       </div>
     </div>
@@ -58,6 +67,7 @@ import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import HomeChat from "@/views/home/modules/home-recovery/homeChat.vue";
 import homeChain from "@/views/home/modules/home-chain/index.vue";
+import DigitBoard from "@/views/home/components/DigitBoard.vue";
 // 2、定义发射给父组件的方法
 const emits = defineEmits(["getReuseList"]);
 const recoveryRef = ref<HTMLElement>();
@@ -75,94 +85,133 @@ const props = withDefaults(
     branchName: "今日"
   }
 );
-const setNumber = () => {
-  const indexList: number[] = [1, 3, 5];
-  nextTick(() => {
-    let recoveryNumber = document.getElementsByClassName("recovery-number");
-    for (let i = 0; i < crudListMap.length; i++) {
-      const valueName = indexList.includes(i) ? "" : "￥";
-      let option = {
-        title: {
-          text: `${valueName}${crudListMap[i]}`,
-          x: "center",
-          y: "center",
-          textStyle: {
-            fontWeight: "normal",
-            color: "#0580f2",
-            fontSize: "12"
-          }
-        },
-        color: ["rgba(176, 212, 251, 1)"],
-        series: [
-          {
-            name: "Line 1",
-            type: "pie",
-            clockwise: true,
-            radius: ["50%", "70%"],
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            },
-            emphasis: {
-              scale: true // 使用emphasis.scale替代hoverAnimation
-            },
-            data: [
-              {
-                value: 20,
-                itemStyle: {
-                  color: {
-                    // 完成的圆环的颜色
-                    colorStops: [
-                      {
-                        offset: 0,
-                        color: "#00cefc" // 0% 处的颜色
-                      },
-                      {
-                        offset: 1,
-                        color: "#367bec" // 100% 处的颜色
-                      }
-                    ]
-                  }
-                },
-                label: {
-                  show: false
-                },
-                labelLine: {
-                  show: false
-                }
-              },
-              {
-                value: 20
-              }
-            ]
-          }
-        ]
-      };
-      let myChart: echarts.ECharts = echarts.init(recoveryNumber[i] as HTMLElement);
-      useEcharts(myChart, option);
-    }
-  });
-};
+// const setNumber = () => {
+//   const indexList: number[] = [1, 3, 5];
+//   nextTick(() => {
+//     let recoveryNumber = document.getElementsByClassName("recovery-number");
+//     for (let i = 0; i < crudListMap.length; i++) {
+//       const valueName = indexList.includes(i) ? "" : "￥";
+//       let option = {
+//         title: {
+//           text: `${valueName}${crudListMap[i]}`,
+//           x: "center",
+//           y: "center",
+//           textStyle: {
+//             fontWeight: "normal",
+//             color: "#0580f2",
+//             fontSize: "12"
+//           }
+//         },
+//         color: ["rgba(176, 212, 251, 1)"],
+//         series: [
+//           {
+//             name: "Line 1",
+//             type: "pie",
+//             clockwise: true,
+//             radius: ["50%", "70%"],
+//             label: {
+//               show: false
+//             },
+//             labelLine: {
+//               show: false
+//             },
+//             emphasis: {
+//               scale: true // 使用emphasis.scale替代hoverAnimation
+//             },
+//             data: [
+//               {
+//                 value: 20,
+//                 itemStyle: {
+//                   color: {
+//                     // 完成的圆环的颜色
+//                     colorStops: [
+//                       {
+//                         offset: 0,
+//                         color: "#00cefc" // 0% 处的颜色
+//                       },
+//                       {
+//                         offset: 1,
+//                         color: "#367bec" // 100% 处的颜色
+//                       }
+//                     ]
+//                   }
+//                 },
+//                 label: {
+//                   show: false
+//                 },
+//                 labelLine: {
+//                   show: false
+//                 }
+//               },
+//               {
+//                 value: 20
+//               }
+//             ]
+//           }
+//         ]
+//       };
+//       let myChart: echarts.ECharts = echarts.init(recoveryNumber[i] as HTMLElement);
+//       useEcharts(myChart, option);
+//     }
+//   });
+// };
 // 处理数据
-let crudListMap = reactive([]);
-setNumber();
+let crudListMap = reactive<
+  {
+    current: number | string;
+    yesterday: number | string;
+    year: number | string;
+  }[]
+>([]);
 const setTypes = id => {
   emits("getReuseList", id);
 };
 const setCrud = obj => {
   crudListMap = [
-    obj.recycleMoney,
-    obj.recycleAmount,
-    obj.recycleAveMoney,
-    obj.salesAmount,
-    obj.salesMoney,
-    obj.unsoldAmount,
-    obj.unsoldMoney
+    {
+      current: obj.recycleMoney,
+      yesterday: obj.ayerRecycleMoney,
+      year: obj.yoyRecycleMoney
+    },
+
+    {
+      current: obj.recycleAmount,
+      yesterday: obj.ayerRecycleAmount,
+      year: obj.yoyRecycleAmount
+    },
+
+    {
+      current: obj.recycleAveMoney,
+      yesterday: obj.ayerRecycleAveMoney,
+      year: obj.yoyRecycleAveMoney
+    },
+
+    {
+      current: obj.salesAmount,
+      yesterday: obj.ayerSalesAmount,
+      year: obj.yoySalesAmount
+    },
+
+    {
+      current: obj.salesMoney,
+      yesterday: obj.ayerSalesMoney,
+      year: obj.yoySalesMoney
+    },
+
+    {
+      current: obj.unsoldAmount,
+      yesterday: obj.ayerUnsoldAmount,
+      year: obj.yoyUnsoldAmount
+    },
+
+    {
+      current: obj.unsoldMoney,
+      yesterday: obj.ayerUnsoldMoney,
+      year: obj.yoyUnsoldMoney
+    }
   ];
   channelId.value = obj?.channelId;
-  setNumber();
+  // setNumber();
 };
 watch(
   () => props.statisticsObj,
@@ -177,15 +226,23 @@ watch(
 <style scoped lang="scss">
 .home-crud {
   width: 100%;
-  padding: 20px;
-  background: #ffffff;
-  border: 2px solid #f0f0f0;
-  border-radius: 6px;
 
   .title {
-    font-size: 24px;
-    font-weight: normal;
-    color: #343434;
+    font-size: 20px;
+    font-weight: 600;
+    color: #475669;
+    padding: 0 16px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      border-bottom-right-radius: 4px;
+      border-top-right-radius: 4px;
+      background-color: var(--el-color-primary);
+    }
   }
 
   .crud-list {
@@ -194,9 +251,8 @@ watch(
     width: 100%;
 
     .crud-list-item {
-      width: 33.33%;
-      height: 181px;
-      padding: 18px 22px;
+      width: 32.5%;
+      max-height: 180px;
       margin-bottom: 10px;
 
       .recovery-number {
@@ -234,10 +290,6 @@ watch(
             height: 31px;
           }
         }
-      }
-
-      &:nth-child(4n) {
-        margin: 0;
       }
     }
   }

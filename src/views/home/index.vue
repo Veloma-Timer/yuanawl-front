@@ -1,25 +1,23 @@
 <template>
   <div ref="scrollNum" class="home table-box">
     <div class="home-tab mb30 flex">
-      <div v-show="userRoleId === 1">
-        <el-form :inline="true">
-          <el-form-item label="部门">
-            <el-select class="mr-10" v-model="institution" placeholder="请选择部门" @change="setInstitution">
-              <el-option v-for="item in institutionList" :key="item.id" :label="item.branchName" :value="item.id" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="门店">
-            <el-select class="mr-10" v-model="cityName" placeholder="请选择门店" @change="setValue1">
-              <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id" />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="时间段">
-            <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
-              <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
+      <el-form :inline="true">
+        <el-form-item v-if="token.isAdmin == '1'" label="部门">
+          <el-select class="mr-10" v-model="institution" placeholder="请选择部门" @change="setInstitution">
+            <el-option v-for="item in institutionList" :key="item.id" :label="item.branchName" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item v-if="token.isAdmin == '1'" label="门店">
+          <el-select class="mr-10" v-model="cityName" placeholder="请选择门店" @change="setValue1">
+            <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="时间段">
+          <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
+            <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
     </div>
     <homeSale
       v-if="setValueNone(salesObj, institution, 0)"
@@ -93,8 +91,9 @@ const branchName = ref("今日");
 const branchNames = ref("今日");
 const params = ref<IStatistics>();
 const paramsHome = ref();
-const obj = userObj();
-const userRoleId = ref(0);
+const token = userObj();
+
+// const userRoleId = ref(0);
 const scroll: Ref<UnwrapRef<string>> = ref("0");
 const setValueNone = (obj: any, value: any, num: number) => {
   if (value === null && obj) return true;
@@ -224,7 +223,7 @@ const branchAllList = async () => {
     branchId: cityList.value[0].id,
     date: monthList[0].id
   };
-  userRoleId.value = obj?.userRole.id;
+  // userRoleId.value = obj?.userRole.id;
   await setHomeCardList();
   await getScroll();
 };

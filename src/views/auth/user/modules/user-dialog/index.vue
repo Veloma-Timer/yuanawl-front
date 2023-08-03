@@ -57,9 +57,7 @@
         <el-col :span="12">
           <el-form-item label="所在部门" prop="setId">
             <el-select v-model="drawerProps.row!.setId" placeholder="请选择所在部门" class="check-select" filterable>
-              <template v-for="item in setIdList" :key="item.value">
-                <el-option :label="item.label" :value="item.value" />
-              </template>
+              <el-option v-for="item in setIdList" :key="item.value" :label="item.label" :value="item.id" />
             </el-select>
           </el-form-item>
         </el-col>
@@ -97,6 +95,7 @@ import { getAllBranch, getAllRole } from "@/api/modules/set";
 import { getGroupListMap } from "@/api/modules/user";
 import md5 from "js-md5";
 import { checkPhoneNumber } from "@/utils/eleValidate";
+import { IOptions } from "@/typings";
 const rules = reactive({
   userCode: [{ required: true, message: "必填项不能为空" }],
   userName: [{ required: true, message: "必填项不能为空" }],
@@ -131,9 +130,8 @@ const drawerProps = ref<DrawerProps>({
 type RoleObj = { roleName: string; id: number };
 const userList = ref<RoleObj[]>([]);
 type BranchObj = { branchName: string; id: number };
-type setObj = { label: string; value: number };
 const branchList = ref<BranchObj[]>([]);
-const setIdList = ref<setObj[]>([]);
+const setIdList = ref<IOptions>([]);
 
 // 接收父组件传过来的参数
 const acceptParams = async (params: DrawerProps & any) => {

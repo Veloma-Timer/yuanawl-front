@@ -66,7 +66,7 @@ import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
-import { getUserAll } from "@/api/modules/user";
+import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { parseTime } from "@/utils/is";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
@@ -120,8 +120,6 @@ const getTableList = async (params: any) => {
   delete newParams.createTime;
   const data = await getRecycleList(newParams);
 
-  console.log(data, "data");
-
   return data;
 };
 const getFixed = (str: string) => {
@@ -156,6 +154,34 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
         </div>
       );
     }
+  },
+  { prop: "recycleOrder", label: "回收订单号", width: 200, search: { el: "input" } },
+  {
+    prop: "storeId",
+    label: "回收店铺",
+    width: 120,
+    search: { el: "select" },
+    enum: async () => {
+      const {
+        data: { recycleShop }
+      } = await getGroupListMap({ key: "recycleShop" });
+      return { data: recycleShop };
+    },
+    fieldNames: { label: "label", value: "id" }
+  },
+  {
+    prop: "groupingId",
+    label: "回收组",
+    width: 120,
+    search: { el: "select" },
+    enum: async () => {
+      const {
+        data: { grouping }
+      } = await getGroupListMap({ key: "grouping" });
+
+      return { data: grouping };
+    },
+    fieldNames: { label: "label", value: "id" }
   },
   {
     prop: "qq",
@@ -244,7 +270,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     width: 160,
     search: { el: "input" }
   },
-  { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
   {
     prop: "accountRecyclerId",
     label: "回收人",
@@ -315,11 +340,8 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
   // 当前时间
   const date = new Date();
   let time = "";
-  const userBranchId = obj.user.userBranchId;
   if (title === "编辑") {
-    accountType = row.accountType.map(item => {
-      return parseFloat(item);
-    });
+    accountType = row.accountType.map(item => parseFloat(item));
     accountCode = row.accountCode;
     time = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
   } else {
@@ -337,7 +359,6 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
       accountRecyclerTime: time,
       accountRecyclerId: obj.user.id,
       accountCode,
-      storeId: userBranchId,
       accountType,
       branchId: obj.user.userBranchId
     },
@@ -351,13 +372,9 @@ const onSetPhone = row => {
     accountId: row.id,
     tel: row.accountTel
   };
-  pointBury(params)
-    .then(res => {
-      console.log(res);
-    })
-    .finally(() => {
-      row.status = !row.status;
-    });
+  pointBury(params).finally(() => {
+    row.status = !row.status;
+  });
 };
 
 // 数据统计引用的本页面 需要隐藏部分

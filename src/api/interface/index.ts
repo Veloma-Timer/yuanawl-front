@@ -406,6 +406,20 @@ export namespace HomeSet {
     salesMoney: number; // 出售金额
     unsoldAmount: number; // 未售数量
     unsoldMoney: number; // 未售金额
+    ayerRecycleMoney: number; // 昨日回收金额
+    ayerRecycleAmount: number; // 昨日回收数量
+    ayerRecycleAveMoney: number; // 昨日回收均价
+    ayerSalesAmount: number; // 昨日出售数量
+    ayerSalesMoney: number; // 昨日出售金额
+    ayerUnsoldAmount: number; // 昨日未售数量
+    ayerUnsoldMoney: number; // 昨日未售金额
+    yoyRecycleMoney: number; // 同比回收金额
+    yoyRecycleAmount: number; // 同比回收数量
+    yoyRecycleAveMoney: number; // 同比回收均价
+    yoySalesAmount: number; // 同比出售数量
+    yoySalesMoney: number; // 同比出售金额
+    yoyUnsoldAmount: number; // 同比未售数量
+    yoyUnsoldMoney: number; // 同比未售金额
     channelList: mapList[];
     resRecycle: (ComparisonAmount & ComparisonMoney)[];
     recycleService: INameAndAmountAndMonty[]; // 区服

@@ -7,25 +7,19 @@
       <div class="mr-5 flex flex-row">
         <span class="label">环比上期: </span>
         <p class="flex items-center ml-2">
-          <el-icon v-if="isTop(chainValue)" color="#fc6772">
+          <el-icon :color="getColor(isTop(chainValue))">
             <CaretTop />
           </el-icon>
-          <el-icon v-else color="#2dca93">
-            <CaretBottom />
-          </el-icon>
-          <span class="value" :style="{ color: isTop(chainValue) ? '#fc6772' : '#2dca93' }"> {{ chainValue }} </span>
+          <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ chainValue }} </span>
         </p>
       </div>
       <div class="flex flex-row">
         <span class="label">同比上期同期:</span>
         <p class="flex items-center ml-2">
-          <el-icon v-if="!isTop(yearValue)" color="#fc6772">
+          <el-icon :color="getColor(isTop(yearValue))">
             <CaretTop />
           </el-icon>
-          <el-icon v-else color="#2dca93">
-            <CaretBottom />
-          </el-icon>
-          <span class="value" :style="{ color: !isTop(yearValue) ? '#fc6772' : '#2dca93' }"> {{ yearValue }} </span>
+          <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ yearValue }} </span>
         </p>
       </div>
     </div>
@@ -52,7 +46,21 @@ withDefaults(
 
 const isTop = (number: number | string) => {
   const pureValue = parseFloat(number as string);
-  return pureValue > 0;
+
+  if (pureValue == 0) {
+    return "-1";
+  }
+
+  return pureValue > 0 ? "1" : "0";
+};
+
+const getColor = (code: "-1" | "0" | "1"): string => {
+  const colorMap = {
+    "-1": "#5f6e82",
+    "0": "#2dca93",
+    "1": "#fc6772"
+  };
+  return colorMap[code];
 };
 </script>
 

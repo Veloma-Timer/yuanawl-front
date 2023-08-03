@@ -1,6 +1,7 @@
 import { ResPage, User } from "@/api/interface/index";
 import { PORT1, PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
+import { IOptions } from "@/typings";
 const baseUrl = PORT3 + "/sys_user";
 /**
  * @name 用户管理模块
@@ -76,7 +77,7 @@ export const getUserTree = () => {
   return http.get<User.Tree>(`${baseUrl}/tree`);
 };
 // 获取所有组的信息
-export const getGroupListMap = (params: { key: string }) => {
+export const getGroupListMap = <T>(params: { key: string }): Promise<{ data: Record<T, IOptions> }> => {
   return http.get(`${PORT3}/sys_map`, params, { noLoading: true });
 };
 // 获取所有用户

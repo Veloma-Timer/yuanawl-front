@@ -133,8 +133,13 @@
         </el-select>
       </el-form-item>
       <el-form-item label="回收店铺" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable @change="setStoreId">
-          <el-option v-for="item in customerMap" :key="item.id" :label="item.label" :value="item.id" />
+        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable>
+          <el-option v-for="item in recycleShop" :key="item.id" :label="item.label" :value="item.id" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="回收组" prop="groupingId">
+        <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable>
+          <el-option v-for="item in recycleGrouping" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收时间" prop="accountRecyclerTime">
@@ -173,9 +178,9 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
-
-import { generateCode, getSetSystemList, typeCode } from "@/api/modules/commodity";
-import { checkPhoneNumber, checkEmail } from "@/utils/eleValidate";
+import { getSetSystemList, typeCode } from "@/api/modules/commodity";
+import { checkPhoneNumber } from "@/utils/eleValidate";
+import { IOptions } from "@/typings";
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
     type: rule.field,
@@ -203,7 +208,7 @@ const rules = reactive({
   accountType: [{ required: true, message: "必填项不能为空" }],
   // accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
-  phoneRemark: [{ required: true, message: "必填项不能为空" }],
+  // phoneRemark: [{ required: true, message: "必填项不能为空" }],
   systemId: [{ required: true, message: "必填项不能为空" }],
   accountRemark: [{ required: true, message: "必填项不能为空" }],
   // campId: [{ required: true, message: "必填项不能为空" }],
@@ -274,12 +279,7 @@ const isSaveMap = [
   { label: "否", value: "0" }
 ];
 const systemMap: Ref = ref([]);
-const setStoreId = (id: string) => {
-  generateCode(id).then(res => {
-    const { data } = res;
-    drawerProps.value.row.accountCode = data;
-  });
-};
+
 // 回收人
 let transCatUploadedMap: unknown = [];
 // 账号分类
@@ -287,13 +287,25 @@ let accountTypeMap: unknown = [];
 // 门店
 let branchMap: unknown = [];
 // 回收店铺
-let customerMap: Array<object> = [];
+const recycleShop = ref<IOptions>([]);
+// 回收组
+const recycleGrouping = ref<IOptions>([]);
 const setAllList = async () => {
   const res = await getAllList();
-  const list = await getGroupListMap({ key: "grouping" });
+
+  const {
+    data: { recycleShop: _recycleShop }
+  } = await getGroupListMap<"recycleShop">({ key: "recycleShop" });
+  recycleShop.value = _recycleShop;
+
+  const {
+    data: { grouping }
+  } = await getGroupListMap<"grouping">({ key: "grouping" });
+
+  recycleGrouping.value = grouping;
+
   const reloads = await getUserAll();
   const { data } = await getAllBranch({});
-  customerMap = list.data.grouping;
   transCatUploadedMap = reloads.data;
   accountTypeMap = res.data;
   branchMap = data;
