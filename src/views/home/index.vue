@@ -76,7 +76,7 @@ const monthList: Item[] = [
   { branchName: "本月", id: 2 },
   { branchName: "本季度", id: 3 },
   { branchName: "本年", id: 4 },
-  { branchName: "全部", id: 9 }
+  { branchName: "全部", id: 5 }
 ];
 const institutionList: Item[] = [
   { branchName: "全部", id: null },

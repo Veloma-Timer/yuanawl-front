@@ -8,7 +8,8 @@
         <span class="label">环比上期: </span>
         <p class="flex items-center ml-2">
           <el-icon :color="getColor(isTop(chainValue))">
-            <CaretTop />
+            <CaretTop v-if="isTop(chainValue) == '1'" />
+            <CaretBottom v-else />
           </el-icon>
           <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ chainValue }} </span>
         </p>
@@ -17,7 +18,8 @@
         <span class="label">同比上期同期:</span>
         <p class="flex items-center ml-2">
           <el-icon :color="getColor(isTop(yearValue))">
-            <CaretTop />
+            <CaretTop v-if="isTop(yearValue) == '1'" />
+            <CaretBottom v-else />
           </el-icon>
           <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ yearValue }} </span>
         </p>

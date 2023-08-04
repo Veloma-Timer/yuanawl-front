@@ -150,6 +150,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     }
   },
   { prop: "publishPrice", label: "商品首次定价", minWidth: 150, search: { el: "input" } },
+  { prop: "publishRemark", label: "发布备注", minWidth: 150, search: { el: "input" } },
   // {
   //   prop: "accountNumber",
   //   sortable: true,
@@ -169,7 +170,18 @@ const columns: ColumnProps<Commodity.Release>[] = [
     search: { el: "input" }
   },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
-  { prop: "campId", label: "游戏区服", width: 160, search: { el: "input" } },
+  {
+    prop: "systemId",
+    label: "系统",
+    width: 160,
+    search: { el: "select" },
+    enum: [
+      { label: "安卓QQ", value: 1 },
+      { label: "苹果QQ", value: 2 },
+      { label: "安卓微信", value: 3 },
+      { label: "苹果微信", value: 4 }
+    ]
+  },
   {
     prop: "accountRecyclerPrice",
     label: "回收价格",
@@ -270,7 +282,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   {
     prop: "publishPlatform",
-    label: "发布渠道",
+    label: "发布平台",
     minWidth: 150,
     enum: async () => {
       const {
@@ -288,6 +300,48 @@ const columns: ColumnProps<Commodity.Release>[] = [
     },
     render: ({ row }) => {
       return row.publishPlatform
+        ?.map(id => {
+          const platform = _publishPlatform.value.find(item => {
+            const value = item.value || item.id;
+            return value == id;
+          }) as any;
+          return platform?.label || "--";
+        })
+        .join(" ");
+    }
+  },
+  {
+    prop: "rollBackTimer",
+    label: "回滚时间",
+    minWidth: 150,
+    search: {
+      el: "date-picker"
+    },
+    render: ({ row }) => {
+      return parseTime(row!.rollBackTimer, "{y}-{m}-{d} {h}:{i}:{s}");
+    }
+  },
+  {
+    prop: "rollBackPlatform",
+    label: "回滚平台",
+    minWidth: 150,
+    enum: async () => {
+      const {
+        data: { publishPlatform = [] }
+      } = await sellKeyMap();
+      _publishPlatform.value = publishPlatform;
+      return { data: publishPlatform };
+    },
+    search: {
+      el: "select",
+      props: {
+        filterable: true,
+        multiple: true
+      }
+    },
+    render: ({ row }) => {
+      console.log(row.rollBackPlatform, "rollBackPlatform");
+      return row.rollBackPlatform
         ?.map(id => {
           const platform = _publishPlatform.value.find(item => {
             const value = item.value || item.id;
@@ -360,23 +414,19 @@ const setEcho = (arr: string[]) => {
 const date = new Date();
 const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
-  let publishPlatform = [];
-  let rollBackPlatform = [];
-  if (title === "编辑") {
-    publishPlatform = row.publishPlatform?.map(item => Number(item));
-    // rollBackPlatform = row.rollBackPlatform?.map(item => Number(item));
-  }
+  const publishPlatform = row.publishPlatform?.map(item => Number(item));
+
+  console.log(row.publishPlatform, publishPlatform);
+
   const params = {
     title,
     isView: title === "查看",
     row: {
       ...row,
       publishPlatform: publishPlatform,
-      rollBackPlatform: rollBackPlatform,
       publishPrice: Number(row.publishPrice),
       accountPublisherTimer: time,
-      accountPublisherId: obj.user.id,
-      accountCode: row.accountCode
+      accountPublisherId: obj.user.id
     },
     api: title === "新增" ? addPublish : title === "编辑" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList

@@ -9,8 +9,8 @@
       :model="drawerProps.row"
       :hide-required-asterisk="drawerProps.isView"
     >
-      <el-form-item label="账号编码" prop="id">
-        <el-select v-model="drawerProps.row!.id" placeholder="请选择账户" filterable disabled>
+      <el-form-item label="账号编码" prop="accountCode">
+        <el-select v-model="drawerProps.row!.accountCode" placeholder="请选择账户" filterable disabled>
           <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -29,33 +29,39 @@
           placeholder="请选择发布时间"
         />
       </el-form-item>
-      <el-form-item label="发布时间" prop="rollBackTimer">
-        <el-date-picker
-          v-model="drawerProps.row!.rollBackTimer"
-          format="YYYY-MM-DD hh:mm:ss"
-          disabled
-          value-format="YYYY-MM-DD hh:mm:ss"
-          type="datetime"
-          placeholder="请选择发布时间"
-        />
-      </el-form-item>
+      <!--<el-form-item label="发布时间" prop="rollBackTimer">-->
+      <!--  <el-date-picker-->
+      <!--    v-model="drawerProps.row!.rollBackTimer"-->
+      <!--    format="YYYY-MM-DD hh:mm:ss"-->
+      <!--    disabled-->
+      <!--    value-format="YYYY-MM-DD hh:mm:ss"-->
+      <!--    type="datetime"-->
+      <!--    placeholder="请选择发布时间"-->
+      <!--  />-->
+      <!--</el-form-item>-->
       <el-form-item label="商品首次定价">
-        <el-input-number
+        <el-input
           v-model="drawerProps.row!.publishPrice"
-          :min="0"
-          placeholder="请输入商品首次定价"
-          clearable
-          :controls="false"
+          placeholder="Please input"
+          :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+          :parser="value => value.replace(/\¥\s?|(,*)/g, '')"
         />
+        <!--<el-input-->
+        <!--  v-model="drawerProps.row!.publishPrice"-->
+        <!--  placeholder="请输入商品首次定价"-->
+        <!--  clearable-->
+        <!--  :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"-->
+        <!--  :parser="value => value.replace(/\$\s?|(,*)/g, '')"-->
+        <!--/>-->
       </el-form-item>
       <el-form-item label="发布平台" prop="publishPlatform">
         <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple>
           <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="账号描述">
+      <el-form-item label="发布备注">
         <el-input
-          v-model="drawerProps.row!.accountDesc"
+          v-model="drawerProps.row!.publishRemark"
           :autosize="{ minRows: 3, maxRows: 5 }"
           type="textarea"
           resize="none"
@@ -123,6 +129,9 @@ const publishMap = () => {
     const {
       data: { publishPlatform = [] }
     } = res;
+
+    console.log(publishPlatform);
+
     handleMap = publishPlatform;
   });
 };

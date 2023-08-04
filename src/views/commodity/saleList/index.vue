@@ -1,6 +1,6 @@
 <template>
   <div class="table-box">
-    <el-tabs v-model="activeName" type="border-card" class="demo-tabs">
+    <el-tabs v-model="activeName" type="border-card" class="demo-tabs h-full">
       <el-tab-pane v-for="branch in branchList" :key="branch.id" :label="branch.branchName" :name="branch.id">
         <ProTable
           :key="activeName"
