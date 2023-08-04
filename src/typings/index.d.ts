@@ -5,3 +5,9 @@ export interface IOption {
 }
 
 export type IOptions = IOption[];
+
+export interface IDigitBoard {
+  current: number | string;
+  yesterday: number | string;
+  year: number | string;
+}

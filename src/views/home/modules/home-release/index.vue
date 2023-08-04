@@ -1,24 +1,16 @@
 <template>
   <div>
     <div class="home-crud">
-      <div class="title">{{ props.title }}</div>
+      <div class="title mb-2 relative">{{ props.title }}</div>
       <div class="crud-list flex">
-        <div v-for="(item, index) in crudListMap" :key="item + index" class="crud-list-item flex">
-          <div class="release-number" ref="releaseRef"></div>
-          <div class="crud-total">
-            <div class="total-name">
-              <span>{{ props.branchName }}{{ namesList[index] }}</span>
-            </div>
-            <!--<div class="total-compare mb22">昨日同比</div>-->
-            <!--<div class="total-proportion flex flx-align-center flx-justify-between">-->
-            <!--  <div>-->
-            <!--    <span class="mr-2">{{ item }}</span>-->
-            <!--    <el-icon>-->
-            <!--      <CaretTop />-->
-            <!--    </el-icon>-->
-            <!--  </div>-->
-            <!--</div>-->
-          </div>
+        <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
+          <DigitBoard
+            :title="namesList[index]"
+            :value="item.current"
+            :year-value="item.year"
+            :chain-value="item.yesterday"
+            :date="branchName"
+          />
         </div>
       </div>
     </div>
@@ -40,14 +32,14 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, reactive, nextTick, watch } from "vue";
-import * as echarts from "echarts";
-import { useEcharts } from "@/hooks/useEcharts";
+import { ref, watch } from "vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
-const releaseRef = ref<HTMLElement>();
-const namesList: string[] = ["已发布数量", "待发布数量", "待发布金额"];
+import DigitBoard from "@/views/home/components/DigitBoard.vue";
+import { IDigitBoard } from "@/typings";
+
+const namesList: string[] = ["已发布金额", "已发布数量", "已发布均价"];
 const publishId = ref();
 // 处理数据
 const props = withDefaults(
@@ -60,83 +52,28 @@ const props = withDefaults(
     branchName: "今日"
   }
 );
-const setNumber = () => {
-  nextTick(() => {
-    let releaseNumber = document.getElementsByClassName("release-number");
-    for (let i = 0; i < crudListMap.length; i++) {
-      const valueName = i === 2 ? "￥" : "";
-      let option = {
-        title: {
-          text: `${valueName}${crudListMap[i]}`,
-          x: "center",
-          y: "center",
-          textStyle: {
-            fontWeight: "normal",
-            color: "#0580f2",
-            fontSize: "12"
-          }
-        },
-        color: ["rgba(176, 212, 251, 1)"],
-        series: [
-          {
-            name: "Line 1",
-            type: "pie",
-            clockwise: true,
-            radius: ["50%", "70%"],
-            label: {
-              show: false
-            },
-            labelLine: {
-              show: false
-            },
-            emphasis: {
-              scale: true // 使用emphasis.scale替代hoverAnimation
-            },
-            data: [
-              {
-                value: 20,
-                itemStyle: {
-                  color: {
-                    // 完成的圆环的颜色
-                    colorStops: [
-                      {
-                        offset: 0,
-                        color: "#00cefc" // 0% 处的颜色
-                      },
-                      {
-                        offset: 1,
-                        color: "#367bec" // 100% 处的颜色
-                      }
-                    ]
-                  }
-                },
-                label: {
-                  show: false
-                },
-                labelLine: {
-                  show: false
-                }
-              },
-              {
-                value: 20
-              }
-            ]
-          }
-        ]
-      };
-      let myChart: echarts.ECharts = echarts.init(releaseNumber[i] as HTMLElement);
-      useEcharts(myChart, option);
-    }
-  });
-};
-// 处理数据
-let crudListMap = reactive([]);
+const crudListMap = ref<IDigitBoard[]>([]);
 let publishUnit = ref([]);
-setNumber();
-const setCrud = obj => {
-  crudListMap = [obj.publishMoney, obj.publishAmount, obj.publishAveMoney];
+const setCrud = (obj: HomeSet.IPublishStatistics) => {
+  crudListMap.value = [
+    {
+      current: obj.publishMoney,
+      yesterday: obj.ayerPublishMoney,
+      year: obj.yoyPublishMoney
+    },
+    {
+      current: obj.publishAmount,
+      yesterday: obj.ayerPublishAmount,
+      year: obj.yoyPublishAmount
+    },
+    {
+      current: obj.publishAveMoney,
+      yesterday: obj.ayerPublishAveMoney,
+      year: obj.yoyPublishAveMoney
+    }
+  ];
   publishUnit.value = obj.publishRatio;
-  setNumber();
+  // setNumber();
 };
 const setValue = (status: number) => {
   const publishSetComparison = props.publishObj.publishSetComparison;
@@ -146,7 +83,7 @@ const setValue = (status: number) => {
 watch(
   () => props.publishObj,
   count => {
-    crudListMap = [];
+    crudListMap.value = [];
     /* ... */
     setCrud(count);
   },
@@ -156,15 +93,23 @@ watch(
 <style scoped lang="scss">
 .home-crud {
   width: 100%;
-  padding: 20px;
-  background: #ffffff;
-  border: 2px solid #f0f0f0;
-  border-radius: 6px;
 
   .title {
-    font-size: 24px;
-    font-weight: normal;
-    color: #343434;
+    font-size: 20px;
+    font-weight: 600;
+    color: #475669;
+    padding: 0 16px;
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      border-bottom-right-radius: 4px;
+      border-top-right-radius: 4px;
+      background-color: var(--el-color-primary);
+    }
   }
 
   .crud-list {
@@ -173,9 +118,8 @@ watch(
     width: 100%;
 
     .crud-list-item {
-      width: 33.33%;
-      height: 181px;
-      padding: 18px 22px;
+      width: 32.5%;
+      max-height: 180px;
       margin-bottom: 10px;
 
       .release-number {

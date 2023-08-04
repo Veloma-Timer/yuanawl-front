@@ -40,16 +40,12 @@
   </div>
 </template>
 <script setup lang="ts">
-import { CaretTop } from "@element-plus/icons-vue";
 import DigitBoard from "@/views/home/components/DigitBoard.vue";
-import { ref, reactive, nextTick, watch } from "vue";
-import * as echarts from "echarts";
-import { useEcharts } from "@/hooks/useEcharts";
+import { ref, watch } from "vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import homeChain from "@/views/home/modules/home-chain/index.vue";
-const crudNumberRef = ref<HTMLElement>();
 const namesList: string[] = ["销售金额", "销售数量", "销售加价率"];
 // 2、定义发射给父组件的方法
 const emits = defineEmits(["getSalesList"]);
@@ -67,90 +63,15 @@ const props = withDefaults(
     branchNames: "今日"
   }
 );
-// const setNumber = () => {
-//   nextTick(() => {
-//     let crudNumber = document.getElementsByClassName("crud-number");
-//     for (let i = 0; i < crudListMap.length; i++) {
-//       const valueName = i === 0 ? "￥" : "";
-//       let option = {
-//         title: {
-//           text: `${valueName}${crudListMap[i]}`,
-//           x: "center",
-//           y: "center",
-//           textStyle: {
-//             fontWeight: "normal",
-//             color: "#0580f2",
-//             fontSize: "12"
-//           }
-//         },
-//         color: ["rgba(176, 212, 251, 1)"],
-//         series: [
-//           {
-//             name: "Line 1",
-//             type: "pie",
-//             clockwise: true,
-//             radius: ["50%", "70%"],
-//             label: {
-//               show: false
-//             },
-//             labelLine: {
-//               show: false
-//             },
-//             emphasis: {
-//               scale: true // 使用emphasis.scale替代hoverAnimation
-//             },
-//             data: [
-//               {
-//                 value: 20,
-//                 itemStyle: {
-//                   color: {
-//                     // 完成的圆环的颜色
-//                     colorStops: [
-//                       {
-//                         offset: 0,
-//                         color: "#00cefc" // 0% 处的颜色
-//                       },
-//                       {
-//                         offset: 1,
-//                         color: "#367bec" // 100% 处的颜色
-//                       }
-//                     ]
-//                   }
-//                 },
-//                 label: {
-//                   show: false
-//                 },
-//                 labelLine: {
-//                   show: false
-//                 }
-//               },
-//               {
-//                 value: 20
-//               }
-//             ]
-//           }
-//         ]
-//       };
-//       let myChart: echarts.ECharts = echarts.init(crudNumber[i] as HTMLElement);
-//       useEcharts(myChart, option);
-//     }
-//   });
-// };
 const setTypes = id => {
   emits("getSalesList", id);
 };
 // 处理数据
-let crudListMap = reactive<
-  {
-    current: number | string;
-    yesterday: number | string;
-    year: number | string;
-  }[]
->([]);
+const crudListMap = ref<IDigitBoard[]>([]);
 let channelId = ref();
 // setNumber();
 const setCrud = (obj: HomeSet.ISalesStatistics) => {
-  crudListMap = [
+  crudListMap.value = [
     {
       current: obj.salesMoney,
       yesterday: obj.salesYesterdayMoney,
@@ -173,7 +94,7 @@ const setCrud = (obj: HomeSet.ISalesStatistics) => {
 watch(
   () => props.salesObj,
   sales => {
-    crudListMap = [];
+    crudListMap.value = [];
     /* ... */
     setCrud(sales);
   },

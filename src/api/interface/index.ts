@@ -434,9 +434,18 @@ export namespace HomeSet {
     publishMoney: number; // 发布金额
     publishAmount: number; // 发布数量
     publishAveMoney: number; // 发布均价
+
+    ayerPublishMoney: number; // 昨日发布金额
+    ayerPublishAmount: number; // 昨日发布数量
+    ayerPublishAveMoney: number; // 昨日发布均价
+
+    yoyPublishMoney: number; // 同比发布金额
+    yoyPublishAmount: number; // 同比发布数量
+    yoyPublishAveMoney: number; // 同比发布均价
+
     publishRatio: INameAndAmountAndMonty[]; // 账号发布占比：用户 金额 数量
     publishRanking: INameAndAmountAndMonty[]; // 发布额排名：用户 金额 数量
-    publishSetComparison?: Record<string | number, INameAndAmountAndMonty[]>; // 发布组数据对比：用户 金额 数量
+    publishSetComparison?: INameAndAmountAndMonty[][]; // 发布组数据对比 按照渠道分类：用户 金额 数量
   }
   export interface BaseWorkOrderEntity {
     account: null;
