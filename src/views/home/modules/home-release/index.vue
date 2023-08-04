@@ -115,10 +115,10 @@ watch(
   .crud-list {
     flex-wrap: wrap;
     width: 100%;
+    justify-content: space-between;
 
     .crud-list-item {
-      min-width: 24%;
-      margin-right: 10px;
+      min-width: 32.5%;
       max-height: 180px;
       margin-bottom: 10px;
 

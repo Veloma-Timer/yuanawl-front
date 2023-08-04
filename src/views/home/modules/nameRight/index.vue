@@ -45,7 +45,7 @@ const props = withDefaults(
   height: 100%;
   padding: 20px;
   background: #ffffff;
-  border: 2px solid #f0f0f0;
+  border-radius: 4px;
 
   .cell {
     font-size: 16px;

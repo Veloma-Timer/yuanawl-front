@@ -2,7 +2,7 @@
   <div>
     <div class="home-crud">
       <div class="title mb-2 relative">{{ title }}</div>
-      <div class="crud-list flex">
+      <div class="crud-list">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
           <DigitBoard
             :title="namesList[index]"
@@ -159,7 +159,8 @@ watch(
   }
 
   .crud-list {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     width: 100%;
 
     .crud-list-item {
