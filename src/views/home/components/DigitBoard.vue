@@ -4,26 +4,30 @@
     <p>{{ date }}</p>
     <p class="digit">{{ value }}</p>
     <div class="flex flex-row">
-      <div class="mr-5 flex flex-row">
-        <span class="label">环比上期: </span>
-        <p class="flex items-center ml-2">
-          <el-icon :color="getColor(isTop(chainValue))">
-            <CaretTop v-if="isTop(chainValue) == '1'" />
-            <CaretBottom v-else />
-          </el-icon>
-          <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ chainValue }} </span>
-        </p>
-      </div>
-      <div class="flex flex-row">
-        <span class="label">同比上期同期:</span>
-        <p class="flex items-center ml-2">
-          <el-icon :color="getColor(isTop(yearValue))">
-            <CaretTop v-if="isTop(yearValue) == '1'" />
-            <CaretBottom v-else />
-          </el-icon>
-          <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ yearValue }} </span>
-        </p>
-      </div>
+      <el-tooltip class="box-item" :content="getAyerMsg(isTop(chainValue), chainValue)" placement="top">
+        <div class="mr-5 flex flex-row">
+          <span class="label">环比上期: </span>
+          <p class="flex items-center ml-2">
+            <el-icon :color="getColor(isTop(chainValue))">
+              <CaretTop v-if="isTop(chainValue) == '1'" />
+              <CaretBottom v-else />
+            </el-icon>
+            <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ chainValue }} </span>
+          </p>
+        </div>
+      </el-tooltip>
+      <el-tooltip class="box-item" :content="getYoyMsg(isTop(yearValue), yearValue)" placement="top">
+        <div class="flex flex-row">
+          <span class="label">同比上期:</span>
+          <p class="flex items-center ml-2">
+            <el-icon :color="getColor(isTop(yearValue))">
+              <CaretTop v-if="isTop(yearValue) == '1'" />
+              <CaretBottom v-else />
+            </el-icon>
+            <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ yearValue }} </span>
+          </p>
+        </div>
+      </el-tooltip>
     </div>
   </div>
 </template>
@@ -54,6 +58,26 @@ const isTop = (number: number | string) => {
   }
 
   return pureValue > 0 ? "1" : "0";
+};
+
+// 环比信息
+const getAyerMsg = (isTop: "-1" | "1" | "0", value: string | number) => {
+  const topMap = {
+    "-1": "持平",
+    "1": "增加",
+    "0": "减少"
+  };
+  return `环比 ${topMap[isTop]} ${value}`;
+};
+
+// 同比信息
+const getYoyMsg = (isTop: "-1" | "1" | "0", value: string | number) => {
+  const topMap = {
+    "-1": "持平",
+    "1": "增加",
+    "0": "减少"
+  };
+  return `同比 ${topMap[isTop]} ${value}`;
 };
 
 const getColor = (code: "-1" | "0" | "1"): string => {
@@ -87,7 +111,7 @@ const getColor = (code: "-1" | "0" | "1"): string => {
   }
 
   .digit {
-    font-size: 40px;
+    font-size: 38px;
   }
 }
 </style>

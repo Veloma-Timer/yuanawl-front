@@ -50,14 +50,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineEmits } from "vue";
+import { ref, watch } from "vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import HomeChat from "@/views/home/modules/home-recovery/homeChat.vue";
 import homeChain from "@/views/home/modules/home-chain/index.vue";
 import DigitBoard from "@/views/home/components/DigitBoard.vue";
-import { IDigitBoard } from "@/typings";
+import type { IDigitBoard } from "@/typings";
+import currency from "currency.js";
+
 // 2、定义发射给父组件的方法
 const emits = defineEmits(["getReuseList"]);
 let channelId = ref();
@@ -81,7 +83,7 @@ const setTypes = id => {
 const setCrud = (obj: HomeSet.IRecycleStatistics) => {
   crudListMap.value = [
     {
-      current: obj.recycleMoney,
+      current: currency(obj.recycleMoney).format({ symbol: "¥" }),
       yesterday: obj.ayerRecycleMoney,
       year: obj.yoyRecycleMoney
     },
@@ -93,7 +95,7 @@ const setCrud = (obj: HomeSet.IRecycleStatistics) => {
     },
 
     {
-      current: obj.recycleAveMoney,
+      current: currency(obj.recycleAveMoney).format({ symbol: "¥" }),
       yesterday: obj.ayerRecycleAveMoney,
       year: obj.yoyRecycleAveMoney
     },
@@ -105,7 +107,7 @@ const setCrud = (obj: HomeSet.IRecycleStatistics) => {
     },
 
     {
-      current: obj.salesMoney,
+      current: currency(obj.salesMoney).format({ symbol: "¥" }),
       yesterday: obj.ayerSalesMoney,
       year: obj.yoySalesMoney
     },
@@ -117,7 +119,7 @@ const setCrud = (obj: HomeSet.IRecycleStatistics) => {
     },
 
     {
-      current: obj.unsoldMoney,
+      current: currency(obj.unsoldMoney).format({ symbol: "¥" }),
       yesterday: obj.ayerUnsoldMoney,
       year: obj.yoyUnsoldMoney
     }
@@ -158,11 +160,11 @@ watch(
 
   .crud-list {
     flex-wrap: wrap;
-    justify-content: space-between;
     width: 100%;
 
     .crud-list-item {
-      width: 32.5%;
+      min-width: 24%;
+      margin-right: 10px;
       max-height: 180px;
       margin-bottom: 10px;
 

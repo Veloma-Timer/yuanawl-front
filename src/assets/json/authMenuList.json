@@ -6,7 +6,7 @@
       "name": "首页",
       "component": "/home/index",
       "meta": {
-        "icon": "HomeFilled",
+        "icon": "TrendCharts",
         "title": "首页",
         "isLink": "",
         "isHide": false,
@@ -29,7 +29,7 @@
       "name": "账号管理",
       "redirect": "/commodity",
       "meta": {
-        "icon": "MessageBox",
+        "icon": "Management",
         "title": "账号管理",
         "isLink": "",
         "isHide": false,
@@ -185,7 +185,7 @@
       "name": "message",
       "component": "/message/template/index",
       "meta": {
-        "icon": "MessageBox",
+        "icon": "UploadFilled",
         "title": "短信管理",
         "isLink": "",
         "isHide": false,
@@ -257,7 +257,7 @@
       "name": "data",
       "redirect": "/data/statistics/recovery",
       "meta": {
-        "icon": "DataBoard",
+        "icon": "HelpFilled",
         "title": "数据统计",
         "isLink": "",
         "isHide": false,
@@ -315,7 +315,7 @@
       "name": "afterSales",
       "redirect": "/afterSales/orderSummary",
       "meta": {
-        "icon": "Memo",
+        "icon": "List",
         "title": "售后工单",
         "isLink": "",
         "isHide": false,
@@ -401,7 +401,7 @@
       "name": "系统设置",
       "redirect": "/auth/store",
       "meta": {
-        "icon": "Lock",
+        "icon": "Tools",
         "title": "设置",
         "isLink": "",
         "isHide": false,

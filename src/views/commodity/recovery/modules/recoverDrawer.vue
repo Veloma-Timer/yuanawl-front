@@ -87,7 +87,7 @@
           :autosize="{ minRows: 3, maxRows: 5 }"
           type="textarea"
           resize="none"
-          v-model="drawerProps.row!.accountRemark"
+          v-model="drawerProps.row!.accountDesc"
           :disabled="drawerProps.isView"
           placeholder="请输入账号描述"
           clearable

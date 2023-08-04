@@ -39,6 +39,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.4.0",
     "crypto-js": "^4.0.0",
+    "currency.js": "^2.0.4",
     "dayjs": "^1.11.7",
     "deepcopy": "^2.1.0",
     "default-passive-events": "^2.0.0",

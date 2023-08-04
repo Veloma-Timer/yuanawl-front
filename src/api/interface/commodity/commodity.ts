@@ -94,6 +94,7 @@ export namespace Commodity {
     accountCode: unknown; // 账号编码
     accountType: number[]; // 账号分类
     groupingId: number; // 回收组
+    accountDesc: string; // 账号描述
     accountNumber: string; // 账号
     accountPassword: string; // 密码
     phoneRemark: string; // 手机卡备注
