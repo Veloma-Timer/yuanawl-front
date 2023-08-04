@@ -40,7 +40,7 @@
       </div>
     </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
-    <homeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="回收组渠道对比">
+    <homeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="回收渠道对比">
       <div>
         <el-select v-model="channelId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
           <el-option v-for="item in statisticsObj?.channelList" :key="item.id" :label="item.label" :value="item.id" />

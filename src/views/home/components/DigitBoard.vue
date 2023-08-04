@@ -67,7 +67,7 @@ const getAyerMsg = (isTop: "-1" | "1" | "0", value: string | number) => {
     "1": "增加",
     "0": "减少"
   };
-  return `环比 ${topMap[isTop]} ${value}`;
+  return `环比上期 ${topMap[isTop]} ${value}`;
 };
 
 // 同比信息
@@ -77,7 +77,7 @@ const getYoyMsg = (isTop: "-1" | "1" | "0", value: string | number) => {
     "1": "增加",
     "0": "减少"
   };
-  return `同比 ${topMap[isTop]} ${value}`;
+  return `同比上期 ${topMap[isTop]} ${value}`;
 };
 
 const getColor = (code: "-1" | "0" | "1"): string => {

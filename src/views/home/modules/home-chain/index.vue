@@ -17,7 +17,6 @@ import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { setValues } from "@/views/home/modules/homeUtis";
 const groupRef = ref<HTMLElement>();
-const myArrayRef = toRef(props, "listArr");
 const props = defineProps({
   listArr: {
     type: Array,
@@ -36,6 +35,9 @@ const props = defineProps({
     default: ""
   }
 });
+
+const myArrayRef = toRef(props, "listArr");
+
 const getFixed = (str: string) => {
   if (str) {
     return "￥" + parseFloat(str).toFixed(2);
@@ -52,9 +54,9 @@ const groupGet = (
   yoyAmount: number[]
 ) => {
   nextTick(() => {
-    let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
-    let nameValue = `${props.branchName}数量`;
-    let option = {
+    const myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
+    const nameValue = `${props.branchName}数量`;
+    const option = {
       tooltip: {
         trigger: "axis",
         axisPointer: {
@@ -63,7 +65,7 @@ const groupGet = (
         }
       },
       legend: {
-        data: ["数量", nameValue, "往年同期数量", "金额", `${props.branchName}金额`, "往年同期金额"],
+        data: [nameValue, `${props.branchName}金额`, "环比数量", "环比金额", "同比数量", "同比金额"],
         bottom: 0
       },
       grid: {
@@ -103,62 +105,52 @@ const groupGet = (
       ],
       series: [
         {
-          name: "数量",
-          type: "line",
-          tooltip: {
-            valueFormatter: function (value) {
-              return value;
-            }
-          },
-          data: ringAmount
-        },
-        {
           name: nameValue,
           type: "line",
           tooltip: {
-            valueFormatter: function (value) {
-              return value;
-            }
+            valueFormatter: (value: string) => value
           },
           data: amount
-        },
-        {
-          name: "往年同期数量",
-          type: "line",
-          tooltip: {
-            valueFormatter: function (value) {
-              return value;
-            }
-          },
-          data: yoyAmount
-        },
-        {
-          name: "金额",
-          type: "bar",
-          tooltip: {
-            valueFormatter: function (value) {
-              return getFixed(value);
-            }
-          },
-          data: ringMoney
         },
         {
           name: `${props.branchName}金额`,
           type: "bar",
           tooltip: {
-            valueFormatter: function (value) {
-              return getFixed(value);
-            }
+            valueFormatter: (value: string) => getFixed(value)
           },
           data: money
         },
+
         {
-          name: "往年同期金额",
+          name: "环比数量",
+          type: "line",
+          tooltip: {
+            valueFormatter: (value: string) => value
+          },
+          data: ringAmount
+        },
+        {
+          name: "环比金额",
           type: "bar",
           tooltip: {
-            valueFormatter: function (value) {
-              return getFixed(value);
-            }
+            valueFormatter: (value: string) => getFixed(value)
+          },
+          data: ringMoney
+        },
+
+        {
+          name: "同比数量",
+          type: "line",
+          tooltip: {
+            valueFormatter: (value: string) => value
+          },
+          data: yoyAmount
+        },
+        {
+          name: "同比金额",
+          type: "bar",
+          tooltip: {
+            valueFormatter: (value: string) => getFixed(value)
           },
           data: yoyMoney
         }
