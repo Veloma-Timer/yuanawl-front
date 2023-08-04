@@ -215,7 +215,7 @@ const rules = reactive({
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   // phoneRemark: [{ required: true, message: "必填项不能为空" }],
   systemId: [{ required: true, message: "必填项不能为空" }],
-  accountRemark: [{ required: true, message: "必填项不能为空" }],
+  accountDesc: [{ required: true, message: "必填项不能为空" }],
   // campId: [{ required: true, message: "必填项不能为空" }],
   haveSecondary: [{ required: true, message: "必填项不能为空" }],
   accountRecyclerPrice: [{ required: true, message: "必填项不能为空" }],
