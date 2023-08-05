@@ -57,7 +57,7 @@ let publishUnit = ref([]);
 const setCrud = (obj: HomeSet.IPublishStatistics) => {
   crudListMap.value = [
     {
-      current: obj.publishMoney,
+      current: "¥" + obj.publishMoney,
       yesterday: obj.ayerPublishMoney,
       year: obj.yoyPublishMoney
     },
@@ -67,7 +67,7 @@ const setCrud = (obj: HomeSet.IPublishStatistics) => {
       year: obj.yoyPublishAmount
     },
     {
-      current: obj.publishAveMoney,
+      current: "¥" + obj.publishAveMoney,
       yesterday: obj.ayerPublishAveMoney,
       year: obj.yoyPublishAveMoney
     }

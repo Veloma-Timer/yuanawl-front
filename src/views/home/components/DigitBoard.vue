@@ -100,6 +100,11 @@ const getColor = (code: "-1" | "0" | "1"): string => {
   border: 2px #fff solid;
   box-shadow: 0 2px 11px #becada2b;
   border-radius: 3px;
+  transition: border 0.25s ease-in;
+
+  &:hover {
+    border: 2px solid var(--el-color-primary);
+  }
 
   .title {
     color: #5f6e82;
