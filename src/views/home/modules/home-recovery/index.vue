@@ -22,6 +22,14 @@
         <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
       </div>
     </div>
+    <div class="home-name mt-[20px]">
+      <div class="home-name-left">
+        <homeChat :list-arr="statisticsObj?.recycleGameType" class-name="maintain" title="游戏类型" />
+      </div>
+      <div class="home-name-right">
+        <homeChat :list-arr="statisticsObj?.recycleService" class-name="maintain" title="区服" />
+      </div>
+    </div>
     <div class="home-name">
       <div class="home-name-left mt-[20px]">
         <nameRight
@@ -29,14 +37,6 @@
           :salas-ranking-arr="statisticsObj?.recycleRankingByProblem"
           :header="['工单类型', '金额', '数量']"
         />
-      </div>
-      <div class="home-name-left mt-[20px]">
-        <homeChat :list-arr="statisticsObj?.recycleGameType" class-name="maintain" title="游戏类型" />
-      </div>
-    </div>
-    <div class="home-name">
-      <div class="home-name-right mt-[20px]">
-        <homeChat :list-arr="statisticsObj?.recycleService" class-name="maintain" title="区服" />
       </div>
     </div>
     <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />

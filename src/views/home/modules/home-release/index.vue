@@ -120,7 +120,6 @@ watch(
     .crud-list-item {
       min-width: 32.5%;
       max-height: 180px;
-      margin-bottom: 10px;
 
       .release-number {
         width: 160px;
@@ -196,11 +195,12 @@ watch(
 }
 .home-name {
   display: flex;
-  justify-content: space-between;
-  margin: 32px 0;
+  margin-top: 20px;
+
   .home-name-left {
     width: 49%;
     height: 465px;
+    margin-right: 20px;
   }
   .home-name-right {
     width: 49%;

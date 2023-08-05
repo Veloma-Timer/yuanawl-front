@@ -139,10 +139,9 @@ watch(
   width: 100%;
   height: 465px;
   padding: 20px;
-  margin: 20px 0 20px;
+  margin-top: 20px;
   background: #ffffff;
   border-radius: 4px;
-  //box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
 }
 
 .home-head {

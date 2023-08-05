@@ -40,12 +40,9 @@
       <!--  />-->
       <!--</el-form-item>-->
       <el-form-item label="商品首次定价">
-        <el-input
-          v-model="drawerProps.row!.publishPrice"
-          placeholder="Please input"
-          :formatter="value => `¥ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
-          :parser="value => value.replace(/\¥\s?|(,*)/g, '')"
-        />
+        <el-input v-model="drawerProps.row!.publishPrice" placeholder="Please input">
+          <template #prepend>¥</template>
+        </el-input>
         <!--<el-input-->
         <!--  v-model="drawerProps.row!.publishPrice"-->
         <!--  placeholder="请输入商品首次定价"-->
