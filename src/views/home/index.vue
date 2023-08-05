@@ -86,7 +86,7 @@ const institutionList: Item[] = [
   { branchName: "工单", id: 3 }
 ];
 const cityName = ref();
-const monthName = ref(5);
+const monthName = ref(0);
 const branchName = ref("今日");
 const branchNames = ref("今日");
 const params = ref<IStatistics>();

@@ -12,7 +12,7 @@
               <CaretTop v-if="isTop(chainValue) == '1'" />
               <CaretBottom v-else />
             </el-icon>
-            <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ chainValue }} </span>
+            <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ Math.abs(chainValue as number) }} </span>
           </p>
         </div>
       </el-tooltip>
@@ -24,7 +24,7 @@
               <CaretTop v-if="isTop(yearValue) == '1'" />
               <CaretBottom v-else />
             </el-icon>
-            <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ yearValue }} </span>
+            <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ Math.abs(yearValue as number) }} </span>
           </p>
         </div>
       </el-tooltip>
@@ -67,7 +67,7 @@ const getAyerMsg = (isTop: "-1" | "1" | "0", value: string | number) => {
     "1": "增加",
     "0": "减少"
   };
-  return `环比上期 ${topMap[isTop]} ${value}`;
+  return `环比上期 ${topMap[isTop]} ${Math.abs(value as number)}`;
 };
 
 // 同比信息
@@ -77,7 +77,7 @@ const getYoyMsg = (isTop: "-1" | "1" | "0", value: string | number) => {
     "1": "增加",
     "0": "减少"
   };
-  return `同比上期 ${topMap[isTop]} ${value}`;
+  return `同比上期 ${topMap[isTop]} ${Math.abs(value as number)}`;
 };
 
 const getColor = (code: "-1" | "0" | "1"): string => {
