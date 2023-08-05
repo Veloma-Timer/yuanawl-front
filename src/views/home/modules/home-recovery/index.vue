@@ -23,19 +23,19 @@
       </div>
     </div>
     <div class="home-name">
-      <div class="home-name-left">
+      <div class="home-name-left mt-[20px]">
         <nameRight
           title="回收问题账号"
           :salas-ranking-arr="statisticsObj?.recycleRankingByProblem"
           :header="['工单类型', '金额', '数量']"
         />
       </div>
-    </div>
-    <div class="home-name">
-      <div class="home-name-left">
+      <div class="home-name-left mt-[20px]">
         <homeChat :list-arr="statisticsObj?.recycleGameType" class-name="maintain" title="游戏类型" />
       </div>
-      <div class="home-name-right">
+    </div>
+    <div class="home-name">
+      <div class="home-name-right mt-[20px]">
         <homeChat :list-arr="statisticsObj?.recycleService" class-name="maintain" title="区服" />
       </div>
     </div>
@@ -164,10 +164,10 @@ watch(
     width: 100%;
 
     .crud-list-item {
-      min-width: 24%;
-      margin-right: 10px;
+      min-width: 25%;
       max-height: 180px;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+      margin-right: 20px;
 
       .recovery-number {
         width: 160px;
@@ -239,11 +239,10 @@ watch(
 }
 .home-name {
   display: flex;
-  justify-content: space-between;
-  margin: 32px 0;
   .home-name-left {
-    width: 49%;
+    width: 48.8%;
     height: 465px;
+    margin-right: 20px;
   }
   .home-name-right {
     width: 49%;
