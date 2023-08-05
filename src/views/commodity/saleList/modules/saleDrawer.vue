@@ -30,7 +30,9 @@
         />
       </el-form-item>
       <el-form-item label="出售金额" prop="salePrice">
-        <el-input-number v-model="drawerProps.row!.salePrice" placeholder="请输入出售金额" clearable :controls="false" />
+        <el-input v-model="drawerProps.row!.salePrice" placeholder="请输入出售金额" clearable>
+          <template #prepend>¥</template>
+        </el-input>
       </el-form-item>
       <el-form-item label="出售平台" prop="salePlatformId">
         <el-select v-model="drawerProps.row!.salePlatformId" placeholder="请选择" filterable>
@@ -122,7 +124,7 @@ const handleSubmit = () => {
     try {
       await drawerProps.value.api!(drawerProps.value.row);
       ElMessage.success({ message: `${drawerProps.value.title}销售订单成功！` });
-      drawerProps.value.getTableList!();
+      drawerProps.value.getTableList?.();
       drawerVisible.value = false;
     } catch (error) {
       console.log(error);

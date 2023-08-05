@@ -12,7 +12,7 @@
               <CaretTop v-if="isTop(chainValue) == '1'" />
               <CaretBottom v-else />
             </el-icon>
-            <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ Math.abs(chainValue as number) }} </span>
+            <span class="value" :style="{ color: getColor(isTop(chainValue)) }"> {{ formatNumber(chainValue) }} </span>
           </p>
         </div>
       </el-tooltip>
@@ -24,7 +24,7 @@
               <CaretTop v-if="isTop(yearValue) == '1'" />
               <CaretBottom v-else />
             </el-icon>
-            <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ Math.abs(yearValue as number) }} </span>
+            <span class="value" :style="{ color: getColor(isTop(yearValue)) }"> {{ formatNumber(yearValue) }} </span>
           </p>
         </div>
       </el-tooltip>
@@ -87,6 +87,13 @@ const getColor = (code: "-1" | "0" | "1"): string => {
     "1": "#fc6772"
   };
   return colorMap[code];
+};
+
+const formatNumber = (value: string | number) => {
+  if (typeof value === "string") {
+    return value;
+  }
+  return Math.abs(value as number);
 };
 </script>
 

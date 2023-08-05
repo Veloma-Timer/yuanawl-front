@@ -1,6 +1,6 @@
 <template>
   <div class="table-box">
-    <el-tabs v-model="activeName" type="border-card" class="demo-tabs h-full">
+    <el-tabs v-model="activeName" type="border-card" class="demo-tabs h-full" @tab-change="onTabChange">
       <el-tab-pane v-for="branch in branchList" :key="branch.id" :label="branch.branchName" :name="branch.id">
         <ProTable
           :key="activeName"
@@ -76,9 +76,10 @@ import deepcopy from "deepcopy";
 const router = useRouter();
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
-const proTable = ref<ProTableInstance>();
+const proTable = ref<ProTableInstance[]>([]);
 
 const activeName = ref();
+const activeIndex = ref(0);
 
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
@@ -95,6 +96,8 @@ const dataCallback = (data: any) => {
     pageSize: Number(data.pageSize)
   };
 };
+
+const onTabChange = (index: number) => (activeIndex.value = index - 1);
 
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
@@ -114,7 +117,7 @@ const batchAdd = (title: string) => {
     status: title === "下载",
     tempApi: salesTemplate,
     updateApi: salesUpload,
-    getTableList: proTable.value?.getTableList
+    getTableList: proTable.value[activeIndex.value].getTableList
   };
   dialogRef.value?.acceptParams(params);
 };
@@ -379,7 +382,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
 ];
 
 const onExport = async () => {
-  const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
+  const obj = { ...proTable.value[activeIndex.value]?.searchParam, ...proTable.value[activeIndex.value]?.pageable };
   delete obj.total;
   const data = await summaryExport(obj);
   saveFile(data, "销售列表导出");
@@ -421,7 +424,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
       salePlatformId: title === "编辑" ? userObj.userInfo.id : null
     },
     api: title === "新增" ? addSales : title === "编辑" ? editSales : undefined,
-    getTableList: proTable.value?.getTableList
+    getTableList: proTable.value[activeIndex.value]?.getTableList
   };
   drawerRef.value?.acceptParams(params);
 };
