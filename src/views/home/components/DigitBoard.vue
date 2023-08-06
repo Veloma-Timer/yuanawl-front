@@ -6,7 +6,7 @@
     <div class="flex flex-row">
       <el-tooltip class="box-item" :content="getAyerMsg(isTop(chainValue), chainValue)" placement="top">
         <div class="mr-5 flex flex-row">
-          <span class="label">环比上期: </span>
+          <span class="label truncate">环比上期</span>
           <p class="flex items-center ml-2">
             <el-icon :color="getColor(isTop(chainValue))">
               <CaretTop v-if="isTop(chainValue) == '1'" />
@@ -18,7 +18,7 @@
       </el-tooltip>
       <el-tooltip class="box-item" :content="getYoyMsg(isTop(yearValue), yearValue)" placement="top">
         <div class="flex flex-row">
-          <span class="label">同比上期:</span>
+          <span class="label truncate">同比上期</span>
           <p class="flex items-center ml-2">
             <el-icon :color="getColor(isTop(yearValue))">
               <CaretTop v-if="isTop(yearValue) == '1'" />
@@ -118,6 +118,7 @@ const formatNumber = (value: string | number) => {
   }
 
   .label {
+    width: 38px;
     font-size: 13px;
     color: #8492a6;
   }
