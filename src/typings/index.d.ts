@@ -11,3 +11,8 @@ export interface IDigitBoard {
   yesterday: number | string;
   year: number | string;
 }
+
+export interface IAccountType {
+  id: number;
+  typeName: string;
+}

@@ -9,7 +9,7 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="所属门店" prop="branchId">
-        <el-select v-model="drawerProps.row!.branchId" disabled placeholder="请选择所属门店" filterable>
+        <el-select v-model="drawerProps.row!.branchId" disabled placeholder="请选择所属门店" style="width: 100%" filterable>
           <el-option v-for="item in branchMap" :key="item.id" :label="item.branchName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -26,6 +26,7 @@
           v-model="drawerProps.row!.accountType"
           :disabled="drawerProps.isView"
           placeholder="请选择账号分类"
+          style="width: 100%"
           filterable
           multiple
           clearable
@@ -41,8 +42,8 @@
       <!--</el-form-item>-->
       <el-form-item label="密码" prop="accountPassword">
         <el-input
-          type="password"
           v-model="drawerProps.row!.accountPassword"
+          type="password"
           placeholder="请输入密码"
           show-password
           clearable
@@ -78,7 +79,13 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="系统" prop="systemId">
-        <el-select v-model="drawerProps.row!.systemId" :disabled="drawerProps.isView" placeholder="请选择" filterable>
+        <el-select
+          v-model="drawerProps.row!.systemId"
+          style="width: 100%"
+          :disabled="drawerProps.isView"
+          placeholder="请选择"
+          filterable
+        >
           <el-option v-for="item in systemMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -102,17 +109,23 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="实名情况" prop="haveSecondary">
-        <el-select v-model="drawerProps.row!.haveSecondary" :disabled="drawerProps.isView" placeholder="请选择" filterable>
+        <el-select
+          v-model="drawerProps.row!.haveSecondary"
+          style="width: 100%"
+          :disabled="drawerProps.isView"
+          placeholder="请选择"
+          filterable
+        >
           <el-option v-for="item in haveSecondaryMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收方式" prop="isSave">
-        <el-select v-model="drawerProps.row!.recycleMethod" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.recycleMethod" style="width: 100%" placeholder="请选择" filterable>
           <el-option v-for="item in methodsMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
       <el-form-item label="资料是否存档" prop="isSave">
-        <el-select v-model="drawerProps.row!.isSave" placeholder="请选择" filterable>
+        <el-select v-model="drawerProps.row!.isSave" style="width: 100%" placeholder="请选择" filterable>
           <el-option v-for="item in isSaveMap" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -133,23 +146,30 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="回收人" prop="accountRecyclerId">
-        <el-select v-model="drawerProps.row!.accountRecyclerId" disabled placeholder="请选择回收人" filterable>
+        <el-select
+          v-model="drawerProps.row!.accountRecyclerId"
+          style="width: 100%"
+          disabled
+          placeholder="请选择回收人"
+          filterable
+        >
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收店铺" prop="storeId">
-        <el-select v-model="drawerProps.row!.storeId" placeholder="请选择回收店铺" filterable>
+        <el-select v-model="drawerProps.row!.storeId" style="width: 100%" placeholder="请选择回收店铺" filterable>
           <el-option v-for="item in recycleShop" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收组" prop="groupingId">
-        <el-select v-model="drawerProps.row!.groupingId" placeholder="请选择回收组" filterable>
+        <el-select v-model="drawerProps.row!.groupingId" style="width: 100%" placeholder="请选择回收组" filterable>
           <el-option v-for="item in recycleGrouping" :key="item.id" :label="item.label" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="回收时间" prop="accountRecyclerTime">
         <el-date-picker
           disabled
+          style="width: 100%"
           v-model="drawerProps.row!.accountRecyclerTime"
           format="YYYY-MM-DD hh:mm:ss"
           value-format="YYYY-MM-DD hh:mm:ss"
@@ -185,7 +205,8 @@ import { getGroupListMap, getUserAll } from "@/api/modules/user";
 import { getAllBranch } from "@/api/modules/set";
 import { getSetSystemList, typeCode } from "@/api/modules/commodity";
 import { checkPhoneNumber } from "@/utils/eleValidate";
-import { IOptions } from "@/typings";
+import { IOptions, IAccountType } from "@/typings";
+
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
     type: rule.field,
@@ -246,11 +267,7 @@ const drawerProps = ref<DrawerProps>({
   title: "",
   row: {}
 });
-// 接收父组件传过来的参数
-const acceptParams = (params: DrawerProps) => {
-  drawerProps.value = params;
-  drawerVisible.value = true;
-};
+
 // 提交数据（新增/编辑）
 const ruleFormRef = ref<FormInstance>();
 const handleSubmit = () => {
@@ -286,15 +303,16 @@ const isSaveMap = [
 const systemMap: Ref = ref([]);
 
 // 回收人
-let transCatUploadedMap: unknown = [];
+const transCatUploadedMap = ref([]);
 // 账号分类
-let accountTypeMap: unknown = [];
+const accountTypeMap = ref<IAccountType[]>([]);
 // 门店
-let branchMap: unknown = [];
+const branchMap = ref<{ branchName: string; id: number }[]>([]);
 // 回收店铺
 const recycleShop = ref<IOptions>([]);
 // 回收组
 const recycleGrouping = ref<IOptions>([]);
+
 const setAllList = async () => {
   const res = await getAllList();
 
@@ -310,17 +328,27 @@ const setAllList = async () => {
   recycleGrouping.value = grouping;
 
   const reloads = await getUserAll();
-  const { data } = await getAllBranch({});
-  transCatUploadedMap = reloads.data;
-  accountTypeMap = res.data;
-  branchMap = data;
+  const { data } = await getAllBranch();
+  transCatUploadedMap.value = reloads.data;
+  accountTypeMap.value = res.data;
+  branchMap.value = data;
 };
+
 const getSetTypeFun = async () => {
   const { data } = await getSetSystemList();
   systemMap.value = data?.system || [];
 };
-setAllList();
-getSetTypeFun();
+
+// 接收父组件传过来的参数
+const acceptParams = (params: DrawerProps) => {
+  drawerProps.value = params;
+  drawerVisible.value = true;
+  if (accountTypeMap.value.length < 1) {
+    setAllList();
+    getSetTypeFun();
+  }
+};
+
 defineExpose({
   acceptParams
 });

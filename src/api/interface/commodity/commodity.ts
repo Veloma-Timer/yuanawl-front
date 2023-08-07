@@ -93,6 +93,7 @@ export namespace Commodity {
     branchId: number; // 所属门店ID
     accountCode: unknown; // 账号编码
     accountType: number[]; // 账号分类
+    qq: string; // QQ号
     groupingId: number; // 回收组
     accountDesc: string; // 账号描述
     accountNumber: string; // 账号

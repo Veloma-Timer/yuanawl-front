@@ -37,7 +37,7 @@
           发布
         </el-button>
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
+        <el-button link @click="addOrder(scope.row)">创建工单</el-button>
         <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
       </template>
     </ProTable>

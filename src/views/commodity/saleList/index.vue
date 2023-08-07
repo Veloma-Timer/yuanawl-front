@@ -34,7 +34,7 @@
             >
               销售
             </el-button>
-            <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
+            <el-button link @click="addOrder(scope.row)">创建工单</el-button>
             <!-- 只有已售出并且是管理员的用户才可以修改 -->
             <el-button
               type="primary"

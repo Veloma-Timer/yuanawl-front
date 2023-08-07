@@ -9,12 +9,15 @@
       :data-callback="dataCallback"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader>
+      <template #tableHeader="{ selectedListIds }">
         <div v-if="props?.isShowTableHeadeBtn">
           <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增</el-button>
           <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
           <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
           <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
+          <el-button type="danger" plain :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(selectedListIds)">
+            批量删除
+          </el-button>
         </div>
       </template>
       <template #accountRecyclerPrice="scope">
@@ -34,8 +37,8 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
-        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
+        <el-button type="danger" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除 </el-button>
+        <el-button link @click="addOrder(scope.row)">创建工单</el-button>
       </template>
     </ProTable>
     <recoverDrawer ref="drawerRef" />
@@ -53,6 +56,7 @@ import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, Download, Hide, Upload, View, Document } from "@element-plus/icons-vue";
 import {
   addRecycle,
+  deleteAccountBatch,
   deleteSummary,
   editRecycle,
   generateCode,
@@ -118,9 +122,7 @@ const getTableList = async (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  const data = await getRecycleList(newParams);
-
-  return data;
+  return await getRecycleList(newParams);
 };
 const getFixed = (str: string) => {
   if (str) {
@@ -239,7 +241,12 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
   },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
   { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },
-  { prop: "email", label: "邮箱", width: 160, search: { el: "input" } },
+  {
+    prop: "email",
+    label: "邮箱",
+    width: 160,
+    search: { el: "input" }
+  },
   { prop: "emailSecret", label: "邮箱密保", width: 160, search: { el: "input" } },
   {
     prop: "systemId",
@@ -301,16 +308,14 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
 ];
 
 // 删除用户信息
-const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `确认是否删除该【${params.accountNumber}】账号吗`);
+const deleteAccount = async (params: Commodity.Account | number[] | string[]) => {
+  if (Array.isArray(params)) {
+    await useHandleData(deleteAccountBatch, params, `批量删除账号`);
+  } else {
+    await useHandleData(deleteSummary, { id: [params.id] }, `确认是否删除该【${params.accountCode}】账号吗`);
+  }
   proTable.value?.getTableList();
 };
-// 批量删除用户信息
-// const batchDelete = async (id: string[]) => {
-//   await useHandleData(deleteSummary, { id }, "导出用户信息");
-//   proTable.value?.clearSelection();
-//   proTable.value?.getTableList();
-// };
 
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
@@ -335,33 +340,30 @@ const batchAdd = (title: string) => {
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof recoverDrawer> | null>(null);
 const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) => {
-  let accountType: number[] | undefined = [];
-  let accountCode: unknown = "";
+  const _row = deepcopy(row);
   // 当前时间
   const date = new Date();
   let time = "";
   if (title === "编辑") {
-    accountType = row.accountType.map(item => parseFloat(item));
-    accountCode = row.accountCode;
-    time = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
+    _row.accountType = row.accountType?.map(item => Number(item));
+    _row.accountCode = row.accountCode;
+    _row.accountRecyclerTime = parseTime(row.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
+    _row.accountRecyclerId = Number(_row.accountRecyclerId);
+    _row.branchId = Number(_row.branchId);
   } else {
     const { data } = await generateCode();
-    accountCode = data;
+    _row.accountCode = data;
     time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
+    _row.accountRecyclerTime = time;
+    _row.accountRecyclerId = obj.user.id;
+    _row.branchId = obj.user.userBranchId;
   }
 
   const params = {
     title,
     isView: title === "查看",
     status: title === "查看",
-    row: {
-      ...row,
-      accountRecyclerTime: time,
-      accountRecyclerId: obj.user.id,
-      accountCode,
-      accountType,
-      branchId: obj.user.userBranchId
-    },
+    row: _row,
     api: title === "新增" ? addRecycle : title === "编辑" ? editRecycle : undefined,
     getTableList: proTable.value?.getTableList
   };

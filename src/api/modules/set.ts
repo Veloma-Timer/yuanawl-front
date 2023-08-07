@@ -18,7 +18,7 @@ export const getOptLog = (params: any) => {
 
 // 获取所有门店
 export const getAllBranch = (): Promise<ResultData<{ branchName: string; id: number }[]>> => {
-  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`, {}, { noLoading: true });
+  return http.get<{ branchName: string; id: number }[]>(PORT3 + `/sys_branch/all`);
 };
 
 // 获取所有角色
@@ -34,6 +34,13 @@ export const getAllUser = (params: any) => {
 // 获取所有账号
 export const getAllBaseAccount = (params: any) => {
   return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/all`, params, {
+    noLoading: true
+  });
+};
+
+// 获取所有已删除账号
+export const getAllBaseAccountDel = (params: any) => {
+  return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/all/del`, params, {
     noLoading: true
   });
 };

@@ -1,4 +1,5 @@
 import { PORT3 } from "@/api/config/servicePort";
+import { IAccountType } from "@/typings";
 import http from "@/api";
 
 const baseUrl: string = PORT3 + "/base_account_type";
@@ -20,6 +21,6 @@ export const deleteAccout = (id: number | string) => {
   return http.delete(`${baseUrl}/${id}`);
 };
 // 获取所有
-export const getAllList = () => {
+export const getAllList = (): Promise<{ data: IAccountType[] }> => {
   return http.get(`${baseUrl}/all`, {}, { noLoading: true });
 };

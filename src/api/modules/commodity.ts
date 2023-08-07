@@ -24,6 +24,17 @@ export const editSummary = (params: any) => {
 export const deleteSummary = (params: any) => {
   return http.delete(`${baseUrl}/${params.id}`, params);
 };
+
+// 批量删除删除
+export const deleteAccountBatch = (ids: number[]) => {
+  return http.delete(`${baseUrl}/batch`, { ids });
+};
+
+// 彻底删除账号
+export const delAccountComplete = (ids: number[]) => {
+  return http.delete(`${baseUrl}/complete`, { ids });
+};
+
 // 账号模块
 export const summaryTemplate = () => {
   return http.get(`/static/template/account.xlsx`, {}, { responseType: "blob" });
@@ -43,6 +54,11 @@ export const summaryUpload = (file: FormData) => {
 // 账号导出
 export const summaryExport = (params: any) => {
   return http.post(`${baseUrl}/export`, params);
+};
+
+// 获取所有已删除账号
+export const getBaseAccountDel = (params: any) => {
+  return http.get<{ accountNumber: string; accountCode: string; id: number }[]>(PORT3 + `/base_account/del`, params);
 };
 
 // 回收列表

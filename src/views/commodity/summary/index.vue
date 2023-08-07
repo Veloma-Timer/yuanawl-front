@@ -9,11 +9,14 @@
       :data-callback="dataCallback"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader>
+      <template #tableHeader="{ selectedListIds }">
         <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
         <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
         <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
         <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
+        <el-button type="danger" plain :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(selectedListIds)">
+          批量删除
+        </el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -36,8 +39,8 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>
-        <el-button type="primary" link @click="addOrder(scope.row)">创建工单</el-button>
+        <el-button type="danger" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除 </el-button>
+        <el-button link @click="addOrder(scope.row)">创建工单</el-button>
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -56,6 +59,7 @@ import { CirclePlus, Delete, Download, Hide, Upload, View, Document } from "@ele
 import { getUserAll } from "@/api/modules/user";
 import {
   addSummary,
+  deleteAccountBatch,
   deleteSummary,
   editSummary,
   pointBury,
@@ -82,7 +86,7 @@ const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
-let typeList: unknown = ref([]);
+const typeList = ref<any[]>([]);
 
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
@@ -474,8 +478,13 @@ const getAllAccountList = async () => {
 };
 getAllAccountList();
 // 删除用户信息
-const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
+const deleteAccount = async (params: Commodity.Account | number[] | string[]) => {
+  if (Array.isArray(params)) {
+    await useHandleData(deleteAccountBatch, params, `批量删除账号`);
+  } else {
+    await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账号`);
+  }
+
   proTable.value?.getTableList();
 };
 const getFixed = (str: string) => {

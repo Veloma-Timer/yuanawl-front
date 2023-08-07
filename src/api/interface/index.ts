@@ -92,6 +92,7 @@ export namespace User {
   }
   export interface ResUser {
     id: number;
+    isManager: string; // 是否主管
     userCode: string; // 用户编码（工号）
     userName: string; // 用户名称
     userTel: string; // 手机号码

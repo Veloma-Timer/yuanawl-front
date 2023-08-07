@@ -70,6 +70,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
+          <el-form-item label="主管" prop="isManager">
+            <el-radio-group v-model="drawerProps.row!.isManager" class="ml-4">
+              <el-radio label="1" size="large">是</el-radio>
+              <el-radio label="0" size="large">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="在职状态" prop="jobStatus ">
             <el-radio-group v-model="drawerProps.row!.jobStatus " class="ml-4">
               <el-radio label="在职" size="large">在职</el-radio>
@@ -108,7 +116,8 @@ const rules = reactive({
   userRoleId: [{ required: true, message: "必填项不能为空" }],
   userBranchId: [{ required: true, message: "必填项不能为空" }],
   setId: [{ required: true, message: "必填项不能为空" }],
-  isAdmin: [{ required: true, message: "必填项不能为空" }]
+  isAdmin: [{ required: true, message: "必填项不能为空" }],
+  isManager: [{ required: true, message: "必填项不能为空" }]
 });
 
 interface DrawerProps {

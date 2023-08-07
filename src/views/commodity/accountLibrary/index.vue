@@ -9,11 +9,11 @@
       :data-callback="dataCallback"
     >
       <!-- 表格 header 按钮 -->
-      <template #tableHeader>
-        <el-button v-if="BUTTONS.add" type="primary" :icon="CirclePlus" @click="openDrawer('新增')">新增账号</el-button>
-        <el-button type="primary" :icon="Download" plain @click="batchAdd('下载')">下载模板</el-button>
-        <el-button v-if="BUTTONS.import" type="primary" :icon="Upload" plain @click="batchAdd('导入')">导入Excel</el-button>
+      <template #tableHeader="{ selectedListIds }">
         <el-button v-if="BUTTONS.export" type="primary" :icon="Document" plain @click="onExport">导出Excel</el-button>
+        <el-button v-if="BUTTONS.del" type="danger" plain :icon="Delete" @click="deleteAccount(selectedListIds)">
+          彻底删除
+        </el-button>
       </template>
       <!-- Expand -->
       <template #expand="scope">
@@ -36,7 +36,7 @@
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('查看', scope.row)">查看</el-button>
-        <!--        <el-button type="primary" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">删除</el-button>-->
+        <!--<el-button type="danger" link :icon="Delete" v-if="BUTTONS.del" @click="deleteAccount(scope.row)">彻底删除 </el-button>-->
       </template>
     </ProTable>
     <UserDrawer ref="drawerRef" />
@@ -51,26 +51,26 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { CirclePlus, Download, Hide, Upload, View, Document } from "@element-plus/icons-vue";
+import { Hide, View, Document, Delete } from "@element-plus/icons-vue";
 import { getUserAll } from "@/api/modules/user";
 import {
   addSummary,
-  deleteSummary,
+  delAccountComplete,
   editSummary,
   pointBury,
   summaryExport,
-  summaryList,
+  getBaseAccountDel,
   summaryTemplate,
   summaryUpload
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-import { getPhone, parseTime, setPhone } from "@/utils";
+import { getPhone, parseTime, setPhone, shortcuts } from "@/utils";
 import { saveFile } from "@/utils/file";
-import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
+import { getAllBaseAccountDel, getAllBranch } from "@/api/modules/set";
 import { useRoute } from "vue-router";
-import { getSetTypes } from "@/api/modules/order";
 import deepcopy from "deepcopy";
+import { sellKeyGrouping, sellKeyMap } from "@/api/modules/dictionary";
 
 const route = useRoute();
 // 跳转详情页
@@ -80,6 +80,7 @@ const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
+const typeList = ref<any[]>([]);
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -98,7 +99,23 @@ const getTableList = (params: any) => {
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
   newParams.createTime && (newParams.endTime = newParams.createTime[1]);
   delete newParams.createTime;
-  return summaryList(newParams);
+  return getBaseAccountDel(newParams);
+};
+
+const getTypeList = async () => {
+  const { data } = await getAllList();
+  typeList.value = data;
+};
+getTypeList();
+
+const getTypeListName = (ids: []) => {
+  const idsNum = ids?.map(item => Number(item));
+  const list = typeList.value;
+  const names = idsNum?.map(item => {
+    const obj = list.find(items => items.id === item);
+    return obj?.typeName;
+  });
+  return names?.join();
 };
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
@@ -109,11 +126,15 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "accountCode",
     label: "账号编码",
+    fixed: "left",
     sortable: true,
     width: 160,
-    enum: getAllBaseAccount,
+    enum: getAllBaseAccountDel,
     search: {
       el: "select",
+      props: {
+        filterable: true
+      },
       slotName: true
     },
     fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
@@ -133,15 +154,29 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   {
+    prop: "qq",
+    label: "QQ号",
+    sortable: true,
+    width: 160,
+    search: {
+      el: "input"
+    }
+  },
+  {
     prop: "accountStatus",
-    label: "账户状态",
+    label: "账号状态",
     width: 160,
     sortable: true,
     enum: [
       { label: "已售", value: 1 },
       { label: "未售", value: 0 }
     ],
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     render: ({ row }) => {
       const status = row.accountStatus === 0;
       return (
@@ -161,7 +196,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "有", value: "1" },
       { label: "没有", value: "0" }
     ],
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     render: ({ row }) => {
       const status = row.isWorkOrder === "0";
       return (
@@ -175,7 +215,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
   {
     prop: "isSales",
     label: "账户发布状态",
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     sortable: true,
     width: 160,
     enum: [
@@ -183,7 +228,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "已发布", value: "1" }
     ],
     render: ({ row }) => {
-      const status = row.isSales === "0";
+      const status = row.isPublish === "0";
       return (
         <div class="flex flex-row flx-center">
           <span class={status ? "v-red" : "v-green"}></span>
@@ -193,20 +238,23 @@ const columns: ColumnProps<Commodity.Account>[] = [
     }
   },
   {
-    prop: "salesSetId",
+    prop: "groupingId",
     sortable: true,
-    label: "所在组",
+    label: "回收组",
     width: 160,
     enum: async () => {
       const {
-        data: { set = [] }
-      } = await getSetTypes();
-      return { data: set };
+        data: { grouping = [] }
+      } = await sellKeyGrouping();
+      return { data: grouping };
     },
+    fieldNames: { label: "label", value: "id" },
     search: {
-      el: "select"
-    },
-    fieldNames: { label: "label", value: "value" }
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
   },
   {
     prop: "accountType",
@@ -214,17 +262,42 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: getAllList,
-    search: { el: "select" },
-    fieldNames: { label: "typeName", value: "id" }
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
+    fieldNames: { label: "typeName", value: "id" },
+    render: ({ row }) => {
+      return getTypeListName(row.accountType);
+    }
   },
   {
     prop: "salePeopleId",
-    label: "出售人姓名",
+    label: "出售人",
     sortable: true,
     width: 160,
     enum: getUserAll,
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "salePlatformId",
+    width: 160,
+    label: "出售渠道",
+    enum: async () => {
+      const {
+        data: { publishPlatform = [] }
+      } = await sellKeyMap();
+      return { data: publishPlatform };
+    },
+    search: { el: "select" }
   },
   {
     prop: "saleTime",
@@ -240,8 +313,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "滞留时间",
     sortable: true,
     width: 160,
-    render: ({ row }) => {
-      return (row?.noSaleResidenceTime || 0) + "天";
+    render: scope => {
+      return (scope.row?.noSaleResidenceTime || 0) + "天";
     }
   },
   {
@@ -270,7 +343,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: getAllBranch,
-    search: { el: "select" },
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    },
     fieldNames: { label: "branchName", value: "id" }
   },
   // {
@@ -299,6 +377,54 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     search: { el: "input" }
   },
+  { prop: "recycleRemark", label: "回收备注", width: 160 },
+  {
+    prop: "accountPublisherId",
+    label: "发布人",
+    enum: getUserAll,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "publishPlatform",
+    label: "发布渠道",
+    minWidth: 150,
+    enum: async () => {
+      const {
+        data: { publishPlatform = [] }
+      } = await sellKeyMap();
+      _publishPlatform.value = publishPlatform;
+      return { data: publishPlatform };
+    },
+    search: {
+      el: "select",
+      props: {
+        filterable: true,
+        multiple: true
+      }
+    },
+    render: ({ row }) => {
+      return row.publishPlatform
+        ?.map(id => {
+          const platform = _publishPlatform.value.find(item => {
+            const value = item.value || item.id;
+            return value == id;
+          }) as any;
+          return platform?.label || "--";
+        })
+        .join(" ");
+    }
+  },
+  {
+    prop: "accountPublisherTimer",
+    label: "发布时间",
+    minWidth: 150,
+    render: ({ row }) => {
+      return parseTime(row!.accountPublisherTimer, "{y}-{m}-{d} {h}:{i}:{s}");
+    }
+  },
+  { prop: "recycleRemark", label: "发布备注", width: 160 },
+  { prop: "salesRemark", label: "销售备注", width: 160 },
   {
     prop: "haveSecondary",
     label: "有无二次",
@@ -308,7 +434,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
       { label: "有", value: "1" },
       { label: "无", value: "0" }
     ],
-    search: { el: "select" }
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
   },
   {
     prop: "isSave",
@@ -316,25 +447,33 @@ const columns: ColumnProps<Commodity.Account>[] = [
     sortable: true,
     width: 160,
     enum: [
-      { label: "有", value: "0" },
-      { label: "无", value: "1" }
+      { label: "是", value: "1" },
+      { label: "否", value: "0" }
     ],
-    search: { el: "select" }
+    search: {
+      el: "select",
+      props: {
+        filterable: true
+      }
+    }
   },
   { prop: "accountDesc", sortable: true, label: "账号描述", width: 160, search: { el: "input" } },
-  { prop: "operation", label: "操作", fixed: "right", width: 200 }
+  {
+    prop: "timeSection",
+    sortable: true,
+    isShow: false,
+    label: "时间区间",
+    search: {
+      el: "date-picker",
+      props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
+    }
+  },
+  { prop: "operation", label: "操作", fixed: "right", width: 300 }
 ];
-// 账号列表
-type AccountObj = { accountNumber: string; accountCode: string; id: number };
-const accountList = reactive<AccountObj[]>([]);
-const getAllAccountList = async () => {
-  const { data } = await getAllBaseAccount({});
-  accountList.value = data;
-};
-getAllAccountList();
+
 // 删除用户信息
-const deleteAccount = async (params: Commodity.Account) => {
-  await useHandleData(deleteSummary, { id: [params.id] }, `删除编号为【${params.accountCode}】的账户`);
+const deleteAccount = async (ids: number[] | string[]) => {
+  await useHandleData(delAccountComplete, ids, `彻底删除选中的账户`);
   proTable.value?.getTableList();
 };
 const getFixed = (str: string) => {
