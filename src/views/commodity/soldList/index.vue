@@ -87,7 +87,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     fixed: "left",
     enum: getAllBaseAccount,
     search: {
-      el: "select",
+      el: "select-v2",
       props: {
         filterable: true
       },

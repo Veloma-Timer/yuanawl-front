@@ -107,7 +107,10 @@ const columns: ColumnProps<Commodity.Account>[] = [
       );
     },
     search: {
-      el: "select",
+      el: "select-v2",
+      props: {
+        filterable: true
+      },
       slotName: true
     }
   },

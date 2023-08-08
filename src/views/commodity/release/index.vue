@@ -63,6 +63,7 @@ import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
 import deepcopy from "deepcopy";
 import { useRouter } from "vue-router";
+import { getAllBaseAccount, getAllBaseAccountDel } from "@/api/modules/set";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
 const obj = JSON.parse(decryption("token", token));
@@ -122,7 +123,15 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "账号编码",
     width: 160,
     fixed: "left",
-    search: { el: "input" },
+    enum: getAllBaseAccount,
+    search: {
+      el: "select-v2",
+      props: {
+        filterable: true
+      },
+      slotName: true
+    },
+    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (

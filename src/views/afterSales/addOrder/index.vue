@@ -33,23 +33,24 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="账号编码" prop="basicAccountId">
-              <el-select
-                :disabled="ruleForm.basicEdit || !!accId"
+              <el-select-v2
                 v-model="ruleForm.row!.basicAccountId"
+                :disabled="ruleForm.basicEdit || !!accId"
                 placeholder="请选择"
                 class="order-input"
                 filterable
+                :options="accountList.map(item => ({ label: item.accountCode, value: item.id }))"
                 @change="onChangeAccount"
               >
-                <template v-for="item in accountList" :key="item.id">
-                  <el-option :label="item.accountCode" :value="item.id">
-                    <span style="float: left">{{ item.accountCode }}</span>
-                    <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">{{
-                      item.accountNumber
-                    }}</span>
-                  </el-option>
-                </template>
-              </el-select>
+                <!--<template v-for="item in accountList" :key="item.id">-->
+                <!--  <el-option :label="item.accountCode" :value="item.id">-->
+                <!--    <span style="float: left">{{ item.accountCode }}</span>-->
+                <!--    <span style="float: right; color: var(&#45;&#45;el-text-color-secondary); font-size: 13px">{{-->
+                <!--      item.accountNumber-->
+                <!--    }}</span>-->
+                <!--  </el-option>-->
+                <!--</template>-->
+              </el-select-v2>
             </el-form-item>
           </el-col>
           <el-col :span="6">

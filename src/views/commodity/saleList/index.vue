@@ -70,7 +70,7 @@ import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { useRouter } from "vue-router";
 import { getAllList } from "@/api/modules/accountClass";
-import { getAllBranch, type IBranch } from "@/api/modules/set";
+import { getAllBaseAccount, getAllBranch, type IBranch } from "@/api/modules/set";
 import deepcopy from "deepcopy";
 
 const router = useRouter();
@@ -153,7 +153,15 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     label: "账号编码",
     fixed: true,
     width: 160,
-    search: { el: "input" },
+    enum: getAllBaseAccount,
+    search: {
+      el: "select-v2",
+      props: {
+        filterable: true
+      },
+      slotName: true
+    },
+    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (

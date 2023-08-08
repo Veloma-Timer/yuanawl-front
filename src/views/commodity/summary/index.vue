@@ -130,7 +130,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     enum: getAllBaseAccount,
     search: {
-      el: "select",
+      el: "select-v2",
       props: {
         filterable: true
       },
