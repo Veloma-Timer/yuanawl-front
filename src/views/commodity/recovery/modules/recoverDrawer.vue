@@ -217,13 +217,14 @@ const validatePass = (rule: any, value: any, callback: any) => {
     typeCode(params).then(res => {
       const { data } = res;
       if (data === "0") {
-        return callback(new Error("该编号已存在"));
+        return callback(new Error("该值已存在, 不能重复"));
       } else {
         return callback();
       }
     });
   }
 };
+
 const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
@@ -232,6 +233,10 @@ const rules = reactive({
     { validator: validatePass, trigger: "blur" }
   ],
   accountType: [{ required: true, message: "必填项不能为空" }],
+  qq: [
+    { required: true, message: "必填项不能为空" },
+    { validator: validatePass, trigger: "blur" }
+  ],
   // accountNumber: [{ required: true, message: "必填项不能为空" }],
   accountPassword: [{ required: true, message: "必填项不能为空" }],
   // phoneRemark: [{ required: true, message: "必填项不能为空" }],
