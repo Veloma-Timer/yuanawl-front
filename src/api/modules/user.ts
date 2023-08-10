@@ -77,13 +77,30 @@ export const getUserTree = () => {
   return http.get<User.Tree>(`${baseUrl}/tree`);
 };
 // 获取所有组的信息
-export const getGroupListMap = <T>(params: { key: string }): Promise<{ data: Record<T, IOptions> }> => {
+export const getGroupListMap = <T extends string>(params: { key: string }): Promise<{ data: Record<T, IOptions> }> => {
   return http.get(`${PORT3}/sys_map`, params, { noLoading: true });
 };
 // 获取所有用户
 export const getUserAll = () => {
   return http.get(`${baseUrl}/all`, {}, { noLoading: true });
 };
+// 获取不同部门的用户
+export const getDeptUsers = (setId: number) => {
+  return http.get(`${baseUrl}/dept`, { setId }, { noLoading: true });
+};
+
+// 获取回收用户
+export const getRecycleUsers = () => getDeptUsers(1);
+
+// 获取发布用户
+export const getPublishUsers = () => getDeptUsers(3);
+
+// 获取销售用户
+export const getSalesUsers = () => getDeptUsers(0);
+
+// 获取售后用户
+export const getAfterSalesUsers = () => getDeptUsers(2);
+
 // 下载用户模板
 export const getUserTemptable = () => {
   return http.get(`/static/template/user.xlsx`, {}, { responseType: "blob" });

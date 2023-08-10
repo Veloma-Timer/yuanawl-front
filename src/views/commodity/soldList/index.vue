@@ -41,12 +41,12 @@ import ProTable from "@/components/ProTable/index.vue";
 import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-import { View, Document } from "@element-plus/icons-vue";
-import { deleteUser, getUserAll } from "@/api/modules/user";
+import { Document } from "@element-plus/icons-vue";
+import { deleteUser, getSalesUsers, getRecycleUsers, getPublishUsers } from "@/api/modules/user";
 import { summaryList, addSummary, editSummary } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
-import { parseTime, shortcuts } from "@/utils";
-import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
+import { parseTime, shortcuts, getFixed } from "@/utils";
+import { getAccountCodeAndId, getAllBranch } from "@/api/modules/set";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import deepcopy from "deepcopy";
 
@@ -85,7 +85,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "账号编码",
     width: 160,
     fixed: "left",
-    enum: getAllBaseAccount,
+    enum: getAccountCodeAndId,
     search: {
       el: "select-v2",
       props: {
@@ -93,7 +93,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       },
       slotName: true
     },
-    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
+    fieldNames: { label: "accountCode", value: "accountCode" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -165,10 +165,25 @@ const columns: ColumnProps<Commodity.Account>[] = [
     render: ({ row }) => row.accountTypeNames
   },
   {
-    prop: "salePeopleId",
-    label: "出售人姓名",
+    prop: "accountRecyclerId",
+    label: "回收人",
     width: 160,
-    enum: getUserAll,
+    enum: getRecycleUsers,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "accountPublisherId",
+    label: "发布人",
+    enum: getPublishUsers,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "salePeopleId",
+    label: "出售人",
+    width: 160,
+    enum: getSalesUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -193,7 +208,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "实际回收金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row?.accountRecyclerPrice);
+      return getFixed(scope.row?.accountRecyclerPrice!);
     }
   },
   {
@@ -202,10 +217,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     enum: getAllBranch,
     search: { el: "select" },
-    fieldNames: { label: "branchName", value: "id" },
-    render: scope => {
-      return scope.row.branch.branchName;
-    }
+    fieldNames: { label: "branchName", value: "id" }
   },
   // { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
@@ -252,23 +264,12 @@ const columns: ColumnProps<Commodity.Account>[] = [
   }
   // { prop: "operation", label: "操作", fixed: "right", width: 200 }
 ];
-// 账号列表
-type AccountObj = { accountNumber: string; accountCode: string; id: number };
-const accountList = reactive<AccountObj[]>([]);
-const getAllAccountList = async () => {
-  const { data } = await getAllBaseAccount({});
-  accountList.value = data;
-};
-getAllAccountList();
 
 // 批量删除用户信息
 const batchDelete = async (id: string[]) => {
   await useHandleData(deleteUser, { id }, "导出用户信息");
   proTable.value?.clearSelection();
   proTable.value?.getTableList();
-};
-const getFixed = (str: string) => {
-  return "￥" + parseFloat(str).toFixed(2);
 };
 
 // 打开 drawer(新增、查看、编辑)
@@ -281,7 +282,7 @@ const openDrawer = (title: string, row: Partial<User.ResUserList> = {}) => {
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
-  drawerRef.value?.acceptParams(params);
+  drawerRef.value?.acceptParams(params as any);
 };
 
 // 数据统计引用的本页面 需要隐藏部分

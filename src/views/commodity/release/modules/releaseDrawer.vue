@@ -11,7 +11,7 @@
     >
       <el-form-item label="账号编码" prop="accountCode">
         <el-select v-model="drawerProps.row!.accountCode" placeholder="请选择账户" filterable disabled>
-          <el-option v-for="item in customerMap" :key="item.id" :label="item.accountNumber" :value="item.id" />
+          <el-option v-for="item in customerMap" :key="item.id" :label="item.accountCode" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="发布人" prop="accountPublisherId">
@@ -53,7 +53,7 @@
       </el-form-item>
       <el-form-item label="发布平台" prop="publishPlatform">
         <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple>
-          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value!" />
         </el-select>
       </el-form-item>
       <el-form-item label="发布备注">
@@ -68,7 +68,7 @@
       </el-form-item>
       <el-form-item v-if="drawerProps.row.isPublish === '1'" label="回滚平台" prop="rollBackPlatform">
         <el-select v-model="drawerProps.row!.rollBackPlatform" placeholder="请选择回滚平台" filterable multiple>
-          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value!" />
         </el-select>
       </el-form-item>
     </el-form>
@@ -86,6 +86,8 @@ import { Commodity } from "@/api/interface/commodity/commodity";
 import { getUserAll } from "@/api/modules/user";
 import { getRecycleList } from "@/api/modules/commodity";
 import { sellKeyMap } from "@/api/modules/dictionary";
+import { IOptions } from "@/typings";
+import { User } from "@/api/interface";
 
 const rules = reactive({
   accountPublisherId: [{ required: true, message: "必填项不能为空" }],
@@ -116,20 +118,18 @@ const acceptParams = (params: DrawerProps) => {
   drawerVisible.value = true;
 };
 // 发布人
-let transCatUploadedMap: object[] = reactive([]);
+const transCatUploadedMap = ref<User.ResUser[]>([]);
 // 回收账户列表
-let customerMap: object[] = reactive([]);
+const customerMap = ref<Commodity.Account[]>([]);
 // 发布平台
-let handleMap: object[] = reactive([]);
+const handleMap = ref<IOptions>([]);
 const publishMap = () => {
   sellKeyMap().then(res => {
     const {
       data: { publishPlatform = [] }
     } = res;
 
-    console.log(publishPlatform);
-
-    handleMap = publishPlatform;
+    handleMap.value = publishPlatform;
   });
 };
 // 提交数据（新增/编辑）
@@ -152,9 +152,9 @@ const setAllList = async () => {
   const {
     data: { list = [] }
   } = await getRecycleList({});
-  transCatUploadedMap = data;
-  customerMap = list;
-  await publishMap();
+  transCatUploadedMap.value = data as any;
+  customerMap.value = list;
+  publishMap();
 };
 setAllList();
 defineExpose({

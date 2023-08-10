@@ -28,18 +28,21 @@
       </div>
     </div>
     <!-- 表格主体 -->
+
     <el-table
-      ref="tableRef"
+      v-if="dropCol"
       v-bind="$attrs"
+      ref="tableRef"
       :data="data ?? tableData"
       :border="border"
       :row-key="rowKey"
       :tree-props="{ children: 'children', hasChildren: childrenStr }"
       @selection-change="selectionChange"
+      @sort-change="onSortChange"
     >
       <!-- 默认插槽 -->
       <slot></slot>
-      <template v-for="item in tableColumns" :key="item">
+      <template v-for="(item, index) in tableColumns" :key="item.prop">
         <!-- selection || index || expand -->
         <el-table-column
           v-bind="item"
@@ -53,7 +56,13 @@
           </template>
         </el-table-column>
         <!-- other -->
-        <TableColumn v-if="!item.type && item.prop && item.isShow" :column="item">
+        <TableColumn
+          v-if="!item.type && item.prop && item.isShow"
+          :key="index"
+          :columns="dropCol"
+          :custom-key="index"
+          :column="getDropCol(item.prop)"
+        >
           <template v-for="slot in Object.keys($slots)" #[slot]="scope">
             <slot :name="slot" v-bind="scope"></slot>
           </template>
@@ -73,6 +82,7 @@
         </div>
       </template>
     </el-table>
+
     <!-- 分页组件 -->
     <slot name="pagination">
       <Pagination
@@ -104,6 +114,8 @@ import printJS from "print-js";
 import { userProTableStore } from "@/stores/modules/proTable";
 import { useAuthStore } from "@/stores/modules/auth";
 import { ProTableColoum } from "@/stores/interface";
+import colDrag from "./drag";
+import deepcopy from "deepcopy";
 
 const proTableStore = userProTableStore();
 const authStore = useAuthStore();
@@ -125,6 +137,12 @@ export interface ProTableProps {
   rowKey?: string; // 行数据的 Key，用来优化 Table 的渲染，当表格数据多选时，所指定的 id ==> 非必传（默认为 id）
   searchCol?: number | Record<BreakPoint, number>; // 表格搜索项 每列占比配置 ==> 非必传 { xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }
 }
+
+const compKey = ref(0);
+
+setTimeout(() => {
+  compKey.value++;
+}, 1500);
 
 // 接受父组件参数，配置默认值
 const props = withDefaults(defineProps<ProTableProps>(), {
@@ -149,14 +167,21 @@ const tableRef = ref<InstanceType<typeof ElTable>>();
 const { selectionChange, selectedList, selectedListIds, isSelected } = useSelection(props.rowKey);
 
 // 表格操作 Hooks
-const { tableData, pageable, searchParam, searchInitParam, getTableList, search, reset, handleSizeChange, handleCurrentChange } =
-  useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
+const {
+  tableData,
+  pageable,
+  searchParam,
+  searchInitParam,
+  onSortChange,
+  getTableList,
+  search,
+  reset,
+  handleSizeChange,
+  handleCurrentChange
+} = useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
 
 // 清空选中数据列表
 const clearSelection = () => tableRef.value!.clearSelection();
-
-// 初始化请求
-onMounted(() => props.requestAuto && getTableList());
 
 // 监听页面 initParam 改化，重新获取表格数据
 watch(() => props.initParam, getTableList, { deep: true });
@@ -198,6 +223,22 @@ if (currentColoumIndex > -1) {
 }
 const tableColumns = ref<ColumnProps[]>(cachecColumns);
 
+const dropCol = ref<ColumnProps[]>(deepcopy(cachecColumns));
+
+// 初始化请求
+onMounted(() => {
+  nextTick(() => {
+    dropCol.value = colDrag(dropCol.value)!;
+  });
+  props.requestAuto && getTableList();
+});
+
+const getDropCol = (prop: string) => {
+  const index = dropCol.value?.findIndex(item => item.prop == prop)!;
+  const item = dropCol.value![index];
+  return item;
+};
+
 // 定义 enumMap 存储 enum 值（避免异步请求无法格式化单元格内容 || 无法填充搜索下拉选择）
 const enumMap = ref(new Map<string, { [key: string]: any }[]>());
 provide("enumMap", enumMap);
@@ -211,7 +252,7 @@ const setEnumMap = async (col: ColumnProps) => {
 
 // 扁平化 columns
 const flatColumnsFunc = (columns: ColumnProps[], flatArr: ColumnProps[] = []) => {
-  columns.forEach(async col => {
+  columns.forEach(col => {
     if (col._children?.length) flatArr.push(...flatColumnsFunc(col._children));
     flatArr.push(col);
     // 给每一项 column 添加 isShow && isFilterEnum 默认属性
@@ -265,11 +306,15 @@ const printData = computed(() => {
     item => (item.enum || (item.prop && item.prop.split(".").length > 1)) && item.isFilterEnum
   );
   needTransformCol.forEach(colItem => {
-    printDataList.forEach((tableItem: { [key: string]: any }) => {
+    printDataList.forEach((tableItem: { [key: string]: any }, index: number) => {
       tableItem[handleProp(colItem.prop!)] =
         colItem.prop!.split(".").length > 1 && !colItem.enum
-          ? formatValue(handleRowAccordingToProp(tableItem, colItem.prop!))
-          : filterEnum(handleRowAccordingToProp(tableItem, colItem.prop!), enumMap.value.get(colItem.prop!), colItem.fieldNames);
+          ? formatValue(handleRowAccordingToProp(tableItem, colItem.prop!, dropCol.value!, index))
+          : filterEnum(
+              handleRowAccordingToProp(tableItem, colItem.prop!, dropCol.value!, index),
+              enumMap.value.get(colItem.prop!),
+              colItem.fieldNames
+            );
       for (const key in tableItem) {
         if (tableItem[key] === null) tableItem[key] = formatValue(tableItem[key]);
       }

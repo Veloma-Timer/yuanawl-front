@@ -22,11 +22,14 @@ export namespace Commodity {
 
   export interface Account {
     id: number;
+    accountType: number[]; // 账号分类(游戏分类)
     orderId: number; // 工单id
     qq: string;
+    isPublish: "1" | "0"; // 是否发布
+    accountTypeNames: string;
+    publishPlatform: number[]; // 发布平台
     accountCode: string; // 账号编码(用户输入，唯一)
     storeId: number; // 回收店铺
-    accountType: []; // 账号分类(游戏分类)
     groupingId: number; // 回收组
     accountTitle: string; // 账号标题
     recycleMethod: string; // 回收方式
@@ -89,8 +92,11 @@ export namespace Commodity {
   }
 
   export interface Recovery {
+    accountTypeNames: string;
     accountTitle: string; // 账号标题
     branchId: number; // 所属门店ID
+    isWorkOrder: "1" | "0";
+    orderId: number;
     accountCode: unknown; // 账号编码
     accountType: number[]; // 账号分类
     qq: string; // QQ号
@@ -120,6 +126,12 @@ export namespace Commodity {
   }
   export interface Sales {
     id: number;
+    orderId: number;
+    isWorkOrder: "1" | "0";
+    accountType: number[]; // 账号分类
+    noSaleResidenceTime: string;
+    isSales: "1" | "0";
+    isPublish: "1" | "0";
     // "salePeople"?: SysUserEntity; // 出售人
     salePeopleId: number; // 出售人ID
     saleTime: string; // 出售时间
@@ -131,7 +143,6 @@ export namespace Commodity {
     accountTitle: string; // 账号标题
     branchId: number; // 所属门店ID
     accountCode: string; // 账号编码
-    accountType: number; // 账号分类
     accountNumber: string; // 账号
     accountPassword: string; // 密码
     phoneRemark: string; // 手机卡备注
@@ -155,7 +166,11 @@ export namespace Commodity {
     // "conversionCycle"?: number; // 商品周转周期
   }
   export interface Release {
-    id: 5;
+    id: number;
+    isWorkOrder: "1" | "0";
+    orderId: number;
+    publishRemark: string; // 发布备注
+    isSales: "1" | "0";
     accountPublisherId: number; // 发布人ID
     accountTitle: string; // 账号标题
     branchId: number; // 所属门店ID

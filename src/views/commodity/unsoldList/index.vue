@@ -21,10 +21,10 @@
       <!-- usernameHeader -->
       <!-- createTime -->
       <!-- 表格操作 -->
-      <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('编辑', scope.row)">编辑</el-button>
-        <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
-      </template>
+      <!-- <template #operation="scope"> -->
+      <!-- <el-button type="primary" link :icon="Edit" @click="openDrawer('编辑', scope.row)">编辑</el-button> -->
+      <!--        <el-button type="primary" link :icon="Delete" @click="deleteAccount(scope.row)">删除</el-button>-->
+      <!-- </template> -->
     </ProTable>
     <SalesDrawer ref="drawerRef" />
     <ImportExcel ref="dialogRef" />
@@ -39,14 +39,14 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import SalesDrawer from "./modules/SalesDrawer.vue";
 import UnsoldDrawer from "@/views/commodity/unsoldList/modules/UnsoldDrawer.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
-import { Document, View } from "@element-plus/icons-vue";
-import { deleteUser } from "@/api/modules/user";
+import { Document } from "@element-plus/icons-vue";
+import { deleteUser, getRecycleUsers, getPublishUsers } from "@/api/modules/user";
 import { addSummary, editSummary, summaryList } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { useAuthButtons } from "@/hooks/useAuthButtons";
-import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
-import { shortcuts } from "@/utils";
+import { getAccountCodeAndId, getAllBranch } from "@/api/modules/set";
+import { shortcuts, getFixed } from "@/utils";
 import deepcopy from "deepcopy";
 
 const { BUTTONS } = useAuthButtons();
@@ -69,7 +69,7 @@ const dataCallback = (data: any) => {
 };
 
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
-// 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
+// 默认不做操作就直接在 ProTable 组件上绑定 :requestApi="getUserList"
 const getTableList = (params: any) => {
   let newParams = deepcopy(params);
   newParams.createTime && (newParams.startTime = newParams.createTime[0]);
@@ -77,10 +77,7 @@ const getTableList = (params: any) => {
   delete newParams.createTime;
   return summaryList(newParams);
 };
-const getFixed = (str: string) => {
-  if (!str) return "--";
-  return "￥" + parseFloat(str).toFixed(2);
-};
+
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
 // 表格配置项
@@ -90,8 +87,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
     prop: "accountCode",
     label: "账号编码",
     width: 160,
-    enum: getAllBaseAccount,
-    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
+    enum: getAccountCodeAndId,
+    fieldNames: { label: "accountCode", value: "accountCode" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -142,20 +139,21 @@ const columns: ColumnProps<Commodity.Account>[] = [
       );
     }
   },
-  // {
-  //   prop: "accountNumber",
-  //   label: "游戏编号",
-  //   width: 160,
-  //   enum: getAllBaseAccount,
-  //   search: {
-  //     el: "select",
-  //     slotName: true
-  //   },
-  //   fieldNames: { label: "accountNumber", value: "id", name: "accountCode" },
-  //   render: scope => {
-  //     return <span>{scope.row?.accountNumber}</span>;
-  //   }
-  // },
+  {
+    prop: "accountRecyclerId",
+    label: "回收人",
+    width: 160,
+    enum: getRecycleUsers,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
+    prop: "accountPublisherId",
+    label: "发布人",
+    enum: getPublishUsers,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
   {
     prop: "accountType",
     label: "游戏分类",
@@ -170,7 +168,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "出售金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row!.salePrice);
+      return getFixed(scope.row!.salePrice!);
     }
   },
   {
@@ -178,7 +176,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "实际回收金额",
     width: 160,
     render: scope => {
-      return getFixed(scope.row!.accountRecyclerPrice);
+      return getFixed(scope.row!.accountRecyclerPrice!);
     }
   },
   {
@@ -187,10 +185,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     enum: getAllBranch,
     search: { el: "select" },
-    fieldNames: { label: "branchName", value: "id" },
-    render: scope => {
-      return scope.row.branch.branchName;
-    }
+    fieldNames: { label: "branchName", value: "id" }
   },
   // { prop: "accountNumber", label: "账号", width: 160 },
   { prop: "accountPassword", label: "密码", width: 160 },
@@ -233,8 +228,8 @@ const columns: ColumnProps<Commodity.Account>[] = [
       el: "date-picker",
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
-  },
-  { prop: "operation", label: "操作", fixed: "right", width: 150 }
+  }
+  // { prop: "operation", label: "操作", fixed: "right", width: 150 }
 ];
 
 // 删除用户信息
@@ -259,15 +254,15 @@ const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UnsoldDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
-  let accountType: [] | undefined = [];
+  let accountType: number[] = [];
   if (title === "编辑") {
-    accountType = row.accountType.map(item => {
-      return parseFloat(item);
-    });
+    accountType = row.accountType?.map(item => {
+      return parseFloat(item as unknown as string);
+    })!;
   }
   const params = {
     title,
-    isView: title === "编辑",
+    isView: false,
     row: { ...row, accountType: accountType },
     api: title === "新增" ? addSummary : title === "编辑" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList

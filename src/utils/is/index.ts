@@ -149,7 +149,7 @@ export function parseTime(time: any, cFormat: string) {
     s: date.getSeconds(),
     a: date.getDay()
   };
-  return format.replace(/{([ymdhisa])+}/g, (result, key) => {
+  return format?.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key];
 
     if (key === "a") {

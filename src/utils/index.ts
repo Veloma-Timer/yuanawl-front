@@ -1,5 +1,5 @@
 import { isArray } from "@/utils/is";
-import { FieldNamesProps } from "@/components/ProTable/interface";
+import { FieldNamesProps, ColumnProps } from "@/components/ProTable/interface";
 
 /**
  * @description 获取localStorage
@@ -245,8 +245,8 @@ export function formatValue(callValue: any) {
  * @param {String} prop 当前 prop
  * @returns {*}
  * */
-export function handleRowAccordingToProp(row: { [key: string]: any }, prop: string) {
-  if (!prop.includes(".")) return row[prop] ?? "--";
+export function handleRowAccordingToProp(row: { [key: string]: any }, prop: string, columns: ColumnProps[], index: number) {
+  if (!prop.includes(".")) return row[columns[index].prop!] ?? "--";
   prop.split(".").forEach(item => (row = row[item] ?? "--"));
   return row;
 }
@@ -342,7 +342,7 @@ export function parseTime(time: any, cFormat: string) {
     s: date.getSeconds(),
     a: date.getDay()
   };
-  return format.replace(/{([ymdhisa])+}/g, (result, key) => {
+  return format?.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key];
 
     if (key === "a") {
@@ -360,7 +360,7 @@ export const formatParams = (obj: any) => {
   return `?${params.slice(0, -1)}`;
 };
 export const setPhone = (accountTel: string) => {
-  return accountTel.replace(/^[0-9]*$/g, "***********");
+  return accountTel?.replace(/^[0-9]*$/g, "***********");
 };
 export const getPhone = (phone: string) => {
   if (!phone) return "--";

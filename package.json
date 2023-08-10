@@ -43,6 +43,7 @@
     "dayjs": "^1.11.7",
     "deepcopy": "^2.1.0",
     "default-passive-events": "^2.0.0",
+    "draggable": "^4.2.0",
     "driver.js": "^0.9.8",
     "echarts": "^5.4.2",
     "echarts-liquidfill": "^3.1.0",

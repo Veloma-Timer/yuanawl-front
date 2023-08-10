@@ -68,7 +68,7 @@ export const addRecycle = (params: any) => {
 export const editRecycle = (params: any) => {
   return http.put(`${baseUrl}/recycle`, params);
 };
-export const getRecycleList = (params: any) => {
+export const getRecycleList = (params: any): Promise<{ data: { list: any } }> => {
   return http.get(`${baseUrl}/recycle`, params);
 };
 // 销售列表

@@ -52,7 +52,7 @@ import ImportExcel from "@/views/commodity/components/ImportExcel/index.vue";
 import UserDrawer from "@/views/commodity/summary/modules/UserDrawer.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
 import { Hide, View, Document, Delete } from "@element-plus/icons-vue";
-import { getUserAll } from "@/api/modules/user";
+import { getPublishUsers, getRecycleUsers, getSalesUsers } from "@/api/modules/user";
 import {
   addSummary,
   delAccountComplete,
@@ -65,12 +65,12 @@ import {
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
-import { getPhone, parseTime, setPhone, shortcuts } from "@/utils";
+import { getPhone, parseTime, setPhone, shortcuts, getFixed } from "@/utils";
 import { saveFile } from "@/utils/file";
 import { getAllBaseAccountDel, getAllBranch } from "@/api/modules/set";
-import { useRoute } from "vue-router";
 import deepcopy from "deepcopy";
 import { sellKeyGrouping, sellKeyMap } from "@/api/modules/dictionary";
+import { IOptions } from "@/typings";
 
 const route = useRoute();
 // 跳转详情页
@@ -108,7 +108,7 @@ const getTypeList = async () => {
 };
 getTypeList();
 
-const getTypeListName = (ids: []) => {
+const getTypeListName = (ids: number[]) => {
   const idsNum = ids?.map(item => Number(item));
   const list = typeList.value;
   const names = idsNum?.map(item => {
@@ -117,6 +117,8 @@ const getTypeListName = (ids: []) => {
   });
   return names?.join();
 };
+
+const _publishPlatform = ref<IOptions>([]);
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
@@ -137,7 +139,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       },
       slotName: true
     },
-    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
+    fieldNames: { label: "accountCode", value: "accountCode" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -278,7 +280,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     label: "出售人",
     sortable: true,
     width: 160,
-    enum: getUserAll,
+    enum: getSalesUsers,
     search: {
       el: "select",
       props: {
@@ -377,11 +379,19 @@ const columns: ColumnProps<Commodity.Account>[] = [
     width: 160,
     search: { el: "input" }
   },
+  {
+    prop: "accountRecyclerId",
+    label: "回收人",
+    width: 160,
+    enum: getRecycleUsers,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
   { prop: "recycleRemark", label: "回收备注", width: 160 },
   {
     prop: "accountPublisherId",
     label: "发布人",
-    enum: getUserAll,
+    enum: getPublishUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -406,7 +416,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
     render: ({ row }) => {
       return row.publishPlatform
         ?.map(id => {
-          const platform = _publishPlatform.value.find(item => {
+          const platform = _publishPlatform.value.find((item: any) => {
             const value = item.value || item.id;
             return value == id;
           }) as any;
@@ -476,12 +486,7 @@ const deleteAccount = async (ids: number[] | string[]) => {
   await useHandleData(delAccountComplete, ids, `彻底删除选中的账户`);
   proTable.value?.getTableList();
 };
-const getFixed = (str: string) => {
-  if (str) {
-    return "￥" + parseFloat(str).toFixed(2);
-  }
-  return "--";
-};
+
 // 批量删除用户信息
 // const batchDelete = async (id: string[]) => {
 //   await useHandleData(deleteSummary, { id }, "导出用户信息");
@@ -500,27 +505,14 @@ const onExport = async () => {
 // 切换用户状态
 // 批量添加用户
 const dialogRef = ref<InstanceType<typeof ImportExcel> | null>(null);
-const batchAdd = (title: string) => {
-  const params = {
-    title: `${title}账号`,
-    status: title === "下载",
-    tempApi: summaryTemplate,
-    updateApi: summaryUpload,
-    getTableList: proTable.value?.getTableList
-  };
-  dialogRef.value?.acceptParams(params);
-};
 
 // 打开 drawer(新增、查看、编辑)
 const drawerRef = ref<InstanceType<typeof UserDrawer> | null>(null);
 const openDrawer = (title: string, row: Partial<Commodity.Account> = {}) => {
-  let accountType = [];
-  if (title === "查看") {
-  }
   const params = {
     title,
     isView: title === "查看",
-    row: { ...row, accountType: accountType },
+    row: { ...row },
     api: title === "新增" ? addSummary : title === "查看" ? editSummary : undefined,
     getTableList: proTable.value?.getTableList
   };
@@ -538,7 +530,7 @@ onMounted(() => {
     }
   }, 300);
 });
-const onSetPhone = row => {
+const onSetPhone = (row: any) => {
   const params = {
     accountId: row.id,
     tel: row.accountTel

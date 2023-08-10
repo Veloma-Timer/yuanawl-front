@@ -152,7 +152,7 @@ const acceptParams = async (params: DrawerProps & any) => {
   await setListMap();
 };
 const userListMap = async () => {
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   branchList.value = data;
 };
 const setListMap = async () => {

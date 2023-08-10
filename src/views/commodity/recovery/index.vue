@@ -32,8 +32,6 @@
           </span>
         </div>
       </template>
-      <!-- usernameHeader -->
-      <!-- createTime -->
       <!-- 表格操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="View" v-if="BUTTONS.view" @click="openDrawer('编辑', scope.row)">编辑</el-button>
@@ -69,8 +67,8 @@ import {
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
-import { getAllBaseAccount, getAllBranch } from "@/api/modules/set";
-import { getGroupListMap, getUserAll } from "@/api/modules/user";
+import { getAllBranch, getAccountCodeAndId } from "@/api/modules/set";
+import { getGroupListMap, getRecycleUsers } from "@/api/modules/user";
 import { parseTime } from "@/utils/is";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
@@ -86,13 +84,6 @@ const obj = JSON.parse(decryption("token", token));
 // 跳转详情页
 // 获取 ProTable 元素，调用其获取刷新数据方法（还能获取到当前查询参数，方便导出携带参数）
 const proTable = ref<ProTableInstance>();
-// 账号列表
-type AccountObj = { accountNumber: string; accountCode: string; id: number };
-const accountList = reactive<AccountObj[]>([]);
-const getAllAccountList = async () => {
-  const { data } = await getAllBaseAccount({});
-  accountList.value = data;
-};
 
 // 创建工单
 const addOrder = (row: Partial<Commodity.Sales>) => {
@@ -100,10 +91,10 @@ const addOrder = (row: Partial<Commodity.Sales>) => {
   router.push({ name: "工单新增", query: { accId: id || "" } });
 };
 
-getAllAccountList();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
+
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -140,6 +131,15 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     label: "账号编码",
     fixed: "left",
     width: 160,
+    enum: getAccountCodeAndId,
+    search: {
+      el: "select-v2",
+      props: {
+        filterable: true
+      },
+      slotName: true
+    },
+    fieldNames: { label: "accountCode", value: "accountCode" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -240,14 +240,14 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     width: 160
   },
   { prop: "campId", label: "营地号", width: 160, search: { el: "input" } },
-  { prop: "phoneRemark", label: "手机卡备注", width: 160, search: { el: "input" } },
+  { prop: "phoneRemark", label: "手机卡备注", width: 160 },
   {
     prop: "email",
     label: "邮箱",
     width: 160,
     search: { el: "input" }
   },
-  { prop: "emailSecret", label: "邮箱密保", width: 160, search: { el: "input" } },
+  { prop: "emailSecret", label: "邮箱密保", width: 160 },
   {
     prop: "systemId",
     label: "系统",
@@ -265,7 +265,6 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     prop: "haveSecondary",
     label: "实名情况",
     width: 160,
-    search: { el: "select" },
     enum: [
       { label: "有", value: "1" },
       { label: "无", value: "0" }
@@ -274,14 +273,13 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
   {
     prop: "accountRecyclerPrice",
     label: "回收价",
-    width: 160,
-    search: { el: "input" }
+    width: 160
   },
   {
     prop: "accountRecyclerId",
     label: "回收人",
     width: 160,
-    enum: getUserAll,
+    enum: getRecycleUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -293,7 +291,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
       return parseTime(scope.row?.accountRecyclerTime, "{y}-{m}-{d} {h}:{i}:{s}");
     }
   },
-  { prop: "recycleRemark", label: "回收备注", width: 160 },
+  { prop: "recycleRemark", label: "回收备注", width: 160, search: { el: "input" } },
   {
     prop: "timeSection",
     sortable: true,
@@ -304,7 +302,12 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
   },
-  { prop: "operation", label: "操作", fixed: "right", width: 300 }
+  {
+    prop: "operation",
+    label: "操作",
+    fixed: "right",
+    width: 250
+  }
 ];
 
 // 删除用户信息
@@ -369,7 +372,7 @@ const openDrawer = async (title: string, row: Partial<Commodity.Recovery> = {}) 
   };
   drawerRef.value?.acceptParams(params);
 };
-const onSetPhone = row => {
+const onSetPhone = (row: any) => {
   const params = {
     accountId: row.id,
     tel: row.accountTel

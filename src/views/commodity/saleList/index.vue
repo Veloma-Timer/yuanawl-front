@@ -65,13 +65,15 @@ import { addSales, getSalesList, editSales, summaryExport, salesTemplate, salesU
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
 import { parseTime, shortcuts, getFixed } from "@/utils";
-import { getUserAll } from "@/api/modules/user";
+import { getRecycleUsers, getSalesUsers, getPublishUsers } from "@/api/modules/user";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { useRouter } from "vue-router";
 import { getAllList } from "@/api/modules/accountClass";
-import { getAllBaseAccount, getAllBranch, type IBranch } from "@/api/modules/set";
+import { getAccountCodeAndId, getAllBranch, type IBranch } from "@/api/modules/set";
 import deepcopy from "deepcopy";
+import { IAccountType } from "@/typings";
+import { TabPaneName } from "element-plus";
 
 const router = useRouter();
 // 跳转详情页
@@ -97,7 +99,9 @@ const dataCallback = (data: any) => {
   };
 };
 
-const onTabChange = (index: number) => (activeIndex.value = index - 1);
+const onTabChange = (index: TabPaneName) => {
+  activeIndex.value = Number(index) - 1;
+};
 
 // 如果你想在请求之前对当前请求参数做一些操作，可以自定义如下函数：params 为当前所有的请求参数（包括分页），最后返回请求列表接口
 // 默认不做操作就直接在 ProTable 组件上绑定	:requestApi="getUserList"
@@ -122,7 +126,7 @@ const batchAdd = (title: string) => {
   dialogRef.value?.acceptParams(params);
 };
 
-let typeList = ref([]);
+let typeList = ref<IAccountType[]>([]);
 
 const getTypeList = async () => {
   const { data } = await getAllList();
@@ -130,7 +134,7 @@ const getTypeList = async () => {
 };
 getTypeList();
 
-const getTypeListName = (ids: []) => {
+const getTypeListName = (ids: number[]) => {
   const idsNum = ids?.map(item => Number(item));
   const list = typeList.value;
   const names = idsNum?.map(item => {
@@ -147,13 +151,12 @@ const branchList = ref<IBranch[]>([]);
 // 表格配置项
 const columns: ColumnProps<Commodity.Sales>[] = [
   { type: "selection", width: 55, fixed: true },
-  { prop: "salesCode", label: "销售订单号", width: 190, search: { el: "input" } },
   {
     prop: "accountCode",
     label: "账号编码",
     fixed: true,
     width: 160,
-    enum: getAllBaseAccount,
+    enum: getAccountCodeAndId,
     search: {
       el: "select-v2",
       props: {
@@ -161,7 +164,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
       },
       slotName: true
     },
-    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
+    fieldNames: { label: "accountCode", value: "accountCode" },
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -179,6 +182,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
       );
     }
   },
+  { prop: "salesCode", label: "销售订单号", width: 190, search: { el: "input" } },
   {
     prop: "qq",
     label: "QQ号",
@@ -249,7 +253,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     },
     fieldNames: { label: "typeName", value: "id" },
     render: ({ row }) => {
-      return getTypeListName(row.accountType);
+      return getTypeListName(row.accountType!);
     }
   },
   // {
@@ -294,7 +298,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     prop: "accountRecyclerId",
     label: "回收人",
     width: 160,
-    enum: getUserAll,
+    enum: getRecycleUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -311,7 +315,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     prop: "salePeopleId",
     width: 160,
     label: "出售人",
-    enum: getUserAll,
+    enum: getSalesUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -356,6 +360,13 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     }
   },
   {
+    prop: "accountPublisherId",
+    label: "发布人",
+    enum: getPublishUsers,
+    search: { el: "select" },
+    fieldNames: { label: "userName", value: "id" }
+  },
+  {
     prop: "isPublish",
     label: "发布状态",
     search: { el: "select" },
@@ -391,6 +402,7 @@ const columns: ColumnProps<Commodity.Sales>[] = [
 
 const onExport = async () => {
   const obj = { ...proTable.value[activeIndex.value]?.searchParam, ...proTable.value[activeIndex.value]?.pageable };
+  // @ts-ignore
   delete obj.total;
   const data = await summaryExport(obj);
   saveFile(data, "销售列表导出");
@@ -434,7 +446,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Sales> = {}) => {
     api: title === "新增" ? addSales : title === "编辑" ? editSales : undefined,
     getTableList: proTable.value[activeIndex.value]?.getTableList
   };
-  drawerRef.value?.acceptParams(params);
+  drawerRef.value?.acceptParams(params as any);
 };
 
 onMounted(async () => {

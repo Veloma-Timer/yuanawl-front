@@ -33,6 +33,7 @@ module.exports = {
     "no-use-before-define": "off", // 禁止在 函数/类/变量 定义之前使用它们
     "no-irregular-whitespace": "off", // 禁止不规则的空白
     "scss/double-slash-comment-whitespa": "off",
+    "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
     // typeScript (https://typescript-eslint.io/rules)
     "@typescript-eslint/no-inferrable-types": "off", // 可以轻松推断的显式类型可能会增加不必要的冗长
     "@typescript-eslint/no-namespace": "off", // 禁止使用自定义 TypeScript 模块和命名空间。

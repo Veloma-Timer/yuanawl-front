@@ -56,14 +56,15 @@ import { CirclePlus, Download, Upload, View, Document } from "@element-plus/icon
 import { addPublish, editPublish, getPublishList, publishTemplate, publishUpload, summaryExport } from "@/api/modules/commodity";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { saveFile } from "@/utils/file";
-import { getUserAll } from "@/api/modules/user";
-import { parseTime, shortcuts } from "@/utils";
+import { getPublishUsers, getRecycleUsers, getUserAll } from "@/api/modules/user";
+import { parseTime, shortcuts, getFixed } from "@/utils";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import { useUserStore } from "@/stores/modules/user";
 import { decryption } from "@/utils/AESUtil";
 import deepcopy from "deepcopy";
 import { useRouter } from "vue-router";
-import { getAllBaseAccount, getAllBaseAccountDel } from "@/api/modules/set";
+import { getAccountCodeAndId } from "@/api/modules/set";
+import { IOptions } from "@/typings";
 const userStore = useUserStore();
 const token = userStore.token; // 获取token
 const obj = JSON.parse(decryption("token", token));
@@ -104,14 +105,8 @@ const getTableList = (params: any) => {
   delete newParams.createTime;
   return getPublishList(newParams);
 };
-const getFixed = (str: string) => {
-  if (str) {
-    return "￥" + parseFloat(str).toFixed(2);
-  }
-  return "--";
-};
 
-const _publishPlatform = ref<{ label: string; value: number; id: number }[]>([]);
+const _publishPlatform = ref<IOptions>([]);
 
 // 页面按钮权限（按钮权限既可以使用 hooks，也可以直接使用 v-auth 指令，指令适合直接绑定在按钮上，hooks 适合根据按钮权限显示不同的内容）
 // 自定义渲染表头（使用tsx语法）
@@ -123,7 +118,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     label: "账号编码",
     width: 160,
     fixed: "left",
-    enum: getAllBaseAccount,
+    enum: getAccountCodeAndId,
     search: {
       el: "select-v2",
       props: {
@@ -131,7 +126,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
       },
       slotName: true
     },
-    fieldNames: { label: "accountCode", value: "accountCode", name: "accountNumber" },
+    fieldNames: { label: "accountCode", value: "accountCode" },
+    // render会导致不刷新
     render: ({ row }) => {
       const status = row.isWorkOrder === "1";
       return (
@@ -160,15 +156,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
   },
   { prop: "publishPrice", label: "商品首次定价", minWidth: 150, search: { el: "input" } },
   { prop: "publishRemark", label: "发布备注", minWidth: 150, search: { el: "input" } },
-  // {
-  //   prop: "accountNumber",
-  //   sortable: true,
-  //   label: "账号",
-  //   width: 160
-  // },
   {
     prop: "accountPassword",
-    sortable: true,
     label: "密码",
     width: 160
   },
@@ -195,7 +184,6 @@ const columns: ColumnProps<Commodity.Release>[] = [
     prop: "accountRecyclerPrice",
     label: "回收价格",
     width: 160,
-    search: { el: "input" },
     render: ({ row }) => "¥" + row.accountRecyclerPrice || row.accountRecyclerPrice?.toFixed(2)
   },
   { prop: "recycleOrder", label: "回收订单号", width: 160, search: { el: "input" } },
@@ -203,7 +191,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     prop: "accountRecyclerId",
     label: "回收人",
     width: 160,
-    enum: getUserAll,
+    enum: getRecycleUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -219,7 +207,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
   {
     prop: "accountPublisherId",
     label: "发布人",
-    enum: getUserAll,
+    enum: getPublishUsers,
     search: { el: "select" },
     fieldNames: { label: "userName", value: "id" }
   },
@@ -310,7 +298,7 @@ const columns: ColumnProps<Commodity.Release>[] = [
     render: ({ row }) => {
       return row.publishPlatform
         ?.map(id => {
-          const platform = _publishPlatform.value.find(item => {
+          const platform = _publishPlatform.value.find((item: any) => {
             const value = item.value || item.id;
             return value == id;
           }) as any;
@@ -349,7 +337,6 @@ const columns: ColumnProps<Commodity.Release>[] = [
       }
     },
     render: ({ row }) => {
-      console.log(row.rollBackPlatform, "rollBackPlatform");
       return row.rollBackPlatform
         ?.map(id => {
           const platform = _publishPlatform.value.find(item => {
@@ -370,8 +357,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
       el: "date-picker",
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
-  },
-  { prop: "operation", label: "操作", fixed: "right", width: 300 }
+  }
+  // { prop: "operation", label: "操作", fixed: "right", width: 300 }
 ];
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };
@@ -411,10 +398,10 @@ const setEcho = (arr: string[]) => {
   if (arr) {
     const list = arr?.map(item => Number(item));
     let names = [];
-    const values = handleMap.filter(item => {
+    const values = handleMap.filter((item: any) => {
       return list.includes(item.value);
     });
-    names = values?.map(item => item.label);
+    names = values?.map((item: any) => item.label);
     return names.join(",");
   } else {
     return "--";
@@ -424,8 +411,6 @@ const date = new Date();
 const time = parseTime(date, "{y}-{m}-{d} {h}:{i}:{s}");
 const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
   const publishPlatform = row.publishPlatform?.map(item => Number(item));
-
-  console.log(row.publishPlatform, publishPlatform);
 
   const params = {
     title,
@@ -440,7 +425,7 @@ const openDrawer = (title: string, row: Partial<Commodity.Release> = {}) => {
     api: title === "新增" ? addPublish : title === "编辑" ? editPublish : undefined,
     getTableList: proTable.value?.getTableList
   };
-  drawerRef.value?.acceptParams(params);
+  drawerRef.value?.acceptParams(params as any);
 };
 
 // 数据统计引用的本页面 需要隐藏部分

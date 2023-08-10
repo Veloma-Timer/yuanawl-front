@@ -96,7 +96,7 @@ const handleSubmit = () => {
       userStore.setToken("");
 
       // 3.重定向到登陆页
-      router.replace(LOGIN_URL);
+      router?.replace(LOGIN_URL);
     } catch (error) {
       console.log(error);
     }

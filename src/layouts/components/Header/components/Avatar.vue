@@ -50,7 +50,7 @@ const logout = () => {
     userStore.cleanToken("");
 
     // 3.重定向到登陆页
-    router.replace(LOGIN_URL);
+    router?.replace(LOGIN_URL);
     ElMessage.success("退出登录成功！");
   });
 };
