@@ -163,14 +163,16 @@
 </template>
 
 <script setup lang="ts" name="UserDrawer">
-import { ref, reactive } from "vue";
 import { ElMessage, FormInstance } from "element-plus";
 import { Commodity } from "@/api/interface/commodity/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { getUserAll } from "@/api/modules/user";
-import { getAllBranch } from "@/api/modules/set";
+import { IBranch, getAllBranch } from "@/api/modules/set";
 import { typeCode } from "@/api/modules/commodity";
 import { checkPhoneNumber } from "@/utils/eleValidate";
+import { User } from "@/api/interface";
+import { IAccountType } from "@/typings";
+
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
     type: rule.field,
@@ -291,16 +293,16 @@ const isSaveMap = [
   { label: "已存", value: "1" },
   { label: "未存", value: "0" }
 ];
-let accountTypeMap: unknown = [];
-let userMap: unknown = [];
-let branchMap: unknown = [];
+const accountTypeMap = ref<IAccountType[]>([]);
+const userMap = ref<User.ResUser[]>([]);
+const branchMap = ref<IBranch[]>([]);
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
   const { data } = await getAllBranch();
-  accountTypeMap = res.data;
-  userMap = reloads.data;
-  branchMap = data;
+  accountTypeMap.value = res.data;
+  userMap.value = reloads.data as User.ResUser[];
+  branchMap.value = data;
 };
 setAllList();
 defineExpose({

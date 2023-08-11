@@ -183,7 +183,7 @@ export namespace SalesOrder {
     afterHandleResult: number; // 处理结果
     afterNotifyOtherDepartments?: number; // 通知其他部门
     afterSalesAssignUsers?: any[]; // 通知他人
-    afterCompensationAmount?: number; // 赔付金额
+    afterSalesCompensationMoney?: number; // 赔付金额
     afterNewSecurityPhone?: number; // 新密保手机
     afterNewSecurityPassword?: number; // 新密码
     afterSpecHandleResult: string; // 售后处理结果备注
@@ -212,6 +212,7 @@ export namespace SalesOrder {
     saleHandleCustomerService: number; // 处理客服
     saleHandleTime: string; // 处理时间
     saleHandleResult: number; // 处理结果
+    saleCompensationUserMoney: number;
     saleCompensationUserAmount?: number; // 赔付用户金额
     saleNotifyOtherDepartments?: string; // 通知其他部门
     salesAssignUsers?: any[]; // 通知他人
@@ -626,11 +627,13 @@ export namespace Dict {
     name: string; //名称
     displayName: string; //展示名称
     description: string; //描述
+    pageSize: number;
   }
 
   export interface Dict {
     name: string; //名称
     code: string; //编码
+    key: string;
     displayName: string; //展示名称
     description: string; //描述
     parentId: null | string; //父Id
@@ -647,6 +650,8 @@ export namespace Dict {
   export interface DictItem {
     name: string;
     code: string;
+    value: number;
+    label: string;
     displayName: string;
     description: null | string;
     parentId: null | string;
@@ -664,7 +669,7 @@ export namespace Dict {
     lastModifierId: null | string;
     creationTime: string;
     creatorId: null | string;
-    id: string;
+    id: string | number;
     extraProperties: any;
   }
 

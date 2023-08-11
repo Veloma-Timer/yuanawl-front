@@ -355,7 +355,9 @@ export function parseTime(time: any, cFormat: string) {
 export const formatParams = (obj: any) => {
   let params = "";
   for (let key in obj) {
-    params = params + key + "=" + obj[key] + "&";
+    if (obj[key] !== undefined && obj[key] !== null) {
+      params = params + key + "=" + obj[key] + "&";
+    }
   }
   return `?${params.slice(0, -1)}`;
 };

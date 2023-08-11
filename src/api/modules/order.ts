@@ -2,6 +2,7 @@ import { ResPage, ResultData, SalesOrder, Data } from "@/api/interface/index";
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 import { formatParams } from "@/utils/index";
+import { IOptions } from "@/typings";
 
 /**
  * @name 售后模块
@@ -110,13 +111,13 @@ export const workOrder = (params: any) => {
 };
 
 // 数据字典-问题类型
-export const getProblemTypes = () => {
-  return http.get<Data.ProblemList>(`${PORT3}/sys_map?key=problemTypes`);
+export const getProblemTypes = (): Promise<{ data: { problemTypes: IOptions } }> => {
+  return http.get(`${PORT3}/sys_map?key=problemTypes`);
 };
 
 // 数据字典-处理结果
-export const getHandleTypes = () => {
-  return http.get<Data.HandleTypeList>(`${PORT3}/sys_map?key=handleTypes`);
+export const getHandleTypes = (): Promise<{ data: { handleTypes: IOptions } }> => {
+  return http.get(`${PORT3}/sys_map?key=handleTypes`);
 };
 
 // 数据字典-部门列表

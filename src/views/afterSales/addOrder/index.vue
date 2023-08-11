@@ -62,7 +62,7 @@
                 class="order-input"
                 :disabled="ruleForm.basicEdit"
               >
-                <el-option v-for="item in problemTypeList" :key="item.value" :label="item.label" :value="item.value" />
+                <el-option v-for="item in problemTypeList" :key="item.id" :label="item.label" :value="item.id" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -287,8 +287,8 @@
                     filterable
                     :disabled="ruleForm.idEdit2"
                   >
-                    <template v-for="item in setTypeList" :key="item.value">
-                      <el-option :label="item.label" :value="item.value" />
+                    <template v-for="item in setTypeList" :key="item.id">
+                      <el-option :label="item.label" :value="item.id" />
                     </template>
                   </el-select>
                 </el-form-item>
@@ -296,10 +296,10 @@
             </el-row>
             <el-row :gutter="10">
               <el-col :span="6">
-                <el-form-item label="赔付金额" prop="afterCompensationAmount" label-width="120px">
+                <el-form-item label="赔付金额" prop="afterSalesCompensationMoney" label-width="120px">
                   <el-input-number
                     :disabled="ruleForm.idEdit2"
-                    v-model="ruleForm.row!.afterCompensationAmount"
+                    v-model="ruleForm.row!.afterSalesCompensationMoney"
                     placeholder="请输入"
                     class="order-input"
                   ></el-input-number>
@@ -342,7 +342,7 @@
               </el-col>
             </el-row>
             <el-row class="basic-info">
-              <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === 7">
+              <!-- <el-col :span="24" v-if="ruleForm.row!.afterHandleResult === 7">
                 <el-form-item label="处理结果备注" prop="afterSpecHandleResult" label-width="120px">
                   <el-input
                     :disabled="ruleForm.idEdit2"
@@ -354,7 +354,7 @@
                     :autosize="{ minRows: 3, maxRows: 6 }"
                   ></el-input>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item label="售后备注" prop="afterSalesRemark" label-width="120px">
                   <el-input
@@ -438,8 +438,8 @@
                     filterable
                     :disabled="ruleForm.idEdit1"
                   >
-                    <template v-for="item in setTypeList" :key="item.value">
-                      <el-option :label="item.label" :value="item.value" />
+                    <template v-for="item in setTypeList" :key="item.id">
+                      <el-option :label="item.label" :value="item.id" />
                     </template>
                   </el-select>
                 </el-form-item>
@@ -461,7 +461,7 @@
               </el-col>
             </el-row>
             <el-row :gutter="10" class="row-line">
-              <el-col :span="24" v-if="ruleForm.row!.recycleHandleResult === 7">
+              <!-- <el-col :span="24" v-if="ruleForm.row!.recycleHandleResult === 7">
                 <el-form-item label="处理结果备注" prop="recycleResultRemark" label-width="120px">
                   <el-input
                     :disabled="ruleForm.idEdit1"
@@ -473,7 +473,7 @@
                     :autosize="{ minRows: 3, maxRows: 6 }"
                   ></el-input>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item label="回收备注" prop="recycleRemark" label-width="120px">
                   <el-input
@@ -555,8 +555,8 @@
                     filterable
                     :disabled="ruleForm.idEdit3"
                   >
-                    <template v-for="item in setTypeList" :key="item.value">
-                      <el-option :label="item.label" :value="item.value" />
+                    <template v-for="item in setTypeList" :key="item.id">
+                      <el-option :label="item.label" :value="item.id" />
                     </template>
                   </el-select>
                 </el-form-item>
@@ -578,7 +578,7 @@
               </el-col>
             </el-row>
             <el-row :gutter="10" class="row-line">
-              <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === 7">
+              <!-- <el-col :span="24" v-if="ruleForm.row!.publishHandleResult === 7">
                 <el-form-item label="处理结果备注" prop="publishResultRemark" label-width="120px">
                   <el-input
                     :disabled="ruleForm.idEdit3"
@@ -590,7 +590,7 @@
                     :autosize="{ minRows: 3, maxRows: 6 }"
                   ></el-input>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item label="发布备注" prop="publishRemark" label-width="120px">
                   <el-input
@@ -672,8 +672,8 @@
                     filterable
                     :disabled="ruleForm.idEdit0"
                   >
-                    <template v-for="item in setTypeList" :key="item.value">
-                      <el-option :label="item.label" :value="item.value" />
+                    <template v-for="item in setTypeList" :key="item.id">
+                      <el-option :label="item.label" :value="item.id" />
                     </template>
                   </el-select>
                 </el-form-item>
@@ -728,7 +728,7 @@
               </el-col>
             </el-row>
             <el-row :gutter="10">
-              <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === 7">
+              <!-- <el-col :span="24" v-if="ruleForm.row!.saleHandleResult === 7">
                 <el-form-item label="处理结果备注" prop="salesResultRemark" label-width="120px">
                   <el-input
                     :disabled="ruleForm.idEdit0"
@@ -740,7 +740,7 @@
                     :autosize="{ minRows: 3, maxRows: 6 }"
                   ></el-input>
                 </el-form-item>
-              </el-col>
+              </el-col> -->
               <el-col :span="24">
                 <el-form-item label="销售备注" prop="salesRemark" label-width="120px">
                   <el-input
@@ -808,6 +808,7 @@ import { findFileType } from "@/utils";
 import { useRouter, useRoute } from "vue-router";
 import { sellKeyMap } from "@/api/modules/dictionary";
 import dayjs from "dayjs";
+import { IOptions } from "@/typings";
 // import { useAuthButtons } from "@/hooks/useAuthButtons";
 
 // const { BUTTONS } = useAuthButtons();
@@ -1001,13 +1002,16 @@ const getDetailInfo = async (id: any) => {
     };
     // 售后
     let afterObj = {};
+
+    console.log(afterInfo, "售后已有数据");
+
     if (afterInfo) {
       afterObj = {
         afterCustomerServiceId: afterInfo?.afterSaleServiceId || userId,
         afterHandleTime: afterInfo?.afterSaleHandleTime || currentDateString,
         afterHandleResult: afterInfo?.afterSaleResultId,
         afterSpecHandleResult: afterInfo?.afterSalesResultRemark,
-        afterCompensationAmount: afterInfo?.afterSalesCompensationAmount,
+        afterSalesCompensationMoney: afterInfo?.afterSalesCompensationMoney,
         afterNewSecurityPhone: afterInfo?.newSecretCellPhone,
         afterNewSecurityPassword: afterInfo?.newPassword,
         afterSalesAssignUsers: afterInfo?.afterSalesAssignUsers,
@@ -1028,6 +1032,7 @@ const getDetailInfo = async (id: any) => {
         afterHandleTime: currentDateString
       };
     }
+
     // 回收
     let recycleObj = {};
     if (recycleInfo) {
@@ -1087,7 +1092,7 @@ const getDetailInfo = async (id: any) => {
         saleHandleCustomerService: saleInfo?.salesServiceId || userId,
         saleHandleTime: saleInfo?.salesHandleTime || currentDateString,
         saleHandleResult: saleInfo?.salesResultId,
-        saleCompensationUserAmount: saleInfo?.salesCompensationAmount,
+        saleCompensationUserMoney: saleInfo?.salesCompensationMoney,
         saleChangeUserNumber: saleInfo?.newAccountId,
         salesResultRemark: saleInfo?.salesResultRemark,
         salesRemark: saleInfo?.salesRemark,
@@ -1115,6 +1120,7 @@ const getDetailInfo = async (id: any) => {
       ...recycleObj,
       ...saleObj
     } as unknown as SalesOrder.AddWorkOrder;
+
     // 账号销售数据信息默认
     onChangeAccount(data.accountId);
   }
@@ -1162,7 +1168,7 @@ const getAllAccountList = async () => {
 getAllAccountList();
 
 // 数据字典-问题类型
-const problemTypeList: Ref = ref([]);
+const problemTypeList = ref<IOptions>([]);
 const getProblemTypesFun = async () => {
   const { data } = await getProblemTypes();
   problemTypeList.value = data?.problemTypes || [];
@@ -1170,7 +1176,7 @@ const getProblemTypesFun = async () => {
 getProblemTypesFun();
 
 // 数据字典-处理结果
-const handleTypeList: Ref = ref([]);
+const handleTypeList = ref<IOptions>([]);
 const getHandleTypesFun = async () => {
   const { data } = await getHandleTypes();
   handleTypeList.value = data?.handleTypes || [];
@@ -1202,7 +1208,7 @@ const handleSubmit = () => {
         basicOrderStar,
         afterHandleResult,
         afterSpecHandleResult,
-        afterCompensationAmount,
+        afterSalesCompensationMoney,
         afterNewSecurityPhone,
         afterNewSecurityPassword,
         afterSalesAssignUsers,
@@ -1228,7 +1234,8 @@ const handleSubmit = () => {
         salesInformDeptId,
         salesAssignUsers,
         publishInformDeptId,
-        publishAssignUsers
+        publishAssignUsers,
+        saleCompensationUserMoney
       } = ruleForm.value.row;
       // 工单的记录id
       let idObj = {};
@@ -1259,14 +1266,17 @@ const handleSubmit = () => {
       // 基本信息
       // 只能新增,不能修改 id为空才能调用
       const { data }: any = !id && (await baseApi!(baseData));
+
+      console.log("afterSalesInformDeptId", afterSalesInformDeptId);
       // 以下只能改当前账号的
       // 回收信息
       (setId.value === 1 || isAdmin.value) &&
+        recycleHandleResult &&
         (await recycleApi({
           id: recycleInfo?.id || -1,
           orderId: recycleInfo?.id || data?.id || id, // 工单id
-          recycleResultId: recycleHandleResult, // 发布处理结果
-          recycleResultRemark: recycleResultRemark, // 销售处理结果备注
+          recycleResultId: recycleHandleResult, // 回收处理结果
+          // recycleResultRemark: recycleResultRemark, // 销售处理结果备注
           recycleRemark: recycleRemark, // 发布备注
           recycleInformDeptId: recycleInformDeptId,
           recycleAssignUsers: recycleAssignUsers,
@@ -1277,15 +1287,16 @@ const handleSubmit = () => {
             };
           }) // 发布提交资源
         }));
-      // 售后信息
 
+      // 售后信息
       (setId.value === 2 || isAdmin.value) &&
+        afterHandleResult &&
         (await afterApi({
           id: afterInfo?.id || -1,
           orderId: afterInfo?.id || data?.id || id,
           afterSaleResultId: afterHandleResult, // 售后处理结果
-          afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
-          afterSalesCompensationAmount: afterCompensationAmount, // 售后赔付金额
+          // afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
+          afterSalesCompensationMoney: afterSalesCompensationMoney, // 售后赔付金额
           newSecretCellPhone: afterNewSecurityPhone, // 新密保手机
           newPassword: afterNewSecurityPassword, // 新密码
           afterSalesAssignUsers: afterSalesAssignUsers,
@@ -1298,13 +1309,15 @@ const handleSubmit = () => {
             };
           }) // 售后提交资源
         }));
+
       // 发布信息
       (setId.value === 3 || isAdmin.value) &&
+        publishHandleResult &&
         (await publishApi({
           id: publishInfo?.id || -1,
           orderId: publishInfo?.id || data?.id || id, // 工单id
           publishResultId: publishHandleResult, // 发布处理结果
-          publishResultRemark: publishResultRemark, // 销售处理结果备注
+          // publishResultRemark: publishResultRemark, // 销售处理结果备注
           publishRemark: publishRemark, // 发布备注
           publishInformDeptId: publishInformDeptId,
           publishAssignUsers: publishAssignUsers,
@@ -1315,15 +1328,17 @@ const handleSubmit = () => {
             };
           }) // 发布提交资源
         }));
+
       // 销售信息
       (setId.value === 0 || isAdmin.value) &&
+        saleHandleResult &&
         (await salesApi({
           id: saleInfo?.id || -1,
           orderId: saleInfo?.id || data?.id || id, // 工单id
           salesResultId: saleHandleResult, // 销售处理结果
-          salesCompensationAmount: saleCompensationUserAmount, // 赔付用户金额
+          salesCompensationMoney: saleCompensationUserMoney, // 赔付用户金额
           newAccountId: saleChangeUserNumber, // 给用户换号: 新账号id
-          salesResultRemark: salesResultRemark, // 销售处理结果备注
+          // salesResultRemark: salesResultRemark, // 销售处理结果备注
           salesRemark: salesRemark, // 销售备注
           salesInformDeptId: salesInformDeptId,
           salesAssignUsers: salesAssignUsers,
@@ -1334,6 +1349,7 @@ const handleSubmit = () => {
             };
           }) // 销售提交资源
         }));
+
       ElMessage.success({ message: `操作成功！` });
       goBack();
     } catch (error) {

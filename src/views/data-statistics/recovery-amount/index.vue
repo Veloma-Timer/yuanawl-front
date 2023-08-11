@@ -13,9 +13,15 @@ import RecoveryListTable from "./modules/recovery-list-table/index.vue";
 // 当前选择的店铺id
 const selectBranchId = ref();
 
-function changeId(id: number) {
-  selectBranchId.value = id;
-}
+const changeId = (id: number) => (selectBranchId.value = id);
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.card {
+  padding: 10px;
+  background-color: var(--el-bg-color-page);
+  .table-box {
+    padding: 0px !important;
+  }
+}
+</style>

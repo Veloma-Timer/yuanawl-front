@@ -90,7 +90,7 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       return { data: problemTypes };
     },
     search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "label", value: "value" },
+    fieldNames: { label: "label", value: "id" },
     width: 180
   },
   // {

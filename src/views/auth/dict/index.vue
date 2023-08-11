@@ -79,7 +79,7 @@ const dictMap = {
   set: { key: "set", name: "部门", desc: "公司部门, 用于用户管理中的所在部门" },
   publishPlatform: { key: "publishPlatform", name: "发布平台", desc: "账号的发布平台, 用于新增账号时选择" },
   problemTypes: { key: "problemTypes", name: "工单问题类型", desc: "用于工单新建时的选择" },
-  handleTypes: { key: "handleTypes", name: "工单处理类型", desc: "用于各部门处理工单时的选择" },
+  handleTypes: { key: "handleTypes", name: "工单处理结果", desc: "用于各部门处理工单时的选择" },
   recycleShop: { key: "recycleShop", name: "回收门店", desc: "用于新增账号时的回收门店选择" },
   system: { key: "system", name: "系统", desc: "用于新增账号时的账号系统选择" },
   grouping: { key: "grouping", name: "回收组", desc: "用于新增账号时的回收组选择" }
@@ -89,16 +89,10 @@ const dictMap = {
 const getDictTable = async (params: Dict.DictParams) => {
   const pageNum = proTable.value.pageable.pageNum;
 
-  const skipCount = !pageNum ? 0 : pageNum - 1;
+  const { data } = await getDictList();
 
-  initParam.maxResultCount = params.pageSize;
-  params.maxResultCount = params.pageSize;
-
-  const { data } = await getDictList({ ...params, skipCount: skipCount * params.pageSize });
-
-  const list = keys(data).map(key => {
-    return dictMap[key];
-  });
+  // @ts-ignore
+  const list = keys(data).map(key => dictMap[key]);
 
   return {
     data: list
@@ -120,10 +114,10 @@ const onDel = async () => {
   await useHandleData(
     delDictItem,
     {
-      key: dictRow.value.key,
-      id: dictItemRow.value.value || dictItemRow.value.id
+      key: dictRow.value!.key,
+      id: dictItemRow.value!.value || dictItemRow.value!.id
     },
-    `确认删除【${dictItemRow.value.label}】`
+    `确认删除【${dictItemRow.value!.label}】`
   );
   proTableItem?.value?.getTableList();
 };
@@ -144,6 +138,7 @@ const dictItemCols: ColumnProps[] = [
 const getDictItemByCodeTable = async () => {
   const { data } = initParam.key ? await getDictItemByCode(initParam.key) : { data: [] };
 
+  // @ts-ignore
   return { data: data[initParam.key] };
 };
 

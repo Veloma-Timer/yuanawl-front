@@ -290,7 +290,8 @@ import { recycleShop, sellKeyMap } from "@/api/modules/dictionary";
 import { checkPhoneNumber } from "@/utils/eleValidate";
 import { decryption } from "@/utils/AESUtil";
 import { useUserStore } from "@/stores/modules/user";
-import { getAllBranch } from "@/api/modules/set";
+import { getAllBranch, IBranch } from "@/api/modules/set";
+import { IOptions, IAccountType } from "@/typings";
 
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
@@ -365,15 +366,15 @@ interface DrawerProps {
 
 let customerMap: Array<any> = [];
 
-const options = date => {
+const options = (date: any) => {
   const accountRecyclerTime = drawerProps.value.row.accountRecyclerTime;
-  const currentDate = new Date(accountRecyclerTime);
+  const currentDate = new Date(accountRecyclerTime!);
   currentDate.setHours(0, 0, 0, 0);
   return date.getTime() < currentDate.getTime();
 };
-const saleOptions = date => {
+const saleOptions = (date: any) => {
   const accountPublisherTimer = drawerProps.value.row.accountPublisherTimer;
-  const currentDate = new Date(accountPublisherTimer);
+  const currentDate = new Date(accountPublisherTimer!);
   currentDate.setHours(0, 0, 0, 0);
   return date.getTime() < currentDate.getTime();
 };
@@ -395,12 +396,11 @@ const setPublisherTime = () => {
 };
 
 // 发布平台
-const publishPlatforms = ref([]);
+const publishPlatforms = ref<IOptions>([]);
 
 const setGroupingId = (id: string) => {
   if (drawerProps.value.title === "编辑") return;
-  generateCode(id).then(res => {
-    const { data } = res;
+  generateCode().then(({ data }) => {
     drawerProps.value.row.accountCode = data;
   });
 };
@@ -449,12 +449,12 @@ const methodsMap = [
   { label: "自主压资料", value: "自主压资料" },
   { label: "买家已投保", value: "买家已投保" }
 ];
-let accountTypeMap: unknown = [];
+const accountTypeMap = ref<IAccountType[]>([]);
 let userMap: unknown = [];
-let stores: unknown = [];
+const stores = ref<IOptions>([]);
 
-const branchMap = ref([]);
-let platformList: unknown = [];
+const branchMap = ref<IBranch[]>([]);
+const platformList = ref<IOptions>([]);
 const publishMap = () => {
   sellKeyMap().then(res => {
     const {
@@ -466,7 +466,7 @@ const publishMap = () => {
     const {
       data: { recycleShop = [] }
     } = res;
-    stores = recycleShop;
+    stores.value = recycleShop;
   });
 };
 
@@ -481,12 +481,12 @@ const setAllList = async () => {
   } = await sellKeyMap();
   const { data } = await getGroupListMap({ key: "grouping" });
   customerMap = data.grouping;
-  platformList = publishPlatform;
-  drawerProps.value.row.groupingId = data.grouping[0].id;
-  setGroupingId(data.grouping[0].id);
-  accountTypeMap = res.data;
+  platformList.value = publishPlatform;
+  drawerProps.value.row.groupingId = data.grouping[0].id!;
+  setGroupingId(data.grouping[0].id!);
+  accountTypeMap.value = res.data;
   userMap = reloads.data;
-  await publishMap();
+  publishMap();
   const { data: branchList } = await getAllBranch();
   branchMap.value = branchList;
   const obj = JSON.parse(decryption("token", token));

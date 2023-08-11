@@ -120,6 +120,6 @@ export const typeCode = (params: any) => {
   return http.get(`${baseUrl}/monitor`, params, { noLoading: true });
 };
 //  生成回收编码
-export const generateCode = () => {
+export const generateCode = (): Promise<{ data: string }> => {
   return http.get(PORT3 + `/sys_code/generate/code`, {}, { noLoading: true });
 };

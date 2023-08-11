@@ -11,6 +11,6 @@ export const sellKeyGrouping = (): Promise<{ data: { grouping: IOptions } }> => 
   return http.get(`${baseUrl}?key=grouping`, { noLoading: true });
 };
 // 所谓门店
-export const recycleShop = () => {
+export const recycleShop = (): Promise<{ data: { recycleShop: IOptions } }> => {
   return http.get(`${baseUrl}?key=recycleShop`, { noLoading: true });
 };

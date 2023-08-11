@@ -126,7 +126,6 @@ watch(
 const beforeUpload: UploadProps["beforeUpload"] = rawFile => {
   const imgSize = rawFile.size / 1024 / 1024 < props.fileSize;
   const imgType = props.fileType.includes(rawFile.type as File.FileMimeType);
-  console.log("type", props.fileType, rawFile.type);
   if (!imgType)
     ElNotification({
       title: "温馨提示",

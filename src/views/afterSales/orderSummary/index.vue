@@ -4,9 +4,9 @@
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
         <el-button type="primary" @click="operatorOrder('新增工单')" v-if="BUTTONS.add" :icon="CirclePlus">新增工单</el-button>
-        <!-- <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button> -->
-        <!-- <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入Excel</el-button> -->
-        <!-- <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出</el-button> -->
+        <el-button type="primary" @click="batchAdd('下载')" :icon="Download" plain>下载导入模板</el-button>
+        <el-button type="primary" @click="batchAdd('导入')" v-if="BUTTONS.import" :icon="Upload" plain>导入Excel</el-button>
+        <el-button type="primary" @click="batchExport()" v-if="BUTTONS.export" :icon="Download" plain>导出Excel</el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="{ row }">
@@ -15,7 +15,7 @@
           >处理工单
         </el-button>
         <el-button type="primary" link @click="openCheck(row)" v-if="BUTTONS.check" :icon="EditPen">审核</el-button>
-        <el-button type="primary" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
+        <el-button type="danger" link @click="delOrder(row.id, row.orderCode)" v-if="BUTTONS.del" :icon="Delete">删除</el-button>
       </template>
     </ProTable>
     <OrderCheck ref="orderCheckRef" />
@@ -28,7 +28,6 @@ import { SalesOrder } from "@/api/interface";
 import ProTable from "@/components/ProTable/index.vue";
 import OrderCheck from "@/views/afterSales/modules/order-check/index.vue";
 import { ProTableInstance, ColumnProps } from "@/components/ProTable/interface";
-// import { getAllBranch } from "@/api/modules/set";
 import { getSalesList, delSalesOrder, orderTemplate, orderUpload, orderExport } from "@/api/modules/order";
 import { INSURE_STATUS, CHECK_RESULT } from "@/public/constant"; // CHECK_RESULT, ORDER_STATUS,
 import { useHandleData } from "@/hooks/useHandleData";
@@ -97,18 +96,9 @@ const columns: ColumnProps<SalesOrder.ResSalesList>[] = [
       return { data: problemTypes };
     },
     search: { el: "select", props: { filterable: true } },
-    fieldNames: { label: "label", value: "value" },
+    fieldNames: { label: "label", value: "id" },
     width: 180
   },
-  // {
-  //   prop: "accountNumber",
-  //   label: "账号",
-  //   search: { el: "input" },
-  //   width: 180,
-  //   render: scope => {
-  //     return <span>{scope.row?.account?.accountNumber || "-"}</span>;
-  //   }
-  // },
   {
     prop: "reportPersonId",
     label: "上报人姓名",
