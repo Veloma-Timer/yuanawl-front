@@ -297,7 +297,7 @@ let branchMap: unknown = [];
 const setAllList = async () => {
   const res = await getAllList();
   const reloads = await getUserAll();
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   accountTypeMap = res.data;
   userMap = reloads.data;
   branchMap = data;

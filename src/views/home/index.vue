@@ -210,7 +210,7 @@ const getReuseList = async id => {
 };
 // 获取门店
 const branchAllList = async () => {
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   cityList.value = [...cityList.value, ...data];
   cityName.value = data[0].id;
   params.value = {

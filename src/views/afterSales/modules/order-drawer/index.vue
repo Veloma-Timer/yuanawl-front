@@ -213,7 +213,7 @@ const insureList = [
 type BranchObj = { branchName: string; id: number };
 const branchList = ref<BranchObj[]>([]);
 const getBranchList = async () => {
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   branchList.value = data;
 };
 getBranchList();

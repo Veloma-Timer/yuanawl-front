@@ -17,7 +17,6 @@ import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { setValues } from "@/views/home/modules/homeUtis";
 const groupRef = ref<HTMLElement>();
-const myArrayRef = toRef(props, "listArr");
 const props = defineProps({
   listArr: {
     type: Array,
@@ -36,12 +35,8 @@ const props = defineProps({
     default: ""
   }
 });
-// const getFixed = (str: string) => {
-//   if (str) {
-//     return "￥" + parseFloat(str).toFixed(2);
-//   }
-//   return "--";
-// };
+const myArrayRef = toRef(props, "listArr");
+
 const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmount: number[]) => {
   nextTick(() => {
     let myChart: echarts.ECharts = echarts.init(groupRef.value as HTMLElement);
@@ -98,7 +93,7 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           name: "完成数量",
           type: "line",
           tooltip: {
-            valueFormatter: function (value) {
+            valueFormatter: (value: any) => {
               return value;
             }
           },
@@ -108,7 +103,7 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           name: nameValue,
           type: "line",
           tooltip: {
-            valueFormatter: function (value) {
+            valueFormatter: (value: any) => {
               return value;
             }
           },
@@ -118,7 +113,7 @@ const groupGet = (amount: number[], name: string[], ringAmount: number[], yoyAmo
           name: "往年同期",
           type: "line",
           tooltip: {
-            valueFormatter: function (value) {
+            valueFormatter: (value: any) => {
               return value;
             }
           },
@@ -154,7 +149,6 @@ watch(
   width: 100%;
   height: 465px;
   padding: 20px;
-  margin: 32px 0 36px;
   background: #ffffff;
   border-radius: 4px;
 }

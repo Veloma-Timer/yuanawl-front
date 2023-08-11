@@ -103,7 +103,7 @@ type BranchObj = { branchName: string; id: number };
 const branchList = ref<BranchObj[]>([]);
 const currentCitySelect = ref("");
 const getAllBranchData = async () => {
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   branchList.value = data?.map(item => {
     return {
       branchName: item.branchName,
@@ -241,7 +241,7 @@ let date = computed(() => {
 });
 
 let legendName = computed(() => {
-  return "销售";
+  return "数量";
 });
 
 watch(

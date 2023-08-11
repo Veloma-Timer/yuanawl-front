@@ -62,7 +62,7 @@ const saleData: Ref = ref([]);
 const selectSale: Ref = ref({});
 const selectIndex: Ref = ref(0);
 const chatData: Ref = ref({});
-let charTitle = ref("本日销售总额");
+const charTitle = ref("本日销售总额");
 
 const getTodaySales = async (branchId: number, date: number, selectSale?: SelectSale) => {
   const {
@@ -79,7 +79,7 @@ const getTodaySales = async (branchId: number, date: number, selectSale?: Select
     },
     {
       title: `${currentTimeSelect.value}商品加价率`,
-      value: markupPercentage
+      value: markupPercentage + "%"
     },
     {
       title: "出售渠道个数",
@@ -103,7 +103,7 @@ type BranchObj = { branchName: string; id: number };
 const branchList = ref<BranchObj[]>([]);
 const currentCitySelect = ref("");
 const getAllBranchData = async () => {
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   branchList.value = data?.map(item => {
     return {
       branchName: item.branchName,
@@ -195,6 +195,15 @@ function initEcharts(xData: any[], yData: any[], legendName: string) {
         emphasis: {
           focus: "series"
         },
+        tooltip: {
+          valueFormatter: (value: any) => {
+            if (selectSale.value.title.indexOf("商品加价率") > -1) {
+              return value + "%";
+            } else {
+              return value;
+            }
+          }
+        },
         data: yData
       }
     ]
@@ -241,12 +250,14 @@ let date = computed(() => {
 });
 
 let legendName = computed(() => {
-  if ([`${currentTimeSelect.value}销售总额`, `${currentTimeSelect.value}商品加价率`].includes(selectSale.value.title)) {
-    return "销售";
+  if ([`${currentTimeSelect.value}销售总额`].includes(selectSale.value.title)) {
+    return "金额";
   } else if ([`${currentTimeSelect.value}订单总量`].includes(selectSale.value.title)) {
-    return "订单";
+    return "数量";
   } else if (["出售渠道个数"].includes(selectSale.value.title)) {
-    return "渠道";
+    return "数量";
+  } else if ([`${currentTimeSelect.value}商品加价率`].includes(selectSale.value.title)) {
+    return "加价率";
   } else {
     return "";
   }

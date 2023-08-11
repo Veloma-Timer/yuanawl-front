@@ -1,5 +1,5 @@
 <template>
-  <div class="home-content" :class="className">
+  <div class="home-content mb-[20px]" :class="className">
     <div class="home-head flx-justify-between">
       <div class="title">
         {{ props.title }}

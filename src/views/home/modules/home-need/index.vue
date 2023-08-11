@@ -108,7 +108,6 @@ watch(
   border-radius: 6px;
 
   .title {
-    font-size: 24px;
     font-weight: normal;
     color: #343434;
   }

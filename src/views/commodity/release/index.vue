@@ -28,7 +28,7 @@
       </template>
       <template #operation="scope">
         <el-button
-          v-if="BUTTONS.add && scope.row.isSales === '0'"
+          v-if="BUTTONS.add && scope.row.isSales == '0'"
           link
           type="primary"
           :icon="CirclePlus"
@@ -79,6 +79,9 @@ const proTable = ref<ProTableInstance>();
 // 如果表格需要初始化请求参数，直接定义传给 ProTable(之后每次请求都会自动带上该参数，此参数更改之后也会一直带上，改变此参数会自动刷新表格数据)
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
+
+console.log(BUTTONS.value);
+
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {
@@ -357,8 +360,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
       el: "date-picker",
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
-  }
-  // { prop: "operation", label: "操作", fixed: "right", width: 300 }
+  },
+  { prop: "operation", label: "操作", fixed: "right", width: 300 }
 ];
 const onExport = async () => {
   const obj = { ...proTable.value?.searchParam, ...proTable.value?.pageable };

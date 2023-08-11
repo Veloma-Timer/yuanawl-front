@@ -10,12 +10,12 @@
       :hide-required-asterisk="drawerProps.isView"
     >
       <el-form-item label="账号编码" prop="accountCode">
-        <el-select v-model="drawerProps.row!.accountCode" placeholder="请选择账户" filterable disabled>
+        <el-select v-model="drawerProps.row!.accountCode" placeholder="请选择账户" class="w-full" filterable disabled>
           <el-option v-for="item in customerMap" :key="item.id" :label="item.accountCode" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="发布人" prop="accountPublisherId">
-        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择发布人" filterable disabled>
+        <el-select v-model="drawerProps.row!.accountPublisherId" placeholder="请选择发布人" class="w-full" filterable disabled>
           <el-option v-for="item in transCatUploadedMap" :key="item.id" :label="item.userName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -23,6 +23,7 @@
         <el-date-picker
           v-model="drawerProps.row!.accountPublisherTimer"
           format="YYYY-MM-DD hh:mm:ss"
+          class="w-full"
           disabled
           value-format="YYYY-MM-DD hh:mm:ss"
           type="datetime"
@@ -52,7 +53,7 @@
         <!--/>-->
       </el-form-item>
       <el-form-item label="发布平台" prop="publishPlatform">
-        <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" filterable multiple>
+        <el-select v-model="drawerProps.row!.publishPlatform" placeholder="请选择发布平台" class="w-full" filterable multiple>
           <el-option v-for="item in handleMap" :key="item.value" :label="item.label" :value="item.value!" />
         </el-select>
       </el-form-item>

@@ -2,13 +2,13 @@
   <div class="wrap">
     <div class="left">
       <div class="content">
-        <template v-if="selectIndex === 2">
+        <!-- <template v-if="selectIndex === 2">
           <el-select v-model="selectTypeId" placeholder="请选择" class="type-input" size="large" filterable>
             <template v-for="item in allTypeList" :key="item.id">
               <el-option :label="item.typeName" :value="item.id" />
             </template>
           </el-select>
-        </template>
+        </template> -->
         <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate" class="date-radio">
           <template v-for="item in tabDateList" :key="item">
             <el-radio-button :label="item" />
@@ -124,7 +124,7 @@ type BranchObj = { branchName: string; id: number };
 const branchList = ref<BranchObj[]>([]);
 const currentCitySelect = ref("");
 const getAllBranchData = async () => {
-  const { data } = await getAllBranch({});
+  const { data } = await getAllBranch();
   branchList.value = data?.map(item => {
     return {
       branchName: item.branchName,

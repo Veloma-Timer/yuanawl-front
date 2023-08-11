@@ -487,7 +487,7 @@ const setAllList = async () => {
   accountTypeMap = res.data;
   userMap = reloads.data;
   await publishMap();
-  const { data: branchList } = await getAllBranch({});
+  const { data: branchList } = await getAllBranch();
   branchMap.value = branchList;
   const obj = JSON.parse(decryption("token", token));
   drawerProps.value.row.branchId = obj.user.userBranchId;

@@ -1,5 +1,5 @@
 <template>
-  <div class="home-content" :class="className">
+  <div class="home-content mb-[20px] mt-[20px]" :class="className">
     <div class="home-head flx-justify-between">
       <div class="title">
         {{ props.title }}
@@ -17,7 +17,6 @@ import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { setValues } from "@/views/home/modules/homeUtis";
 const groupRef = ref<HTMLElement>();
-const myArrayRef = toRef(props, "listArr");
 const props = defineProps({
   listArr: {
     type: Array,
@@ -32,6 +31,8 @@ const props = defineProps({
     default: ""
   }
 });
+const myArrayRef = toRef(props, "listArr");
+
 const getFixed = (str: string) => {
   if (str) {
     return parseFloat(str).toFixed(2);
@@ -89,7 +90,7 @@ const groupGet = (data: number[], name: number[]) => {
           name: "数量",
           type: "bar",
           tooltip: {
-            valueFormatter: function (value) {
+            valueFormatter: (value: any) => {
               return getFixed(value);
             }
           },
@@ -121,7 +122,6 @@ watch(
   width: 100%;
   height: 465px;
   padding: 20px;
-  margin: 32px 0 36px;
   background: #ffffff;
   border-radius: 4px;
   //box-shadow: 0 3px 6px 0 rgb(0 0 0 / 15%);
