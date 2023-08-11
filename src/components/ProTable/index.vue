@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts" name="ProTable">
-import { ref, watch, computed, provide, onMounted } from "vue";
+import { ref, watch, computed, provide, onMounted, nextTick } from "vue";
 import { ElTable } from "element-plus";
 import { useTable } from "@/hooks/useTable";
 import { useSelection } from "@/hooks/useSelection";
@@ -223,7 +223,7 @@ if (currentColoumIndex > -1) {
 }
 const tableColumns = ref<ColumnProps[]>(cachecColumns);
 
-const dropCol = ref<ColumnProps[]>(deepcopy(cachecColumns));
+const dropCol = ref<ColumnProps[]>(tableColumns.value);
 
 // 初始化请求
 onMounted(() => {
