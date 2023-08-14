@@ -21,7 +21,7 @@ const getTableList = async (params: any) => {
 // 表格配置项
 const columns: ColumnProps<Set.ResSalesList>[] = [
   { type: "selection", fixed: "left", width: 80 },
-  { type: "index", label: "日志编号", width: 100 },
+  { prop: "id", label: "唯一ID", width: 100 },
   {
     prop: "sysModule",
     label: "系统模块",
@@ -33,10 +33,8 @@ const columns: ColumnProps<Set.ResSalesList>[] = [
   {
     prop: "handleType",
     label: "操作类型",
-    search: { el: "input" },
-    render: scope => {
-      return <span style={{ color: "#FFBA00" }}>{scope.row.handleType || "--"}</span>;
-    }
+    tag: true,
+    search: { el: "input" }
   },
   {
     prop: "handleUser",
