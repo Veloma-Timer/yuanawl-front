@@ -206,6 +206,7 @@ import { getAllBranch } from "@/api/modules/set";
 import { getSetSystemList, typeCode } from "@/api/modules/commodity";
 import { checkPhoneNumber } from "@/utils/eleValidate";
 import { IOptions, IAccountType } from "@/typings";
+import { User } from "@/api/interface";
 
 const validatePass = (rule: any, value: any, callback: any) => {
   const params = {
@@ -229,8 +230,8 @@ const rules = reactive({
   accountTitle: [{ required: true, message: "必填项不能为空" }],
   branchId: [{ required: true, message: "必填项不能为空" }],
   accountCode: [
-    { required: true, message: "必填项不能为空" },
-    { validator: validatePass, trigger: "blur" }
+    { required: true, message: "必填项不能为空" }
+    // { validator: validatePass, trigger: "blur" }
   ],
   accountType: [{ required: true, message: "必填项不能为空" }],
   qq: [
@@ -308,7 +309,7 @@ const isSaveMap = [
 const systemMap: Ref = ref([]);
 
 // 回收人
-const transCatUploadedMap = ref([]);
+const transCatUploadedMap = ref<User.ResUser[]>([]);
 // 账号分类
 const accountTypeMap = ref<IAccountType[]>([]);
 // 门店

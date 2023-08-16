@@ -86,6 +86,7 @@ export const todayPublishs = (branchId: number, date: number) => {
   return http.get<Data.TodayPublish>(`${PORT3}/sys_statistics/publish?branchId=${branchId}&date=${date}`);
 };
 // 数据统计-回收数据-下边表格的
+
 export const baseAccountRecyle = (params: any, branchId: number) => {
   return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_recycle?branchId=${branchId}`, params);
 };

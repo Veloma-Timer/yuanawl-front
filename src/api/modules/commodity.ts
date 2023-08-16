@@ -1,6 +1,7 @@
 import { PORT3 } from "@/api/config/servicePort";
 import http from "@/api";
 import { Data } from "@/api/interface";
+import { IOptions } from "@/typings";
 
 const baseUrl: string = PORT3 + "/base_account";
 
@@ -111,8 +112,8 @@ export const orderList = (params: any) => {
   return http.get(`${PORT3}`, params);
 };
 // 数据字典-系统数据列表
-export const getSetSystemList = () => {
-  return http.get<Data.SetList>(`${PORT3}/sys_map?key=system`);
+export const getSetSystemList = (): Promise<{ data: { system: IOptions } }> => {
+  return http.get(`${PORT3}/sys_map?key=system`);
 };
 
 /** 账户编号验证 **/

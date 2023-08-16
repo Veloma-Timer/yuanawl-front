@@ -135,7 +135,8 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
     search: {
       el: "select-v2",
       props: {
-        filterable: true
+        filterable: true,
+        "allow-create": true
       },
       slotName: true
     },

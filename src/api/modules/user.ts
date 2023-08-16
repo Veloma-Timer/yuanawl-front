@@ -81,7 +81,7 @@ export const getGroupListMap = <T extends string>(params: { key: string }): Prom
   return http.get(`${PORT3}/sys_map`, params, { noLoading: true });
 };
 // 获取所有用户
-export const getUserAll = () => {
+export const getUserAll = (): Promise<{ data: User.ResUser[] }> => {
   return http.get(`${baseUrl}/all`, {}, { noLoading: true });
 };
 // 获取不同部门的用户

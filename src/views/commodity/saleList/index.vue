@@ -160,7 +160,8 @@ const columns: ColumnProps<Commodity.Sales>[] = [
     search: {
       el: "select-v2",
       props: {
-        filterable: true
+        filterable: true,
+        "allow-create": true
       },
       slotName: true
     },

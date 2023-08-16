@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { showFullScreenLoading, tryHideFullScreenLoading } from "@/config/serviceLoading";
 import { LOGIN_URL } from "@/config";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElNotification } from "element-plus";
 import { ResultData } from "@/api/interface";
 import { ResultEnum } from "@/enums/httpEnum";
 import { checkStatus } from "./helper/checkStatus";
@@ -62,6 +62,15 @@ class RequestHttp {
           router?.replace(LOGIN_URL);
           ElMessage.error(data.msg);
           return Promise.reject(data);
+        }
+        if (data?.data === "warning") {
+          ElNotification({
+            title: "编码变更",
+            message: data.message,
+            type: "warning",
+            duration: 0
+          });
+          return data;
         }
         if (data.success === undefined && data.code === undefined) return data;
         // 如果data本身是空则也代表成功

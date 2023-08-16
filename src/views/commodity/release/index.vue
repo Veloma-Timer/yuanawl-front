@@ -125,7 +125,8 @@ const columns: ColumnProps<Commodity.Release>[] = [
     search: {
       el: "select-v2",
       props: {
-        filterable: true
+        filterable: true,
+        "allow-create": true
       },
       slotName: true
     },
