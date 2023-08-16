@@ -19,7 +19,11 @@
         <homeGroup :list-arr="statisticsObj?.recycleRatio" class-name="maintain" title="账号回收占比" />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台回收额排名" :salas-ranking-arr="statisticsObj?.recycleRanking" :header="['名字', '金额', '数量']" />
+        <nameRight
+          title="平台回收数量排名"
+          :salas-ranking-arr="statisticsObj?.recycleRanking"
+          :header="['名字', '金额', '数量']"
+        />
       </div>
     </div>
     <div class="home-name mt-[20px]">

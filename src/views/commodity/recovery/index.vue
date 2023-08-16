@@ -174,7 +174,7 @@ const columns: ColumnProps<Commodity.Recovery>[] = [
   },
   {
     prop: "groupingId",
-    label: "回收组",
+    label: "分组",
     width: 120,
     search: { el: "select" },
     enum: async () => {
