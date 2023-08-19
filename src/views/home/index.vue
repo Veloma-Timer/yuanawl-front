@@ -72,10 +72,11 @@ import { shortcuts, parseTime } from "@/utils";
 
 interface Item {
   branchName: string;
-  id: number;
+  id: number | undefined;
 }
 
 const institutionList: Item[] = [
+  { branchName: "全部", id: undefined },
   { branchName: "销售", id: 0 },
   { branchName: "回收", id: 1 },
   { branchName: "发布", id: 2 },
@@ -90,7 +91,7 @@ const paramsHome = ref<IStatistics>();
 const token = userObj();
 
 const cityList = ref<{ branchName: string; id: number }[]>([]);
-const institution = ref<number>(token.setId);
+const institution = ref<number | undefined>(token.isAdmin ? undefined : token.setId);
 const scrollNum = ref<number>();
 
 // const userRoleId = ref(0);
