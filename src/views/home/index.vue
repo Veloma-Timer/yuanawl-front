@@ -91,7 +91,7 @@ const paramsHome = ref<IStatistics>();
 const token = userObj();
 
 const cityList = ref<{ branchName: string; id: number }[]>([]);
-const institution = ref<number | undefined>(token.isAdmin ? undefined : token.setId);
+const institution = ref<number | undefined>(token.isAdmin == "1" ? undefined : token.setId);
 const scrollNum = ref<number>();
 
 // const userRoleId = ref(0);
