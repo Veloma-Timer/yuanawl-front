@@ -3,10 +3,11 @@
     <div class="home-crud">
       <div class="title">{{ props.title }}</div>
       <div class="crud-list">
-        <homeNameList :await-work-order="awaitWorkOrder" />
+        <homeNameList v-if="awaitWorkOrder" :await-work-order="awaitWorkOrder" />
+        <FullScreenSkeleton v-else />
       </div>
     </div>
-    <homeNeed :list-arr="publishUnitTypesObj?.typeList" title="售后工单类型">
+    <homeNeed v-if="publishUnitTypesObj?.typeList" :list-arr="publishUnitTypesObj?.typeList" title="售后工单类型">
       <div>
         <span>星级</span>
         <el-select v-model="publishUnitTypesObj.typeId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
@@ -14,13 +15,21 @@
         </el-select>
       </div>
     </homeNeed>
-    <homeNeed :list-arr="afterPublishUnitObj?.afterList" title="售后组数据对比">
+    <FullScreenSkeleton v-else />
+    <homeNeed v-if="afterPublishUnitObj?.afterList" :list-arr="afterPublishUnitObj?.afterList" title="售后组数据对比">
       <span>问题类型</span>
       <el-select v-model="afterPublishUnitObj.afterId" class="m-2" clearable placeholder="查看数据" @change="setAfter">
         <el-option v-for="item in workOrderObj?.afterSalesSetComparison" :key="item.id" :label="item.name" :value="item.id" />
       </el-select>
     </homeNeed>
-    <Chan :list-arr="workOrderObj?.afterSales" :branch-name="branchNames" title="售后组数据对比" />
+    <FullScreenSkeleton v-else />
+    <Chan
+      v-if="workOrderObj?.afterSales"
+      :list-arr="workOrderObj?.afterSales"
+      :branch-name="branchNames"
+      title="售后组数据对比"
+    />
+    <FullScreenSkeleton v-else />
   </div>
 </template>
 <script setup lang="ts">
@@ -29,50 +38,46 @@ import Chan from "@/views/home/modules/home-need/chan.vue";
 import homeNameList from "@/views/home/modules/home-nameList/index.vue";
 import homeNeed from "@/views/home/modules/home-group/need.vue";
 import { HomeSet } from "@/api/interface";
-// 处理数据
-const props = withDefaults(
-  defineProps<{
-    workOrderObj: HomeSet.IAfterSalesStatistics;
-    branchName: string;
-    branchNames: string;
-    title: string;
-  }>(),
-  {
-    branchName: "今日",
-    branchNames: "今日"
-  }
-);
+import FullScreenSkeleton from "../../components/FullScreenSkeleton.vue";
 
-let publishUnitTypesObj = ref({
+// 处理数据
+const props = defineProps<{
+  workOrderObj: HomeSet.IAfterSalesStatistics;
+  branchName: string;
+  branchNames: string;
+  title: string;
+}>();
+
+const publishUnitTypesObj = ref({
   typeList: [],
   typeId: ""
 });
-let afterPublishUnitObj = ref({
+const afterPublishUnitObj = ref({
   afterList: [],
   afterId: ""
 });
 const setTypes = (status: string) => {
   const publishSetComparison = props.workOrderObj.workOrderTypes;
-  const values = publishSetComparison.find(item => item.id === status);
+  const values = publishSetComparison.find(item => item?.id === status);
   const obj = {
     ...publishUnitTypesObj.value,
-    typeList: values.data,
-    typeId: values.id
+    typeList: values?.data,
+    typeId: values?.id
   };
   return (publishUnitTypesObj.value = obj);
 };
 const setAfter = (status: string) => {
   const publishSetComparison = props.workOrderObj.afterSalesSetComparison;
-  const values = publishSetComparison.find(item => item.id === status);
+  const values = publishSetComparison.find(item => item?.id === status);
   const obj = {
     ...afterPublishUnitObj.value,
-    afterList: values.data,
-    afterId: values.id
+    afterList: values?.data,
+    afterId: values?.id
   };
   return (afterPublishUnitObj.value = obj);
 };
 let awaitWorkOrder = ref({});
-const setCrud = obj => {
+const setCrud = (obj: any) => {
   awaitWorkOrder.value = obj.awaitWorkOrder;
   if (obj.workOrderTypes.length > 0) {
     publishUnitTypesObj.value = {
@@ -92,9 +97,9 @@ const setCrud = obj => {
 
 watch(
   () => props.workOrderObj,
-  count => {
-    /* ... */
-    setCrud(count);
+  data => {
+    if (!data) return;
+    setCrud(data);
   },
   { deep: true, immediate: true }
 );

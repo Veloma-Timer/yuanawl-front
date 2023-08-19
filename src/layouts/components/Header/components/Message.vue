@@ -64,7 +64,6 @@ const workList = async () => {
   const {
     awaitWorkOrder: { pendingList }
   } = await getHomeWorkOrders({
-    date: 2,
     branchId: obj.user.branchId,
     userId: obj.user.id
   });

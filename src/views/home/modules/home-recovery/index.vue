@@ -5,64 +5,88 @@
       <div class="crud-list">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
           <DigitBoard
+            v-if="statisticsObj"
             :title="namesList[index]"
             :value="item.current"
             :year-value="item.year"
             :chain-value="item.yesterday"
             :date="branchName"
           />
+          <DigitBoardSkeleton v-else />
         </div>
       </div>
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="statisticsObj?.recycleRatio" class-name="maintain" title="账号回收占比" />
+        <HomeGroup
+          v-if="statisticsObj?.recycleRatio"
+          :list-arr="statisticsObj?.recycleRatio"
+          class-name="maintain"
+          title="账号回收占比"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
       <div class="home-name-right">
-        <nameRight
+        <NameRight
+          v-if="statisticsObj?.recycleRanking"
           title="平台回收数量排名"
           :salas-ranking-arr="statisticsObj?.recycleRanking"
           :header="['名字', '金额', '数量']"
         />
+        <HalfScreenSkeleton v-else />
       </div>
     </div>
     <div class="home-name mt-[20px]">
       <div class="home-name-left">
-        <homeChat :list-arr="statisticsObj?.recycleGameType" class-name="maintain" title="游戏类型" />
+        <HomeChat
+          v-if="statisticsObj?.recycleGameType"
+          :list-arr="statisticsObj?.recycleGameType"
+          class-name="maintain"
+          title="游戏类型"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
       <div class="home-name-right">
-        <homeChat :list-arr="statisticsObj?.recycleService" class-name="maintain" title="区服" />
+        <HomeChat
+          v-if="statisticsObj?.recycleService"
+          :list-arr="statisticsObj?.recycleService"
+          class-name="maintain"
+          title="区服"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
     </div>
     <div class="home-name">
       <div class="home-name-left mt-[20px]">
-        <nameRight
+        <NameRight
           title="回收问题账号"
           :salas-ranking-arr="statisticsObj?.recycleRankingByProblem"
           :header="['工单类型', '金额', '数量']"
         />
       </div>
     </div>
-    <homeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
-    <homeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="回收渠道对比">
+    <HomeGroup :list-arr="statisticsObj?.recycleSetComparison" title="回收组数据对比" />
+    <HomeChain :list-arr="statisticsObj?.resRecycle" :branch-name="branchNames" title="回收渠道对比">
       <div>
         <el-select v-model="channelId" class="m-2" clearable placeholder="查看数据" @change="setTypes">
-          <el-option v-for="item in statisticsObj?.channelList" :key="item.id" :label="item.label" :value="item.id" />
+          <el-option v-for="item in statisticsObj?.channelList" :key="item.id" :label="item.label" :value="item.id!" />
         </el-select>
       </div>
-    </homeChain>
+    </HomeChain>
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import homeGroup from "@/views/home/modules/home-group/index.vue";
-import nameRight from "@/views/home/modules/nameRight/index.vue";
+import HomeGroup from "@/views/home/modules/home-group/index.vue";
+import NameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import HomeChat from "@/views/home/modules/home-recovery/homeChat.vue";
-import homeChain from "@/views/home/modules/home-chain/index.vue";
+import HomeChain from "@/views/home/modules/home-chain/index.vue";
 import DigitBoard from "@/views/home/components/DigitBoard.vue";
 import type { IDigitBoard } from "@/typings";
 import currency from "currency.js";
+import DigitBoardSkeleton from "../../components/DigitBoardSkeleton.vue";
+import HalfScreenSkeleton from "../../components/HalfScreenSkeleton.vue";
 
 // 2、定义发射给父组件的方法
 const emits = defineEmits(["getReuseList"]);
@@ -81,15 +105,13 @@ const props = withDefaults(
   }
 );
 const crudListMap = ref<IDigitBoard[]>([]);
-const setTypes = id => {
-  emits("getReuseList", id);
-};
+const setTypes = (id: any) => emits("getReuseList", id);
 const setCrud = (obj: HomeSet.IRecycleStatistics) => {
   crudListMap.value = [
     {
-      current: currency(obj.recycleMoney).format({ symbol: "¥" }),
-      yesterday: obj.ayerRecycleMoney,
-      year: obj.yoyRecycleMoney
+      current: currency(obj?.recycleMoney).format({ symbol: "¥" }),
+      yesterday: obj?.ayerRecycleMoney,
+      year: obj?.yoyRecycleMoney
     },
 
     {
@@ -132,10 +154,10 @@ const setCrud = (obj: HomeSet.IRecycleStatistics) => {
 };
 watch(
   () => props.statisticsObj,
-  count => {
+  data => {
     crudListMap.value = [];
-    /* ... */
-    setCrud(count);
+    if (!data) return;
+    setCrud(data);
   },
   { deep: true, immediate: true }
 );

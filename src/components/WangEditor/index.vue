@@ -108,7 +108,6 @@ props.editorConfig.MENU_CONF!["uploadImage"] = {
 
 // 图片上传前判断
 const uploadImgValidate = (file: File): boolean => {
-  console.log(file);
   return true;
 };
 
@@ -134,7 +133,6 @@ props.editorConfig.MENU_CONF!["uploadVideo"] = {
 
 // 视频上传前判断
 const uploadVideoValidate = (file: File): boolean => {
-  console.log(file);
   return true;
 };
 

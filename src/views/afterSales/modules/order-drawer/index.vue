@@ -287,7 +287,6 @@ const handleSubmit = () => {
 
 const edit = () => {
   drawerProps.value.isView = false;
-  console.log("编辑");
 };
 
 const addProcess = () => {

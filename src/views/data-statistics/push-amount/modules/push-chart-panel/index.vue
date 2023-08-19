@@ -2,11 +2,28 @@
   <div class="wrap">
     <div class="left">
       <div class="content">
-        <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate" class="date-radio">
+        <!-- <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate" class="date-radio">
           <template v-for="item in tabDateList" :key="item">
             <el-radio-button :label="item" />
           </template>
-        </el-radio-group>
+        </el-radio-group> -->
+        <div class="flex flex-row justify-between items-center bg-slate-100 rounded-xl p-2">
+          <h6 class="text-sm">{{ selectSale.title }}</h6>
+          <div>
+            <el-date-picker
+              v-model="dateRange"
+              unlink-panels
+              type="daterange"
+              format="YYYY-MM-DD"
+              range-separator="To"
+              end-placeholder="结束时间"
+              value-format="YYYY-MM-DD"
+              start-placeholder="开始时间"
+              :shortcuts="shortcuts"
+              @change="setValue"
+            />
+          </div>
+        </div>
         <div ref="echartsRef" class="sale-echarts"></div>
       </div>
     </div>
@@ -44,8 +61,14 @@ import { useEcharts } from "@/hooks/useEcharts";
 import { getAllBranch } from "@/api/modules/set";
 import { todayPublishs } from "@/api/modules/order";
 import { Data } from "@/api/interface/index";
+import { parseTime, shortcuts } from "@/utils";
 
 const emit = defineEmits(["change-id"]);
+
+const dateRange = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
+
+const setValue = (date: [string, string]) => (dateRange.value = date);
+
 const echartsRef = ref<HTMLElement>();
 // 时间范围选择
 const currentTimeSelect = ref<string>("本日");
@@ -62,12 +85,12 @@ const saleData: Ref = ref([]);
 const selectSale: Ref = ref({});
 const selectIndex: Ref = ref(0);
 const chatData: Ref = ref({});
-let charTitle = ref("本日销售总额");
+// let charTitle = ref("本日销售总额");
 
-const getTodaySales = async (branchId: number, date: number, selectSale?: SelectSale) => {
+const getTodaySales = async (branchId: number) => {
   const {
     data: { tenTenTotalNumber, webTotalNumber, cycleTotalNumber, totalNumber, chat }
-  } = await todayPublishs(branchId, date);
+  } = await todayPublishs(branchId, dateRange.value);
   saleData.value = [
     {
       title: `转转发布总数`,
@@ -86,17 +109,17 @@ const getTodaySales = async (branchId: number, date: number, selectSale?: Select
       value: totalNumber
     }
   ];
-  if (selectSale) {
-    charTitle.value = selectSale.title;
-  } else {
-    charTitle.value = saleData.value[selectIndex.value].title;
-  }
+  // if (selectSale) {
+  //   charTitle.value = selectSale.title;
+  // } else {
+  //   charTitle.value = saleData.value[selectIndex.value].title;
+  // }
   chatData.value = chat;
   chatSwitch(selectIndex.value);
   initEcharts(xData.value, yData.value, legendName.value);
 };
 
-const tabDateList = ref(["本日", "本周", "本月"]);
+// const tabDateList = ref(["本日", "本周", "本月"]);
 
 // 门店数据获取
 type BranchObj = { branchName: string; id: number };
@@ -116,7 +139,7 @@ const getAllBranchData = async () => {
   const obj: Data.DateRange = { 本日: 0, 本周: 1, 本月: 2 };
   const date = obj[currentTimeSelect.value];
   if (typeof id === "number") {
-    getTodaySales(id, date);
+    getTodaySales(id);
     emit("change-id", id);
   }
 };
@@ -129,20 +152,20 @@ async function changeCityDate(e: any) {
   const id = selectObj!.id;
   const obj: Data.DateRange = { 本日: 0, 本周: 1, 本月: 2 };
   let date = obj[currentTimeSelect.value];
-  getTodaySales(id, date);
+  getTodaySales(id);
   emit("change-id", id);
 }
 
 // 日期范围切换
-function changeSelectDate(e: any) {
-  currentTimeSelect.value = e;
-}
+// function changeSelectDate(e: any) {
+//   currentTimeSelect.value = e;
+// }
 
 function initEcharts(xData: any[], yData: any[], legendName: string) {
   let myChart: echarts.ECharts = echarts.init(echartsRef.value as HTMLElement);
   let option: echarts.EChartsOption = {
     title: {
-      text: charTitle.value,
+      // text: charTitle.value,
       top: 10,
       textStyle: {
         fontWeight: 500,
@@ -244,27 +267,21 @@ let legendName = computed(() => {
   return "数量";
 });
 
-watch(
-  () => currentTimeSelect.value,
-  () => {
-    if (typeof id.value === "number") {
-      getTodaySales(id.value, date.value);
-    }
+watch(dateRange, () => {
+  if (typeof id.value === "number") {
+    getTodaySales(id.value);
   }
-);
+});
 
-watch(
-  () => selectSale.value,
-  () => {
-    if (typeof id.value === "number" && typeof date.value === "number") {
-      chatSwitch(selectIndex.value);
-      getTodaySales(id.value, date.value, selectSale.value);
-    }
+watch(selectSale, () => {
+  if (typeof id.value === "number" && typeof date.value === "number") {
+    chatSwitch(selectIndex.value);
+    getTodaySales(id.value);
   }
-);
+});
 
 onMounted(() => {
-  switchChart({ title: `${currentTimeSelect.value}销售总额` }, 0);
+  switchChart({ title: `销售总额` }, 0);
 });
 </script>
 

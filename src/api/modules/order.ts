@@ -68,7 +68,7 @@ export const workOrderAllLine = (id: number, date: number) => {
 };
 
 // 数据统计-销售数据-上边图表的
-export const todaySales = (branchId: number, date: number) => {
+export const todaySales = (branchId: number, date: [string, string]) => {
   // return http.get<Data.TodaySales>(`${PORT3}/sys_analysis/today_sales?branchId=${branchId}&date=${date}`);
   return http.get<Data.TodaySales>(`${PORT3}/sys_statistics/sales?branchId=${branchId}&date=${date}`);
 };
@@ -81,7 +81,7 @@ export const todayRecycles = (params: any) => {
 };
 
 // 数据统计-发布数据-下边表格的
-export const todayPublishs = (branchId: number, date: number) => {
+export const todayPublishs = (branchId: number, date: [string, string]) => {
   // return http.get<ResultData<Data.TodaySales>>(`${PORT3}/base_account/today_sales?branchId=${branchId}`, params);
   return http.get<Data.TodayPublish>(`${PORT3}/sys_statistics/publish?branchId=${branchId}&date=${date}`);
 };

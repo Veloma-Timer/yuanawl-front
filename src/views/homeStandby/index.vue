@@ -3,10 +3,28 @@
     <div class="home-tab flex ml-5">
       <div class="tab-list flex">
         <el-form :inline="true">
-          <el-form-item label="时间段">
+          <!-- <el-form-item label="时间段">
             <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
               <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
             </el-select>
+          </el-form-item> -->
+
+          <el-form-item label="时间段">
+            <el-date-picker
+              v-model="monthName"
+              type="daterange"
+              unlink-panels
+              range-separator="To"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+              format="YYYY-MM-DD"
+              value-format="YYYY-MM-DD"
+              :shortcuts="shortcuts"
+              @change="setValue"
+            />
+            <!-- <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
+            <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
+          </el-select> -->
           </el-form-item>
         </el-form>
       </div>
@@ -78,6 +96,8 @@ import { getUserProfile, homeSalesAndAfter, homeSalesChannel, homeSalesRecycle, 
 import { HomeSet } from "@/api/interface";
 import { useRoute } from "vue-router";
 import { sellKeyGrouping, sellKeyMap } from "@/api/modules/dictionary";
+import { shortcuts, parseTime } from "@/utils";
+
 const route = useRoute();
 interface Item {
   branchName: string;
@@ -92,24 +112,24 @@ interface userObj {
   set: string;
   tel: string;
 }
-const monthList: Item[] = [
-  { branchName: "今日", id: 0 },
-  { branchName: "本周", id: 1 },
-  { branchName: "本月", id: 2 }
-];
-const monthName = ref(0);
-const branchName = ref("今日");
-const branchNames = ref("今日");
+
+const monthName = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
+const branchName = ref();
+const branchNames = ref();
 const params = ref<IStatistics>();
 const paramsHome = ref();
-let userInfoObj: userObj = reactive({});
-const setValue = function (id: number) {
-  const value = monthList.find(item => item.id === id);
-  branchName.value = value.branchName;
-  branchNames.value = value.branchName;
+const userInfoObj = ref<userObj>();
+const setValue = function (date: [string, string]) {
+  // const value = monthList.find(item => item.id === id);
+  // branchName.value = value.branchName;
+  // branchNames.value = value.branchName;
+
+  branchName.value = `${date[0]} 至 ${date[1]}`;
+  branchNames.value = `${date[0]} 至 ${date[1]}`;
+
   params.value = {
     ...params.value,
-    date: monthName.value
+    date
   };
   setHomeCardList();
 };
@@ -128,11 +148,11 @@ const setHomeCardList = async () => {
   let {
     data: { sales, recycle, publish, workOrder, userInfo }
   } = (await getUserProfile(params.value!)) as any;
-  userInfoObj = userInfo as any;
+  userInfoObj.value = userInfo as any;
   paramsHome.value = {
     ...paramsHome.value,
-    branchId: userInfoObj?.branchId,
-    date: monthList[0].id
+    branchId: userInfoObj.value?.branchId,
+    date: monthName.value
   };
   const { data } = await homeSalesAndAfter(paramsHome.value);
   const resChannel = await homeSalesChannel(paramsHome.value);
@@ -162,7 +182,7 @@ const setHomeCardList = async () => {
   }
   publishObj.value = publish as any;
 };
-const getSalesList = async id => {
+const getSalesList = async (id: any) => {
   paramsHome.value = {
     ...paramsHome.value,
     channelId: id
@@ -170,11 +190,12 @@ const getSalesList = async id => {
   const resChannel = await homeSalesChannel(paramsHome.value);
   salesObj.value = {
     ...salesObj.value,
+    // @ts-ignore
     resChannel: resChannel.data,
     channelId: id
   };
 };
-const getReuseList = async id => {
+const getReuseList = async (id: any) => {
   paramsHome.value = {
     ...paramsHome.value,
     grouping: id
@@ -182,6 +203,7 @@ const getReuseList = async id => {
   const resRecycle = await homeSalesRecycle(paramsHome.value);
   statisticsObj.value = {
     ...statisticsObj.value,
+    // @ts-ignore
     resRecycle: resRecycle.data,
     channelId: id
   };

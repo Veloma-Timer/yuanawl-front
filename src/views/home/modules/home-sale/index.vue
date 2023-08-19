@@ -5,26 +5,41 @@
       <div class="crud-list flex">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
           <DigitBoard
+            v-if="salesObj"
             :title="namesList[index]"
             :value="item.current"
             :year-value="item.year"
             :chain-value="item.yesterday"
             :date="branchName"
           />
+          <DigitBoardSkeleton v-else />
         </div>
       </div>
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="salesObj?.salesRatio" class-name="maintain" title="账号销售占比" />
+        <homeGroup v-if="salesObj?.salesRatio" :list-arr="salesObj?.salesRatio" class-name="maintain" title="账号销售占比" />
+        <HalfScreenSkeleton v-else />
       </div>
       <div class="home-name-right">
-        <nameRight title="金额榜" :salas-ranking-arr="salesObj?.salesRanking" :header="['姓名', '销售额', '销售数量']" />
+        <nameRight
+          v-if="salesObj?.salesRanking"
+          title="金额榜"
+          :salas-ranking-arr="salesObj?.salesRanking"
+          :header="['姓名', '销售额', '销售数量']"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <nameRight title="数量榜" :salas-ranking-arr="salesObj?.salesRankingByAmount" :header="['姓名', '销售额', '销售数量']" />
+        <nameRight
+          v-if="salesObj?.salesRankingByAmount"
+          title="数量榜"
+          :salas-ranking-arr="salesObj?.salesRankingByAmount"
+          :header="['姓名', '销售额', '销售数量']"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
     </div>
     <homeGroup :list-arr="salesObj?.salesSetComparison" title="销售数据对比" />
@@ -46,26 +61,24 @@ import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import homeChain from "@/views/home/modules/home-chain/index.vue";
+import DigitBoardSkeleton from "../../components/DigitBoardSkeleton.vue";
+import { IDigitBoard } from "@/typings";
+import HalfScreenSkeleton from "../../components/HalfScreenSkeleton.vue";
+
 const namesList: string[] = ["销售金额", "销售数量", "销售加价率"];
+
 // 2、定义发射给父组件的方法
 const emits = defineEmits(["getSalesList"]);
 
 // 处理数据
-const props = withDefaults(
-  defineProps<{
-    salesObj: HomeSet.ISalesStatistics;
-    branchName: string;
-    branchNames: string;
-    title: string;
-  }>(),
-  {
-    branchName: "今日",
-    branchNames: "今日"
-  }
-);
-const setTypes = id => {
-  emits("getSalesList", id);
-};
+const props = defineProps<{
+  salesObj: HomeSet.ISalesStatistics;
+  branchName: string;
+  branchNames: string;
+  title: string;
+}>();
+
+const setTypes = (id: any) => emits("getSalesList", id);
 // 处理数据
 const crudListMap = ref<IDigitBoard[]>([]);
 let channelId = ref();
@@ -89,14 +102,12 @@ const setCrud = (obj: HomeSet.ISalesStatistics) => {
     }
   ];
   channelId.value = obj?.channelId;
-  // setNumber();
 };
 watch(
   () => props.salesObj,
   sales => {
     crudListMap.value = [];
-    /* ... */
-    setCrud(sales);
+    setCrud(sales || {});
   },
   { deep: true, immediate: true }
 );

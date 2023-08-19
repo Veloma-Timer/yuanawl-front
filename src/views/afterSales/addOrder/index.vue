@@ -333,6 +333,7 @@
                     class="small-input"
                     multiple
                     filterable
+                    :disabled="ruleForm.idEdit2"
                   >
                     <template v-for="item2 in userList" :key="item2.id">
                       <el-option :label="item2.userName" :value="item2.id" />
@@ -452,6 +453,7 @@
                     class="small-input"
                     multiple
                     filterable
+                    :disabled="ruleForm.idEdit1"
                   >
                     <template v-for="item2 in userList" :key="item2.id">
                       <el-option :label="item2.userName" :value="item2.id" />
@@ -569,6 +571,7 @@
                     class="small-input"
                     multiple
                     filterable
+                    :disabled="ruleForm.idEdit3"
                   >
                     <template v-for="item2 in userList" :key="item2.id">
                       <el-option :label="item2.userName" :value="item2.id" />
@@ -719,6 +722,7 @@
                     class="small-input"
                     multiple
                     filterable
+                    :disabled="ruleForm.idEdit0"
                   >
                     <template v-for="item2 in userList" :key="item2.id">
                       <el-option :label="item2.userName" :value="item2.id" />
@@ -803,7 +807,7 @@ import {
   getProcessingDept,
   generateCode
 } from "@/api/modules/order";
-import { getAllBranch, getAllBaseAccount, getAllUser } from "@/api/modules/set";
+import { getAllBranch, getAllBaseAccount, getUserOptions } from "@/api/modules/set";
 import { findFileType } from "@/utils";
 import { useRouter, useRoute } from "vue-router";
 import { sellKeyMap } from "@/api/modules/dictionary";
@@ -964,6 +968,9 @@ function onChangeAccount(e: any) {
     // 是转转
     isZZ.value = _isZZ;
     ruleForm.value.row.basicHandleTime = _isZZ ? 4 : 7;
+  } else {
+    // 没有出售默认是4天
+    ruleForm.value.row.basicHandleTime = 4;
   }
 }
 
@@ -1002,8 +1009,6 @@ const getDetailInfo = async (id: any) => {
     };
     // 售后
     let afterObj = {};
-
-    console.log(afterInfo, "售后已有数据");
 
     if (afterInfo) {
       afterObj = {
@@ -1207,7 +1212,6 @@ const handleSubmit = () => {
         baiscAnnex,
         basicOrderStar,
         afterHandleResult,
-        afterSpecHandleResult,
         afterSalesCompensationMoney,
         afterNewSecurityPhone,
         afterNewSecurityPassword,
@@ -1215,20 +1219,16 @@ const handleSubmit = () => {
         afterSalesRemark,
         afterAnnex,
         recycleHandleResult,
-        recycleResultRemark,
         recycleRemark,
         recycleAnnex,
         recycleInformDeptId,
         recycleAssignUsers,
         publishHandleResult,
-        publishResultRemark,
         publishRemark,
         publishAnnex,
         saleHandleResult,
-        saleCompensationUserAmount,
         saleChangeUserNumber,
         saleannex,
-        salesResultRemark,
         salesRemark,
         afterSalesInformDeptId,
         salesInformDeptId,
@@ -1267,7 +1267,6 @@ const handleSubmit = () => {
       // 只能新增,不能修改 id为空才能调用
       const { data }: any = !id && (await baseApi!(baseData));
 
-      console.log("afterSalesInformDeptId", afterSalesInformDeptId);
       // 以下只能改当前账号的
       // 回收信息
       (setId.value === 1 || isAdmin.value) &&
@@ -1296,12 +1295,12 @@ const handleSubmit = () => {
           orderId: afterInfo?.id || data?.id || id,
           afterSaleResultId: afterHandleResult, // 售后处理结果
           // afterSalesResultRemark: afterSpecHandleResult, // 售后处理结果备注(这个只有当处理结果类型为其他的时候才有)
-          afterSalesCompensationMoney: afterSalesCompensationMoney, // 售后赔付金额
+          afterSalesCompensationMoney, // 售后赔付金额
           newSecretCellPhone: afterNewSecurityPhone, // 新密保手机
           newPassword: afterNewSecurityPassword, // 新密码
-          afterSalesAssignUsers: afterSalesAssignUsers,
-          afterSalesRemark: afterSalesRemark, // 售后备注
-          afterSalesInformDeptId: afterSalesInformDeptId,
+          afterSalesAssignUsers,
+          afterSalesRemark, // 售后备注
+          afterSalesInformDeptId,
           afterSaleAssets: afterAnnex?.map(item => {
             return {
               path: item?.response?.path || item.url || item.path,
@@ -1408,7 +1407,7 @@ const addProcess = () => {
   }
 };
 
-type UserObj = { userName: string; id: number };
+type UserObj = { userName: string; id: string };
 const userList = ref<UserObj[]>([]);
 
 // 回显用户下拉和订单数据
@@ -1417,11 +1416,11 @@ const initOrderData = async () => {
   // ruleForm.value.row.basicHandleTime = 4;
   // 不是管理员不可编辑工单星级 就默认星级4 管理员可以无限加
   ruleForm.value.row.basicOrderStar = 1;
-  const { data } = await getAllUser({});
+  const { data } = await getUserOptions();
   getDetailInfo(id);
   getAccountInfo();
   getBasicOrderCode();
-  userList.value = data;
+  userList.value = data.map(item => ({ ...item, id: String(item.id) }));
 };
 
 initOrderData();

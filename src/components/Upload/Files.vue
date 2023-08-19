@@ -189,7 +189,6 @@ const uploadSuccess = (response: { path: string; id: number } | undefined, uploa
 const handleRemove = async (file: any) => {
   const api = props.api ?? deletedImg;
   const id = file.id || file.uid;
-  console.log("删除参数", id);
   await api(id);
   _fileList.value = _fileList.value.filter(item => item.url !== file.url || item.name !== file.name);
   emit("update:fileList", _fileList.value);
@@ -227,7 +226,6 @@ const viewImageUrl = ref("");
 const imgViewVisible = ref(false);
 const handlePictureCardPreview: UploadProps["onPreview"] = (file: any) => {
   viewImageUrl.value = file.url!;
-  console.log("file.type", file.type);
   if (file.type === "img") {
     imgViewVisible.value = true;
   } else if (file.type === "audio" || file.type === "video") {

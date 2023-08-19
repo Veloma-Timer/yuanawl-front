@@ -120,7 +120,6 @@ const handleExceed = () => {
 
 // 上传错误提示
 const excelUploadError = () => {
-  console.log(parameter);
   ElNotification({
     title: "温馨提示",
     message: `批量添加${parameter.value.title}失败，请您重新上传！`,

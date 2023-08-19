@@ -5,39 +5,57 @@
       <div class="crud-list flex">
         <div v-for="(item, index) in crudListMap" :key="index" class="crud-list-item flex">
           <DigitBoard
+            v-if="publishObj"
             :title="namesList[index]"
             :value="item.current"
             :year-value="item.year"
             :chain-value="item.yesterday"
             :date="branchName"
           />
+          <DigitBoardSkeleton v-else />
         </div>
       </div>
     </div>
     <div class="home-name">
       <div class="home-name-left">
-        <homeGroup :list-arr="publishObj?.publishRatio" class-name="maintain" title="账号发布占比" />
+        <HomeGroup
+          v-if="publishObj?.publishRatio"
+          :list-arr="publishObj?.publishRatio"
+          class-name="maintain"
+          title="账号发布占比"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
       <div class="home-name-right">
-        <nameRight title="平台发布数量排名" :salas-ranking-arr="publishObj?.publishRanking" :header="['用户', '金额', '数量']" />
+        <NameRight
+          v-if="publishObj?.publishRanking"
+          title="平台发布数量排名"
+          :salas-ranking-arr="publishObj?.publishRanking"
+          :header="['用户', '金额', '数量']"
+        />
+        <HalfScreenSkeleton v-else />
       </div>
     </div>
-    <homeGroup :list-arr="publishUnit" title="发布组数据对比">
+    <HomeGroup v-if="publishUnit" :list-arr="publishUnit" title="发布组数据对比">
       <div class="release-button-list">
         <el-select v-model="publishId" placeholder="查看" filterable @change="setValue">
-          <el-option v-for="item in publishObj.publishSetComparison" :key="item.id" :label="item.name" :value="item.id" />
+          <el-option v-for="item in publishObj?.publishSetComparison" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
       </div>
-    </homeGroup>
+    </HomeGroup>
+    <FullScreenSkeleton v-else />
   </div>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import homeGroup from "@/views/home/modules/home-group/index.vue";
-import nameRight from "@/views/home/modules/nameRight/index.vue";
+import HomeGroup from "@/views/home/modules/home-group/index.vue";
+import NameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
 import DigitBoard from "@/views/home/components/DigitBoard.vue";
 import { IDigitBoard } from "@/typings";
+import DigitBoardSkeleton from "../../components/DigitBoardSkeleton.vue";
+import HalfScreenSkeleton from "../../components/HalfScreenSkeleton.vue";
+import FullScreenSkeleton from "../../components/FullScreenSkeleton.vue";
 
 const namesList: string[] = ["已发布金额", "已发布数量", "已发布均价"];
 const publishId = ref();
@@ -73,7 +91,6 @@ const setCrud = (obj: HomeSet.IPublishStatistics) => {
     }
   ];
   publishUnit.value = obj.publishRatio;
-  // setNumber();
 };
 const setValue = (status: number) => {
   const publishSetComparison = props.publishObj.publishSetComparison;
@@ -82,10 +99,10 @@ const setValue = (status: number) => {
 };
 watch(
   () => props.publishObj,
-  count => {
+  data => {
     crudListMap.value = [];
-    /* ... */
-    setCrud(count);
+    if (!data) return;
+    setCrud(data);
   },
   { deep: true, immediate: true }
 );
@@ -221,18 +238,4 @@ watch(
     background: linear-gradient(180deg, #dc463a, #dc463a);
   }
 }
-//@media (width <= 1366px) {
-//  /* 在此处添加你的样式 */
-//  .crud-list-item {
-//    width: calc((100% - 40px) / 3) !important;
-//
-//    &:nth-child(3n) {
-//      margin: 0 !important;
-//    }
-//
-//    &:nth-child(4n) {
-//      margin: 0 20px 20px 0 !important;
-//    }
-//  }
-//}
 </style>

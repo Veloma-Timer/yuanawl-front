@@ -13,9 +13,7 @@ import SaleListTable from "./modules/sale-list-table/index.vue";
 // 当前选择的店铺id
 const selectBranchId = ref();
 
-function changeId(id: number) {
+const changeId = (id: number) => {
   selectBranchId.value = id;
-}
+};
 </script>
-
-<style scoped lang="scss"></style>

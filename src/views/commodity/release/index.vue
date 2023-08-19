@@ -80,8 +80,6 @@ const proTable = ref<ProTableInstance>();
 const initParam = reactive({});
 const { BUTTONS } = useAuthButtons();
 
-console.log(BUTTONS.value);
-
 // dataCallback 是对于返回的表格数据做处理，如果你后台返回的数据不是 list && total && pageNum && pageSize 这些字段，那么你可以在这里进行处理成这些字段
 // 或者直接去 hooks/useTable.ts 文件中把字段改为你后端对应的就行
 const dataCallback = (data: any) => {

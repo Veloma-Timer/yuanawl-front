@@ -148,7 +148,6 @@ const drawerProps = ref<DrawerProps>({
 });
 const edit = () => {
   drawerProps.value.isView = false;
-  console.log("编辑");
 };
 // 接收父组件传过来的参数
 const acceptParams = (params: DrawerProps) => {

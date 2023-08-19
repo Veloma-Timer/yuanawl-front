@@ -10,8 +10,10 @@ export const getHomeList = (params: any) => {
 
 export interface IStatistics {
   branchId?: number;
-  date?: number;
+  date?: [string, string];
   userId?: number;
+  channelId?: string | number;
+  grouping?: number | string;
 }
 
 // 获取首页数据
@@ -20,7 +22,7 @@ export const getHomeStatistics = (params: IStatistics) => {
 };
 
 // 获取首页工单消息数据
-export const getHomeWorkOrders = (params: { date: number; branchId: number; userId: number }): any => {
+export const getHomeWorkOrders = (params: { branchId: number; userId: number }): any => {
   return http.get(`${baseUrl}/after_sale`, params);
 };
 

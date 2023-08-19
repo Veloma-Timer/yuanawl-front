@@ -356,7 +356,11 @@ export const formatParams = (obj: any) => {
   let params = "";
   for (let key in obj) {
     if (obj[key] !== undefined && obj[key] !== null) {
-      params = params + key + "=" + obj[key] + "&";
+      if (Array.isArray(obj[key])) {
+        params = params + key + "=" + obj[key].join(",") + "&";
+      } else {
+        params = params + key + "=" + obj[key] + "&";
+      }
     }
   }
   return `?${params.slice(0, -1)}`;
@@ -370,6 +374,14 @@ export const getPhone = (phone: string) => {
 };
 
 export const shortcuts = [
+  {
+    text: "本日",
+    value: () => {
+      const end = new Date();
+      const start = new Date();
+      return [start, end];
+    }
+  },
   {
     text: "近一周",
     value: () => {

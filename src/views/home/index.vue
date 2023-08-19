@@ -3,56 +3,61 @@
     <div class="home-tab mb30 flex">
       <el-form :inline="true">
         <el-form-item v-if="token.isAdmin == '1'" label="部门">
-          <el-select class="mr-10" v-model="institution" placeholder="请选择部门" @change="setInstitution">
-            <el-option v-for="item in institutionList" :key="item.id" :label="item.branchName" :value="item.id" />
+          <!-- <el-select v-model="institution" placeholder="请选择部门" @change="setInstitution"> -->
+          <el-select v-model="institution" placeholder="请选择部门">
+            <el-option v-for="item in institutionList" :key="item.id!" :label="item.branchName" :value="item.id!" />
           </el-select>
         </el-form-item>
         <el-form-item v-if="token.isAdmin == '1'" label="门店">
-          <el-select class="mr-10" v-model="cityName" placeholder="请选择门店" @change="setValue1">
-            <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id" />
+          <el-select v-model="cityName" placeholder="请选择门店" @change="setValue1">
+            <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id!" />
           </el-select>
         </el-form-item>
         <el-form-item label="时间段">
-          <el-select v-model="monthName" placeholder="请选择时间段" @change="setValue">
-            <el-option v-for="item in monthList" :key="item.id" :label="item.branchName" :value="item.id" />
-          </el-select>
+          <el-date-picker
+            v-model="monthName"
+            type="daterange"
+            unlink-panels
+            range-separator="To"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+            :shortcuts="shortcuts"
+            @change="setValue"
+          />
         </el-form-item>
       </el-form>
     </div>
     <homeSale
-      v-if="setValueNone(salesObj, institution, 0)"
-      :sales-obj="salesObj"
+      v-if="setValueNone(0)"
+      :sales-obj="salesObj!"
       :branch-names="branchNames"
       :branch-name="branchName"
       title="销售数据汇总"
       @get-sales-list="getSalesList"
     />
     <homeRecovery
-      v-if="setValueNone(statisticsObj, institution, 1)"
-      :statistics-obj="statisticsObj"
+      v-if="setValueNone(1)"
+      :statistics-obj="statisticsObj!"
       :branch-name="branchName"
       :branch-names="branchNames"
       title="回收数据汇总"
       @get-reuse-list="getReuseList"
     />
-    <homeRelease
-      v-if="setValueNone(publishObj, institution, 2)"
-      :publish-obj="publishObj"
-      :branch-name="branchName"
-      title="发布数据汇总"
-    />
+    <homeRelease v-if="setValueNone(3)" :publish-obj="publishObj!" :branch-name="branchName" title="发布数据汇总" />
     <homeNeed
-      v-if="setValueNone(workOrderObj, institution, 3)"
-      :work-order-obj="workOrderObj"
+      v-if="setValueNone(2)"
+      :work-order-obj="workOrderObj!"
       :branch-name="branchName"
       :branch-names="branchNames"
-      title="待办工单"
+      title="售后数据汇总"
     />
   </div>
 </template>
 
 <script setup lang="ts" name="home">
-import { ref, onMounted, UnwrapRef, Ref } from "vue";
+import { ref, onMounted } from "vue";
 import homeSale from "@/views/home/modules/home-sale/index.vue";
 import homeRecovery from "@/views/home/modules/home-recovery/index.vue";
 import homeRelease from "@/views/home/modules/home-release/index.vue";
@@ -63,76 +68,59 @@ import { userObj } from "@/views/home/modules/homeUtis";
 import { HomeSet } from "@/api/interface";
 import { onBeforeRouteLeave } from "vue-router";
 import { sellKeyGrouping, sellKeyMap } from "@/api/modules/dictionary";
+import { shortcuts, parseTime } from "@/utils";
+
 interface Item {
   branchName: string;
-  id: number | null;
+  id: number;
 }
-const cityList = ref([]);
-const institution = ref(null);
-const scrollNum = ref<number>();
-const monthList: Item[] = [
-  { branchName: "今日", id: 0 },
-  { branchName: "本周", id: 1 },
-  { branchName: "本月", id: 2 },
-  { branchName: "本季度", id: 3 },
-  { branchName: "本年", id: 4 },
-  { branchName: "全部", id: 5 }
-];
+
 const institutionList: Item[] = [
-  { branchName: "全部", id: null },
   { branchName: "销售", id: 0 },
   { branchName: "回收", id: 1 },
   { branchName: "发布", id: 2 },
   { branchName: "工单", id: 3 }
 ];
 const cityName = ref();
-const monthName = ref(0);
-const branchName = ref("今日");
-const branchNames = ref("今日");
+const monthName = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
+const branchName = ref();
+const branchNames = ref();
 const params = ref<IStatistics>();
-const paramsHome = ref();
+const paramsHome = ref<IStatistics>();
 const token = userObj();
 
+const cityList = ref<{ branchName: string; id: number }[]>([]);
+const institution = ref<number>(token.setId);
+const scrollNum = ref<number>();
+
 // const userRoleId = ref(0);
-const scroll: Ref<UnwrapRef<string>> = ref("0");
-const setValueNone = (obj: any, value: any, num: number) => {
-  if (value === null && obj) return true;
-  if (value === num) return true;
+const scroll = ref<string>("0");
+
+const setValueNone = (num: number) => {
+  if (!institution.value) return true;
+  if (institution.value === num) return true;
 };
-const setInstitution = (id: number) => {
-  const objects = {
-    0: salesObj,
-    1: statisticsObj,
-    2: publishObj
-  };
-  if (objects.hasOwnProperty(id)) {
-    setValueNone(objects[id], institution.value, id);
-  } else {
-    setValueNone(workOrderObj, institution.value, id);
-  }
-};
-const setValue = function (id) {
-  const value = monthList.find(item => item.id === id);
-  branchName.value = value.branchName;
-  branchNames.value = value.branchName;
-  params.value = {
-    ...params.value,
-    date: monthName.value
-  };
+
+const setValue = (date: [string, string]) => {
+  branchName.value = `${date[0]} 至 ${date[1]}`;
+  branchNames.value = `${date[0]} 至 ${date[1]}`;
+
+  params.value = { ...params.value, date };
   paramsHome.value = {
     ...paramsHome.value,
-    date: monthName.value
+    date
   };
   setHomeCardList();
 };
-const setValue1 = function (id) {
+const setValue1 = function (id: any) {
   params.value = {
     ...params.value,
     branchId: cityName.value
   };
   paramsHome.value = {
     ...paramsHome.value,
-    branchId: id
+    branchId: id,
+    date: monthName.value
   };
   setHomeCardList();
 };
@@ -140,6 +128,8 @@ const salesObj = ref<HomeSet.ISalesStatistics>(); // 销售组
 const statisticsObj = ref<HomeSet.IRecycleStatistics>(); // 回收组
 const publishObj = ref<HomeSet.IPublishStatistics>(); // 发布组
 const workOrderObj = ref<HomeSet.IAfterSalesStatistics>(); // 售后
+
+// 获取数据
 const setHomeCardList = async () => {
   const {
     data: { publishPlatform = [] }
@@ -184,7 +174,7 @@ const setHomeCardList = async () => {
   };
   publishObj.value = publish as any;
 };
-const getSalesList = async id => {
+const getSalesList = async (id: any) => {
   paramsHome.value = {
     ...paramsHome.value,
     channelId: id
@@ -192,11 +182,12 @@ const getSalesList = async id => {
   const resChannel = await homeSalesChannel(paramsHome.value);
   salesObj.value = {
     ...salesObj.value,
+    // @ts-ignore
     resChannel: resChannel.data,
     channelId: id
   };
 };
-const getReuseList = async id => {
+const getReuseList = async (id: any) => {
   paramsHome.value = {
     ...paramsHome.value,
     grouping: id
@@ -204,6 +195,7 @@ const getReuseList = async id => {
   const resRecycle = await homeSalesRecycle(paramsHome.value);
   statisticsObj.value = {
     ...statisticsObj.value,
+    // @ts-ignore
     resRecycle: resRecycle.data,
     channelId: id
   };
@@ -221,11 +213,11 @@ const branchAllList = async () => {
   paramsHome.value = {
     ...paramsHome.value,
     branchId: cityList.value[0].id,
-    date: monthList[0].id
+    date: monthName.value
   };
   // userRoleId.value = obj?.userRole.id;
   await setHomeCardList();
-  await getScroll();
+  getScroll();
 };
 // 获取首页统计
 onMounted(() => {
@@ -234,6 +226,7 @@ onMounted(() => {
 // 跳转路由守卫
 onBeforeRouteLeave((to, from, next) => {
   // 将当前位置进行一个保存
+  // @ts-ignore
   scroll.value = scrollNum.value?.scrollTop;
   sessionStorage.setItem("scrollTop", scroll.value);
   next();
@@ -242,8 +235,10 @@ const getScroll = () => {
   const scrollValue = sessionStorage.getItem("scrollTop");
   nextTick(() => {
     if (scrollValue) {
+      // @ts-ignore
       scrollNum.value!.scrollTop = Number(scrollValue);
     } else {
+      // @ts-ignore
       scrollNum.value!.scrollTop = 0;
     }
   });

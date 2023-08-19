@@ -20,7 +20,6 @@ const dialogProps = ref<{ url: string; type: string }>({
 });
 
 const openDialog = async (row: any) => {
-  console.log("row", row);
   dialogProps.value.url = row.url;
   dialogProps.value.type = row.type;
   dialogVisible.value = true;
