@@ -3,7 +3,7 @@
   "build": {
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run dev",
-    "devPath": "http://localhost:8080",
+    "devPath": "http://localhost:8848",
     "distDir": "../dist"
   },
   "package": {
@@ -12,7 +12,18 @@
   },
   "tauri": {
     "allowlist": {
-      "all": false
+      "window": {
+        "all": true
+      },
+      "all": false,
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": [
+          "http://**",
+          "https://**"
+        ]
+      }
     },
     "bundle": {
       "active": true,
@@ -56,10 +67,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 800,
+        "height": 900,
         "resizable": true,
         "title": "元阿网络后台",
-        "width": 1200
+        "width": 1400
       }
     ]
   }

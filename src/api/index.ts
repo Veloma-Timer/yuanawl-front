@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse, AxiosRequestHeaders } from "axios";
 import { showFullScreenLoading, tryHideFullScreenLoading } from "@/config/serviceLoading";
 import { LOGIN_URL } from "@/config";
 import { ElMessage, ElNotification } from "element-plus";
@@ -7,13 +7,17 @@ import { ResultEnum } from "@/enums/httpEnum";
 import { checkStatus } from "./helper/checkStatus";
 import { useUserStore } from "@/stores/modules/user";
 import router from "@/routers";
-export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+import Axios from "./http";
+
+export interface CustomAxiosRequestConfig extends Partial<InternalAxiosRequestConfig> {
   noLoading?: boolean;
+  query?: any;
 }
 
 const config = {
   // 默认地址请求地址，可在 .env.** 文件中修改
   baseURL: import.meta.env.VITE_API_URL as string,
+  // baseURL: "http://localhost:3000",
   // 设置超时时间
   timeout: ResultEnum.TIMEOUT as number,
   // 跨域时候允许携带凭证
@@ -21,10 +25,11 @@ const config = {
 };
 
 class RequestHttp {
-  service: AxiosInstance;
+  service: Axios;
+
   public constructor(config: AxiosRequestConfig) {
     // instantiation
-    this.service = axios.create(config);
+    this.service = new Axios(config);
 
     /**
      * @description 请求拦截器
@@ -37,9 +42,11 @@ class RequestHttp {
         const userStore = useUserStore();
         // 当前请求不需要显示 loading，在 api 服务中通过指定的第三个参数: { noLoading: true } 来控制
         config.noLoading || showFullScreenLoading();
-        if (config.headers && typeof config.headers.set === "function") {
-          config.headers.set("yuanawl", userStore.token);
+        if (!config.headers) {
+          config.headers = {} as AxiosRequestHeaders;
         }
+        config.headers["yuanawl"] = userStore.token;
+
         return config;
       },
       (error: AxiosError) => {
@@ -102,20 +109,49 @@ class RequestHttp {
    * @description 常用请求方法封装
    */
   get<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    // @ts-ignore
     return this.service.get(url, { params, ..._object });
   }
-  post<T>(url: string, params?: object | string, _object = {}): Promise<ResultData<T>> {
+
+  post<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    // @ts-ignore
     return this.service.post(url, params, _object);
   }
+
   put<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+    // @ts-ignore
     return this.service.put(url, params, _object);
   }
+
   delete<T>(url: string, params?: any, _object = {}): Promise<ResultData<T>> {
+    // @ts-ignore
     return this.service.delete(url, { params, ..._object });
   }
+
   download(url: string, params?: object, _object = {}): Promise<BlobPart> {
+    // @ts-ignore
     return this.service.post(url, params, { ..._object, responseType: "blob" });
   }
+
+  //  get<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+  //    return this.service.get(url, { params, ..._object });
+  //  }
+  //
+  //  post<T>(url: string, params?: object | string, _object = {}): Promise<ResultData<T>> {
+  //    return this.service.post(url, params, _object);
+  //  }
+  //
+  //  put<T>(url: string, params?: object, _object = {}): Promise<ResultData<T>> {
+  //    return this.service.put(url, params, _object);
+  //  }
+  //
+  //  delete<T>(url: string, params?: any, _object = {}): Promise<ResultData<T>> {
+  //    return this.service.delete(url, { params, ..._object });
+  //  }
+  //
+  //  download(url: string, params?: object, _object = {}): Promise<BlobPart> {
+  //    return this.service.post(url, params, { ..._object, responseType: "blob" });
+  //  }
 }
 
 export default new RequestHttp(config);
