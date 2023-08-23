@@ -125,11 +125,18 @@ export default class Axios {
         }
       }
 
-      console.log(this.config.baseURL + url, params);
-
       let response = await http.fetch(this.config.baseURL + url, params);
 
-      console.log(response, "response");
+      console.log(
+        {
+          response: response.data,
+          params: {
+            url: this.config.baseURL + url,
+            data: params
+          }
+        },
+        "---- request ------"
+      );
 
       for (let { fulfilled, rejected } of _interceptors.response) {
         try {

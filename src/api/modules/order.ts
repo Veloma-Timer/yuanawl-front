@@ -58,12 +58,12 @@ export const sysAnalysisWork = (id: number, date: number) => {
 };
 
 // 工单处理汇总-右侧看板
-export const workOrderAllBoard = (id: number, date: number) => {
+export const workOrderAllBoard = (id: number, date: [string, string]) => {
   return http.get<SalesOrder.WorkReport>(`${PORT3}/sys_statistics/order/board?branchId=${id}&date=${date}`);
 };
 
 // 工单处理汇总-折线图
-export const workOrderAllLine = (id: number, date: number) => {
+export const workOrderAllLine = (id: number, date: [string, string]) => {
   return http.get<SalesOrder.WorOrderkLine>(`${PORT3}/sys_statistics/order/finished?branchId=${id}&date=${date}`);
 };
 

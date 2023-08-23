@@ -2,23 +2,33 @@
   <div class="wrap">
     <div class="left">
       <div class="content">
-        <Header title="处理工单数量" class="header"></Header>
-        <el-radio-group v-model="currentTimeLabel" size="large" @change="changeSelectDate" class="date-radio">
-          <template v-for="(item, index) in tabCityList" :key="index">
-            <el-radio-button :label="item.title" />
-          </template>
-        </el-radio-group>
+        <div class="flex flex-row justify-between items-center bg-slate-100 rounded-xl p-2">
+          <h6 class="text-sm">工单处理汇总</h6>
+          <div>
+            <el-date-picker
+              v-model="dateRange"
+              unlink-panels
+              type="daterange"
+              format="YYYY-MM-DD"
+              range-separator="To"
+              end-placeholder="结束时间"
+              value-format="YYYY-MM-DD"
+              start-placeholder="开始时间"
+              :shortcuts="shortcuts"
+              @change="changeDaterange"
+            />
+          </div>
+        </div>
+
         <div ref="echartsRef" class="sale-echarts"></div>
       </div>
     </div>
     <div class="right">
-      <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
-        <template v-for="(item, index) in newBranchList" :key="index">
-          <el-radio-button :label="item.branchName" :value="item.id" />
-        </template>
+      <el-radio-group v-model="branchId" size="large" @change="changeBranch" class="city-radio">
+        <el-radio-button v-for="item in newBranchList" :key="item.id" :label="item.id">{{ item.branchName }}</el-radio-button>
       </el-radio-group>
       <div class="sale-content">
-        <div class="item" v-for="(item, index) in saleData" :key="index">
+        <div class="item cursor-pointer" v-for="(item, index) in saleData" :key="index">
           <table>
             <tr class="top">
               {{
@@ -39,11 +49,10 @@
 
 <script setup lang="ts">
 import { workOrderAllBoard, workOrderAllLine } from "@/api/modules/order";
-// import { getAllBranch } from "@/api/modules/set";
-import Header from "@/components/Header/index.vue";
-import { ref } from "vue";
 import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
+import { parseTime, shortcuts } from "@/utils";
+
 const echartsRef = ref<HTMLElement>();
 const emit = defineEmits(["change-id"]);
 
@@ -51,26 +60,27 @@ type Props = {
   branchList: any;
   selectBranchId: number;
 };
+
+const dateRange = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
+
+const changeDaterange = (date: [string, string]) => (dateRange.value = date);
+
 const tableProps = withDefaults(defineProps<Props>(), {
   branchList: [],
   selectBranchId: 0
 });
 
-const currentCitySelect = ref("");
+const branchId = ref<number>();
 
-// 门店切换
-const currentBranchId: Ref = ref("");
-async function changeCityDate(e: any) {
-  currentCitySelect.value = e as string;
-  let selectObj = tableProps.branchList.find((item: { branchName: any }) => item.branchName === e);
-  currentBranchId.value = selectObj.id;
-  emit("change-id", selectObj.id);
-  initData();
-}
+const changeBranch = (id: any) => {
+  branchId.value = id;
+  emit("change-id", id);
+};
 
 // 获取门店统计数据
-const saleData: any = ref([]);
-async function getBoradData(id: number, date: number) {
+const saleData = ref();
+
+async function getBoradData(id: number, date: [string, string]) {
   const {
     data: { totalNumber, incrementNumber, approveNumber, unApproveNumber }
   } = await workOrderAllBoard(id, date);
@@ -94,7 +104,7 @@ async function getBoradData(id: number, date: number) {
   ];
 }
 
-async function getLineData(id: number, date: number, { legendName1, legendName2 }: any) {
+async function getLineData(id: number, date: [string, string], { legendName1, legendName2 }: any) {
   const {
     data: { current, preCurrent }
   } = await workOrderAllLine(id, date);
@@ -111,30 +121,7 @@ async function getLineData(id: number, date: number, { legendName1, legendName2 
 }
 
 // 日期范围选择
-const currentTimeLabel = ref("本日");
 const currentTimeValue = ref(0);
-const tabCityList = ref([
-  {
-    title: "本日"
-  },
-  {
-    title: "本周"
-  },
-  {
-    title: "本月"
-  }
-]);
-function changeSelectDate(e: any) {
-  currentTimeLabel.value = e;
-  if (e === "本日") {
-    currentTimeValue.value = 0;
-  } else if (e === "本周") {
-    currentTimeValue.value = 1;
-  } else if (e === "本月") {
-    currentTimeValue.value = 2;
-  }
-  initData();
-}
 
 function legendObj() {
   let legend1 = "";
@@ -155,13 +142,13 @@ function legendObj() {
   };
 }
 
-function initData() {
+const initData = () => {
   const { legend1, legend2 } = legendObj();
-  if (currentBranchId.value) {
-    getBoradData(currentBranchId.value, currentTimeValue.value);
-    getLineData(currentBranchId.value, currentTimeValue.value, { legendName1: legend1, legendName2: legend2 });
+  if (!saleData.value) {
+    getBoradData(branchId.value!, dateRange.value);
   }
-}
+  getLineData(branchId.value!, dateRange.value, { legendName1: legend1, legendName2: legend2 });
+};
 
 type BranchObj = { branchName: string; id: number };
 const newBranchList = ref<BranchObj[]>([]);
@@ -170,8 +157,7 @@ watch(
   value => {
     if (value) {
       newBranchList.value = value;
-      currentCitySelect.value = value[0]?.branchName;
-      currentBranchId.value = value[0]?.id;
+      branchId.value = value[0]?.id;
       initData();
     }
   },
@@ -180,7 +166,7 @@ watch(
 
 // 渲染图表
 // x轴一条 y轴两条数据
-function initEcharts(toDayX: any, toDayY: any, yesterdayY: any, { legendName1, legendName2 }: any) {
+const initEcharts = (toDayX: any, toDayY: any, yesterdayY: any, { legendName1, legendName2 }: any) => {
   let myChart: echarts.ECharts = echarts.init(echartsRef.value as HTMLElement);
   let option: echarts.EChartsOption = {
     tooltip: {
@@ -253,7 +239,9 @@ function initEcharts(toDayX: any, toDayY: any, yesterdayY: any, { legendName1, l
     myChart.resize();
   });
   chartObserver.observe(echartsRef.value as HTMLElement);
-}
+};
+
+watch(dateRange, () => initData());
 </script>
 
 <style scoped lang="scss">
