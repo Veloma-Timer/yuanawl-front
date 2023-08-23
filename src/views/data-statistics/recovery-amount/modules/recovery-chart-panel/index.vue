@@ -2,20 +2,8 @@
   <div class="wrap">
     <div class="left">
       <div class="content">
-        <!-- <template v-if="selectIndex === 2">
-          <el-select v-model="selectTypeId" placeholder="请选择" class="type-input" size="large" filterable>
-            <template v-for="item in allTypeList" :key="item.id">
-              <el-option :label="item.typeName" :value="item.id" />
-            </template>
-          </el-select>
-        </template> -->
-        <!-- <el-radio-group v-model="currentTimeSelect" size="large" @change="changeSelectDate" class="date-radio">
-          <template v-for="item in tabDateList" :key="item">
-            <el-radio-button :label="item" />
-          </template>
-        </el-radio-group> -->
         <div class="flex flex-row justify-between items-center bg-slate-100 rounded-xl p-2">
-          <h6 class="text-sm">{{ selectSale.title }}</h6>
+          <h6 class="text-sm">{{ title }}</h6>
           <div>
             <el-date-picker
               v-model="dateRange"
@@ -27,7 +15,7 @@
               value-format="YYYY-MM-DD"
               start-placeholder="开始时间"
               :shortcuts="shortcuts"
-              @change="setValue"
+              @change="changeDaterange"
             />
           </div>
         </div>
@@ -35,10 +23,9 @@
       </div>
     </div>
     <div class="right">
-      <el-radio-group v-model="currentCitySelect" size="large" @change="changeCityDate" class="city-radio">
-        <template v-for="(item, index) in branchList" :key="index">
-          <el-radio-button :label="item.branchName" :value="item.id" />
-        </template>
+      <el-radio-group v-model="branchId" size="large" @change="changeBranch" class="city-radio">
+        <el-radio-button v-for="item in branchList" :key="item.id" :label="item.id">{{ item.branchName }}</el-radio-button>
+        >
       </el-radio-group>
       <div class="sale-content">
         <div class="item" v-for="(item, index) in saleData" :key="index" @click="switchChart(item, index)">
@@ -67,17 +54,15 @@ import * as echarts from "echarts";
 import { useEcharts } from "@/hooks/useEcharts";
 import { getAllBranch } from "@/api/modules/set";
 import { todayRecycles } from "@/api/modules/order";
-import { Data } from "@/api/interface/index";
 import { SeriesOption, YAXisComponentOption } from "echarts";
 import { getAllList } from "@/api/modules/accountClass";
 import { parseTime, shortcuts } from "@/utils";
-// import { getAllUser } from "@/api/modules/set";
 
 const selectTypeId: Ref = ref();
 
 const dateRange = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
 
-const setValue = (date: [string, string]) => (dateRange.value = date);
+const changeDaterange = (date: [string, string]) => (dateRange.value = date);
 
 const allTypeList: Ref = ref([]);
 const setAllTypeList = async () => {
@@ -88,11 +73,7 @@ setAllTypeList();
 
 const emit = defineEmits(["change-id"]);
 const echartsRef = ref<HTMLElement>();
-// 时间范围选择
-const currentTimeSelect = ref<string>("本日");
 
-// const xData: any = ref(["张三", "张三", "张三", "张三", "张三", "精英"]);
-// const yData: any = ref([20, 30, 40, 50, 60, 70]);
 const xData: Ref = ref([]);
 const yData: Ref = ref([]);
 const yData2: Ref = ref([]); // 七日未售 有y轴有两个值 数量和金额 这里用做金额
@@ -101,29 +82,29 @@ interface SelectSale {
   value?: string;
 }
 const saleData: Ref = ref([]);
-const selectSale: Ref = ref({});
+const title = ref("回收金额");
 const selectIndex: Ref = ref(0);
 const chatData: Ref = ref({});
 // let charTitle = ref("本日销售总额");
 
-const getTodaySales = async (branchId: number) => {
+const getTodaySales = async () => {
   const postData = selectTypeId.value
-    ? { branchId, date: dateRange.value, id: selectTypeId.value }
-    : { branchId, date: dateRange.value };
+    ? { branchId: branchId.value, date: dateRange.value, id: selectTypeId.value }
+    : { branchId: branchId.value, date: dateRange.value };
   const {
     data: { recycleTotalMoney, recycleTotalNumber, gameCategory, sevenDaysTotalNumber, chat }
   } = await todayRecycles(postData);
   saleData.value = [
     {
-      title: `${currentTimeSelect.value}回收金额`,
+      title: `回收金额`,
       value: `￥${recycleTotalMoney}`
     },
     {
-      title: `${currentTimeSelect.value}回收订单总量`,
+      title: `回收订单总量`,
       value: `${recycleTotalNumber || 0}`
     },
     {
-      title: `${currentTimeSelect.value}回收游戏品类`,
+      title: `回收游戏品类`,
       value: gameCategory
     },
     {
@@ -131,22 +112,15 @@ const getTodaySales = async (branchId: number) => {
       value: sevenDaysTotalNumber
     }
   ];
-  // if (selectSale) {
-  //   charTitle.value = selectSale.title;
-  // } else {
-  //   charTitle.value = saleData.value[selectIndex.value].title;
-  // }
   chatData.value = chat;
   chatSwitch(selectIndex.value);
   initEcharts(xData.value, yData.value, yData2.value, legendName.value);
 };
 
-// const tabDateList = ref(["本日", "本周", "本月"]);
-
 // 门店数据获取
 type BranchObj = { branchName: string; id: number };
 const branchList = ref<BranchObj[]>([]);
-const currentCitySelect = ref("");
+const branchId = ref<number>();
 const getAllBranchData = async () => {
   const { data } = await getAllBranch();
   branchList.value = data?.map(item => {
@@ -155,35 +129,20 @@ const getAllBranchData = async () => {
       id: item.id
     };
   });
-  currentCitySelect.value = branchList.value[0].branchName;
-  let selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
-  let id = selectObj?.id;
-  // const obj: Data.DateRange = { 本日: 0, 本周: 1, 本月: 2 };
-  // const date = obj[currentTimeSelect.value];
-  if (typeof id === "number") {
-    getTodaySales(id);
-    emit("change-id", id);
-  }
+  branchId.value = branchList.value[0].id;
+  await getTodaySales();
+  emit("change-id", branchId.value);
 };
 getAllBranchData();
 
 // 门店切换
-async function changeCityDate(e: any) {
-  currentCitySelect.value = e;
-  const selectObj = branchList.value.find(item => item.branchName === e);
-  const id = selectObj!.id;
-  // const obj: Data.DateRange = { 本日: 0, 本周: 1, 本月: 2 };
-  // let date = obj[currentTimeSelect.value];
-  getTodaySales(id);
+const changeBranch = async (id: any) => {
+  branchId.value = id;
+  await getTodaySales();
   emit("change-id", id);
-}
+};
 
-// 日期范围切换
-function changeSelectDate(e: any) {
-  currentTimeSelect.value = e;
-}
-
-function initEcharts(xData: any[], yData: any[], yData2: any[], legendName: string[]) {
+const initEcharts = (xData: any[], yData: any[], yData2: any[], legendName: string[]) => {
   let seriesTemp;
   let colorTemp;
   let yTemp;
@@ -253,7 +212,6 @@ function initEcharts(xData: any[], yData: any[], yData2: any[], legendName: stri
   let option: echarts.EChartsOption = {
     color: colorTemp,
     title: {
-      // text: charTitle.value,
       top: 10,
       textStyle: {
         fontWeight: 500,
@@ -300,14 +258,14 @@ function initEcharts(xData: any[], yData: any[], yData2: any[], legendName: stri
     myChart.resize();
   });
   chartObserver.observe(echartsRef.value as HTMLElement);
-}
+};
 
-function switchChart(item: SelectSale, index: number) {
-  selectSale.value = item;
+const switchChart = (item: SelectSale, index: number) => {
+  title.value = item.title!;
   selectIndex.value = index;
-}
+};
 
-function chatSwitch(value: number) {
+const chatSwitch = (value: number) => {
   if (value === 0) {
     xData.value = chatData.value.recycleTotalMoney.map((item: any) => item.name);
     yData.value = chatData.value.recycleTotalMoney.map((item: any) => item.value);
@@ -325,47 +283,27 @@ function chatSwitch(value: number) {
     yData.value = chatData.value.sevenDaysTotalNumber.map((item: any) => item.value);
     yData2.value = chatData.value.sevenDaysTotalNumber.map((item: any) => item.money);
   }
-}
+};
 
-let id = computed(() => {
-  const selectObj = branchList.value.find(item => item.branchName === currentCitySelect.value);
-  return selectObj?.id;
-});
-
-let date = computed(() => {
-  const obj: Data.DateRange = { 本日: 0, 本周: 1, 本月: 2 };
-  return obj[currentTimeSelect.value];
-});
-
-let legendName = computed(() => {
-  if ([`回收金额`].includes(selectSale.value.title)) {
+const legendName = computed(() => {
+  if ([`回收金额`].includes(title.value)) {
     return ["金额"];
-  } else if ([`回收订单总量`, `回收游戏品类`].includes(selectSale.value.title)) {
+  } else if ([`回收订单总量`, `回收游戏品类`].includes(title.value)) {
     return ["数量"];
-  } else if (["七日未售出数量"].includes(selectSale.value.title)) {
+  } else if (["七日未售出数量"].includes(title.value)) {
     return ["数量", "金额"];
   } else {
     return [""];
   }
 });
 
-watch(dateRange, () => {
-  if (typeof id.value === "number") {
-    getTodaySales(id.value);
-  }
-});
+watch(dateRange, () => getTodaySales());
 
-watch(selectTypeId, () => {
-  if (typeof id.value === "number") {
-    getTodaySales(id.value);
-  }
-});
+watch(selectTypeId, () => getTodaySales());
 
-watch(selectSale, () => {
-  if (typeof id.value === "number" && typeof date.value === "number") {
-    chatSwitch(selectIndex.value);
-    getTodaySales(id.value);
-  }
+watch(title, () => {
+  chatSwitch(selectIndex.value);
+  getTodaySales();
 });
 
 onMounted(() => {

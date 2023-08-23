@@ -15,7 +15,7 @@
               value-format="YYYY-MM-DD"
               start-placeholder="开始时间"
               :shortcuts="shortcuts"
-              @change="setValue"
+              @change="changeDaterange"
             />
           </div>
         </div>
@@ -26,9 +26,7 @@
     <div class="right">
       <!--选择门店-->
       <el-radio-group v-model="branchId" size="large" @change="changeBranch" class="city-radio">
-        <template v-for="item in branchList" :key="item.id">
-          <el-radio-button :label="item.branchName" :value="item.id" />
-        </template>
+        <el-radio-button v-for="item in branchList" :key="item.id" :label="item.id">{{ item.branchName }}</el-radio-button>
       </el-radio-group>
       <div class="sale-content">
         <div class="item" v-for="(item, index) in saleData" :key="index" @click="switchChart(item, index)">
@@ -61,7 +59,7 @@ const emit = defineEmits(["change-id"]);
 const echartsRef = ref<HTMLElement>();
 const dateRange = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
 
-const setValue = (date: [string, string]) => (dateRange.value = date);
+const changeDaterange = (date: [string, string]) => (dateRange.value = date);
 
 const xData = ref<(string | number)[]>([]);
 const yData = ref<(string | number)[]>([]);
@@ -214,7 +212,7 @@ const switchChart = (item: SelectSale, index: number) => {
   selectIndex.value = index;
 };
 
-function chatSwitch(value: number) {
+const chatSwitch = (value: number) => {
   if (value === 0) {
     xData.value = chatData.value.salesTotalMoney.map((item: any) => item.name);
     yData.value = chatData.value.salesTotalMoney.map((item: any) => item.value);
@@ -231,7 +229,7 @@ function chatSwitch(value: number) {
     xData.value = chatData.value.platformNumber.map((item: any) => item.name);
     yData.value = chatData.value.platformNumber.map((item: any) => item.value);
   }
-}
+};
 
 const legendName = computed(() => {
   if (["销售总额"].includes(title.value)) {
