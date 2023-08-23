@@ -97,7 +97,10 @@
         "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
       ],
       "dialog": true,
-      "pubkey": "251400"
+      "pubkey": "251400",
+      "windows": {
+        "installMode": "passive"
+      }
     },
     "windows": [
       {
