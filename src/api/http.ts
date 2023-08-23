@@ -1,6 +1,6 @@
-import { http } from "@tauri-apps/api";
 import { AxiosRequestConfig, InternalAxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
-import { HttpVerb, HttpOptions } from "@tauri-apps/api/http";
+import { HttpVerb, HttpOptions, ResponseType } from "@tauri-apps/api/http";
+import { http } from "@tauri-apps/api";
 import deepcopy from "deepcopy";
 import { isObj } from "@/utils";
 
@@ -82,6 +82,16 @@ export default class Axios {
         delete config.noLoading;
       }
 
+      if (config?.params === null) {
+        delete config.params;
+      }
+
+      if (config?.responseType === "blob") {
+        delete config.responseType;
+        // @ts-ignore
+        config.responseType = ResponseType.Binary;
+      }
+
       const params = {
         method: method,
         ...config
@@ -97,16 +107,29 @@ export default class Axios {
           params.query[key] = String(value);
         }
         if (Array.isArray(value)) {
-          // @ts-ignore
-          params.query[key] = value.join(",");
+          if (value.length > 0) {
+            // @ts-ignore
+            params.query[key] = value.join(",");
+          } else {
+            // @ts-ignore
+            delete params.query[key];
+          }
         }
         if (isObj(value) && !Array.isArray(value)) {
           // @ts-ignore
           params.query[key] = JSON.stringify(value);
         }
+        if (value === "") {
+          // @ts-ignore
+          delete params.query[key];
+        }
       }
 
+      console.log(this.config.baseURL + url, params);
+
       let response = await http.fetch(this.config.baseURL + url, params);
+
+      console.log(response, "response");
 
       for (let { fulfilled, rejected } of _interceptors.response) {
         try {

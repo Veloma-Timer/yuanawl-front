@@ -1,4 +1,7 @@
-import { ElNotification } from "element-plus";
+import { ElNotification, ElMessage } from "element-plus";
+import { writeBinaryFile } from "@tauri-apps/api/fs";
+import { downloadDir } from "@tauri-apps/api/path";
+import { save } from "@tauri-apps/api/dialog";
 
 /**
  * @description 接收数据流生成 blob，创建链接，下载文件
@@ -38,11 +41,40 @@ export const useDownload = async (
     // 去除下载对 url 的影响
     // document.body.removeChild(exportFile);
     // window.URL.revokeObjectURL(blobUrl);
-    const blob = new Blob([res], { type: "application/octet-stream" });
-    const link = document.createElement("a");
-    link.href = window.URL.createObjectURL(blob);
-    link.download = `${tempName}${fileType}`;
-    link.click();
+    // const blob = new Blob([res], { type: "application/octet-stream" });
+    // const link = document.createElement("a");
+    // link.href = window.URL.createObjectURL(blob);
+    // link.download = `${tempName}${fileType}`;
+    // link.click();
+
+    const basePath = (await downloadDir()) + `/${tempName}`;
+    const selPath = await save({
+      title: `保存文件: ${tempName}`,
+      defaultPath: basePath,
+      filters: [
+        {
+          name: fileType.slice(1),
+          extensions: [fileType.slice(1)]
+        }
+      ]
+    });
+    // 开始发送下载请求
+    if (selPath) {
+      try {
+        await writeBinaryFile({ contents: res, path: `${selPath}` });
+        console.log(`【文件保存成功】: ${selPath}`);
+        ElMessage({
+          type: "success",
+          message: `【文件保存成功】: ${selPath}`
+        });
+      } catch (error) {
+        ElMessage({
+          type: "error",
+          message: `【文件保存失败】: ${(error as Error).message}`
+        });
+        console.log(`【文件保存失败】: ${(error as Error).message}`);
+      }
+    }
   } catch (error) {
     console.log(error);
   }

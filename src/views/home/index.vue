@@ -9,7 +9,7 @@
           </el-select>
         </el-form-item>
         <el-form-item v-if="token.isAdmin == '1'" label="门店">
-          <el-select v-model="cityName" placeholder="请选择门店" @change="setValue1">
+          <el-select v-model="cityName" placeholder="请选择门店" @change="changeBranch">
             <el-option v-for="item in cityList" :key="item.id" :label="item.branchName" :value="item.id!" />
           </el-select>
         </el-form-item>
@@ -24,7 +24,7 @@
             format="YYYY-MM-DD"
             value-format="YYYY-MM-DD"
             :shortcuts="shortcuts"
-            @change="setValue"
+            @change="changeDaterange"
           />
         </el-form-item>
       </el-form>
@@ -79,8 +79,8 @@ const institutionList: Item[] = [
   { branchName: "全部", id: undefined },
   { branchName: "销售", id: 0 },
   { branchName: "回收", id: 1 },
-  { branchName: "发布", id: 2 },
-  { branchName: "工单", id: 3 }
+  { branchName: "发布", id: 3 },
+  { branchName: "工单", id: 2 }
 ];
 const cityName = ref();
 const monthName = ref<[string, string]>([parseTime(new Date(), "{y}-{m}-{d}"), parseTime(new Date(), "{y}-{m}-{d}")]);
@@ -102,7 +102,7 @@ const setValueNone = (num: number) => {
   if (institution.value === num) return true;
 };
 
-const setValue = (date: [string, string]) => {
+const changeDaterange = (date: [string, string]) => {
   branchName.value = `${date[0]} 至 ${date[1]}`;
   branchNames.value = `${date[0]} 至 ${date[1]}`;
 
@@ -113,7 +113,7 @@ const setValue = (date: [string, string]) => {
   };
   setHomeCardList();
 };
-const setValue1 = function (id: any) {
+const changeBranch = (id: any) => {
   params.value = {
     ...params.value,
     branchId: cityName.value
@@ -130,8 +130,16 @@ const statisticsObj = ref<HomeSet.IRecycleStatistics>(); // 回收组
 const publishObj = ref<HomeSet.IPublishStatistics>(); // 发布组
 const workOrderObj = ref<HomeSet.IAfterSalesStatistics>(); // 售后
 
+const reset = () => {
+  salesObj.value = undefined;
+  statisticsObj.value = undefined;
+  publishObj.value = undefined;
+  workOrderObj.value = undefined;
+};
+
 // 获取数据
 const setHomeCardList = async () => {
+  reset();
   const {
     data: { publishPlatform = [] }
   } = await sellKeyMap();

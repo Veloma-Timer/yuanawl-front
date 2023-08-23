@@ -56,7 +56,6 @@
 </template>
 <script setup lang="ts">
 import DigitBoard from "@/views/home/components/DigitBoard.vue";
-import { ref, watch } from "vue";
 import homeGroup from "@/views/home/modules/home-group/index.vue";
 import nameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";
@@ -64,6 +63,7 @@ import homeChain from "@/views/home/modules/home-chain/index.vue";
 import DigitBoardSkeleton from "../../components/DigitBoardSkeleton.vue";
 import { IDigitBoard } from "@/typings";
 import HalfScreenSkeleton from "../../components/HalfScreenSkeleton.vue";
+import currency from "currency.js";
 
 const namesList: string[] = ["销售金额", "销售数量", "销售加价率"];
 
@@ -86,9 +86,9 @@ let channelId = ref();
 const setCrud = (obj: HomeSet.ISalesStatistics) => {
   crudListMap.value = [
     {
-      current: obj.salesMoney,
-      yesterday: obj.salesYesterdayMoney,
-      year: obj.salesYearMoney
+      current: currency(obj?.salesMoney).format({ symbol: "¥" }),
+      yesterday: obj?.salesYesterdayMoney,
+      year: obj?.salesYearMoney
     },
     {
       current: obj.salesAmount,

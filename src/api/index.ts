@@ -63,6 +63,10 @@ class RequestHttp {
         const { data } = response;
         const userStore = useUserStore();
         tryHideFullScreenLoading();
+        if (data.statusCode === 500) {
+          ElMessage.error(`【服务异常】：请联系开发者处理 ${data.message}`);
+          return Promise.reject(data);
+        }
         // 登陆失效
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken("");

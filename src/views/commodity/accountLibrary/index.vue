@@ -59,9 +59,7 @@ import {
   editSummary,
   pointBury,
   summaryExport,
-  getBaseAccountDel,
-  summaryTemplate,
-  summaryUpload
+  getBaseAccountDel
 } from "@/api/modules/commodity";
 import { getAllList } from "@/api/modules/accountClass";
 import { Commodity } from "@/api/interface/commodity/commodity";

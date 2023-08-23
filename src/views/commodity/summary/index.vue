@@ -76,7 +76,7 @@ import { useRoute, useRouter } from "vue-router";
 import { sellKeyGrouping, sellKeyMap } from "@/api/modules/dictionary";
 import deepcopy from "deepcopy";
 import { IOptions } from "@/typings";
-import { getRecycleUsers, getPublishUsers, getSalesUsers } from "../../../api/modules/user";
+import { getRecycleUsers, getPublishUsers, getSalesUsers } from "@/api/modules/user";
 
 const route = useRoute();
 const router = useRouter();

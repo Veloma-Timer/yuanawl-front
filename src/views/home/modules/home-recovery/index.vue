@@ -76,7 +76,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
 import HomeGroup from "@/views/home/modules/home-group/index.vue";
 import NameRight from "@/views/home/modules/nameRight/index.vue";
 import { HomeSet } from "@/api/interface";

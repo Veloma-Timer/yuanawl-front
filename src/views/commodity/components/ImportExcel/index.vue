@@ -70,9 +70,10 @@ const acceptParams = (params: ExcelParameterProps & any) => {
 };
 
 // Excel 导入模板下载
-const downloadTemp = () => {
+const downloadTemp = async () => {
   if (!parameter.value.tempApi) return;
-  useDownload(parameter.value.tempApi, `${parameter.value.title}`);
+  await useDownload(parameter.value.tempApi, `${parameter.value.title}`);
+  dialogVisible.value = false;
 };
 
 // 文件上传
