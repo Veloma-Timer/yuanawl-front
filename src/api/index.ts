@@ -8,6 +8,7 @@ import { checkStatus } from "./helper/checkStatus";
 import { useUserStore } from "@/stores/modules/user";
 import router from "@/routers";
 import Axios from "./http";
+import { message } from "@tauri-apps/api/dialog";
 
 export interface CustomAxiosRequestConfig extends Partial<InternalAxiosRequestConfig> {
   noLoading?: boolean;
@@ -59,19 +60,21 @@ class RequestHttp {
      *  服务器换返回信息 -> [拦截统一处理] -> 客户端JS获取到信息
      */
     this.service.interceptors.response.use(
-      (response: AxiosResponse) => {
+      async (response: AxiosResponse) => {
         const { data } = response;
         const userStore = useUserStore();
         tryHideFullScreenLoading();
         if (data.statusCode === 500) {
-          ElMessage.error(`【服务异常】：请联系开发者处理 ${data.message}`);
+          await message(`请联系开发者处理 ${data.message}`, { title: "服务异常", type: "error" });
+          // ElMessage.error(`【服务异常】：请联系开发者处理 ${data.message}`);
           return Promise.reject(data);
         }
         // 登陆失效
         if (data.code == ResultEnum.OVERDUE) {
           userStore.setToken("");
           router?.replace(LOGIN_URL);
-          ElMessage.error(data.msg);
+          await message(data.msg, { title: "ERROR", type: "error" });
+          // ElMessage.error(data.msg);
           return Promise.reject(data);
         }
         if (data?.data === "warning") {
@@ -88,7 +91,8 @@ class RequestHttp {
         if (!data) return data;
         // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）
         if (!data.success) {
-          ElMessage.error(data.message);
+          // ElMessage.error(data.message);
+          await message(data.message, { title: "ERROR", type: "error" });
           return Promise.reject(data);
         }
         // 成功请求（在页面上除非特殊情况，否则不用处理失败逻辑）

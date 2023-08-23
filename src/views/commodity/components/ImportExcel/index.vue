@@ -5,30 +5,31 @@
         <el-button type="primary" :icon="Download" @click="downloadTemp">点击下载</el-button>
       </el-form-item>
       <el-form-item v-show="!parameter.status" label="文件上传 :">
-        <el-upload
-          action="#"
-          class="upload"
-          :drag="true"
-          :limit="excelLimit"
-          :multiple="true"
-          :show-file-list="true"
-          :http-request="uploadExcel"
-          :before-upload="beforeExcelUpload"
-          :on-exceed="handleExceed"
-          :on-success="excelUploadSuccess"
-          :on-error="excelUploadError"
-          :accept="parameter.fileType!.join(',')"
-        >
-          <slot name="empty">
-            <el-icon class="el-icon--upload"><upload-filled /></el-icon>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-          </slot>
-          <template #tip>
-            <slot name="tip">
-              <div class="el-upload__tip">请上传 .xls , .xlsx 标准格式文件，文件最大为 {{ parameter.fileSize }}M</div>
-            </slot>
-          </template>
-        </el-upload>
+        <el-button type="primary" @click="openSelectFileDialog">点击上传</el-button>
+        <!--<el-upload-->
+        <!--  action="#"-->
+        <!--  class="upload"-->
+        <!--  :drag="true"-->
+        <!--  :limit="excelLimit"-->
+        <!--  :multiple="true"-->
+        <!--  :show-file-list="true"-->
+        <!--  :http-request="uploadExcel"-->
+        <!--  :before-upload="beforeExcelUpload"-->
+        <!--  :on-exceed="handleExceed"-->
+        <!--  :on-success="excelUploadSuccess"-->
+        <!--  :on-error="excelUploadError"-->
+        <!--  :accept="parameter.fileType!.join(',')"-->
+        <!--&gt;-->
+        <!--  <slot name="empty">-->
+        <!--    <el-icon class="el-icon&#45;&#45;upload"><upload-filled /></el-icon>-->
+        <!--    <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>-->
+        <!--  </slot>-->
+        <!--  <template #tip>-->
+        <!--    <slot name="tip">-->
+        <!--      <div class="el-upload__tip">请上传 .xls , .xlsx 标准格式文件，文件最大为 {{ parameter.fileSize }}M</div>-->
+        <!--    </slot>-->
+        <!--  </template>-->
+        <!--</el-upload>-->
       </el-form-item>
     </el-form>
   </el-dialog>
@@ -39,6 +40,7 @@ import { ref } from "vue";
 import { useDownload } from "@/hooks/useDownload";
 import { Download } from "@element-plus/icons-vue";
 import { ElNotification, UploadRequestOptions, UploadRawFile } from "element-plus";
+import { fs, dialog } from "@tauri-apps/api";
 
 export interface ExcelParameterProps {
   title: string; // 标题
@@ -76,9 +78,28 @@ const downloadTemp = async () => {
   dialogVisible.value = false;
 };
 
+const openSelectFileDialog = async () => {
+  const filepath = await dialog.open({
+    multiple: false,
+    title: "选择文件"
+  });
+
+  const formData = new FormData();
+  const fileBytes = await fs.readBinaryFile(filepath as string);
+  formData.append(
+    "file",
+    new Blob([fileBytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+    filepath as string
+  );
+
+  await parameter.value.updateApi!(formData);
+  parameter.value.getTableList && parameter.value.getTableList();
+  dialogVisible.value = false;
+};
+
 // 文件上传
 const uploadExcel = async (param: UploadRequestOptions) => {
-  let excelFormData = new FormData();
+  const excelFormData = new FormData();
   excelFormData.append("file", param.file);
   excelFormData.append("isCover", isCover.value as unknown as Blob);
   await parameter.value.updateApi!(excelFormData);

@@ -38,11 +38,11 @@ export const delAccountComplete = (ids: number[]) => {
 
 // 账号模块
 export const summaryTemplate = () => {
-  return http.get(`/static/template/account.xlsx`, null, { responseType: "blob" });
+  return http.get(`/static/template/account.xlsx`, undefined, { responseType: "blob" });
 };
 // 回收账户模块
 export const recycleTemplate = () => {
-  return http.get(`/static/template/recycle.xlsx`, null, { responseType: "blob" });
+  return http.get(`/static/template/recycle.xlsx`, undefined, { responseType: "blob" });
 };
 export const recycleUpload = (file: FormData) => {
   return http.post(`${baseUrl}/upload/recycle`, file);

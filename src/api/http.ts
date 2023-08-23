@@ -3,6 +3,7 @@ import { HttpVerb, HttpOptions, ResponseType } from "@tauri-apps/api/http";
 import { http } from "@tauri-apps/api";
 import deepcopy from "deepcopy";
 import { isObj } from "@/utils";
+import { message } from "@tauri-apps/api/dialog";
 
 export interface CustomAxiosRequestConfig extends Partial<InternalAxiosRequestConfig> {
   noLoading?: boolean;
@@ -11,7 +12,7 @@ export interface CustomAxiosRequestConfig extends Partial<InternalAxiosRequestCo
 
 type Fulfilled = (config: CustomAxiosRequestConfig) => CustomAxiosRequestConfig;
 
-type FulfilledResponse = (config: AxiosResponse) => CustomAxiosRequestConfig;
+type FulfilledResponse = (config: AxiosResponse) => Promise<CustomAxiosRequestConfig>;
 
 type Rejected = (error: AxiosError) => Promise<AxiosError>;
 
@@ -66,6 +67,34 @@ export default class Axios {
       } catch (err) {
         if (rejected) await rejected(err as AxiosError);
       }
+    }
+
+    const _url = this.config.baseURL + url;
+
+    // 如果是FormData数据则使用浏览器的fetch方法
+    if (data instanceof FormData) {
+      let response = await fetch(_url, {
+        method: "POST",
+        body: data,
+        ...((config || {}) as any)
+      });
+      const result = { data: await response.json() };
+
+      for (let { fulfilled, rejected } of _interceptors.response) {
+        try {
+          // @ts-ignore
+          response = fulfilled ? await fulfilled(result) : result;
+        } catch (err) {
+          if (rejected) await rejected(err as AxiosError);
+        }
+      }
+
+      // @ts-ignore
+      if (response.success) {
+        await message("操作成功！", "成功");
+      }
+
+      return response;
     }
 
     try {
@@ -125,7 +154,9 @@ export default class Axios {
         }
       }
 
-      let response = await http.fetch(this.config.baseURL + url, params);
+      console.log(_url, params, "---- before request ------");
+
+      let response = await http.fetch(_url, params);
 
       console.log(
         {
@@ -141,7 +172,7 @@ export default class Axios {
       for (let { fulfilled, rejected } of _interceptors.response) {
         try {
           // @ts-ignore
-          response = fulfilled ? fulfilled(response) : response;
+          response = fulfilled ? await fulfilled(response) : response;
         } catch (err) {
           if (rejected) await rejected(err as AxiosError);
         }

@@ -477,7 +477,7 @@ const columns: ColumnProps<Commodity.Account>[] = [
       props: { type: "daterange", unlinkPanels: true, shortcuts: shortcuts, valueFormat: "YYYY-MM-DD" }
     }
   },
-  { prop: "operation", label: "操作", fixed: "right", width: 300 }
+  { prop: "operation", label: "操作", fixed: "right", width: 100 }
 ];
 
 // 删除用户信息
