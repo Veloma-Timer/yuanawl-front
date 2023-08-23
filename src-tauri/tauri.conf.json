@@ -94,7 +94,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+        "https://gitee.com/veloma-timer/tauri-yuanawl-updator/raw/master/update.json"
       ],
       "dialog": true,
       "pubkey": "251400",
