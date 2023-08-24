@@ -1,10 +1,10 @@
 // scripts/updater.mjs
 
 import fetch from 'node-fetch';
-import { getOctokit, context } from '@actions/github';
+import { getOctokit } from '@actions/github';
 import fs from 'fs';
 
-const token = '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';
+const token = "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";
 
 async function updater() {
   if (!token) {
@@ -13,11 +13,14 @@ async function updater() {
   }
 
   // 用户名，仓库名
-  const options = { owner: context.repo.owner, repo: context.repo.repo };
+  const options = { owner: "Veloma-Timer", repo: "yuanawl-front" };
   const github = getOctokit(token);
 
   // 获取 tag
   const { data: tags } = await github.rest.repos.listTags({
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
     ...options,
     per_page: 10,
     page: 1,
@@ -31,6 +34,9 @@ async function updater() {
 
   // 获取此 tag 的详细信息
   const { data: latestRelease } = await github.rest.repos.getReleaseByTag({
+    headers: {
+      Authorization: `Bearer ${token}`
+    },
     ...options,
     tag: tag.name,
   });

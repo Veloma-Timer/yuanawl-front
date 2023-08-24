@@ -1,0 +1,26 @@
+{
+  "version": "",
+  "pub_date": "2023-08-24T07:59:25.590Z",
+  "platforms": {
+    "win64": {
+      "signature": "",
+      "url": ""
+    },
+    "darwin": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbjJ5VmliWTh1dHFDbldtUGhSRUNXVFl0MEVWVFNmeWs2WG55SzBjSDRReFRYYXJBUkJ2UnEyd1RjUU80UnB6VGFIOGpiMnhJVndrMHZpU1A1RGJwdVE0PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODQ4MzE4CWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKRVpIL0gzUVVBYUp4Ymp6WmVUMjRkdTNYUnpnMVdWREtxalZ2dkZrTnFvQ2ZkSUpNVUh6eEFvTFVMODRVSmMwMTVBZUVTd284OTBLejdRaVVBMVZKQlE9PQo=",
+      "url": ""
+    },
+    "darwin-aarch64": {
+      "signature": "",
+      "url": ""
+    },
+    "darwin-x86_64": {
+      "signature": "",
+      "url": ""
+    },
+    "windows-x86_64": {
+      "signature": "",
+      "url": ""
+    }
+  }
+}
