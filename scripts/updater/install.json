@@ -7,16 +7,16 @@
       "url": ""
     },
     "darwin": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbnppeDhxMlB2Tm9JZk1vTUVXNTRlT1JPMnRpaHRGc3JLbXFZMStxR0tHaHFJVnhHdUlTc0taS1dmMUs4NGN3NTAyMmRTbFRWQm9Qc3o4dEFXbGJ2RWdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODY3MTIwCWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKd1djUWwwWmVsWDQzMnY5cFdtZ3pGa1MrUEF6c0NKeU1XcEJ1Z3dqZVhUWWVISXA0Z0ozbFNxblVCU2xidGluK29zY095SGtpQkNDenhwTFRWS2hnQUE9PQo=",
-      "url": "https://github.com/Veloma-Timer/yuanawl-front/archive/refs/tags/1.0.8.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbnl1LzIrUlBXcVRNdWZqd3NhMXpuRnViZzBMSVRNT3FtNmZiSDIvcyt4d2Z2UFVsRGt3NFVHSTFuY3RmMFN0aVp3Z3Z6TGhrN1M2b2YvV1ZpUlR0VWdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODkwMDc5CWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKZWhISTBzQWhGNGl3blRnS2pDdlRic3NaQXRSZVJNTkpuQXpLekllY0RDNTg1OXdaV2s0UUxmYkdZQTQ4bktwZUJkdEZpbVo2Yjljb0VYbEN4eUFvQ3c9PQo=",
+      "url": "https://github.com/Veloma-Timer/yuanawl-front/archive/refs/tags/1.1.0.tar.gz"
     },
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbnppeDhxMlB2Tm9JZk1vTUVXNTRlT1JPMnRpaHRGc3JLbXFZMStxR0tHaHFJVnhHdUlTc0taS1dmMUs4NGN3NTAyMmRTbFRWQm9Qc3o4dEFXbGJ2RWdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODY3MTIwCWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKd1djUWwwWmVsWDQzMnY5cFdtZ3pGa1MrUEF6c0NKeU1XcEJ1Z3dqZVhUWWVISXA0Z0ozbFNxblVCU2xidGluK29zY095SGtpQkNDenhwTFRWS2hnQUE9PQo=",
-      "url": "https://github.com/Veloma-Timer/yuanawl-front/archive/refs/tags/1.0.8.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbnl1LzIrUlBXcVRNdWZqd3NhMXpuRnViZzBMSVRNT3FtNmZiSDIvcyt4d2Z2UFVsRGt3NFVHSTFuY3RmMFN0aVp3Z3Z6TGhrN1M2b2YvV1ZpUlR0VWdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODkwMDc5CWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKZWhISTBzQWhGNGl3blRnS2pDdlRic3NaQXRSZVJNTkpuQXpLekllY0RDNTg1OXdaV2s0UUxmYkdZQTQ4bktwZUJkdEZpbVo2Yjljb0VYbEN4eUFvQ3c9PQo=",
+      "url": "https://github.com/Veloma-Timer/yuanawl-front/archive/refs/tags/1.1.0.tar.gz"
     },
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbnppeDhxMlB2Tm9JZk1vTUVXNTRlT1JPMnRpaHRGc3JLbXFZMStxR0tHaHFJVnhHdUlTc0taS1dmMUs4NGN3NTAyMmRTbFRWQm9Qc3o4dEFXbGJ2RWdrPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODY3MTIwCWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKd1djUWwwWmVsWDQzMnY5cFdtZ3pGa1MrUEF6c0NKeU1XcEJ1Z3dqZVhUWWVISXA0Z0ozbFNxblVCU2xidGluK29zY095SGtpQkNDenhwTFRWS2hnQUE9PQo=",
-      "url": "https://github.com/Veloma-Timer/yuanawl-front/archive/refs/tags/1.0.8.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVRRjVveHFnR2tLbnl1LzIrUlBXcVRNdWZqd3NhMXpuRnViZzBMSVRNT3FtNmZiSDIvcyt4d2Z2UFVsRGt3NFVHSTFuY3RmMFN0aVp3Z3Z6TGhrN1M2b2YvV1ZpUlR0VWdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNjkyODkwMDc5CWZpbGU65YWD6Zi/572R57uc5ZCO5Y+wLmFwcC50YXIuZ3oKZWhISTBzQWhGNGl3blRnS2pDdlRic3NaQXRSZVJNTkpuQXpLekllY0RDNTg1OXdaV2s0UUxmYkdZQTQ4bktwZUJkdEZpbVo2Yjljb0VYbEN4eUFvQ3c9PQo=",
+      "url": "https://github.com/Veloma-Timer/yuanawl-front/archive/refs/tags/1.1.0.tar.gz"
     },
     "windows-x86_64": {
       "signature": "",

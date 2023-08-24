@@ -23,11 +23,6 @@ initTheme();
 
 // init language
 const i18n = useI18n();
-onMounted(async () => {
-  const language = globalStore.language ?? getBrowserLang();
-  i18n.locale.value = language;
-  globalStore.setGlobalState("language", language as LanguageType);
-});
 
 // element language
 const locale = computed(() => {
@@ -41,6 +36,18 @@ const assemblySize = computed(() => globalStore.assemblySize);
 
 // element button config
 const buttonConfig = reactive({ autoInsertSpace: false });
+
+// const autoUpdate = async () => {
+//   const res = await fetch("https://cdn.jsdelivr.net/gh/Veloma-Timer/yuanawl-front@dev/scripts/updater/install.json");
+//   console.log(await res.json());
+// };
+
+onMounted(async () => {
+  const language = globalStore.language ?? getBrowserLang();
+  i18n.locale.value = language;
+  globalStore.setGlobalState("language", language as LanguageType);
+  // await autoUpdate();
+});
 </script>
 
 <style>
