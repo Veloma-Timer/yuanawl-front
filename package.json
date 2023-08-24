@@ -22,11 +22,14 @@
     "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged",
     "prepare": "husky install",
-    "release": "standard-version",
+    "release-old": "standard-version",
     "make": "npm run make:mac && npm run make:win",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "updater": "node scripts/updater.mjs",
+    "release": "node scripts/release.mjs"
   },
   "dependencies": {
+    "@actions/github": "^5.1.1",
     "@element-plus/icons-vue": "^2.1.0",
     "@tauri-apps/api": "^1.4.0",
     "@vueuse/core": "^10.1.2",
@@ -46,6 +49,7 @@
     "formdata-node": "^5.0.1",
     "js-md5": "^0.7.3",
     "mitt": "^3.0.0",
+    "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.3",
     "pinia-plugin-persistedstate": "^3.1.0",
