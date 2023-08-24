@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "元阿网络后台",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "tauri": {
     "allowlist": {
