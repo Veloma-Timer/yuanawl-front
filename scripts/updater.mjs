@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import { getOctokit, context } from '@actions/github';
 import fs from 'fs';
 
-const token = process.env.GITHUB_TOKEN;
+const token = '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';
 
 async function updater() {
   if (!token) {
