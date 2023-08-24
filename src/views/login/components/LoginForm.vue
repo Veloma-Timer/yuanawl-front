@@ -20,7 +20,6 @@
         </template>
       </el-input>
     </el-form-item>
-    <el-form-item>自动更新</el-form-item>
   </el-form>
   <div class="login-btn">
     <!--    <el-button :icon="CircleClose" round @click="resetForm(loginFormRef)" size="large">重置</el-button>-->
